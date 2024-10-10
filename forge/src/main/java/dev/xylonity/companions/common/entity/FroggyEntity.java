@@ -50,6 +50,7 @@ public class FroggyEntity extends TamableAnimal implements GeoEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 0.6D, true));
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -154,6 +155,18 @@ public class FroggyEntity extends TamableAnimal implements GeoEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
+        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
+    }
+
+    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
+
+        if (this.swinging && event.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
+            event.getController().forceAnimationReset();
+            event.getController().setAnimation(RawAnimation.begin().then("attack", Animation.LoopType.PLAY_ONCE));
+            this.swinging = false;
+        }
+
+        return PlayState.CONTINUE;
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
@@ -172,7 +185,7 @@ public class FroggyEntity extends TamableAnimal implements GeoEntity {
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 10.0D)
+                .add(Attributes.MAX_HEALTH, 1000.0D)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
