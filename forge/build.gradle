@@ -78,6 +78,9 @@ dependencies {
 
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:4.4.7")
 
+    implementation fg.deobf("curse.maven:puzzles-lib-495476:5904750")
+    implementation fg.deobf("curse.maven:overflowing-bars-852662:5763974")
+
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 }
 

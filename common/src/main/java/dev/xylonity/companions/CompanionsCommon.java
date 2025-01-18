@@ -1,6 +1,9 @@
 package dev.xylonity.companions;
 
 import dev.xylonity.companions.platform.CompanionsPlatform;
+import dev.xylonity.companions.registry.CompanionsCreativeModeTabs;
+import dev.xylonity.companions.registry.CompanionsEffects;
+import dev.xylonity.companions.registry.CompanionsItems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +20,9 @@ public class CompanionsCommon {
     public static final CompanionsPlatform COMMON_PLATFORM = ServiceLoader.load(CompanionsPlatform.class).findFirst().orElseThrow();
 
     public static void init() {
+        CompanionsItems.init();
+        CompanionsCreativeModeTabs.init();
+        CompanionsEffects.init();
     }
 
 }
