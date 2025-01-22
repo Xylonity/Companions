@@ -4,6 +4,7 @@ import dev.xylonity.companions.platform.CompanionsPlatform;
 import dev.xylonity.companions.registry.CompanionsCreativeModeTabs;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ public class CompanionsCommon {
         CompanionsItems.init();
         CompanionsCreativeModeTabs.init();
         CompanionsEffects.init();
+        CompanionsParticles.init();
     }
 
 }

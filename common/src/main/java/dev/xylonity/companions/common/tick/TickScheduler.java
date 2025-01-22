@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class TickScheduler {
 
     public static final Map<ServerLevel, List<ScheduledTask>> TASKS = new HashMap<>();
