@@ -30,7 +30,7 @@ public abstract class TestHeartsLoop {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/gui/Gui;renderHeart(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Gui$HeartType;IIIZZ)V",
-                    ordinal = 1  // Asume que ordinal=1 corresponde a corazones de absorción
+                    ordinal = 1
             ),
             locals = LocalCapture.CAPTURE_FAILSOFT,
             cancellable = true

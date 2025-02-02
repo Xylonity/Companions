@@ -1,14 +1,17 @@
 package dev.xylonity.companions;
 
+import dev.xylonity.companions.common.item.WrenchItem;
 import dev.xylonity.companions.common.tick.TickScheduler;
-import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.*;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,24 +37,38 @@ public class Companions {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         CompanionsEntities.ENTITY.register(modEventBus);
+        CompanionsBlocks.BLOCK.register(modEventBus);
+        CompanionsBlockEntities.BLOCK_ENTITY.register(modEventBus);
 
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
         MOB_EFFECTS.register(modEventBus);
         PARTICLES.register(modEventBus);
 
+        ITEMS.register("wrench", () -> new WrenchItem(new Item.Properties()));
+
         CompanionsCommon.init();
+
+        MinecraftForge.EVENT_BUS.register(new Testing());
     }
 
-    @Mod.EventBusSubscriber(modid = CompanionsCommon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class KnightLibClientEvents {
-
+    static class Testing {
         @SubscribeEvent
-        public static void registerParticleFactories(final RegisterParticleProvidersEvent event) {
+        public void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
+            Entity cameraEntity = event.getCamera().getEntity();
 
+            if (cameraEntity instanceof Player player) {
+                if (player.hasEffect(CompanionsEffects.ELECTROSHOCK.get())) {
+                    float intensity = 0.2F;
 
+                    double offsetX = (Math.random() - 0.5) * intensity;
+                    double offsetY = (Math.random() - 0.5) * intensity;
+                    double offsetZ = (Math.random() - 0.5) * intensity;
+
+                    event.getCamera().move(offsetX, offsetY, offsetZ);
+                }
+            }
         }
-
     }
 
     @Mod.EventBusSubscriber(modid = CompanionsCommon.MOD_ID)

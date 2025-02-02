@@ -11,6 +11,7 @@ public class CompanionsParticles {
 
     public static final Supplier<SimpleParticleType> TEDDY_TRANSFORMATION = registerParticle("teddy_transformation", true);
     public static final Supplier<SimpleParticleType> TEDDY_TRANSFORMATION_CLOUD = registerParticle("teddy_transformation_cloud", true);
+    public static final Supplier<SimpleParticleType> ILLAGER_GOLEM_FLASH = registerParticle("illager_golem_flash", true);
 
     private static <T extends SimpleParticleType> Supplier<T> registerParticle(String id, boolean overrideLimiter) {
         return CompanionsCommon.COMMON_PLATFORM.registerParticle(id, overrideLimiter);

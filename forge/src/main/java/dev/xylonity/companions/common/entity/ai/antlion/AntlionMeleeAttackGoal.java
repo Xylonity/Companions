@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.entity.ai.antlion;
 
 import java.util.EnumSet;
 
-import dev.xylonity.companions.common.entity.AntlionEntity;
+import dev.xylonity.companions.common.entity.custom.AntlionEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;

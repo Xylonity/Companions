@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.entity;
+package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import net.minecraft.network.syncher.EntityDataAccessor;

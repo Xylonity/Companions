@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.teddy;
 
-import dev.xylonity.companions.common.entity.TeddyEntity;
+import dev.xylonity.companions.common.entity.custom.TeddyEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.player.Player;

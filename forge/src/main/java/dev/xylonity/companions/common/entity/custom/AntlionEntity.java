@@ -1,9 +1,9 @@
-package dev.xylonity.companions.common.entity;
+package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.ai.antlion.AntlionMeleeAttackGoal;
-import dev.xylonity.companions.common.entity.ai.teddy.TeddyLookAtPlayerGoal;
-import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.common.entity.ai.antlion.AntlionLongAttackGoal;
+import dev.xylonity.companions.common.tick.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -11,35 +11,26 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -52,6 +43,7 @@ public class AntlionEntity extends Monster implements GeoEntity {
     private final RawAnimation EMERGE = RawAnimation.begin().thenPlay("dig_out");
     private final RawAnimation DIG_IDLE = RawAnimation.begin().thenPlay("dig_idle");
     private final RawAnimation ATTACK = RawAnimation.begin().thenPlay("dig_attack");
+    private final RawAnimation SHOOT = RawAnimation.begin().thenPlay("dig_attack2");
 
     private static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DIG_IN_COUNTER = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.INT);
@@ -60,6 +52,7 @@ public class AntlionEntity extends Monster implements GeoEntity {
     private static final EntityDataAccessor<Boolean> IS_UNDERGROUND = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> NO_PLAYERS_NEAR_COUNTER = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> EMERGE_COUNTER = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> SHOULD_DO_SAND_ATTACK = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final int ANIMATION_DIG_MAX_TICKS = 55;
     private static final int ANIMATION_EMERGE_MAX_TICKS = 15;
@@ -99,7 +92,21 @@ public class AntlionEntity extends Monster implements GeoEntity {
     @Override
     protected void registerGoals() {
         //this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new AntlionMeleeAttackGoal(this, 0.6D, true));
+        this.goalSelector.addGoal(1, new AntlionLongAttackGoal(this, 10, 20, 0.5, 4F));
+        this.goalSelector.addGoal(2, new AntlionMeleeAttackGoal(this, 0.6D, true));
+        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.6D) {
+            @Override
+            public boolean canUse() {
+                return !AntlionEntity.this.isUnderground() && super.canUse();
+            }
+        });
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this) {
+            @Override
+            public boolean canUse() {
+                return !AntlionEntity.this.isUnderground() && super.canUse();
+            }
+        });
+
         //this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
@@ -170,6 +177,14 @@ public class AntlionEntity extends Monster implements GeoEntity {
         this.entityData.set(IS_NEAR_PLAYER, value);
     }
 
+    public boolean shouldDoSandAttack() {
+        return this.entityData.get(SHOULD_DO_SAND_ATTACK);
+    }
+
+    public void setShouldDoSandAttack(boolean shouldAttack) {
+        this.entityData.set(SHOULD_DO_SAND_ATTACK, shouldAttack);
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -180,6 +195,7 @@ public class AntlionEntity extends Monster implements GeoEntity {
         this.entityData.define(NO_MOVEMENT, false);
         this.entityData.define(IS_NEAR_PLAYER, false);
         this.entityData.define(IS_UNDERGROUND, false);
+        this.entityData.define(SHOULD_DO_SAND_ATTACK, false);
     }
 
     protected void spawnDiggingParticles(BlockState blockState) {
@@ -195,6 +211,71 @@ public class AntlionEntity extends Monster implements GeoEntity {
         }
     }
 
+    private void doDigEarthquake(ServerLevel serverLevel, BlockPos center) {
+        int radius = 2;
+
+        for (int x = -radius; x <= radius; x++) {
+            for (int z = -radius; z <= radius; z++) {
+                int dist = Math.abs(x) + Math.abs(z);
+
+                if (dist >= 1 && dist <= radius) {
+                    BlockPos blockPos = center.offset(x, -1, z);
+                    BlockState state = serverLevel.getBlockState(blockPos);
+
+                    if (!state.isAir() && state.getBlock() != Blocks.BEDROCK) {
+                        if (dist == 1) {
+                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 5);
+                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 20);
+                        } else {
+                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 10);
+                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 25);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void doEmergeEarthquake(ServerLevel serverLevel, BlockPos center) {
+        int radius = 2;
+
+        for (int x = -radius; x <= radius; x++) {
+            for (int z = -radius; z <= radius; z++) {
+                int dist = Math.abs(x) + Math.abs(z);
+
+                if (dist >= 1 && dist <= radius) {
+                    BlockPos blockPos = center.offset(x, -1, z);
+                    BlockState state = serverLevel.getBlockState(blockPos);
+
+                    if (!state.isAir() && state.getBlock() != Blocks.BEDROCK) {
+                        if (dist == 1) {
+                            spawnFallingBlock(serverLevel, blockPos, state, 0.18);
+                        } else {
+                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 5);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void spawnFallingBlock(ServerLevel level, BlockPos pos, BlockState state, double yDelay) {
+        FallingBlockEntity fallingBlock = new FallingBlockEntity(
+                level,
+                pos.getX() + 0.5D,
+                pos.getY(),
+                pos.getZ() + 0.5D,
+                state
+        );
+
+        fallingBlock.setDeltaMovement(0.0, yDelay, 0.0);
+
+        level.addFreshEntity(fallingBlock);
+        level.removeBlock(pos, false);
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -204,14 +285,30 @@ public class AntlionEntity extends Monster implements GeoEntity {
             this.setDeltaMovement(Vec3.ZERO);
         }
 
+        if (isUnderground() && getTarget() != null) {
+            double dX = getTarget().getX() - getX();
+            double dZ = getTarget().getZ() - getZ();
+
+            float targetYaw = (float) (Mth.atan2(dZ, dX) * (180F / Math.PI)) - 90F;
+
+            setYRot(targetYaw);
+            yBodyRot = targetYaw;
+            yHeadRot = targetYaw;
+        }
+
         if (getEmergeCounter() != 0 && getEmergeCounter() <= ANIMATION_EMERGE_MAX_TICKS && getNoPlayersNearCounter() == 25) {
             setEmergeCounter(getEmergeCounter() + 1);
+
+            if (getEmergeCounter() == 5 && this.level() instanceof ServerLevel level) {
+                doEmergeEarthquake(level, this.blockPosition());
+            }
 
             if (getEmergeCounter() == ANIMATION_EMERGE_MAX_TICKS) {
                 setIsUnderground(false);
                 setEmergeCounter(0);
                 setNoMovement(false);
                 this.isDigging = !this.isDigging;
+                refreshDimensions();
             }
 
         }
@@ -220,6 +317,10 @@ public class AntlionEntity extends Monster implements GeoEntity {
             setNoMovement(true);
             setDigInCounter(getDigInCounter() + 1);
 
+            if (getDigInCounter() == 10 && this.level() instanceof ServerLevel level) {
+                doDigEarthquake(level, this.blockPosition());
+            }
+
             if (getDigInCounter() != 0 && getDigInCounter() < ANIMATION_DIG_MAX_TICKS - 20) {
                 spawnDiggingParticles(this.level().getBlockState(new BlockPos((int) getX(), (int) (getY() - 1), (int) getZ())));
             }
@@ -227,6 +328,7 @@ public class AntlionEntity extends Monster implements GeoEntity {
             if (getDigInCounter() == ANIMATION_DIG_MAX_TICKS) {
                 setIsUnderground(true);
                 setDigInCounter(0);
+                refreshDimensions();
             }
 
         }
@@ -246,6 +348,11 @@ public class AntlionEntity extends Monster implements GeoEntity {
     }
 
     @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        return isUnderground() ? EntityDimensions.scalable(1F, 0.2F) : super.getDimensions(pPose);
+    }
+
+    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 5, this::predicate));
         controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
@@ -256,6 +363,9 @@ public class AntlionEntity extends Monster implements GeoEntity {
             event.getController().forceAnimationReset();
             event.getController().setAnimation(ATTACK);
             this.swinging = false;
+        } else if (shouldDoSandAttack() && event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isUnderground()) {
+            event.getController().forceAnimationReset();
+            event.getController().setAnimation(SHOOT);
         }
 
         return PlayState.CONTINUE;

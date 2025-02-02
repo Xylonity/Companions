@@ -87,16 +87,7 @@ public class TeslaConnectionManager {
         return incoming.getOrDefault(node, Collections.emptySet());
     }
 
-    public static class ConnectionNode {
-        private final UUID entityId;
-        private final BlockPos blockPos;
-        private final ResourceLocation dimension;
-
-        private ConnectionNode(UUID entityId, BlockPos blockPos, ResourceLocation dimension) {
-            this.entityId = entityId;
-            this.blockPos = blockPos;
-            this.dimension = dimension;
-        }
+    public record ConnectionNode(UUID entityId, BlockPos blockPos, ResourceLocation dimension) {
 
         public static ConnectionNode forEntity(UUID entityId, ResourceLocation dimension) {
             return new ConnectionNode(entityId, null, dimension);
@@ -152,8 +143,9 @@ public class TeslaConnectionManager {
             return Objects.hash(entityId, blockPos, dimension);
         }
 
-        public UUID getEntityId() { return entityId; }
+        public UUID getEntityId() { return this.entityId; }
         public BlockPos getBlockPos() { return blockPos; }
         public ResourceLocation getDimension() { return dimension; }
+
     }
 }

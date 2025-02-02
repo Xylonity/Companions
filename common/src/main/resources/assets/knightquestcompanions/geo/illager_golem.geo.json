@@ -1,0 +1,99 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 96,
+				"texture_height": 96,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "entity",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "body",
+					"parent": "entity",
+					"pivot": [0, 2, 2],
+					"cubes": [
+						{"origin": [-6, 1.5, -7], "size": [12, 7, 16], "uv": [0, 52]},
+						{"origin": [-4.5, 8.5, -2.5], "size": [9, 9, 9], "uv": [0, 78]}
+					]
+				},
+				{
+					"name": "tesla",
+					"parent": "body",
+					"pivot": [0, 20.33333, 2],
+					"cubes": [
+						{"origin": [-8, 17.5, -6], "size": [16, 4, 16], "uv": [32, 0]},
+						{"origin": [-6, 21.5, -4], "size": [12, 3, 12], "uv": [0, 33]},
+						{"origin": [-2, 24.5, 0], "size": [4, 6, 4], "uv": [64, 70]}
+					]
+				},
+				{
+					"name": "arm2",
+					"parent": "body",
+					"pivot": [5, 4, -7],
+					"rotation": [24.89867, 62.22995, 27.68035],
+					"cubes": [
+						{"origin": [5, 2.5, -9], "size": [6, 3, 4], "uv": [40, 75], "mirror": true}
+					]
+				},
+				{
+					"name": "arm",
+					"parent": "body",
+					"pivot": [-5, 4, -7],
+					"rotation": [24.89867, -62.22995, -27.68035],
+					"cubes": [
+						{"origin": [-11, 2.5, -9], "size": [6, 3, 4], "uv": [40, 75]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "body",
+					"pivot": [0, 7.75, -3.75],
+					"cubes": [
+						{"origin": [-8, 7, -9], "size": [16, 8, 6], "uv": [0, 0]},
+						{"origin": [-2, 6, -11], "size": [4, 5, 3], "uv": [82, 0]}
+					]
+				},
+				{
+					"name": "wheel2",
+					"parent": "entity",
+					"pivot": [-8.5, 2.5, -3.5],
+					"cubes": [
+						{"origin": [-11, 0, -6], "size": [5, 5, 5], "uv": [34, 20], "mirror": true}
+					]
+				},
+				{
+					"name": "wheel4",
+					"parent": "entity",
+					"pivot": [-8.5, 2.5, 5.5],
+					"cubes": [
+						{"origin": [-11, 0, 3], "size": [5, 5, 5], "uv": [34, 20], "mirror": true}
+					]
+				},
+				{
+					"name": "wheel3",
+					"parent": "entity",
+					"pivot": [8.5, 2.5, 5.5],
+					"cubes": [
+						{"origin": [6, 0, 3], "size": [5, 5, 5], "uv": [34, 20]}
+					]
+				},
+				{
+					"name": "wheel",
+					"parent": "entity",
+					"pivot": [8.5, 2.5, -3.5],
+					"cubes": [
+						{"origin": [6, 0, -6], "size": [5, 5, 5], "uv": [34, 20]}
+					]
+				}
+			]
+		}
+	]
+}

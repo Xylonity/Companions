@@ -1,10 +1,8 @@
 package dev.xylonity.companions.client.entity.renderer;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.entity.model.FroggyModel;
-import dev.xylonity.companions.common.entity.FroggyEntity;
-import net.minecraft.client.renderer.MultiBufferSource;
+import dev.xylonity.companions.common.entity.custom.FroggyEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;

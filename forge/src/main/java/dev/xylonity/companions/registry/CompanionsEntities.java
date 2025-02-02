@@ -1,9 +1,7 @@
 package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.common.entity.AntlionEntity;
-import dev.xylonity.companions.common.entity.FroggyEntity;
-import dev.xylonity.companions.common.entity.TeddyEntity;
+import dev.xylonity.companions.common.entity.custom.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,11 +17,15 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<FroggyEntity>> FROGGY;
     public static final RegistryObject<EntityType<TeddyEntity>> TEDDY;
     public static final RegistryObject<EntityType<AntlionEntity>> ANTLION;
+    public static final RegistryObject<EntityType<IllagerGolemEntity>> ILLAGER_GOLEM;
+    public static final RegistryObject<EntityType<TamedIllagerGolemEntity>> TAMED_ILLAGER_GOLEM;
 
     static {
         FROGGY = register("froggy", FroggyEntity::new, MobCategory.CREATURE, 1f, 1f);
         TEDDY = register("teddy", TeddyEntity::new, MobCategory.CREATURE, 1f, 1f);
         ANTLION = register("antlion", AntlionEntity::new, MobCategory.CREATURE, 1f, 1f);
+        ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f);
+        TAMED_ILLAGER_GOLEM = register("tamed_illager_golem", TamedIllagerGolemEntity::new, MobCategory.CREATURE, 1f, 2f);
     }
 
     private static <X extends Entity> RegistryObject<EntityType<X>> register(String name, EntityType.EntityFactory<X> entity, MobCategory category, float width, float height) {

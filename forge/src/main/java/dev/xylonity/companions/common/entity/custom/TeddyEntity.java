@@ -1,15 +1,20 @@
-package dev.xylonity.companions.common.entity;
+package dev.xylonity.companions.common.entity.custom;
 
+import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
-import dev.xylonity.companions.common.entity.ai.teddy.TeddyLookAtPlayerGoal;
+import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.teddy.*;
+import dev.xylonity.companions.common.entity.ai.teddy.control.MutatedTeddyMoveControl;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -27,17 +32,12 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class TeddyEntity extends TamableAnimal implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
+public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private final RawAnimation SIT1 = RawAnimation.begin().thenPlay("lay");
     private final RawAnimation SIT2 = RawAnimation.begin().thenPlay("sit");
     private final RawAnimation SIT3 = RawAnimation.begin().thenPlay("sleep");
@@ -53,11 +53,9 @@ public class TeddyEntity extends TamableAnimal implements GeoEntity {
     private final RawAnimation MUTATED_SIT2 = RawAnimation.begin().thenPlay("laying");
     private final RawAnimation MUTATED_DEATH = RawAnimation.begin().thenPlay("death");
 
-    private static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> SIT_VARIATION = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SECOND_PHASE_COUNTER = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Boolean> NO_MOVEMENT = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final int ANIMATION_TRANSFORM_MAX_TICKS = 200;
     private static final int ANIMATION_DEAD_MAX_TICKS = 64;
@@ -73,11 +71,25 @@ public class TeddyEntity extends TamableAnimal implements GeoEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+        //this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new TeddySitWhenOrderedToGoal(this));
+        //this.goalSelector.addGoal(2, new TeddyAttackGoal(this, 1.0D, 2.5D, 20));
+        this.goalSelector.addGoal(2, new MutatedTeddyChargeAttackGoal(
+                this,
+                1.5,
+                1.0,
+                2,
+                10,
+                2.5,
+                4.0
+        ));
+        this.goalSelector.addGoal(3, new MutatedTeddyFollowOwnerGoal(this, 0.6D, 3.0F, 7.0F));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 0.6D, true));
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(4, new TeddyFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+
+        //this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 0.6D, true));
+        //this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        //this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(6, new TeddyLookAtPlayerGoal(this, Player.class, 8.0F));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
@@ -93,21 +105,13 @@ public class TeddyEntity extends TamableAnimal implements GeoEntity {
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
 
-    public void setSitting(boolean sitting) {
-        this.entityData.set(SITTING, sitting);
-        this.setOrderedToSit(sitting);
-    }
-
-    public boolean isSitting() {
-        return this.entityData.get(SITTING);
-    }
-
     public int getPhase() {
         return this.entityData.get(PHASE);
     }
 
     public void setPhase(int phase) {
         this.entityData.set(PHASE, phase);
+        this.refreshDimensions();
     }
 
     private void setSitVariation(int variation) {
@@ -126,31 +130,25 @@ public class TeddyEntity extends TamableAnimal implements GeoEntity {
         this.entityData.set(SECOND_PHASE_COUNTER, t);
     }
 
-    public boolean isNoMovement() {
-        return this.entityData.get(NO_MOVEMENT);
-    }
-
-    public void setNoMovement(boolean isNoMovement) {
-        this.entityData.set(NO_MOVEMENT, isNoMovement);
+    @Override
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
+        return getPhase() != 2 && super.causeFallDamage(pFallDistance, pMultiplier, pSource);
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SITTING, false);
         this.entityData.define(SIT_VARIATION, 0);
         this.entityData.define(PHASE, 1);
         this.entityData.define(SECOND_PHASE_COUNTER, 0);
-        this.entityData.define(NO_MOVEMENT, false);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (isNoMovement()) {
-            this.getNavigation().stop();
-            this.setDeltaMovement(Vec3.ZERO);
+        if (getPhase() == 2) {
+            this.setNoGravity(true);
         }
 
         if (getSecondPhaseCounter() != 0 && getSecondPhaseCounter() <= ANIMATION_TRANSFORM_MAX_TICKS) {
@@ -173,11 +171,35 @@ public class TeddyEntity extends TamableAnimal implements GeoEntity {
                 }
 
                 setPhase(2);
+
+                FlyingNavigator navigation = new FlyingNavigator(this, this.level());
+                navigation.setCanOpenDoors(true);
+                navigation.setCanPassDoors(true);
+
+                this.moveControl = new MutatedTeddyMoveControl(this);
+                this.navigation = navigation;
             }
 
             setSecondPhaseCounter(getSecondPhaseCounter() + 1);
         }
 
+    }
+
+    @Override
+    public void move(@NotNull MoverType pType, @NotNull Vec3 pPos) {
+        super.move(pType, pPos);
+        this.checkInsideBlocks();
+    }
+
+    @Nullable
+    @Override
+    public LivingEntity getOwner() {
+        return super.getOwner();
+    }
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        return getPhase() == 1 ? super.getDimensions(pPose) : EntityDimensions.scalable(1F, 2F);
     }
 
     @Override
@@ -255,10 +277,14 @@ public class TeddyEntity extends TamableAnimal implements GeoEntity {
         }
     }
 
-    @Nullable
     @Override
-    public AgeableMob getBreedOffspring(@NotNull ServerLevel serverLevel, @NotNull AgeableMob ageableMob) {
-        return null;
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
     }
 
     @Override
@@ -271,7 +297,7 @@ public class TeddyEntity extends TamableAnimal implements GeoEntity {
 
         if (this.swinging && event.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
             event.getController().forceAnimationReset();
-            event.getController().setAnimation(ATTACK);
+            event.getController().setAnimation(getPhase() == 2 ? MUTATED_ATTACK1 : ATTACK);
             this.swinging = false;
         }
 
@@ -303,11 +329,6 @@ public class TeddyEntity extends TamableAnimal implements GeoEntity {
         }
 
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
     }
 
 }
