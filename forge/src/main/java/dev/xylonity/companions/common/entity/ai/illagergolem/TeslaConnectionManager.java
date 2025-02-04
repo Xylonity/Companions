@@ -9,7 +9,7 @@ import java.util.*;
 
 /**
  * Dynamic bidirectional BFS algorithm with memoized generic node tracking (for both UUIDs and block positions), for graphs under a
- * depth constraint (preconfigured with a certain cap as a config value, `DINAMO_MAX_RECEIVER_CONNECTIONS`).
+ * depth constraint (preconfigured with a default cap, which is a config value, `DINAMO_MAX_RECEIVER_CONNECTIONS`).
  *
  * @author Xylonity
  */
