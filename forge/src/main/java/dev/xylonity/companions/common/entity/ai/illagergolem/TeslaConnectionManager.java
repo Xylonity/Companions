@@ -1,16 +1,17 @@
 package dev.xylonity.companions.common.entity.ai.illagergolem;
 
 import dev.xylonity.companions.common.blockentity.TeslaReceiverBlockEntity;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import java.util.*;
 
 /**
- * Dynamic bidirectional BFS algorithm with memoized generic node tracking (for both UUIDs and block positions),
- * for graphs under a depth constraint (preconfigured with a cap of 3).
+ * Dynamic bidirectional BFS algorithm with memoized generic node tracking (for both UUIDs and block positions), for graphs under a
+ * depth constraint (preconfigured with a certain cap as a config value, `DINAMO_MAX_RECEIVER_CONNECTIONS`).
  *
- * @Author Xylonity
+ * @author Xylonity
  */
 public class TeslaConnectionManager {
     private static TeslaConnectionManager instance;
@@ -32,51 +33,184 @@ public class TeslaConnectionManager {
     }
 
     public void addConnection(ConnectionNode source, ConnectionNode target) {
+        addConnection(source, target, false);
+    }
+
+    public void addConnection(ConnectionNode source, ConnectionNode target, boolean bypassValidation) {
+        if (!bypassValidation) {
+            if (source.isBlock() && target.isBlock()) {
+                if (!canAddConnection(source, target)) return;
+            }
+        }
+
         outgoing.computeIfAbsent(source, k -> new HashSet<>()).add(target);
         incoming.computeIfAbsent(target, k -> new HashSet<>()).add(source);
         recalculateDistances();
     }
 
     public void removeConnection(ConnectionNode source, ConnectionNode target) {
-        Optional.ofNullable(outgoing.get(source)).ifPresent(s -> s.remove(target));
-        Optional.ofNullable(incoming.get(target)).ifPresent(s -> s.remove(source));
+        Set<ConnectionNode> outSet = outgoing.get(source);
+        if (outSet != null) outSet.remove(target);
+
+        Set<ConnectionNode> inSet = incoming.get(target);
+        if (inSet != null) inSet.remove(source);
+
         recalculateDistances();
     }
 
-    private void recalculateDistances() {
-        blockEntities.values().forEach(be -> be.setDistance(Integer.MAX_VALUE));
+    public void removeConnectionNode(ConnectionNode node) {
+        outgoing.remove(node);
+        incoming.remove(node);
+
+        for (Set<ConnectionNode> set : outgoing.values()) {
+            set.remove(node);
+        }
+
+        for (Set<ConnectionNode> set : incoming.values()) {
+            set.remove(node);
+        }
+    }
+
+    public void recalculateDistances() {
+        for (TeslaReceiverBlockEntity be : blockEntities.values()) {
+            be.setDistance(Integer.MAX_VALUE);
+        }
+
         Queue<ConnectionNode> queue = new LinkedList<>();
         Map<ConnectionNode, Integer> distances = new HashMap<>();
-        for (ConnectionNode node : outgoing.keySet()) {
-            if (!node.isBlock()) {
-                queue.add(node);
+
+        for (ConnectionNode node : getAllNodes()) {
+            if (node.isEntity()) {
                 distances.put(node, 0);
+                queue.add(node);
             }
         }
+
         while (!queue.isEmpty()) {
             ConnectionNode current = queue.poll();
             int currentDistance = distances.get(current);
-            for (ConnectionNode neighbor : outgoing.getOrDefault(current, Collections.emptySet())) {
-                if (neighbor.isBlock()) {
-                    int newDistance = current.isBlock() ? currentDistance + 1 : 1;
-                    if (newDistance > 3) continue;
-                    if (!distances.containsKey(neighbor) || newDistance < distances.get(neighbor)) {
-                        distances.put(neighbor, newDistance);
-                        queue.add(neighbor);
-                        TeslaReceiverBlockEntity be = blockEntities.get(neighbor);
-                        if (be != null) be.setDistance(newDistance);
-                    }
+
+            Set<ConnectionNode> neighbors = new HashSet<>();
+
+            neighbors.addAll(outgoing.getOrDefault(current, Collections.emptySet()));
+            neighbors.addAll(incoming.getOrDefault(current, Collections.emptySet()));
+
+            for (ConnectionNode neighbor : neighbors) {
+                if (!neighbor.isBlock()) continue;
+
+                int newDistance = current.isBlock() ? currentDistance + 1 : 1;
+
+                if (newDistance > CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS.get()) continue;
+                if (!distances.containsKey(neighbor) || newDistance < distances.get(neighbor)) {
+                    distances.put(neighbor, newDistance);
+                    queue.add(neighbor);
+                    TeslaReceiverBlockEntity be = blockEntities.get(neighbor);
+                    if (be != null) be.setDistance(newDistance);
                 }
             }
+
         }
-        blockEntities.values().forEach(be -> {
-            if (be.getDistance() == Integer.MAX_VALUE) be.setDistance(0);
-        });
-        for (Map.Entry<ConnectionNode, Integer> entry : distances.entrySet()) {
-            ConnectionNode node = entry.getKey();
-            int distance = entry.getValue();
-            if (node.isBlock() && distance == 3) outgoing.getOrDefault(node, Collections.emptySet()).clear();
+
+        for (TeslaReceiverBlockEntity be : blockEntities.values()) {
+            if (be.getDistance() == Integer.MAX_VALUE) {
+                removeConnectionNode(be.asConnectionNode());
+                be.setDistance(0);
+            }
+
         }
+
+    }
+
+    private Set<ConnectionNode> getAllNodes() {
+        Set<ConnectionNode> nodes = new HashSet<>();
+
+        nodes.addAll(outgoing.keySet());
+        nodes.addAll(incoming.keySet());
+
+        for (Set<ConnectionNode> set : outgoing.values()) {
+            nodes.addAll(set);
+        }
+
+        for (Set<ConnectionNode> set : incoming.values()) {
+            nodes.addAll(set);
+        }
+
+        return nodes;
+    }
+
+    private boolean canAddConnection(ConnectionNode source, ConnectionNode target) {
+        int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS.get();
+
+        Set<ConnectionNode> comp = getConnectedComponentIncluding(source, target);
+        Map<ConnectionNode, Integer> simDistance = new HashMap<>();
+        Queue<ConnectionNode> queue = new LinkedList<>();
+
+        for (ConnectionNode node : comp) {
+            if (node.isEntity()) {
+                simDistance.put(node, 0);
+                queue.add(node);
+            }
+        }
+
+        if (simDistance.isEmpty()) return false;
+
+        while (!queue.isEmpty()) {
+            ConnectionNode cur = queue.poll();
+            int d = simDistance.get(cur);
+
+            Set<ConnectionNode> neighbors = new HashSet<>();
+
+            neighbors.addAll(outgoing.getOrDefault(cur, Collections.emptySet()));
+            neighbors.addAll(incoming.getOrDefault(cur, Collections.emptySet()));
+
+            if (cur.equals(source)) neighbors.add(target);
+            if (cur.equals(target)) neighbors.add(source);
+
+            for (ConnectionNode neighbor : neighbors) {
+                if (!comp.contains(neighbor)) continue;
+
+                int nd = cur.isBlock() ? d + 1 : 1;
+
+                if (nd > maxAllowed) continue;
+                if (!simDistance.containsKey(neighbor) || nd < simDistance.get(neighbor)) {
+                    simDistance.put(neighbor, nd);
+                    queue.add(neighbor);
+                }
+            }
+
+        }
+
+        if (!simDistance.containsKey(source) || !simDistance.containsKey(target)) return false;
+
+        return simDistance.get(source) <= maxAllowed && simDistance.get(target) <= maxAllowed;
+    }
+
+    private Set<ConnectionNode> getConnectedComponentIncluding(ConnectionNode source, ConnectionNode target) {
+        Set<ConnectionNode> comp = new HashSet<>();
+        Queue<ConnectionNode> queue = new LinkedList<>();
+
+        comp.add(source);
+        comp.add(target);
+        queue.add(source);
+        queue.add(target);
+
+        while (!queue.isEmpty()) {
+            ConnectionNode cur = queue.poll();
+            Set<ConnectionNode> neighbors = new HashSet<>();
+
+            neighbors.addAll(outgoing.getOrDefault(cur, Collections.emptySet()));
+            neighbors.addAll(incoming.getOrDefault(cur, Collections.emptySet()));
+
+            if (cur.equals(source)) neighbors.add(target);
+            if (cur.equals(target)) neighbors.add(source);
+
+            for (ConnectionNode nb : neighbors) {
+                if (comp.add(nb)) queue.add(nb);
+            }
+
+        }
+
+        return comp;
     }
 
     public Set<ConnectionNode> getOutgoing(ConnectionNode node) {
@@ -99,6 +233,7 @@ public class TeslaConnectionManager {
 
         public CompoundTag serialize() {
             CompoundTag tag = new CompoundTag();
+
             if (isEntity()) {
                 tag.putString("Type", "entity");
                 tag.putUUID("UUID", entityId);
@@ -108,18 +243,21 @@ public class TeslaConnectionManager {
                 tag.putInt("Y", blockPos.getY());
                 tag.putInt("Z", blockPos.getZ());
             }
+
             tag.putString("Dimension", dimension.toString());
+
             return tag;
         }
-
         public static ConnectionNode deserialize(CompoundTag tag) {
             ResourceLocation dimension = new ResourceLocation(tag.getString("Dimension"));
+
             if (tag.getString("Type").equals("entity")) {
                 return forEntity(tag.getUUID("UUID"), dimension);
             } else {
                 BlockPos pos = new BlockPos(tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z"));
                 return forBlock(pos, dimension);
             }
+
         }
 
         public boolean isEntity() {
@@ -134,8 +272,12 @@ public class TeslaConnectionManager {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
+
             ConnectionNode that = (ConnectionNode) o;
-            return Objects.equals(entityId, that.entityId) && Objects.equals(blockPos, that.blockPos) && Objects.equals(dimension, that.dimension);
+
+            return Objects.equals(entityId, that.entityId) &&
+                    Objects.equals(blockPos, that.blockPos) &&
+                    Objects.equals(dimension, that.dimension);
         }
 
         @Override
@@ -143,9 +285,18 @@ public class TeslaConnectionManager {
             return Objects.hash(entityId, blockPos, dimension);
         }
 
-        public UUID getEntityId() { return this.entityId; }
-        public BlockPos getBlockPos() { return blockPos; }
-        public ResourceLocation getDimension() { return dimension; }
+        public UUID getEntityId() {
+            return this.entityId;
+        }
+
+        public BlockPos getBlockPos() {
+            return blockPos;
+        }
+
+        public ResourceLocation getDimension() {
+            return dimension;
+        }
 
     }
+
 }
