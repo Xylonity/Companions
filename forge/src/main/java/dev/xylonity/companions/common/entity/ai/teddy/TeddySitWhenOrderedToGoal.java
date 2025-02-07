@@ -47,7 +47,6 @@ public class TeddySitWhenOrderedToGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        // Sigue sentado mientras esté “isOrderedToSit()”
         return this.mob.isOrderedToSit();
     }
 
@@ -63,7 +62,6 @@ public class TeddySitWhenOrderedToGoal extends Goal {
                 double y = groundPos.getY() + 1.0;
                 double z = groundPos.getZ() + 0.5;
                 mob.teleportTo(x, y, z);
-                // O si prefieres, haz setPos(x, y, z) y ajusta la rotación
             }
         }
 

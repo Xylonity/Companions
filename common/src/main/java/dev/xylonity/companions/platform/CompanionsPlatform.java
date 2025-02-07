@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 public interface CompanionsPlatform {
 
     <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item);
+    <T extends Item> Supplier<T> registerWrenchItem(String id, Item.Properties properties);
     <T extends MobEffect> Supplier<T> registerEffect(String id, Supplier<T> item);
     <T extends ParticleType<?>> Supplier<T> registerParticle(String id, boolean overrideLimiter);
     <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(String id, Supplier<T> tab);

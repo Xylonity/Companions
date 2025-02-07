@@ -28,7 +28,6 @@ public class IllagerGolemModel extends GeoModel<IllagerGolemEntity> {
 
     @Override
     public void setCustomAnimations(IllagerGolemEntity animatable, long instanceId, AnimationState<IllagerGolemEntity> animationState) {
-        super.setCustomAnimations(animatable, instanceId, animationState);
 
         Entity camera = Minecraft.getInstance().getCameraEntity();
         if (camera == null) return;
@@ -62,6 +61,7 @@ public class IllagerGolemModel extends GeoModel<IllagerGolemEntity> {
             rightEyeBone.setPosX(baseRightEyeX - dot);
         }
 
+        super.setCustomAnimations(animatable, instanceId, animationState);
     }
 
     @Override

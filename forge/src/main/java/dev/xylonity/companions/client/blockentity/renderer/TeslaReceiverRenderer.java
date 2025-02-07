@@ -5,25 +5,20 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.blockentity.model.TeslaReceiverModel;
-import dev.xylonity.companions.client.entity.renderer.TamedIllagerGolemRenderer;
 import dev.xylonity.companions.common.blockentity.TeslaReceiverBlockEntity;
 import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
-import dev.xylonity.companions.common.entity.custom.TamedIllagerGolemEntity;
 import dev.xylonity.companions.common.event.ClientEntityTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -31,7 +26,9 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEntity> {
 
@@ -55,7 +52,14 @@ public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEn
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull TeslaReceiverBlockEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/tamed_illager_golem.png");
+        TeslaConnectionManager connectionManager = TeslaConnectionManager.getInstance();
+        TeslaConnectionManager.ConnectionNode node = animatable.asConnectionNode();
+
+        if ((!connectionManager.getIncoming(node).isEmpty() || !connectionManager.getOutgoing(node).isEmpty()) && animatable.isActive()) {
+            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
+        }
+
+        return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
     }
 
     private static class ElectricConnectionLayer extends GeoRenderLayer<TeslaReceiverBlockEntity> {

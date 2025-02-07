@@ -44,18 +44,20 @@ public class TeslaReceiverBlock extends PoweredBlock implements EntityBlock {
         if (pLevel.getBlockEntity(pPos) instanceof TeslaReceiverBlockEntity receiver) {
 
             TeslaConnectionManager connectionManager = TeslaConnectionManager.getInstance();
-
             TeslaConnectionManager.getInstance().unregisterBlockEntity(receiver);
+
             super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
 
             for (TeslaConnectionManager.ConnectionNode targetNode : connectionManager.getOutgoing(receiver.asConnectionNode())) {
                 connectionManager.getIncoming(targetNode).remove(receiver.asConnectionNode());
             }
+
             connectionManager.getOutgoing(receiver.asConnectionNode()).clear();
 
             for (TeslaConnectionManager.ConnectionNode sourceNode : connectionManager.getIncoming(receiver.asConnectionNode())) {
                 connectionManager.getOutgoing(sourceNode).remove(receiver.asConnectionNode());
             }
+
             connectionManager.getIncoming(receiver.asConnectionNode()).clear();
         } else {
             super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);

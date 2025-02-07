@@ -32,7 +32,7 @@ public abstract class IllagerGolemRaidMixin implements RaidAccessor {
     @Unique private static final int[] COMPANIONS_ILLAGER_GOLEM_SPAWNWAVE;
 
     @Inject(method = "spawnGroup", at = @At("HEAD"))
-    private void addCustomEntity(BlockPos pos, CallbackInfo ci) {
+    private void companions$addCustomEntity(BlockPos pos, CallbackInfo ci) {
         int wave = this.getGroupsSpawned() + 1;
 
         DifficultyInstance difficultyInstance = this.getLevel().getCurrentDifficultyAt(pos);

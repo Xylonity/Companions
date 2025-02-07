@@ -18,14 +18,16 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<TeddyEntity>> TEDDY;
     public static final RegistryObject<EntityType<AntlionEntity>> ANTLION;
     public static final RegistryObject<EntityType<IllagerGolemEntity>> ILLAGER_GOLEM;
-    public static final RegistryObject<EntityType<TamedIllagerGolemEntity>> TAMED_ILLAGER_GOLEM;
+    public static final RegistryObject<EntityType<DinamoEntity>> DINAMO;
+    public static final RegistryObject<EntityType<BrokenDinamoEntity>> BROKEN_DINAMO;
 
     static {
         FROGGY = register("froggy", FroggyEntity::new, MobCategory.CREATURE, 1f, 1f);
         TEDDY = register("teddy", TeddyEntity::new, MobCategory.CREATURE, 1f, 1f);
         ANTLION = register("antlion", AntlionEntity::new, MobCategory.CREATURE, 1f, 1f);
         ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f);
-        TAMED_ILLAGER_GOLEM = register("tamed_illager_golem", TamedIllagerGolemEntity::new, MobCategory.CREATURE, 1f, 2f);
+        DINAMO = register("dinamo", DinamoEntity::new, MobCategory.CREATURE, 1f, 2f);
+        BROKEN_DINAMO = register("broken_dinamo", BrokenDinamoEntity::new, MobCategory.CREATURE, 1f, 0.5f);
     }
 
     private static <X extends Entity> RegistryObject<EntityType<X>> register(String name, EntityType.EntityFactory<X> entity, MobCategory category, float width, float height) {

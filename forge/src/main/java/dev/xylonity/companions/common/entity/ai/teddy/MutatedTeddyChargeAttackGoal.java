@@ -17,13 +17,12 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
     private final TeddyEntity teddy;
     private LivingEntity target;
 
-    // Parámetros de comportamiento
-    private final double chargeSpeed;       // Velocidad al embestir
-    private final double retreatSpeed;      // Velocidad al retirarse
-    private final int windUpDuration;       // Ticks de “preparación”
-    private final int retreatDuration;      // Ticks de “retirada”
-    private final double hitRange;          // Distancia para hacer daño
-    private final double retreatDistance;   // Bloques que se aleja tras golpear
+    private final double chargeSpeed;
+    private final double retreatSpeed;
+    private final int windUpDuration;
+    private final int retreatDuration;
+    private final double hitRange;
+    private final double retreatDistance;
 
     // Contadores / estados internos
     private int stateTicks;                 // Cuenta ticks en cada estado
@@ -83,7 +82,6 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
 
         // Aseguramos colisiones (no atraviesa bloques)
         //this.teddy.noPhysics = false;
-        // Si “flota” en fase 2
         this.teddy.setNoGravity(true);
     }
 

@@ -32,6 +32,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.TEST.get());
                                 output.accept(CompanionsItems.TEST2.get());
                                 output.accept(CompanionsItems.ETERNAL_LIGHTER.get());
+                                output.accept(CompanionsItems.WRENCH.get());
 
                                 for (Supplier<Block> itemSupplier : platformItems) {
                                     Block item = itemSupplier.get();

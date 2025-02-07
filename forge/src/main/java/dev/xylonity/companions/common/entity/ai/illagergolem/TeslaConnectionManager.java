@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.*;
 
 /**
- * Dynamic bidirectional BFS algorithm with memoized generic node tracking (for both UUIDs and block positions), for graphs under a
+ * Dynamic bidirectional algorithm (based on BFS) with memoized generic node tracking (for both UUIDs and block positions), for graphs under a
  * depth constraint (preconfigured with a default cap, which is a config value, `DINAMO_MAX_RECEIVER_CONNECTIONS`).
  *
  * @author Xylonity
@@ -29,7 +29,10 @@ public class TeslaConnectionManager {
     }
 
     public void unregisterBlockEntity(TeslaReceiverBlockEntity blockEntity) {
-        blockEntities.remove(blockEntity.asConnectionNode());
+        ConnectionNode node = blockEntity.asConnectionNode();
+        blockEntities.remove(node);
+        removeConnectionNode(node);
+        recalculateDistances();
     }
 
     public void addConnection(ConnectionNode source, ConnectionNode target) {

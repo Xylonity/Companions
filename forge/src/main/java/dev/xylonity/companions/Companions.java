@@ -2,6 +2,7 @@ package dev.xylonity.companions;
 
 import dev.xylonity.companions.common.item.WrenchItem;
 import dev.xylonity.companions.common.tick.TickScheduler;
+import dev.xylonity.companions.config.CompanionsForgeConfig;
 import dev.xylonity.companions.registry.*;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
@@ -15,9 +16,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Iterator;
 
@@ -27,10 +32,10 @@ import static dev.xylonity.companions.common.tick.TickScheduler.TASKS;
 public class Companions {
 
     public static final String MOD_ID = CompanionsCommon.MOD_ID;
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, CompanionsCommon.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CompanionsCommon.MOD_ID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Companions.MOD_ID);
-    public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, Companions.MOD_ID);
-    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(Registries.PARTICLE_TYPE, Companions.MOD_ID);
+    public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Companions.MOD_ID);
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Companions.MOD_ID);
 
     public Companions() {
 
@@ -45,7 +50,7 @@ public class Companions {
         MOB_EFFECTS.register(modEventBus);
         PARTICLES.register(modEventBus);
 
-        ITEMS.register("wrench", () -> new WrenchItem(new Item.Properties()));
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CompanionsForgeConfig.SPEC, "kqcompanions.toml");
 
         CompanionsCommon.init();
 

@@ -2,15 +2,10 @@ package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.block.TeslaReceiverBlock;
-import dev.xylonity.companions.common.blockentity.TeslaReceiverBlockEntity;
-import dev.xylonity.companions.common.item.GenericBlockItem;
-import net.minecraft.world.item.BlockItem;
+import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;

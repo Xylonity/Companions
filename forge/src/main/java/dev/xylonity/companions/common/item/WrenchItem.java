@@ -2,14 +2,13 @@ package dev.xylonity.companions.common.item;
 
 import dev.xylonity.companions.common.blockentity.TeslaReceiverBlockEntity;
 import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
-import dev.xylonity.companions.common.entity.custom.TamedIllagerGolemEntity;
+import dev.xylonity.companions.common.entity.custom.DinamoEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +28,7 @@ public class WrenchItem extends Item {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, @NotNull Player player, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
-        if (!(target instanceof TamedIllagerGolemEntity) || player.level().isClientSide()) {
+        if (!(target instanceof DinamoEntity) || player.level().isClientSide()) {
             return InteractionResult.PASS;
         }
 

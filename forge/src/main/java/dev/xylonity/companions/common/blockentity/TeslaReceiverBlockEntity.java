@@ -114,14 +114,23 @@ public class TeslaReceiverBlockEntity extends BlockEntity implements GeoBlockEnt
         ListTag outgoing = new ListTag();
         connectionManager.getOutgoing(asConnectionNode()).forEach(node -> outgoing.add(node.serialize()));
         tag.put("OutgoingConnections", outgoing);
+        tag.putInt("TickCount", this.tickCount);
+        tag.putInt("Distance", this.distance);
+        tag.putBoolean("IsActive", this.isActive);
+        tag.putBoolean("HasSignal", this.hasSignal);
     }
 
     @Override
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         tag.getList("OutgoingConnections", 10).forEach(t ->
-                TeslaConnectionManager.getInstance().addConnection(asConnectionNode(), TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t))
+                TeslaConnectionManager.getInstance().addConnection(asConnectionNode(), TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t), true)
         );
+
+        this.tickCount = tag.getInt("TickCount");
+        this.distance = tag.getInt("Distance");
+        this.isActive = tag.getBoolean("IsActive");
+        this.hasSignal = tag.getBoolean("HasSignal");
     }
 
     @Override
@@ -144,6 +153,7 @@ public class TeslaReceiverBlockEntity extends BlockEntity implements GeoBlockEnt
         tag.putInt("TickCount", this.tickCount);
         tag.putBoolean("IsActive", this.isActive);
         tag.putBoolean("HasSignal", this.hasSignal);
+        tag.putInt("Distance", this.distance);
         return tag;
     }
 
@@ -153,6 +163,7 @@ public class TeslaReceiverBlockEntity extends BlockEntity implements GeoBlockEnt
         this.tickCount = tag.getInt("TickCount");
         this.isActive = tag.getBoolean("IsActive");
         this.hasSignal = tag.getBoolean("HasSignal");
+        this.distance = tag.getInt("Distance");
     }
 
     @Nullable
@@ -178,32 +189,30 @@ public class TeslaReceiverBlockEntity extends BlockEntity implements GeoBlockEnt
                 receiver.setActive(false);
             }
 
-            if (!receiver.connectionManager.getIncoming(receiver.asConnectionNode()).isEmpty()) {
-                receiver.setSignal(true);
-            } else {
-                receiver.setSignal(false);
-            }
+            receiver.setSignal(receiver.getDistance() > 0);
 
             if (receiver.isActive() && receiver.level instanceof ServerLevel serverLevel) {
                 for (TeslaConnectionManager.ConnectionNode connectionNode : TeslaConnectionManager.getInstance().getOutgoing(receiver.asConnectionNode())) {
                     if (connectionNode.isEntity()) {
                         Entity connectedEntity = serverLevel.getEntity(connectionNode.getEntityId());
-                        Vec3 start = receiver.getBlockPos().getCenter().add(0.0, 0.3D, 0.0);
-                        Vec3 end = connectedEntity.position().add(0.0, connectedEntity.getBbHeight() * 0.5D, 0.0);
+                        if (connectedEntity != null) {
+                            Vec3 start = receiver.getBlockPos().getCenter().add(0.0, 0.3D, 0.0);
+                            Vec3 end = connectedEntity.position().add(0.0, connectedEntity.getBbHeight() * 0.5D, 0.0);
 
-                        AABB segmentAABB = new AABB(start, end).inflate(1.0D);
+                            AABB segmentAABB = new AABB(start, end).inflate(1.0D);
 
-                        List<LivingEntity> nearbyEntities = receiver.level.getEntitiesOfClass(
-                                LivingEntity.class,
-                                segmentAABB,
-                                e -> e != connectedEntity && e.isAlive()
-                        );
+                            List<LivingEntity> nearbyEntities = receiver.level.getEntitiesOfClass(
+                                    LivingEntity.class,
+                                    segmentAABB,
+                                    e -> e != connectedEntity && e.isAlive()
+                            );
 
-                        for (LivingEntity victim : nearbyEntities) {
-                            if (isEntityNearLine(start, end, victim, 0.75D)) {
-                                victim.hurt(victim.level().damageSources().lightningBolt(), 5f);
-                                if (new Random().nextFloat() <= 0.2) {
-                                    victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0));
+                            for (LivingEntity victim : nearbyEntities) {
+                                if (isEntityNearLine(start, end, victim, 0.75D)) {
+                                    victim.hurt(victim.level().damageSources().lightningBolt(), 5f);
+                                    if (new Random().nextFloat() <= 0.2) {
+                                        victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0));
+                                    }
                                 }
                             }
                         }

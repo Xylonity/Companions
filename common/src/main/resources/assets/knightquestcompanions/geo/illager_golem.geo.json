@@ -18,19 +18,34 @@
 				{
 					"name": "body",
 					"parent": "entity",
-					"pivot": [0, 2, 2],
-					"cubes": [
-						{"origin": [-6, 1.5, -7], "size": [12, 7, 16], "uv": [0, 52]},
-						{"origin": [-4.5, 8.5, -2.5], "size": [9, 9, 9], "uv": [0, 78]}
-					]
+					"pivot": [0, 2, 2]
 				},
 				{
 					"name": "tesla",
 					"parent": "body",
-					"pivot": [0, 20.33333, 2],
+					"pivot": [0, 20.33333, 2]
+				},
+				{
+					"name": "ring",
+					"parent": "tesla",
+					"pivot": [0, 19.5, 2],
 					"cubes": [
-						{"origin": [-8, 17.5, -6], "size": [16, 4, 16], "uv": [32, 0]},
-						{"origin": [-6, 21.5, -4], "size": [12, 3, 12], "uv": [0, 33]},
+						{"origin": [-8, 17.5, -6], "size": [16, 4, 16], "uv": [32, 0]}
+					]
+				},
+				{
+					"name": "ring2",
+					"parent": "tesla",
+					"pivot": [0, 23, 2],
+					"cubes": [
+						{"origin": [-6, 21.5, -4], "size": [12, 3, 12], "uv": [0, 33]}
+					]
+				},
+				{
+					"name": "ring3",
+					"parent": "tesla",
+					"pivot": [0, 27.5, 2],
+					"cubes": [
 						{"origin": [-2, 24.5, 0], "size": [4, 6, 4], "uv": [64, 70]}
 					]
 				},
@@ -57,8 +72,47 @@
 					"parent": "body",
 					"pivot": [0, 7.75, -3.75],
 					"cubes": [
-						{"origin": [-8, 7, -9], "size": [16, 8, 6], "uv": [0, 0]},
+						{"origin": [-8, 7, -9], "size": [16, 8, 6], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "nose",
+					"parent": "head",
+					"pivot": [0, 8.5, -9.5],
+					"cubes": [
 						{"origin": [-2, 6, -11], "size": [4, 5, 3], "uv": [82, 0]}
+					]
+				},
+				{
+					"name": "right_eye",
+					"parent": "head",
+					"pivot": [-4, 10.5, -8.55],
+					"cubes": [
+						{"origin": [-4.5, 10, -9.05], "size": [1, 1, 1], "uv": [1, 1]}
+					]
+				},
+				{
+					"name": "left_eye",
+					"parent": "head",
+					"pivot": [5, 10.5, -11.55],
+					"cubes": [
+						{"origin": [4.5, 10, -9.05], "size": [1, 1, 1], "uv": [1, 1]}
+					]
+				},
+				{
+					"name": "bellybox",
+					"parent": "body",
+					"pivot": [0, 5, 1],
+					"cubes": [
+						{"origin": [-6, 1.5, -7], "size": [12, 7, 16], "uv": [0, 52]}
+					]
+				},
+				{
+					"name": "stand",
+					"parent": "body",
+					"pivot": [0, 13, 2],
+					"cubes": [
+						{"origin": [-4.5, 8.5, -2.5], "size": [9, 9, 9], "uv": [0, 78]}
 					]
 				},
 				{

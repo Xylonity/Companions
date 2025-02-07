@@ -4,7 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.entity.model.IllagerGolemModel;
+import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.custom.IllagerGolemEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -12,11 +14,13 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
@@ -27,18 +31,21 @@ public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> 
     public IllagerGolemRenderer(EntityRendererProvider.Context renderManager, int totalFrames, int ticksPerFrame) {
         super(renderManager, new IllagerGolemModel());
         addRenderLayer(new ElectricConnectionLayer(this,
-                new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"),
+                new ResourceLocation(Companions.MOD_ID, "textures/misc/illager_golem_electric_arch.png"),
                 totalFrames,
                 ticksPerFrame
         ));
     }
 
     public IllagerGolemRenderer(EntityRendererProvider.Context renderManager) {
-        this(renderManager, 8, IllagerGolemEntity.ELECTRICAL_CHARGE_DURATION / 8);
+        this(renderManager, IllagerGolemEntity.ELECTRICAL_CHARGE_DURATION, 1);
     }
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull IllagerGolemEntity animatable) {
+        if (animatable.isActive() && !animatable.visibleEntities.isEmpty())
+            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/illager_golem_charge.png");
+
         return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/illager_golem.png");
     }
 
@@ -64,14 +71,15 @@ public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> 
             if (frame < 0) return;
 
             for (Entity e : animatable.visibleEntities) {
-                Vec3 offset = new Vec3(0.0D, 1.25D, 0.0D);
+                Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.95D, 0.0D);
                 Vec3 direction = e.position().subtract(animatable.position()).add(0.0D, e.getBbHeight() * 0.5D, 0.0D);
                 renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
             }
+
         }
 
         private int calculateCurrentFrame(IllagerGolemEntity animatable) {
-            int elapsedTicks = animatable.tickCount - animatable.getAnimationStartTick();
+            int elapsedTicks = animatable.getTickCount() - animatable.getAnimationStartTick();
             int frame = elapsedTicks / ticksPerFrame;
 
             if (frame >= totalFrames) return -1;
