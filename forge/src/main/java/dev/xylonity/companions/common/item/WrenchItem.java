@@ -28,19 +28,21 @@ public class WrenchItem extends Item {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, @NotNull Player player, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
-        if (!(target instanceof DinamoEntity) || player.level().isClientSide()) {
-            return InteractionResult.PASS;
+        if (!(target instanceof DinamoEntity dinamoEntity) || player.level().isClientSide()) return InteractionResult.PASS;
+        if (dinamoEntity.getOwner() != null && !player.equals(dinamoEntity.getOwner())) return InteractionResult.PASS;
+
+        if (dinamoEntity.isSitting()) {
+            handleNodeSelection(player, TeslaConnectionManager.ConnectionNode.forEntity(target.getUUID(), player.level().dimension().location()));
+        } else {
+            handleDinamoAttackToggle(player, dinamoEntity);
         }
 
-        handleNodeSelection(player, TeslaConnectionManager.ConnectionNode.forEntity(target.getUUID(), player.level().dimension().location()));
         return InteractionResult.SUCCESS;
     }
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        if (context.getLevel().isClientSide()) {
-            return InteractionResult.SUCCESS;
-        }
+        if (context.getLevel().isClientSide()) return InteractionResult.PASS;
 
         BlockPos pos = context.getClickedPos();
         BlockEntity blockEntity = context.getLevel().getBlockEntity(pos);
@@ -87,7 +89,7 @@ public class WrenchItem extends Item {
                         true
                 );
             } else {
-                manager.addConnection(firstNode, currentNode);
+                manager.addConnection(firstNode, currentNode, false);
                 player.displayClientMessage(
                         Component.literal("added!").withStyle(ChatFormatting.GREEN),
                         true
@@ -96,6 +98,22 @@ public class WrenchItem extends Item {
 
             firstNode = null;
         }
+    }
+
+    private void handleDinamoAttackToggle(Player player, DinamoEntity dinamoEntity) {
+        if (!dinamoEntity.shouldAttack()) {
+            player.displayClientMessage(
+                    Component.literal("activando ataque").withStyle(ChatFormatting.GREEN),
+                    true
+            );
+        } else {
+            player.displayClientMessage(
+                    Component.literal("desactivando ataque").withStyle(ChatFormatting.GREEN),
+                    true
+            );
+        }
+
+        dinamoEntity.setShouldAttack(!dinamoEntity.shouldAttack());
     }
 
 }

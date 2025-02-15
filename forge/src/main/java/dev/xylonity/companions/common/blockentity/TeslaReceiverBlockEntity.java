@@ -1,23 +1,19 @@
 package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
+import dev.xylonity.companions.common.util.interfaces.IActivable;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,9 +31,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class TeslaReceiverBlockEntity extends BlockEntity implements GeoBlockEntity {
+public class TeslaReceiverBlockEntity extends BlockEntity implements GeoBlockEntity, IActivable {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final TeslaConnectionManager connectionManager;
 
@@ -72,6 +67,7 @@ public class TeslaReceiverBlockEntity extends BlockEntity implements GeoBlockEnt
         return new AABB(getBlockPos()).inflate(10.0);
     }
 
+    @Override
     public boolean isActive() {
         return this.isActive;
     }
@@ -189,12 +185,16 @@ public class TeslaReceiverBlockEntity extends BlockEntity implements GeoBlockEnt
                 receiver.setActive(false);
             }
 
-            receiver.setSignal(receiver.getDistance() > 0);
+            if (CompanionsConfig.DINAMO_RECEIVER_REDSTONE_MODE.get() && (!receiver.connectionManager.getIncoming(receiver.asConnectionNode()).isEmpty() || !receiver.connectionManager.getOutgoing(receiver.asConnectionNode()).isEmpty())) {
+                receiver.setSignal(receiver.isActive());
+            } else {
+                receiver.setSignal(receiver.getDistance() > 0);
+            }
 
             if (receiver.isActive() && receiver.level instanceof ServerLevel serverLevel) {
                 for (TeslaConnectionManager.ConnectionNode connectionNode : TeslaConnectionManager.getInstance().getOutgoing(receiver.asConnectionNode())) {
                     if (connectionNode.isEntity()) {
-                        Entity connectedEntity = serverLevel.getEntity(connectionNode.getEntityId());
+                        Entity connectedEntity = serverLevel.getEntity(connectionNode.entityId());
                         if (connectedEntity != null) {
                             Vec3 start = receiver.getBlockPos().getCenter().add(0.0, 0.3D, 0.0);
                             Vec3 end = connectedEntity.position().add(0.0, connectedEntity.getBbHeight() * 0.5D, 0.0);
@@ -218,7 +218,7 @@ public class TeslaReceiverBlockEntity extends BlockEntity implements GeoBlockEnt
                         }
                     } else if (connectionNode.isBlock()) {
                         Vec3 start = receiver.getBlockPos().getCenter().add(0.0, 0.0D, 0.0);
-                        Vec3 end = connectionNode.getBlockPos().getCenter().add(0.0, 0.0D, 0.0);
+                        Vec3 end = connectionNode.blockPos().getCenter().add(0.0, 0.0D, 0.0);
 
                         AABB segmentAABB = new AABB(start, end).inflate(1.0D);
 

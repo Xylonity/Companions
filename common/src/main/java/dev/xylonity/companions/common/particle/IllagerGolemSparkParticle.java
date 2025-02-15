@@ -50,4 +50,5 @@ public class IllagerGolemSparkParticle extends TextureSheetParticle {
             return new IllagerGolemSparkParticle(level, x, y, z, motionX, -0.1, motionZ, this.sprites);
         }
     }
+
 }

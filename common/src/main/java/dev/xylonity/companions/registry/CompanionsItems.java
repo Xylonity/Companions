@@ -14,6 +14,14 @@ public class CompanionsItems {
 
     public static final Supplier<Item> TEST = registerItem("test", () -> new EarthQuakeItem(new Item.Properties()));
     public static final Supplier<Item> TEST2 = registerItem("test2", () -> new TestItem(new Item.Properties()));
+
+    public static final Supplier<Item> BOOK_ICE_SHARD = registerMagicBook("book_ice_shard", new Item.Properties().stacksTo(1), MagicType.ICE_SHARD);
+    public static final Supplier<Item> BOOK_ICE_TORNADO = registerMagicBook("book_ice_tornado", new Item.Properties().stacksTo(1), MagicType.ICE_TORNADO);
+    public static final Supplier<Item> BOOK_FIRE_MARK = registerMagicBook("book_fire_mark", new Item.Properties().stacksTo(1), MagicType.FIRE_MARK);
+    public static final Supplier<Item> BOOK_HEAL_RING = registerMagicBook("book_heal_ring", new Item.Properties().stacksTo(1), MagicType.HEAL_RING);
+    public static final Supplier<Item> BOOK_STONE_SPIKES = registerMagicBook("book_stone_spikes", new Item.Properties().stacksTo(1), MagicType.STONE_SPIKES);
+    public static final Supplier<Item> BOOK_BRACE = registerMagicBook("book_brace", new Item.Properties().stacksTo(1), MagicType.BRACE);
+
     public static final Supplier<Item> ETERNAL_LIGHTER = registerItem("eternal_lighter", () -> new EternalLighter(new Item.Properties()));
     public static final Supplier<Item> WRENCH = registerWrenchItem("wrench", new Item.Properties().durability(64));
 
@@ -23,6 +31,19 @@ public class CompanionsItems {
 
     private static <T extends Item> Supplier<T> registerWrenchItem(String id, Item.Properties properties) {
         return CompanionsCommon.COMMON_PLATFORM.registerWrenchItem(id, properties);
+    }
+
+    private static <T extends Item> Supplier<T> registerMagicBook(String id, Item.Properties properties, MagicType magicType) {
+        return CompanionsCommon.COMMON_PLATFORM.registerMagicBook(id, properties, magicType);
+    }
+
+    public enum MagicType {
+        ICE_SHARD,
+        ICE_TORNADO,
+        FIRE_MARK,
+        HEAL_RING,
+        STONE_SPIKES,
+        BRACE
     }
 
 }

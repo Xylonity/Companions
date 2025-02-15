@@ -6,6 +6,9 @@ import java.util.Map;
 public class CompanionsConfig {
 
     public static final ConfigEntry<Integer> DINAMO_MAX_RECEIVER_CONNECTIONS = ConfigRegistry.of("DINAMO_MAX_RECEIVER_CONNECTIONS", 3);
+    public static final ConfigEntry<Boolean> DINAMO_RECEIVER_REDSTONE_MODE = ConfigRegistry.of("DINAMO_RECEIVER_REDSTONE_MODE", true);
+
+    public static final ConfigEntry<Double> FIRE_MARK_EFFECT_RADIUS = ConfigRegistry.of("FIRE_MARK_EFFECT_RADIUS", 2.5D);
 
     public static class ConfigEntry<T> {
         private final String key;
@@ -36,7 +39,7 @@ public class CompanionsConfig {
 
     }
 
-    public static class ConfigRegistry {
+    protected static class ConfigRegistry {
         private static final Map<String, ConfigEntry<?>> entries = new HashMap<>();
 
         public static <T> ConfigEntry<T> of(String key, T defaultValue) {

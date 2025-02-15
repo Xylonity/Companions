@@ -1,11 +1,17 @@
 package dev.xylonity.companions.platform;
 
 import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.common.item.book.books.FireMarkBook;
+import dev.xylonity.companions.common.item.book.books.IceShardBook;
+import dev.xylonity.companions.common.item.book.books.IceTornadoBook;
 import dev.xylonity.companions.common.item.WrenchItem;
+import dev.xylonity.companions.common.item.book.books.StoneSpikesBook;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.CreativeModeTab;
@@ -24,6 +30,24 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     @Override
     public <T extends Item> Supplier<T> registerWrenchItem(String id, Item.Properties properties) {
         return (Supplier<T>) registerItem(id, () -> new WrenchItem(properties));
+    }
+
+    @Override
+    public <T extends Item> Supplier<T> registerMagicBook(String id, Item.Properties properties, CompanionsItems.MagicType magicType) {
+        switch (magicType) {
+            case ICE_TORNADO -> {
+                return (Supplier<T>) registerItem(id, () -> new IceTornadoBook(properties));
+            }
+            case FIRE_MARK -> {
+                return (Supplier<T>) registerItem(id, () -> new FireMarkBook(properties));
+            }
+            case STONE_SPIKES -> {
+                return (Supplier<T>) registerItem(id, () -> new StoneSpikesBook(properties));
+            }
+            default -> {
+                return (Supplier<T>) registerItem(id, () -> new IceShardBook(properties)); // ICE_SHARDS
+            }
+        }
     }
 
     @Override
@@ -49,6 +73,11 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     @Override
     public <T extends Raider> EntityType<T> getIllagerGolemEntity() {
         return (EntityType<T>) CompanionsEntities.ILLAGER_GOLEM.get();
+    }
+
+    @Override
+    public <T extends Entity> EntityType<T> getFireMarkProjectile() {
+        return (EntityType<T>) CompanionsEntities.FIRE_MARK_PROJECTILE.get();
     }
 
 }

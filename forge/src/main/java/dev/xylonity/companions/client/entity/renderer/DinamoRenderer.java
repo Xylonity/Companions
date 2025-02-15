@@ -22,8 +22,10 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.texture.AutoGlowingTexture;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
@@ -35,6 +37,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
                 totalFrames,
                 ticksPerFrame
         ));
+        addRenderLayer(new AutoGlowingGeoLayer<>(this));
     }
 
     public DinamoRenderer(EntityRendererProvider.Context renderManager) {
@@ -68,33 +71,47 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
         @Override
         public void render(PoseStack poseStack, DinamoEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
 
-            if (!animatable.isActive()) return;
-
             int frame = calculateCurrentFrame(animatable);
 
             if (frame < 0) return;
 
-            for (TeslaConnectionManager.ConnectionNode e : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
-                if (e.isEntity()) {
-                    Entity entity = ClientEntityTracker.getEntityByUUID(e.getEntityId());
-                    if (entity instanceof LivingEntity livingEntity) {
-                        Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.95D, 0.0D);
-                        Vec3 direction = livingEntity.position()
-                                .subtract(animatable.position())
-                                .add(0.0D, livingEntity.getBbHeight() * 0.95D, 0.0D);
+            if (animatable.isSitting()) {
+                if (!animatable.isActive()) return;
+
+                for (TeslaConnectionManager.ConnectionNode e : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
+                    if (e.isEntity()) {
+                        Entity entity = ClientEntityTracker.getEntityByUUID(e.entityId());
+                        if (entity instanceof LivingEntity livingEntity) {
+                            Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.90D, 0.0D);
+                            Vec3 direction = livingEntity.position()
+                                    .subtract(animatable.position())
+                                    .add(0.0D, livingEntity.getBbHeight() * 0.90D, 0.0D);
+
+                            renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
+                        }
+                    } else if (e.isBlock()) {
+                        Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.90D, 0.0D);
+                        BlockPos blockPos = e.blockPos();
+
+                        Vec3 blockPosVec = new Vec3(blockPos.getX() + 0.5D, blockPos.getY(), blockPos.getZ() + 0.5D);
+                        Vec3 animatablePos = animatable.position();
+                        Vec3 direction = blockPosVec.subtract(animatablePos).add(0.0D, 1.25D, 0.0D);
 
                         renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
                     }
-                } else if (e.isBlock()) {
-                    Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.95D, 0.0D);
-                    BlockPos blockPos = e.getBlockPos();
-
-                    Vec3 blockPosVec = new Vec3(blockPos.getX() + 0.5D, blockPos.getY(), blockPos.getZ() + 0.5D);
-                    Vec3 animatablePos = animatable.position();
-                    Vec3 direction = blockPosVec.subtract(animatablePos).add(0.0D, 1.25D, 0.0D);
-
-                    renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
                 }
+
+            } else {
+                if (!animatable.isActiveForAttack() && !animatable.shouldAttack()) return;
+
+                if (!animatable.isSitting()) {
+                    for (Entity e : animatable.visibleEntities) {
+                        Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.95D, 0.0D);
+                        Vec3 direction = e.position().subtract(animatable.position()).add(0.0D, e.getBbHeight() * 0.5D, 0.0D);
+                        renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
+                    }
+                }
+
             }
 
         }
@@ -111,7 +128,8 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
         // Original idea of the layer embedded in the entity renderer to force the rendering of a singular "electric arch" towards a certain target by mim1q
         // https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
         private void renderConnection(MultiBufferSource bufferSource, PoseStack poseStack, Vec3 p0, Vec3 p1, int frame, int light) {
-            VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
+            VertexConsumer vertexConsumer = bufferSource.getBuffer(AutoGlowingTexture.getRenderType(texture));
+            //VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
             Matrix4f positionMatrix = poseStack.last().pose();
             Matrix3f normalMatrix = poseStack.last().normal();
 

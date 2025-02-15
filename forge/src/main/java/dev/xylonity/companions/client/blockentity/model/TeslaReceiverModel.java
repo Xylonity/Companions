@@ -7,10 +7,6 @@ import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionMana
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 public class TeslaReceiverModel extends GeoModel<TeslaReceiverBlockEntity> {
 
     @Override
@@ -20,12 +16,9 @@ public class TeslaReceiverModel extends GeoModel<TeslaReceiverBlockEntity> {
 
     @Override
     public ResourceLocation getTextureResource(TeslaReceiverBlockEntity animatable) {
-        TeslaConnectionManager connectionManager = TeslaConnectionManager.getInstance();
+        TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
         TeslaConnectionManager.ConnectionNode node = animatable.asConnectionNode();
-
-        if ((!connectionManager.getIncoming(node).isEmpty() || !connectionManager.getOutgoing(node).isEmpty()) && animatable.isActive()) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
-        }
+        if (animatable.isActive() && (!manager.getOutgoing(node).isEmpty() || !manager.getIncoming(node).isEmpty())) return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
 
         return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
     }

@@ -1,0 +1,29 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"activate": {
+			"animation_length": 1.5,
+			"bones": {
+				"ring": {
+					"rotation": {
+						"vector": [0, "query.anim_time*400", 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					},
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.75": {
+							"vector": [2.5, 2.5, 2.5]
+						},
+						"1": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		}
+	}
+}

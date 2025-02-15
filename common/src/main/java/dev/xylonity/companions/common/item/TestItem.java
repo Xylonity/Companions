@@ -22,7 +22,6 @@ public class TestItem extends Item {
         if (!world.isClientSide) {
             int duration = 200;
             int amplifier = 0;
-            player.addEffect(new MobEffectInstance(CompanionsEffects.BLACK_ABSORPTION.get(), duration, amplifier));
         }
 
         return InteractionResultHolder.success(stack);

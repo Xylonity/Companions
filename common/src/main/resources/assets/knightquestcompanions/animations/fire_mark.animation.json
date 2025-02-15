@@ -1,0 +1,26 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"idle": {
+			"loop": true,
+			"bones": {
+				"head": {
+					"position": {
+						"vector": [0, "1 + math.cos(query.anim_time*360)", 0]
+					}
+				},
+				"head2": {
+					"position": {
+						"vector": [0, "1 + math.cos(query.anim_time*360 + 180)", 0]
+					}
+				},
+				"head3": {
+					"position": {
+						"vector": [0, "1 + math.cos(query.anim_time*360 + 90)", 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

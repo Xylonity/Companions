@@ -22,12 +22,12 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.texture.AutoGlowingTexture;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEntity> {
@@ -39,6 +39,7 @@ public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEn
                 totalFrames,
                 ticksPerFrame
         ));
+        addRenderLayer(new AutoGlowingGeoLayer<>(this));
     }
 
     @Override
@@ -52,12 +53,9 @@ public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEn
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull TeslaReceiverBlockEntity animatable) {
-        TeslaConnectionManager connectionManager = TeslaConnectionManager.getInstance();
+        TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
         TeslaConnectionManager.ConnectionNode node = animatable.asConnectionNode();
-
-        if ((!connectionManager.getIncoming(node).isEmpty() || !connectionManager.getOutgoing(node).isEmpty()) && animatable.isActive()) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
-        }
+        if (animatable.isActive() && (!manager.getOutgoing(node).isEmpty() || !manager.getIncoming(node).isEmpty())) return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
 
         return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
     }
@@ -85,7 +83,7 @@ public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEn
 
             for (TeslaConnectionManager.ConnectionNode e : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
                 if (e.isEntity()) {
-                    Entity entity = ClientEntityTracker.getEntityByUUID(e.getEntityId());
+                    Entity entity = ClientEntityTracker.getEntityByUUID(e.entityId());
                     if (entity instanceof LivingEntity livingEntity) {
                         Vec3 offset = new Vec3(0.0D, 1.25D, 0.0D);
                         Vec3 direction = livingEntity.position()
@@ -96,7 +94,7 @@ public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEn
                     }
                 } else if (e.isBlock()) {
                     Vec3 offset = new Vec3(0.0D, 1.25D, 0.0D);
-                    BlockPos blockPos = e.getBlockPos();
+                    BlockPos blockPos = e.blockPos();
 
                     Vec3 blockPosVec = new Vec3(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D);
                     Vec3 animatablePos = animatable.getBlockPos().getCenter();
@@ -120,7 +118,8 @@ public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEn
         // Original idea of the layer embedded in the entity renderer to force the rendering of a singular "electric arch" towards a certain target by mim1q
         // https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
         private void renderConnection(MultiBufferSource bufferSource, PoseStack poseStack, Vec3 p0, Vec3 p1, int frame, int light) {
-            VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
+            VertexConsumer vertexConsumer = bufferSource.getBuffer(AutoGlowingTexture.getRenderType(texture));
+            //VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
             Matrix4f positionMatrix = poseStack.last().pose();
             Matrix3f normalMatrix = poseStack.last().normal();
 

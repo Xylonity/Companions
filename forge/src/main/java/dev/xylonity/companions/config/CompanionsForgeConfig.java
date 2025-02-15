@@ -15,6 +15,9 @@ public class CompanionsForgeConfig {
     public static final ForgeConfigSpec.IntValue ILLAGER_GOLEM_ATTACK_RANGE;
     public static final ForgeConfigSpec.IntValue ILLAGER_GOLEM_ATTACK_INTERVAL;
 
+    // Magic Books
+    public static final ForgeConfigSpec.DoubleValue FIRE_MARK_EFFECT_RADIUS;
+
     static {
 
         BUILDER.push("Dinamo Configuration");
@@ -46,6 +49,15 @@ public class CompanionsForgeConfig {
                 .comment("The time delay (in ticks) between consecutive attacks of the Illager Golem.")
                 .comment("For reference, 20 ticks = 1 second.")
                 .defineInRange("illagerGolemAttackInterval", 60, 10, 5000);
+
+        BUILDER.pop();
+
+
+        BUILDER.push("Magic Books Configuration");
+
+        FIRE_MARK_EFFECT_RADIUS = BUILDER
+                .comment("The radius (in blocks) of the Fire Mark book's effect area.")
+                .defineInRange("fireMarkEffectRadius", 2.5, 1.0, 10.0);
 
         BUILDER.pop();
 

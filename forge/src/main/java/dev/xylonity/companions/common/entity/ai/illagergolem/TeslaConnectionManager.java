@@ -119,7 +119,6 @@ public class TeslaConnectionManager {
                 removeConnectionNode(be.asConnectionNode());
                 be.setDistance(0);
             }
-
         }
 
     }
