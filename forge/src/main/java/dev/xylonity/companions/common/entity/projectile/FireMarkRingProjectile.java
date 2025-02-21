@@ -36,6 +36,7 @@ public class FireMarkRingProjectile extends Projectile implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private final RawAnimation ACTIVATE = RawAnimation.begin().thenPlay("activate");
+
     private final int LIFETIME = 30;
     private final double RADIUS = CompanionsConfig.FIRE_MARK_EFFECT_RADIUS.get();
 

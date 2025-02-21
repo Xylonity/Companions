@@ -1,0 +1,49 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"idle": {
+			"loop": true,
+			"bones": {
+				"asda": {
+					"rotation": {
+						"vector": [0, 0, "(-(query.anim_time + 0.25))*150"]
+					},
+					"scale": {
+						"vector": ["(math.cos(query.anim_time*320)+1)/20 + 1", "(math.cos(query.anim_time*320)+1)/20 + 1", "(math.cos(query.anim_time*320)+1)/20 + 1"]
+					}
+				}
+			}
+		},
+		"appear": {
+			"animation_length": 0.1667,
+			"bones": {
+				"asda": {
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 1]
+						},
+						"0.1667": {
+							"vector": [1, 1, 1]
+						}
+					}
+				}
+			}
+		},
+		"disappear": {
+			"animation_length": 0.3333,
+			"bones": {
+				"asda": {
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.3333": {
+							"vector": [0, 0, 1]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

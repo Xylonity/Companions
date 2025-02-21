@@ -1,0 +1,66 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"appear": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.25,
+			"bones": {
+				"hole": {
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [1, 1, 1]
+						}
+					}
+				},
+				"ring": {
+					"rotation": {
+						"vector": [0, "query.anim_time*200", 0]
+					}
+				}
+			}
+		},
+		"disappear": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.25,
+			"bones": {
+				"hole": {
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.25": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"ring": {
+					"scale": {
+						"vector": [1.75, 1.75, 1.75]
+					}
+				}
+			}
+		},
+		"idle": {
+			"loop": true,
+			"bones": {
+				"ring": {
+					"rotation": {
+						"vector": [0, "(query.anim_time + 0.25)*200", 0]
+					},
+					"scale": {
+						"vector": ["(query.anim_time > 1 ? 1.75 : 1)", "(query.anim_time > 1 ? 1.75 : 1)", "(query.anim_time > 1 ? 1.75 : 1)"]
+					}
+				},
+				"ball": {
+					"scale": {
+						"vector": ["1.1 + math.cos(query.anim_time*360)*0.1", "1.1 + math.cos(query.anim_time*360)*0.1", "1.1 + math.cos(query.anim_time*360)*0.1"]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

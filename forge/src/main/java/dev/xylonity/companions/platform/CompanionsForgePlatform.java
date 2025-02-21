@@ -1,11 +1,8 @@
 package dev.xylonity.companions.platform;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.common.item.book.books.FireMarkBook;
-import dev.xylonity.companions.common.item.book.books.IceShardBook;
-import dev.xylonity.companions.common.item.book.books.IceTornadoBook;
+import dev.xylonity.companions.common.item.book.books.*;
 import dev.xylonity.companions.common.item.WrenchItem;
-import dev.xylonity.companions.common.item.book.books.StoneSpikesBook;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.particles.ParticleType;
@@ -43,6 +40,18 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
             }
             case STONE_SPIKES -> {
                 return (Supplier<T>) registerItem(id, () -> new StoneSpikesBook(properties));
+            }
+            case HEAL_RING -> {
+                return (Supplier<T>) registerItem(id, () -> new HealRingBook(properties));
+            }
+            case BRACE -> {
+                return (Supplier<T>) registerItem(id, () -> new BraceBook(properties));
+            }
+            case MAGIC_RAY -> {
+                return (Supplier<T>) registerItem(id, () -> new MagicRayBook(properties));
+            }
+            case BLACK_HOLE -> {
+                return (Supplier<T>) registerItem(id, () -> new BlackHoleBook(properties));
             }
             default -> {
                 return (Supplier<T>) registerItem(id, () -> new IceShardBook(properties)); // ICE_SHARDS

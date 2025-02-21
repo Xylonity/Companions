@@ -2,6 +2,7 @@ package dev.xylonity.companions;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class Companions implements ModInitializer, ClientModInitializer {
@@ -11,7 +12,6 @@ public class Companions implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitialize() {
-
         CompanionsCommon.init();
     }
 

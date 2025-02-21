@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -22,20 +23,32 @@ import java.util.Random;
 public class BigIceShardProjectile extends AbstractArrow implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    private static final int LIFETIME = 40;
+    private static final int LIFETIME = 25;
 
     public BigIceShardProjectile(EntityType<? extends AbstractArrow> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
         Random random = new Random();
-        double initialSpeed = 0.2;
-        double dx = random.nextDouble() * 2 - 1;
-        double dy = random.nextDouble() * 2 - 1;
-        double dz = random.nextDouble() * 2 - 1;
-        Vec3 randomDir = new Vec3(dx, dy, dz).normalize();
-        this.setDeltaMovement(randomDir.scale(initialSpeed));
+        double initialSpeed = 4;
+
+        double minElevation = Math.toRadians(30);
+        double elevation = minElevation + random.nextDouble() * (Math.toRadians(90) - minElevation);
+
+        double theta = random.nextDouble() * 2 * Math.PI;
+
+        double dx = Math.cos(elevation) * Math.cos(theta);
+        double dy = Math.sin(elevation);
+        double dz = Math.cos(elevation) * Math.sin(theta);
+
+        Vec3 upwardDir = new Vec3(dx, dy, dz).normalize();
+        this.setDeltaMovement(upwardDir.scale(initialSpeed));
 
         this.pickup = Pickup.DISALLOWED;
+    }
+
+    @Override
+    protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
+        return SoundEvents.AMETHYST_BLOCK_HIT;
     }
 
     @Override
@@ -113,6 +126,5 @@ public class BigIceShardProjectile extends AbstractArrow implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        // Implementación pendiente o no necesaria para este ejemplo
     }
 }

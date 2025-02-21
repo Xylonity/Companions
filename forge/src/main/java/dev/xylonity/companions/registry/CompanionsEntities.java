@@ -11,6 +11,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
+
 public class CompanionsEntities {
 
     public static final DeferredRegister<EntityType<?>> ENTITY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Companions.MOD_ID);
@@ -21,6 +24,8 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<IllagerGolemEntity>> ILLAGER_GOLEM;
     public static final RegistryObject<EntityType<DinamoEntity>> DINAMO;
     public static final RegistryObject<EntityType<BrokenDinamoEntity>> BROKEN_DINAMO;
+    public static final RegistryObject<EntityType<HostileImpEntity>> HOSTILE_IMP;
+    public static final RegistryObject<EntityType<MinionEntity>> MINION;
 
     public static final RegistryObject<EntityType<SmallIceShardProjectile>> SMALL_ICE_SHARD_PROJECTILE;
     public static final RegistryObject<EntityType<BigIceShardProjectile>> BIG_ICE_SHARD_PROJECTILE;
@@ -28,24 +33,42 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<FireMarkProjectile>> FIRE_MARK_PROJECTILE;
     public static final RegistryObject<EntityType<FireMarkRingProjectile>> FIRE_MARK_RING_PROJECTILE;
     public static final RegistryObject<EntityType<StoneSpikeProjectile>> STONE_SPIKE_PROJECTILE;
+    public static final RegistryObject<EntityType<HealRingProjectile>> HEAL_RING_PROJECTILE;
+    public static final RegistryObject<EntityType<BraceProjectile>> BRACE_PROJECTILE;
+    public static final RegistryObject<EntityType<MagicRayPieceProjectile>> MAGIC_RAY_PIECE_PROJECTILE;
+    public static final RegistryObject<EntityType<MagicRayCircleProjectile>> MAGIC_RAY_PIECE_CIRCLE_PROJECTILE;
+    public static final RegistryObject<EntityType<BlackHoleProjectile>> BLACK_HOLE_PROJECTILE;
 
     static {
-        FROGGY = register("froggy", FroggyEntity::new, MobCategory.CREATURE, 1f, 1f);
-        TEDDY = register("teddy", TeddyEntity::new, MobCategory.CREATURE, 1f, 1f);
-        ANTLION = register("antlion", AntlionEntity::new, MobCategory.CREATURE, 1f, 1f);
-        ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f);
-        DINAMO = register("dinamo", DinamoEntity::new, MobCategory.CREATURE, 1f, 2f);
-        BROKEN_DINAMO = register("broken_dinamo", BrokenDinamoEntity::new, MobCategory.CREATURE, 1f, 0.5f);
-        SMALL_ICE_SHARD_PROJECTILE = register("small_ice_shard_projectile", SmallIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f);
-        BIG_ICE_SHARD_PROJECTILE = register("big_ice_shard_projectile", BigIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f);
-        TORNADO_PROJECTILE = register("tornado_projectile", TornadoProjectile::new, MobCategory.MISC, 1f, 0.5f);
-        FIRE_MARK_PROJECTILE = register("fire_mark_projectile", FireMarkProjectile::new, MobCategory.MISC, 1f, 1f);
-        FIRE_MARK_RING_PROJECTILE = register("fire_mark_ring_projectile", FireMarkRingProjectile::new, MobCategory.MISC, 1f, 0.2f);
-        STONE_SPIKE_PROJECTILE = register("stone_spike_projectile", StoneSpikeProjectile::new, MobCategory.MISC, 0.5f, 1f);
+        FROGGY = register("froggy", FroggyEntity::new, MobCategory.CREATURE, 1f, 1f, null);
+        TEDDY = register("teddy", TeddyEntity::new, MobCategory.CREATURE, 1f, 1f, null);
+        ANTLION = register("antlion", AntlionEntity::new, MobCategory.CREATURE, 1f, 1f, null);
+        ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f, null);
+        DINAMO = register("dinamo", DinamoEntity::new, MobCategory.CREATURE, 1f, 2f, null);
+        BROKEN_DINAMO = register("broken_dinamo", BrokenDinamoEntity::new, MobCategory.CREATURE, 1f, 0.5f, null);
+        HOSTILE_IMP = register("hostile_imp", HostileImpEntity::new, MobCategory.MONSTER, 1f, 0.5f, null);
+        MINION = register("minion", MinionEntity::new, MobCategory.MONSTER, 1f, 1f, null);
+        SMALL_ICE_SHARD_PROJECTILE = register("small_ice_shard_projectile", SmallIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, EntityType.Builder::fireImmune);
+        BIG_ICE_SHARD_PROJECTILE = register("big_ice_shard_projectile", BigIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, EntityType.Builder::fireImmune);
+        TORNADO_PROJECTILE = register("tornado_projectile", TornadoProjectile::new, MobCategory.MISC, 1f, 0.5f, EntityType.Builder::fireImmune);
+        FIRE_MARK_PROJECTILE = register("fire_mark_projectile", FireMarkProjectile::new, MobCategory.MISC, 1f, 1f, EntityType.Builder::fireImmune);
+        FIRE_MARK_RING_PROJECTILE = register("fire_mark_ring_projectile", FireMarkRingProjectile::new, MobCategory.MISC, 1f, 0.2f, EntityType.Builder::fireImmune);
+        STONE_SPIKE_PROJECTILE = register("stone_spike_projectile", StoneSpikeProjectile::new, MobCategory.MISC, 0.5f, 1f, EntityType.Builder::fireImmune);
+        HEAL_RING_PROJECTILE = register("heal_ring_projectile", HealRingProjectile::new, MobCategory.MISC, 0.5f, 1f, EntityType.Builder::fireImmune);
+        BRACE_PROJECTILE = register("brace_projectile", BraceProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
+        MAGIC_RAY_PIECE_PROJECTILE = register("magic_ray_piece_projectile", MagicRayPieceProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
+        MAGIC_RAY_PIECE_CIRCLE_PROJECTILE = register("magic_ray_circle_projectile", MagicRayCircleProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
+        BLACK_HOLE_PROJECTILE = register("black_hole_projectile", BlackHoleProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
     }
 
-    private static <X extends Entity> RegistryObject<EntityType<X>> register(String name, EntityType.EntityFactory<X> entity, MobCategory category, float width, float height) {
-        return ENTITY.register(name, () -> EntityType.Builder.of(entity, category).sized(width, height).build(String.valueOf(new ResourceLocation(Companions.MOD_ID, name))));
+    private static <X extends Entity> RegistryObject<EntityType<X>> register(String name, EntityType.EntityFactory<X> entity, MobCategory category, float width, float height, @Nullable Consumer<EntityType.Builder<X>> properties) {
+        return ENTITY.register(name, () -> {
+            EntityType.Builder<X> builder = EntityType.Builder.of(entity, category).sized(width, height);
+
+            if (properties != null) properties.accept(builder);
+
+            return builder.build(new ResourceLocation(Companions.MOD_ID, name).toString());
+        });
     }
 
 }

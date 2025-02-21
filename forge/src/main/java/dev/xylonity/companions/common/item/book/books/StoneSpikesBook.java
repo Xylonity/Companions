@@ -34,7 +34,7 @@ public class StoneSpikesBook extends AbstractMagicBook {
         final double DISTANCE_INCREMENT = 1.5;
         final double HORIZONTAL_OFFSET_DEG = 0.0;
         final double VERTICAL_OFFSET_DEG = 0.0;
-        final int NUM_SPIKES = 4;
+        final int NUM_SPIKES = 10;
         final int MAX_DOWN = 6;
         final int MAX_UP = 3;
         final int DELAY_INCREMENT = 2;
@@ -52,8 +52,6 @@ public class StoneSpikesBook extends AbstractMagicBook {
         double finalYComp = Math.sin(verticalRad);
         double finalZComp = adjustedHorizontal.z * Math.cos(verticalRad);
         Vec3 finalDir = new Vec3(finalXComp, finalYComp, finalZComp).normalize();
-
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENCHANTMENT_TABLE_USE, player.getSoundSource(), 1.0F, 1.0F);
 
         for (int i = 0; i < NUM_SPIKES; i++) {
             double distance = BASE_DISTANCE + i * DISTANCE_INCREMENT;

@@ -18,8 +18,10 @@ public class CompanionsCreativeModeTabs {
                             .title(Component.translatable("itemgroup.common"))
                             .displayItems((itemDisplayParameters, output) -> {
 
-                                output.accept(CompanionsItems.TEST.get());
-                                output.accept(CompanionsItems.TEST2.get());
+                                output.accept(CompanionsItems.COPPER_COIN.get());
+                                output.accept(CompanionsItems.NETHER_COIN.get());
+                                output.accept(CompanionsItems.END_COIN.get());
+                                output.accept(CompanionsItems.NETHERITE_CHAINS.get());
 
                                 output.accept(CompanionsItems.BOOK_ICE_SHARD.get());
                                 output.accept(CompanionsItems.BOOK_ICE_TORNADO.get());
@@ -27,6 +29,8 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.BOOK_BRACE.get());
                                 output.accept(CompanionsItems.BOOK_HEAL_RING.get());
                                 output.accept(CompanionsItems.BOOK_STONE_SPIKES.get());
+                                output.accept(CompanionsItems.BOOK_MAGIC_RAY.get());
+                                output.accept(CompanionsItems.BOOK_BLACK_HOLE.get());
 
                                 output.accept(CompanionsItems.ETERNAL_LIGHTER.get());
                                 output.accept(CompanionsItems.WRENCH.get());

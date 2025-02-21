@@ -80,8 +80,11 @@ public class TornadoProjectile extends AbstractArrow implements GeoEntity {
 
         double t = this.tickCount * PARAM_SCALE;
 
-        double xLocal = Math.sin(-2.0 * t) + t;
-        double zLocal = Math.cos(-2.0 * t) + 1.0;
+        //double xLocal = Math.sin(-2.0 * t) + t;
+        //double zLocal = Math.cos(-2.0 * t) + 1.0;
+
+        double xLocal = t + Math.pow(Math.E, 0.1 * t) * ((Math.cos(5*t)-1)/2);
+        double zLocal = Math.pow(Math.E, 0.1*t)*Math.sin(5*t);
 
         double cosA = Math.cos(this.alpha);
         double sinA = Math.sin(this.alpha);

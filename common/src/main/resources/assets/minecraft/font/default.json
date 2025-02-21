@@ -1,0 +1,23 @@
+{
+  "providers": [
+    {
+      "type": "reference",
+      "id": "minecraft:include/space"
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:include/default"
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:include/unifont"
+    },
+    {
+      "type": "bitmap",
+      "file": "knightquestcompanions:icons/stick.png",
+      "ascent": 14,
+      "height": 14,
+      "chars": [ "\uEA0A" ]
+    }
+  ]
+}

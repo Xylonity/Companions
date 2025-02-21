@@ -25,6 +25,7 @@ public class FireMarkProjectile extends Projectile implements GeoEntity {
 
     public FireMarkProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        this.noPhysics = true;
     }
 
     @Override

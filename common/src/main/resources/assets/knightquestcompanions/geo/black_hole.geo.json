@@ -1,0 +1,35 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 64,
+				"texture_height": 16,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 1.5,
+				"visible_bounds_offset": [0, 0.25, 0]
+			},
+			"bones": [
+				{
+					"name": "hole",
+					"pivot": [0, 3, 0],
+					"cubes": [
+						{"origin": [-3, 0, -3], "size": [6, 6, 6], "uv": [30, 0]}
+					]
+				},
+				{
+					"name": "ring",
+					"parent": "hole",
+					"pivot": [0, 3, 0],
+					"cubes": [
+						{"origin": [-13, 3, -13], "size": [13, 0, 13], "uv": [-13, 0]},
+						{"origin": [-13, 3, -13], "size": [13, 0, 13], "pivot": [0, 0, 0], "rotation": [0, -90, 0], "uv": [-13, 0]},
+						{"origin": [-13, 3, -13], "size": [13, 0, 13], "pivot": [0, 0, 0], "rotation": [0, 180, 0], "uv": [-13, 0]},
+						{"origin": [-13, 3, -13], "size": [13, 0, 13], "pivot": [0, 0, 0], "rotation": [0, 90, 0], "uv": [-13, 0]}
+					]
+				}
+			]
+		}
+	]
+}

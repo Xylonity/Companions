@@ -2,10 +2,12 @@ package dev.xylonity.companions.common.event;
 
 import com.mojang.serialization.Codec;
 import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.client.blockentity.renderer.SoulFurnaceRenderer;
 import dev.xylonity.companions.client.blockentity.renderer.TeslaReceiverRenderer;
 import dev.xylonity.companions.client.entity.renderer.*;
 import dev.xylonity.companions.client.projectile.renderer.*;
 import dev.xylonity.companions.common.entity.projectile.FireMarkRingProjectile;
+import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
@@ -31,6 +33,8 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.ILLAGER_GOLEM.get(), IllagerGolemRenderer::new);
         EntityRenderers.register(CompanionsEntities.DINAMO.get(), DinamoRenderer::new);
         EntityRenderers.register(CompanionsEntities.BROKEN_DINAMO.get(), BrokenDinamoRenderer::new);
+        EntityRenderers.register(CompanionsEntities.HOSTILE_IMP.get(), HostileImpRenderer::new);
+        EntityRenderers.register(CompanionsEntities.MINION.get(), MinionRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.SMALL_ICE_SHARD_PROJECTILE.get(), IceShardSmallRenderer::new);
         EntityRenderers.register(CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.get(), IceShardBigRenderer::new);
@@ -38,8 +42,14 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.FIRE_MARK_PROJECTILE.get(), FireMarkRenderer::new);
         EntityRenderers.register(CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get(), FireMarkRingRenderer::new);
         EntityRenderers.register(CompanionsEntities.STONE_SPIKE_PROJECTILE.get(), StoneSpikeRenderer::new);
+        EntityRenderers.register(CompanionsEntities.HEAL_RING_PROJECTILE.get(), HealRingRenderer::new);
+        EntityRenderers.register(CompanionsEntities.BRACE_PROJECTILE.get(), BraceRenderer::new);
+        EntityRenderers.register(CompanionsEntities.MAGIC_RAY_PIECE_PROJECTILE.get(), MagicRayPieceRenderer::new);
+        EntityRenderers.register(CompanionsEntities.MAGIC_RAY_PIECE_CIRCLE_PROJECTILE.get(), MagicRayCircleRenderer::new);
+        EntityRenderers.register(CompanionsEntities.BLACK_HOLE_PROJECTILE.get(), BlackHoleRenderer::new);
 
         BlockEntityRenderers.register(CompanionsBlockEntities.TESLA_RECEIVER.get(), TeslaReceiverRenderer::new);
+        BlockEntityRenderers.register(CompanionsBlockEntities.SOUL_FURNACE.get(), SoulFurnaceRenderer::new);
     }
 
     @SubscribeEvent
@@ -48,6 +58,8 @@ public class CompanionsClientEvents {
         event.registerSpriteSet(CompanionsParticles.TEDDY_TRANSFORMATION_CLOUD.get(), TeddyTransformationCloudParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.ILLAGER_GOLEM_SPARK.get(), IllagerGolemSparkParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.DINAMO_SPARK.get(), IllagerGolemSparkParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.EMBER.get(), EmberParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.BLACK_HOLE_STAR.get(), BlackHoleStarParticle.Provider::new);
     }
 
 }

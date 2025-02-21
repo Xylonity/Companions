@@ -1,6 +1,7 @@
 package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
 import dev.xylonity.companions.common.blockentity.TeslaReceiverBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,9 +17,11 @@ public class CompanionsBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Companions.MOD_ID);
 
     public static final RegistryObject<BlockEntityType<TeslaReceiverBlockEntity>> TESLA_RECEIVER;
+    public static final RegistryObject<BlockEntityType<SoulFurnaceBlockEntity>> SOUL_FURNACE;
 
     static {
         TESLA_RECEIVER = register("tesla_receiver", TeslaReceiverBlockEntity::new, CompanionsBlocks.TESLA_RECEIVER);
+        SOUL_FURNACE = register("soul_furnace", SoulFurnaceBlockEntity::new, CompanionsBlocks.SOUL_FURNACE);
     }
 
     private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register(String name, BlockEntityType.BlockEntitySupplier<T> supplier, Supplier<Block> block) {

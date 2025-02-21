@@ -16,7 +16,7 @@ public class BrokenDinamoModel extends GeoModel<BrokenDinamoEntity> {
 
     @Override
     public ResourceLocation getModelResource(BrokenDinamoEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/illager_golem.geo.json");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/broken_dinamo.geo.json");
     }
 
     @Override
