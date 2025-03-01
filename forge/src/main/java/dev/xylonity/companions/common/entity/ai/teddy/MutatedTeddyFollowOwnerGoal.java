@@ -14,11 +14,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 
 public class MutatedTeddyFollowOwnerGoal extends Goal {
-    // Distancia mínima al dueño
     private final double minDistance;
-    // Distancia a partir de la cual se activa el seguimiento
     private final double startDistance;
-    // Velocidad máxima base
     private final double maxSpeedModifier;
 
     private final TeddyEntity teddy;
@@ -39,18 +36,20 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        // Solo fase 2
         if (this.teddy.getPhase() != 2) {
             return false;
         }
+
         LivingEntity possibleOwner = this.teddy.getOwner();
         if (possibleOwner == null || !possibleOwner.isAlive()) {
             return false;
         }
+
         double distSqr = this.teddy.distanceToSqr(possibleOwner);
         if (distSqr < (this.startDistance * this.startDistance)) {
             return false;
         }
+
         this.owner = possibleOwner;
         return true;
     }
@@ -60,6 +59,7 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
         if (this.teddy.getPhase() != 2 || this.owner == null || !this.owner.isAlive()) {
             return false;
         }
+
         double distSqr = this.teddy.distanceToSqr(this.owner);
         return distSqr > (this.minDistance * this.minDistance);
     }
@@ -73,7 +73,6 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
     public void stop() {
         this.owner = null;
         this.navigation.stop();
-        // Asegurarse de dejar la colisión activa al salir
         this.teddy.noPhysics = false;
     }
 
@@ -100,7 +99,7 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
                 );
                 this.navigation.stop();
             }
-            // Cuando está cerca, que no atraviese paredes
+
             this.teddy.noPhysics = false;
             return;
         }
@@ -126,18 +125,12 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
         );
 
         if (!blocked) {
-            // SIN obstáculo => movimiento directo con colisión normal
             this.teddy.noPhysics = false;
             this.navigation.stop();
-            this.teddy.getMoveControl().setWantedPosition(
-                    targetX, targetY, targetZ, effectiveSpeed
-            );
+            this.teddy.getMoveControl().setWantedPosition(targetX, targetY, targetZ, effectiveSpeed);
         } else {
-            // BLOQUEADO => atravesar el bloque
-            // 1) Ponemos noPhysics = true (puede atravesar)
             this.teddy.noPhysics = true;
 
-            // 2) Hacemos movimiento directo sin pathfinding
             this.navigation.stop();
             this.teddy.getMoveControl().setWantedPosition(
                     targetX, targetY, targetZ, effectiveSpeed
@@ -146,13 +139,8 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
     }
 
     private boolean isPathBlocked(Level level, Vec3 from, Vec3 to) {
-        BlockHitResult hitResult = level.clip(new ClipContext(
-                from,
-                to,
-                ClipContext.Block.COLLIDER,
-                ClipContext.Fluid.NONE,
-                this.teddy
-        ));
+        BlockHitResult hitResult = level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.teddy));
+
         return (hitResult.getType() != HitResult.Type.MISS);
     }
 }

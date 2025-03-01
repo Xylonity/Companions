@@ -14,6 +14,8 @@ public class CompanionsItems {
     public static final Supplier<Item> NETHER_COIN = registerItem("nether_coin", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> END_COIN = registerItem("end_coin", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> NETHERITE_CHAINS = registerItem("netherite_chains", () -> new Item(new Item.Properties()));
+    public static final Supplier<Item> BIG_BREAD = registerItem("big_bread", () -> new Item(new Item.Properties()));
+    public static final Supplier<Item> SOUL_GEM = registerItem("soul_gem", () -> new Item(new Item.Properties()));
 
     public static final Supplier<Item> BOOK_ICE_SHARD = registerMagicBook("book_ice_shard", new Item.Properties().stacksTo(1), MagicType.ICE_SHARD);
     public static final Supplier<Item> BOOK_ICE_TORNADO = registerMagicBook("book_ice_tornado", new Item.Properties().stacksTo(1), MagicType.ICE_TORNADO);

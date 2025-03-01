@@ -26,6 +26,9 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<BrokenDinamoEntity>> BROKEN_DINAMO;
     public static final RegistryObject<EntityType<HostileImpEntity>> HOSTILE_IMP;
     public static final RegistryObject<EntityType<MinionEntity>> MINION;
+    public static final RegistryObject<EntityType<GoldenAllayEntity>> GOLDEN_ALLAY;
+    public static final RegistryObject<EntityType<SoulMageEntity>> SOUL_MAGE;
+    public static final RegistryObject<EntityType<LivingCandleEntity>> LIVING_CANDLE;
 
     public static final RegistryObject<EntityType<SmallIceShardProjectile>> SMALL_ICE_SHARD_PROJECTILE;
     public static final RegistryObject<EntityType<BigIceShardProjectile>> BIG_ICE_SHARD_PROJECTILE;
@@ -46,8 +49,12 @@ public class CompanionsEntities {
         ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f, null);
         DINAMO = register("dinamo", DinamoEntity::new, MobCategory.CREATURE, 1f, 2f, null);
         BROKEN_DINAMO = register("broken_dinamo", BrokenDinamoEntity::new, MobCategory.CREATURE, 1f, 0.5f, null);
-        HOSTILE_IMP = register("hostile_imp", HostileImpEntity::new, MobCategory.MONSTER, 1f, 0.5f, null);
-        MINION = register("minion", MinionEntity::new, MobCategory.MONSTER, 1f, 1f, null);
+        HOSTILE_IMP = register("hostile_imp", HostileImpEntity::new, MobCategory.MONSTER, 0.85f, 1.5f, null);
+        MINION = register("minion", MinionEntity::new, MobCategory.CREATURE, 0.85f, 1.5f, null);
+        GOLDEN_ALLAY = register("golden_allay", GoldenAllayEntity::new, MobCategory.CREATURE, 0.5f, 0.5f, null);
+        SOUL_MAGE = register("soul_mage", SoulMageEntity::new, MobCategory.CREATURE, 0.85f, 1.2f, null);
+        LIVING_CANDLE = register("living_candle", LivingCandleEntity::new, MobCategory.CREATURE, 0.5f, 0.75f, null);
+
         SMALL_ICE_SHARD_PROJECTILE = register("small_ice_shard_projectile", SmallIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, EntityType.Builder::fireImmune);
         BIG_ICE_SHARD_PROJECTILE = register("big_ice_shard_projectile", BigIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, EntityType.Builder::fireImmune);
         TORNADO_PROJECTILE = register("tornado_projectile", TornadoProjectile::new, MobCategory.MISC, 1f, 0.5f, EntityType.Builder::fireImmune);

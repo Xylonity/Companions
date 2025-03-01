@@ -22,6 +22,8 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.NETHER_COIN.get());
                                 output.accept(CompanionsItems.END_COIN.get());
                                 output.accept(CompanionsItems.NETHERITE_CHAINS.get());
+                                output.accept(CompanionsItems.BIG_BREAD.get());
+                                output.accept(CompanionsItems.SOUL_GEM.get());
 
                                 output.accept(CompanionsItems.BOOK_ICE_SHARD.get());
                                 output.accept(CompanionsItems.BOOK_ICE_TORNADO.get());

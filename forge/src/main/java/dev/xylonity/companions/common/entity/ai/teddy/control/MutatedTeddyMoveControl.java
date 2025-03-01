@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.phys.Vec3;
 
 public class MutatedTeddyMoveControl extends MoveControl {
-    private TeddyEntity teddy;
+    private final TeddyEntity teddy;
 
     public MutatedTeddyMoveControl(TeddyEntity teddy) {
         super(teddy);

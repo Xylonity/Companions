@@ -16,13 +16,18 @@ public class StoneSpikeModel extends GeoModel<StoneSpikeProjectile> {
 
     @Override
     public ResourceLocation getTextureResource(StoneSpikeProjectile animatable) {
-        if (animatable.tickCount <= 22) return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike.png");
-        switch (animatable.tickCount) {
-            case 23, 24: {return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike1.png");}
-            case 25, 26, 27: {return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike2.png");}
-            case 28, 29, 30: {return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike3.png");}
-            default:  {return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike4.png");}
-        }
+        int l = animatable.getLifetime();
+        int remaining = l - animatable.tickCount;
+
+        return switch (remaining) {
+            case 12, 11 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike1.png");
+            case 10, 9 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike2.png");
+            case 8, 7 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike3.png");
+            case 6, 5 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike4.png");
+            case 4, 3 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike5.png");
+            case 2, 1 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike6.png");
+            default -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike0.png");
+        };
     }
 
     @Override

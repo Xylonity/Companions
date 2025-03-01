@@ -1,0 +1,86 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"walk": {
+			"loop": true,
+			"bones": {
+				"candle": {
+					"rotation": {
+						"vector": ["math.cos(query.anim_time*480)*15", "math.sin(query.anim_time*480)*15", 0]
+					}
+				},
+				"leg": {
+					"rotation": {
+						"vector": ["(-(math.cos(query.anim_time*480)+ 0.5))*25", 0, 0]
+					},
+					"position": {
+						"vector": [0, "(math.cos(query.anim_time*480+ 80) + 1)", 0]
+					}
+				},
+				"leg3": {
+					"rotation": {
+						"vector": ["(-(math.cos(query.anim_time*480- 90)+ 0.5))*25", 0, 0]
+					},
+					"position": {
+						"vector": [0, "(math.cos(query.anim_time*480- 10) + 1)", 0]
+					}
+				},
+				"leg2": {
+					"relative_to": {
+						"rotation": "entity"
+					},
+					"rotation": {
+						"vector": ["(-(math.cos(query.anim_time*480- 45)+ 0.5))*25", 0, 0]
+					},
+					"position": {
+						"vector": [0, "(math.cos(query.anim_time*480+ 35) + 1)", 0]
+					}
+				},
+				"leg4": {
+					"rotation": {
+						"vector": ["(-(math.cos(query.anim_time*480- 80)+ 0.5))*25", 0, 0]
+					},
+					"position": {
+						"vector": [0, "(math.cos(query.anim_time*480) + 1)", 0]
+					}
+				},
+				"entity": {
+					"rotation": {
+						"vector": ["(-math.cos(query.anim_time*480 + 90))*15", 0, 0]
+					},
+					"position": {
+						"vector": [0, "(math.cos(query.anim_time*480 + 80)+1) * 0.5", 0]
+					}
+				},
+				"fire": {
+					"rotation": {
+						"vector": ["(-math.cos(query.anim_time*480))*5", "(-math.sin(query.anim_time*480))*5", 0]
+					}
+				}
+			}
+		},
+		"idle": {
+			"loop": true,
+			"bones": {
+				"candle": {
+					"rotation": {
+						"vector": ["math.cos(query.anim_time*180 + 45)*5 ", "math.sin(query.anim_time*180 + 45)*5 ", 0]
+					},
+					"scale": {
+						"vector": [
+							"1 + (math.cos(query.anim_time*180) + 1)*0.0125",
+							"1 + (math.cos(query.anim_time*180) + 1)*0.0125",
+							"1 + (math.cos(query.anim_time*180) + 1)*0.0125"
+						]
+					}
+				},
+				"fire": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*180 + 45)*2.5 ", "math.sin(query.anim_time*180 + 45)*2.5 ", 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

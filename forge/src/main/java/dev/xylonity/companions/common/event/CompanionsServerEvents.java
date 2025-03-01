@@ -20,6 +20,9 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.BROKEN_DINAMO.get(), BrokenDinamoEntity.setAttributes());
         event.put(CompanionsEntities.HOSTILE_IMP.get(), HostileImpEntity.setAttributes());
         event.put(CompanionsEntities.MINION.get(), MinionEntity.setAttributes());
+        event.put(CompanionsEntities.GOLDEN_ALLAY.get(), GoldenAllayEntity.setAttributes());
+        event.put(CompanionsEntities.SOUL_MAGE.get(), SoulMageEntity.setAttributes());
+        event.put(CompanionsEntities.LIVING_CANDLE.get(), LivingCandleEntity.setAttributes());
     }
 
 }

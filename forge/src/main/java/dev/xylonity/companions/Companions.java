@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.event.ViewportEvent;
@@ -45,6 +46,7 @@ public class Companions {
         CompanionsEntities.ENTITY.register(modEventBus);
         CompanionsBlocks.BLOCK.register(modEventBus);
         CompanionsBlockEntities.BLOCK_ENTITY.register(modEventBus);
+        CompanionsMenuTypes.MENU_TYPES.register(modEventBus);
 
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);

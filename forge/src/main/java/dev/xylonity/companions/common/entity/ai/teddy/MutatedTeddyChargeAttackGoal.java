@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import java.util.EnumSet;
 
 public class MutatedTeddyChargeAttackGoal extends Goal {
+
     private enum AttackState {
         WIND_UP,
         CHARGING,
@@ -24,19 +25,10 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
     private final double hitRange;
     private final double retreatDistance;
 
-    // Contadores / estados internos
-    private int stateTicks;                 // Cuenta ticks en cada estado
+    private int stateTicks;
     private AttackState state = AttackState.WIND_UP;
 
-    public MutatedTeddyChargeAttackGoal(
-            TeddyEntity teddy,
-            double chargeSpeed,
-            double retreatSpeed,
-            int windUpDuration,
-            int retreatDuration,
-            double hitRange,
-            double retreatDistance
-    ) {
+    public MutatedTeddyChargeAttackGoal(TeddyEntity teddy, double chargeSpeed, double retreatSpeed, int windUpDuration, int retreatDuration, double hitRange, double retreatDistance) {
         this.teddy = teddy;
         this.chargeSpeed = chargeSpeed;
         this.retreatSpeed = retreatSpeed;
@@ -50,28 +42,25 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        // Activar si:
-        // 1) Fase 2
         if (this.teddy.getPhase() != 2 || this.teddy.isSitting()) {
             return false;
         }
-        // 2) Tenemos target vivo
+
         LivingEntity possibleTarget = this.teddy.getTarget();
         if (possibleTarget == null || !possibleTarget.isAlive()) {
             return false;
         }
+
         this.target = possibleTarget;
         return true;
     }
 
     @Override
     public boolean canContinueToUse() {
-        // Continuar mientras:
-        // 1) Fase 2
-        // 2) Target existe y está vivo
         if (this.teddy.getPhase() != 2 || this.teddy.isSitting()) {
             return false;
         }
+
         return this.target != null && this.target.isAlive();
     }
 
@@ -79,15 +68,11 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
     public void start() {
         this.state = AttackState.WIND_UP;
         this.stateTicks = 0;
-
-        // Aseguramos colisiones (no atraviesa bloques)
-        //this.teddy.noPhysics = false;
         this.teddy.setNoGravity(true);
     }
 
     @Override
     public void stop() {
-        // Limpiamos
         this.target = null;
         this.state = AttackState.WIND_UP;
         this.stateTicks = 0;
@@ -95,18 +80,13 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
 
     @Override
     public void tick() {
-        if (this.target == null) {
-            return;
-        }
+        if (this.target == null) return;
 
-        // Si en algún momento el target muere, paramos
         if (!this.target.isAlive()) {
-            // Esto forzará la IA a volver a FollowOwnerGoal
             this.teddy.setTarget(null);
             return;
         }
 
-        // Mira al target
         this.teddy.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
 
         switch (this.state) {
@@ -123,7 +103,6 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
     }
 
     private void doWindUp() {
-        // Mantente quieto o muévete muy poco
         this.teddy.getMoveControl().setWantedPosition(
                 this.teddy.getX(),
                 this.teddy.getY(),
@@ -132,7 +111,6 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
         );
 
         this.stateTicks++;
-        // Pasar a CHARGING tras windUpDuration
         if (this.stateTicks >= this.windUpDuration) {
             this.state = AttackState.CHARGING;
             this.stateTicks = 0;
@@ -140,12 +118,10 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
     }
 
     private void doCharging() {
-        // Moverse hacia el target con "deslizamiento"
         double distSqr = this.teddy.distanceToSqr(this.target);
         double hitRangeSqr = this.hitRange * this.hitRange;
 
         if (distSqr > hitRangeSqr) {
-            // Aún lejos => acércate con chargeSpeed
             this.teddy.getMoveControl().setWantedPosition(
                     this.target.getX(),
                     this.target.getY(),
@@ -153,17 +129,14 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
                     this.chargeSpeed
             );
         } else {
-            // En rango de golpe => daña
             this.teddy.swing(InteractionHand.MAIN_HAND);
             this.teddy.doHurtTarget(this.target);
-            // Pasamos a RETREAT
             this.state = AttackState.RETREAT;
             this.stateTicks = 0;
         }
     }
 
     private void doRetreat() {
-        // Alejarse "retreatDistance" bloques en línea Teddy->Target invertida
         double dx = this.teddy.getX() - this.target.getX();
         double dy = this.teddy.getY() - this.target.getY();
         double dz = this.teddy.getZ() - this.target.getZ();
@@ -176,14 +149,9 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
         double ry = this.teddy.getY() + (dy / dist) * this.retreatDistance;
         double rz = this.teddy.getZ() + (dz / dist) * this.retreatDistance;
 
-        // Muévete rápido al punto de retirada
-        this.teddy.getMoveControl().setWantedPosition(
-                rx, ry, rz, this.retreatSpeed
-        );
+        this.teddy.getMoveControl().setWantedPosition(rx, ry, rz, this.retreatSpeed);
 
-        // Contamos ticks de retirada
         this.stateTicks++;
-        // Al cabo de retreatDuration ticks, volvemos a wind-up para otro ataque
         if (this.stateTicks >= this.retreatDuration) {
             this.state = AttackState.WIND_UP;
             this.stateTicks = 0;

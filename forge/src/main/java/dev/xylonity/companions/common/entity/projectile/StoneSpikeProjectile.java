@@ -38,7 +38,7 @@ public class StoneSpikeProjectile extends Projectile implements GeoEntity {
 
     private final RawAnimation APPEAR = RawAnimation.begin().thenPlay("appear");
 
-    private final int LIFETIME = 32;
+    private final int LIFETIME = 36;
     private final float DAMAGE = 4.0F;
     private final double COLLISION_RADIUS = 0.3;
 
@@ -83,6 +83,10 @@ public class StoneSpikeProjectile extends Projectile implements GeoEntity {
         } else {
             super.handleEntityEvent(pId);
         }
+    }
+
+    public int getLifetime() {
+        return LIFETIME;
     }
 
     private void spawnHitParticles() {

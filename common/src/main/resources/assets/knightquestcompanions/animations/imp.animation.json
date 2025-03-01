@@ -6,7 +6,7 @@
 			"bones": {
 				"entity": {
 					"rotation": {
-						"vector": ["-math.cos(-180+query.anim_time*720)*2", "math.cos(120+query.anim_time*360)*3.5", "math.cos(120+query.anim_time*360)*3.5"]
+						"vector": ["-math.cos(-180+query.anim_time*720)*2", "-math.cos(120+query.anim_time*360)*3.5", "-math.cos(120+query.anim_time*360)*3.5"]
 					},
 					"position": {
 						"vector": [0, 0.3, 0]
@@ -37,7 +37,7 @@
 				},
 				"arm": {
 					"rotation": {
-						"vector": [0, "math.cos(-140 + query.anim_time*360)*10", "math.cos(-140 + query.anim_time*360)*10 - 10"]
+						"vector": [0, "math.cos(-100 + query.anim_time*360)*10", "math.cos(-100 + query.anim_time*360)*10 - 10"]
 					},
 					"position": {
 						"vector": [0, 0, "math.cos(query.anim_time*360)*0.2 + 0.2"]
@@ -45,10 +45,10 @@
 				},
 				"arm2": {
 					"rotation": {
-						"vector": [0, "-math.cos(query.anim_time*360)*10", "-math.cos(query.anim_time*360)*10 + 10"]
+						"vector": [0, "-math.cos(query.anim_time*360 +40)*10", "-math.cos(query.anim_time*360 +40)*10 + 10"]
 					},
 					"position": {
-						"vector": [0, 0, "-math.cos(-140 + query.anim_time*360)*0.2 - 0.2"]
+						"vector": [0, 0, "-math.cos(-100 + query.anim_time*360)*0.2 - 0.2"]
 					}
 				},
 				"head": {
