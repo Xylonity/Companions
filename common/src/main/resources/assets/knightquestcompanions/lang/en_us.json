@@ -15,5 +15,7 @@
   "broken_dinamo.client_message.requires_tesla_receiver": "You need a Tesla Receiver to complete the repair.",
   "broken_dinamo.client_message.tesla_receiver_consumed": "You have supplied a Tesla Receiver. Interact with a wrench to proceed.",
 
-  "broken_dinamo.client_message.requires_wrench": "You need a Wrench repair the entity."
+  "broken_dinamo.client_message.requires_wrench": "You need a Wrench repair the entity.",
+
+  "tooltip.companions.wrench": "\uEA0C Press \uEA0B for more information."
 }

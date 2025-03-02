@@ -10,9 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +21,7 @@ import java.util.function.Supplier;
 public interface CompanionsPlatform {
 
     <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item);
+    <T extends Item> Supplier<T> registerArmorItem(String id, ArmorMaterial armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor);
     <T extends Item> Supplier<T> registerWrenchItem(String id, Item.Properties properties);
     <T extends Item> Supplier<T> registerMagicBook(String id, Item.Properties properties, CompanionsItems.MagicType magicType);
     <T extends MobEffect> Supplier<T> registerEffect(String id, Supplier<T> item);

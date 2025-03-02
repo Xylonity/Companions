@@ -18,6 +18,13 @@
       "ascent": 14,
       "height": 14,
       "chars": [ "\uEA0A" ]
+    },
+    {
+      "type": "bitmap",
+      "file": "knightquestcompanions:icons/icons.png",
+      "ascent": 9,
+      "height": 11,
+      "chars": [ "\uEA0B\uEA0C" ]
     }
   ]
 }

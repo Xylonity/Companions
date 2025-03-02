@@ -1,0 +1,82 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.mage_hat",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 4.5,
+				"visible_bounds_offset": [0, 1.75, 0]
+			},
+			"bones": [
+				{
+					"name": "bipedHead",
+					"pivot": [0, 24, 0]
+				},
+				{
+					"name": "armorHead",
+					"parent": "bipedHead",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{
+							"origin": [-9, 30.4375, -9.01609],
+							"size": [18, 1.125, 18],
+							"uv": {
+								"north": {"uv": [16, 46], "uv_size": [16, 1]},
+								"east": {"uv": [0, 46], "uv_size": [16, 1]},
+								"south": {"uv": [48, 46], "uv_size": [16, 1]},
+								"west": {"uv": [32, 46], "uv_size": [16, 1]},
+								"up": {"uv": [16, 30], "uv_size": [16, 16]},
+								"down": {"uv": [32, 46], "uv_size": [16, -16]}
+							}
+						},
+						{
+							"origin": [-3.9375, 31.5625, -4.51609],
+							"size": [7.875, 10.125, 9],
+							"pivot": [0.5625, 31.5625, -4.51609],
+							"rotation": [-22.5, 0, 0],
+							"uv": {
+								"north": {"uv": [8, 21], "uv_size": [7, 9]},
+								"east": {"uv": [0, 21], "uv_size": [8, 9]},
+								"south": {"uv": [23, 21], "uv_size": [7, 9]},
+								"west": {"uv": [15, 21], "uv_size": [8, 9]},
+								"up": {"uv": [8, 13], "uv_size": [7, 8]},
+								"down": {"uv": [15, 21], "uv_size": [7, -8]}
+							}
+						},
+						{
+							"origin": [-2.8125, 39.4375, -2.26609],
+							"size": [5.625, 4.5, 12.375],
+							"pivot": [0.5625, 31.5625, -4.51609],
+							"rotation": [-22.5, 0, 0],
+							"uv": {
+								"north": {"uv": [42, 25], "uv_size": [5, 4]},
+								"east": {"uv": [31, 25], "uv_size": [11, 4]},
+								"south": {"uv": [58, 25], "uv_size": [5, 4]},
+								"west": {"uv": [47, 25], "uv_size": [11, 4]},
+								"up": {"uv": [42, 14], "uv_size": [5, 11]},
+								"down": {"uv": [47, 25], "uv_size": [5, -11]}
+							}
+						},
+						{
+							"origin": [-1.6875, 39.4375, 8.98391],
+							"size": [3.375, 7.875, 2.25],
+							"pivot": [0.5625, 31.5625, -4.51609],
+							"rotation": [-22.5, 0, 0],
+							"uv": {
+								"north": {"uv": [4, 35], "uv_size": [3, 7]},
+								"east": {"uv": [2, 35], "uv_size": [2, 7]},
+								"south": {"uv": [9, 35], "uv_size": [3, 7]},
+								"west": {"uv": [7, 35], "uv_size": [2, 7]},
+								"up": {"uv": [4, 33], "uv_size": [3, 2]},
+								"down": {"uv": [7, 35], "uv_size": [3, -2]}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

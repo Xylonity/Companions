@@ -2,6 +2,9 @@ package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.item.EternalLighter;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 
 import java.util.function.Supplier;
@@ -29,8 +32,16 @@ public class CompanionsItems {
     public static final Supplier<Item> ETERNAL_LIGHTER = registerItem("eternal_lighter", () -> new EternalLighter(new Item.Properties()));
     public static final Supplier<Item> WRENCH = registerWrenchItem("wrench", new Item.Properties().durability(64));
 
+    public static final Supplier<Item> MAGE_COAT = registerArmorItem("mage_coat", ArmorMaterials.DIAMOND, ArmorItem.Type.CHESTPLATE, false);
+    public static final Supplier<Item> MAGE_HAT = registerArmorItem("mage_hat", ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, true);
+
+
     private static <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item) {
         return CompanionsCommon.COMMON_PLATFORM.registerItem(id, item);
+    }
+
+    private static <T extends Item> Supplier<T> registerArmorItem(String id, ArmorMaterial armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
+        return CompanionsCommon.COMMON_PLATFORM.registerArmorItem(id, armorMaterial, armorType, isGeckoArmor);
     }
 
     private static <T extends Item> Supplier<T> registerWrenchItem(String id, Item.Properties properties) {

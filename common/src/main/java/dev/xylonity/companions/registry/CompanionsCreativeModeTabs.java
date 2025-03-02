@@ -37,6 +37,9 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.ETERNAL_LIGHTER.get());
                                 output.accept(CompanionsItems.WRENCH.get());
 
+                                output.accept(CompanionsItems.MAGE_HAT.get());
+                                output.accept(CompanionsItems.MAGE_COAT.get());
+
                             })
                             .build());
 
