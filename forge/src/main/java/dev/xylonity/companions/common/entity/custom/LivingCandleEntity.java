@@ -3,21 +3,18 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.event.ClientEntityTracker;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
+import dev.xylonity.companions.registry.CompanionsParticles;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -25,8 +22,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,20 +32,16 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.EnumSet;
 import java.util.List;
 
 public class LivingCandleEntity extends CompanionEntity {
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
 
-    private static final EntityDataAccessor<Integer> SIT_VARIATION = SynchedEntityData.defineId(LivingCandleEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(LivingCandleEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> SECOND_PHASE_COUNTER = SynchedEntityData.defineId(LivingCandleEntity.class, EntityDataSerializers.INT);
-
     public LivingCandleEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.moveControl = new net.minecraft.world.entity.ai.control.MoveControl(this);
+        this.tickCount = this.getRandom().nextInt(6);
     }
 
     @Override
@@ -92,12 +83,38 @@ public class LivingCandleEntity extends CompanionEntity {
         }
     }
 
+    @Override
+    public void handleEntityEvent(byte pId) {
+        if (pId == 3) {
+            spawnDeadParticles();
+        } else {
+            super.handleEntityEvent(pId);
+        }
+    }
+
+    private void spawnDeadParticles() {
+        for (int i = 0; i < 15; i++) {
+            double dx = ((this.random.nextDouble() - 0.5) * 2.0) * 0.2;
+            double dy = ((this.random.nextDouble() - 0.5) * 2.0) * 0.2;
+            double dz = ((this.random.nextDouble() - 0.5) * 2.0) * 0.2;
+            level().addParticle(ParticleTypes.POOF, this.getX(), this.getY() + getBbHeight() * 0.5, this.getZ(), dx * 1.05, dy * 1.05, dz * 1.05);
+            if (i % 5 == 0) level().addParticle(CompanionsParticles.GOLDEN_ALLAY_TRAIL.get(), this.getX(), this.getY() + getBbHeight() * 0.5, this.getZ(), dx, dy,dz);
+        }
+    }
+
+    public void doKill() {
+        if (this.level().isClientSide) {
+            spawnDeadParticles();
+        } else {
+            this.level().playSound(null, blockPosition(), SoundEvents.ENDER_EYE_DEATH, SoundSource.BLOCKS, 1f, 1f);
+            this.level().broadcastEntityEvent(this, (byte) 3);
+        }
+
+        this.discard();
+    }
+
     private void findNearestSoulMage(ServerLevel serverLevel) {
-        List<SoulMageEntity> nearbyMages = serverLevel.getEntitiesOfClass(
-                SoulMageEntity.class,
-                this.getBoundingBox().inflate(20.0D),
-                EntitySelector.NO_SPECTATORS
-        );
+        List<SoulMageEntity> nearbyMages = serverLevel.getEntitiesOfClass(SoulMageEntity.class, this.getBoundingBox().inflate(20.0D), EntitySelector.NO_SPECTATORS);
 
         if (!nearbyMages.isEmpty()) {
             SoulMageEntity closestMage = nearbyMages.get(0);
@@ -111,82 +128,19 @@ public class LivingCandleEntity extends CompanionEntity {
                 }
             }
 
-            this.setOwnerUUID(closestMage.getUUID());
-            this.setTame(true);
-        }
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(SIT_VARIATION, 0);
-        this.entityData.define(PHASE, 1);
-        this.entityData.define(SECOND_PHASE_COUNTER, 0);
-    }
-
-    @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        Item itemForTaming = Items.APPLE;
-        Item item = itemstack.getItem();
-
-        if (item == itemForTaming && !isTame()) {
-            if (this.level().isClientSide) {
-                return InteractionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-                if (!ForgeEventFactory.onAnimalTame(this, player)) {
-                    if (!this.level().isClientSide) {
-                        super.tame(player);
-                        this.getNavigation().stop();
-                        this.setTarget(null);
-                        this.level().broadcastEntityEvent(this, (byte) 7);
-                        setSitting(true);
-                    }
-                }
-                return InteractionResult.SUCCESS;
+            if (closestMage.getCandleCount() < SoulMageEntity.MAX_CANDLES_COUNT) {
+                this.setOwnerUUID(closestMage.getUUID());
+                closestMage.setCandleCount(closestMage.getCandleCount() + 1);
+                closestMage.candles.add(this);
+                this.setTame(true);
             }
+
         }
-
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if ((itemstack.getItem().equals(Items.APPLE)) && this.getHealth() < this.getMaxHealth()) {
-                this.heal(16.0F);
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-            } else {
-                setSitting(!isSitting());
-            }
-            return InteractionResult.SUCCESS;
-        }
-
-        if (itemstack.getItem() == itemForTaming) {
-            return InteractionResult.PASS;
-        }
-
-        return super.mobInteract(player, hand);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
-        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
-    }
-
-    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
-        return PlayState.CONTINUE;
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
@@ -195,6 +149,7 @@ public class LivingCandleEntity extends CompanionEntity {
         } else {
             event.setAnimation(IDLE);
         }
+
         return PlayState.CONTINUE;
     }
 

@@ -18,7 +18,7 @@ public class SoulFurnaceModel extends GeoModel<SoulFurnaceBlockEntity> {
 
     @Override
     public ResourceLocation getTextureResource(SoulFurnaceBlockEntity animatable) {
-        if (animatable.getBlockState().getValue(SoulFurnaceBlock.LIT))
+        if (animatable.getProgress() != 0)
             return new ResourceLocation(Companions.MOD_ID, "textures/block/soul_furnace_on_block.png");
 
         return new ResourceLocation(Companions.MOD_ID, "textures/block/soul_furnace_block.png");

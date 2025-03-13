@@ -224,11 +224,11 @@ public class AntlionEntity extends Monster implements GeoEntity {
 
                     if (!state.isAir() && state.getBlock() != Blocks.BEDROCK) {
                         if (dist == 1) {
-                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 5);
-                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 20);
+                            TickScheduler.scheduleServer(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 5);
+                            TickScheduler.scheduleServer(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 20);
                         } else {
-                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 10);
-                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 25);
+                            TickScheduler.scheduleServer(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 10);
+                            TickScheduler.scheduleServer(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 25);
                         }
                     }
                 }
@@ -252,7 +252,7 @@ public class AntlionEntity extends Monster implements GeoEntity {
                         if (dist == 1) {
                             spawnFallingBlock(serverLevel, blockPos, state, 0.18);
                         } else {
-                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 5);
+                            TickScheduler.scheduleServer(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 5);
                         }
                     }
                 }

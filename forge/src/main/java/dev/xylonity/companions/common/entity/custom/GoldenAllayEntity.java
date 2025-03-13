@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.entity.ai.soul_mage.control.GoldenAllayMoveControl;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
@@ -64,6 +65,11 @@ public class GoldenAllayEntity extends PathfinderMob implements GeoEntity {
         super.tick();
         this.noPhysics = false;
         this.setNoGravity(true);
+
+        if (tickCount % 20 == 0) {
+            this.level().addParticle(CompanionsParticles.GOLDEN_ALLAY_TRAIL.get(), getX(), getY(), getZ(), 0.35, 0.35, 0.35);
+        }
+
     }
 
     private class GoldenAllayRandomMoveGoal extends Goal {

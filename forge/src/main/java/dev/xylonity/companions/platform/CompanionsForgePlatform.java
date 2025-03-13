@@ -1,9 +1,13 @@
 package dev.xylonity.companions.platform;
 
 import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.common.block.SoulFurnaceBlock;
+import dev.xylonity.companions.common.block.TeslaReceiverBlock;
 import dev.xylonity.companions.common.item.armor.GenericArmorItem;
+import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.companions.common.item.book.books.*;
 import dev.xylonity.companions.common.item.WrenchItem;
+import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.particles.ParticleType;
@@ -15,6 +19,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -26,6 +34,18 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     @Override
     public <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item) {
         return Companions.ITEMS.register(id, item);
+    }
+
+    @Override
+    public <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, CompanionsBlocks.BlockType blockType) {
+        RegistryObject<T> tr = switch (blockType) {
+            case SOUL_FURNACE -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new SoulFurnaceBlock(properties));
+            default -> // TESLA_RECEIVER
+                    (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new TeslaReceiverBlock(properties));
+        };
+
+        registerItem(id, () -> new GenericBlockItem(tr.get(), new Item.Properties(), id));
+        return tr;
     }
 
     @Override
@@ -41,7 +61,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     public <T extends Item> Supplier<T> registerWrenchItem(String id, Item.Properties properties) {
         return (Supplier<T>) registerItem(id, () -> new WrenchItem(properties) {
             @Override
-            public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+            public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
                 pTooltipComponents.add(Component.translatable("tooltip.companions.wrench"));
                 super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
             }
@@ -72,8 +92,8 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
             case BLACK_HOLE -> {
                 return (Supplier<T>) registerItem(id, () -> new BlackHoleBook(properties));
             }
-            default -> {
-                return (Supplier<T>) registerItem(id, () -> new IceShardBook(properties)); // ICE_SHARDS
+            default -> { // ICE_SHARDS
+                return (Supplier<T>) registerItem(id, () -> new IceShardBook(properties));
             }
         }
     }

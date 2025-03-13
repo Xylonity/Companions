@@ -40,6 +40,9 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.MAGE_HAT.get());
                                 output.accept(CompanionsItems.MAGE_COAT.get());
 
+                                output.accept(CompanionsBlocks.TESLA_RECEIVER.get());
+                                output.accept(CompanionsBlocks.SOUL_FURNACE.get());
+
                             })
                             .build());
 

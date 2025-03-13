@@ -77,8 +77,8 @@ public class StoneSpikesBook extends AbstractMagicBook {
                 spike.setOwner(player);
 
                 int delay = i * DELAY_INCREMENT;
-                if (level instanceof ServerLevel serverLevel && i != 0) {
-                    TickScheduler.schedule(serverLevel, () -> level.addFreshEntity(spike), delay);
+                if ( i != 0) {
+                    TickScheduler.scheduleBoth(level, () -> level.addFreshEntity(spike), delay);
                 } else {
                     level.addFreshEntity(spike);
                 }

@@ -43,7 +43,7 @@ public class EarthQuakeItem extends Item {
                         if (dist == 1) {
                             spawnFallingBlock(serverLevel, blockPos, state, 0.23);
                         } else {
-                            TickScheduler.schedule(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 4);
+                            TickScheduler.scheduleServer(serverLevel, () -> spawnFallingBlock(serverLevel, blockPos, state, 0.18), 4);
                         }
                     }
                 }

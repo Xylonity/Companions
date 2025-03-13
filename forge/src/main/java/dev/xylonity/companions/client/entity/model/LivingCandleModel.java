@@ -15,7 +15,7 @@ public class LivingCandleModel extends GeoModel<LivingCandleEntity> {
 
     @Override
     public ResourceLocation getTextureResource(LivingCandleEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/living_candle.png");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/living_candle" + animatable.tickCount / 3 % 5 + ".png");
     }
 
     @Override

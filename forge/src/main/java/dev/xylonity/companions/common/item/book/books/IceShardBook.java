@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.item.book.AbstractMagicBook;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -61,6 +62,10 @@ public class IceShardBook extends AbstractMagicBook {
 
             double initialSpeed = 0.2;
             projectile.setDeltaMovement(randomDir.scale(initialSpeed));
+
+            LivingEntity tByMob = player.getLastHurtByMob();
+            LivingEntity tMob = player.getLastHurtMob();
+            projectile.setTarget(tByMob == null ? tMob : tByMob);
 
             pLevel.addFreshEntity(projectile);
         }

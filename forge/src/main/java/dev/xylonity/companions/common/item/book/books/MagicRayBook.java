@@ -90,7 +90,7 @@ public class MagicRayBook extends AbstractMagicBook {
                 rayPiece.setPos(piecePos.x, piecePos.y, piecePos.z);
                 setProjectileRotation(rayPiece, lookVec);
                 if (pLevel instanceof ServerLevel serverLevel) {
-                    TickScheduler.schedule(serverLevel, () -> pLevel.addFreshEntity(rayPiece), 3);
+                    TickScheduler.scheduleServer(serverLevel, () -> pLevel.addFreshEntity(rayPiece), 3);
                 }
             }
         }

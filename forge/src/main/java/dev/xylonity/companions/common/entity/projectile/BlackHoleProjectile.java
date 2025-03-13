@@ -1,5 +1,7 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.entity.custom.LivingCandleEntity;
+import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -8,10 +10,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
@@ -26,10 +25,12 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class BlackHoleProjectile extends Projectile implements GeoEntity {
@@ -163,7 +164,19 @@ public class BlackHoleProjectile extends Projectile implements GeoEntity {
     private void attractNearbyEntities() {
         AABB area = this.getBoundingBox().inflate(ATTRACT_RADIUS);
 
-        List<LivingEntity> nearby = level().getEntitiesOfClass(LivingEntity.class, area, e -> e.isAlive());
+        List<LivingEntity> nearby = level().getEntitiesOfClass(LivingEntity.class, area,
+                e -> e.isAlive()
+                && !e.equals(getOwner())
+                && !(getOwner() instanceof SoulMageEntity
+                    && ((SoulMageEntity) getOwner()).getOwner() != null
+                    && ((SoulMageEntity) getOwner()).getOwner().equals(e))
+                && !(e instanceof TamableAnimal
+                    && ((TamableAnimal) e).getOwner() != null
+                    && ((TamableAnimal) e).getOwner().equals(getOwner()))
+                && !(getOwner() instanceof SoulMageEntity && e instanceof TamableAnimal
+                    && ((TamableAnimal) e).getOwner() != null
+                    && ((TamableAnimal) e).getOwner().equals(((SoulMageEntity) getOwner()).getOwner()))
+        );
 
         for (LivingEntity ent : nearby) {
             Vec3 toCenter = new Vec3(this.getX() - ent.getX(),
@@ -191,8 +204,6 @@ public class BlackHoleProjectile extends Projectile implements GeoEntity {
             ent.setDeltaMovement(newVel);
         }
     }
-
-
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

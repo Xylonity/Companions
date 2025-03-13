@@ -150,7 +150,7 @@ public class AntlionLongAttackGoal extends Goal {
             double currentY = linearY + parabola;
 
             int delay = i / 6;
-            TickScheduler.schedule(serverLevel, () -> serverLevel.sendParticles(
+            TickScheduler.scheduleServer(serverLevel, () -> serverLevel.sendParticles(
                     particleOption,
                     currentX, currentY, currentZ,
                     1,
@@ -158,7 +158,7 @@ public class AntlionLongAttackGoal extends Goal {
                     0.01
             ), delay);
 
-            if (isHit && i == 0) TickScheduler.schedule(serverLevel, () -> attemptDamageToPlayer(target), steps / 6);
+            if (isHit && i == 0) TickScheduler.scheduleServer(serverLevel, () -> attemptDamageToPlayer(target), steps / 6);
         }
     }
 

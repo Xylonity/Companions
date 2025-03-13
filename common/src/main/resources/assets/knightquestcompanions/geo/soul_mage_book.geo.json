@@ -1,0 +1,70 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 64,
+				"texture_height": 32,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "book2",
+					"pivot": [-1.33333, 5.26667, 2.9],
+					"rotation": [90, 0, -90]
+				},
+				{
+					"name": "book",
+					"parent": "book2",
+					"pivot": [-1.13333, 7.16667, 2.9],
+					"rotation": [90, 0, 0],
+					"cubes": [
+						{"origin": [-6.13333, 6, -3.1], "size": [10, 1, 14], "inflate": 0.01, "uv": [16, 0]},
+						{"origin": [-5.13333, 6.5, -2.1], "size": [8, 2, 12], "uv": [19, 18]},
+						{"origin": [-6.13333, 6.5, -3.1], "size": [1, 2, 14], "uv": [0, 11]}
+					]
+				},
+				{
+					"name": "cover",
+					"parent": "book",
+					"pivot": [-6.10833, 8.5, 3.9],
+					"cubes": [
+						{"origin": [-5.13333, 6.5, -2.1], "size": [8, 2, 12], "pivot": [-5.10833, 8.5, 3.9], "rotation": [180, 0, 0], "uv": [19, 18]},
+						{"origin": [-6.13333, 6, -3.1], "size": [10, 1, 14], "pivot": [-5.10833, 8.5, 3.9], "rotation": [180, 0, 0], "uv": [16, 0]},
+						{"origin": [-6.13333, 6.5, -3.1], "size": [1, 2, 14], "inflate": -0.01, "pivot": [-5.10833, 8.5, 3.9], "rotation": [180, 0, 0], "uv": [0, 11]}
+					]
+				},
+				{
+					"name": "book_page",
+					"parent": "cover",
+					"pivot": [-6.13333, 8.5, 3.9],
+					"rotation": [0, 0, -1.5],
+					"cubes": [
+						{"origin": [-6.13333, 8.5, -2.1], "size": [9, 0, 12], "pivot": [-5.10833, 8.5, 3.9], "rotation": [180, 0, 0], "uv": [18, 18]}
+					]
+				},
+				{
+					"name": "book_page2",
+					"parent": "cover",
+					"pivot": [-6.13333, 8.5, 3.9],
+					"rotation": [0, 0, -1.5],
+					"cubes": [
+						{"origin": [-6.13333, 8.5, -2.1], "size": [9, 0, 12], "pivot": [-5.10833, 8.5, 3.9], "rotation": [180, 0, 0], "uv": [18, 18]}
+					]
+				},
+				{
+					"name": "book_page3",
+					"parent": "cover",
+					"pivot": [-6.13333, 8.5, 3.9],
+					"rotation": [0, 0, -1.5],
+					"cubes": [
+						{"origin": [-6.13333, 8.5, -2.1], "size": [9, 0, 12], "pivot": [-5.10833, 8.5, 3.9], "rotation": [180, 0, 0], "uv": [18, 18]}
+					]
+				}
+			]
+		}
+	]
+}

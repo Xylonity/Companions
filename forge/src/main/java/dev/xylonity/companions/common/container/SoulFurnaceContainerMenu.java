@@ -1,8 +1,7 @@
-package dev.xylonity.companions.common.blockentity.container;
+package dev.xylonity.companions.common.container;
 
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
 import dev.xylonity.companions.registry.CompanionsMenuTypes;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

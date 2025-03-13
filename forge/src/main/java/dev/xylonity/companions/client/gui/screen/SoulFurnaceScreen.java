@@ -1,10 +1,9 @@
 package dev.xylonity.companions.client.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
-import dev.xylonity.companions.common.blockentity.container.SoulFurnaceContainerMenu;
+import dev.xylonity.companions.common.container.SoulFurnaceContainerMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;

@@ -6,22 +6,31 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Random;
 
 public class BigIceShardProjectile extends AbstractArrow implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private LivingEntity target;
+
+    private static final RawAnimation APPEAR = RawAnimation.begin().thenPlay("appear");
 
     private static final int LIFETIME = 25;
 
@@ -51,6 +60,15 @@ public class BigIceShardProjectile extends AbstractArrow implements GeoEntity {
         return SoundEvents.AMETHYST_BLOCK_HIT;
     }
 
+    public void setTarget(@Nullable LivingEntity target) {
+        this.target = target;
+    }
+
+    @Nullable
+    public LivingEntity getTarget() {
+        return this.target;
+    }
+
     @Override
     protected boolean tryPickup(@NotNull Player pPlayer) {
         return false;
@@ -74,12 +92,15 @@ public class BigIceShardProjectile extends AbstractArrow implements GeoEntity {
                 }
 
                 for (int i = 0; i < 5; i++) {
-                    SmallIceShardProjectile smallIceShardProjectile = CompanionsEntities.SMALL_ICE_SHARD_PROJECTILE.get().create(level());
+                    SmallIceShardProjectile projectile = CompanionsEntities.SMALL_ICE_SHARD_PROJECTILE.get().create(level());
 
-                    if (smallIceShardProjectile != null) {
-                        smallIceShardProjectile.moveTo(getX(), getY(), getZ());
-                        smallIceShardProjectile.setOwner(owner);
-                        level().addFreshEntity(smallIceShardProjectile);
+                    if (projectile != null) {
+                        projectile.moveTo(getX(), getY(), getZ());
+                        projectile.setOwner(owner);
+
+                        projectile.setTarget(this.getTarget());
+
+                        level().addFreshEntity(projectile);
                     }
                 }
 
@@ -126,5 +147,13 @@ public class BigIceShardProjectile extends AbstractArrow implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
     }
+
+    private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
+        if (tickCount <= 8) event.getController().setAnimation(APPEAR);
+
+        return PlayState.CONTINUE;
+    }
+
 }
