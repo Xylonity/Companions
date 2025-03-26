@@ -34,4 +34,5 @@ public class IceTornadoBook extends AbstractMagicBook {
 
         return super.use(pLevel, pPlayer, pUsedHand);
     }
+
 }

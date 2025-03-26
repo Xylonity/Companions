@@ -29,6 +29,8 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<GoldenAllayEntity>> GOLDEN_ALLAY;
     public static final RegistryObject<EntityType<SoulMageEntity>> SOUL_MAGE;
     public static final RegistryObject<EntityType<LivingCandleEntity>> LIVING_CANDLE;
+    public static final RegistryObject<EntityType<CroissantDragonEntity>> CROISSANT_DRAGON;
+    public static final RegistryObject<EntityType<HostilePuppetGlove>> HOSTILE_PUPPET_GLOVE;
 
     public static final RegistryObject<EntityType<SmallIceShardProjectile>> SMALL_ICE_SHARD_PROJECTILE;
     public static final RegistryObject<EntityType<BigIceShardProjectile>> BIG_ICE_SHARD_PROJECTILE;
@@ -55,6 +57,8 @@ public class CompanionsEntities {
         GOLDEN_ALLAY = register("golden_allay", GoldenAllayEntity::new, MobCategory.CREATURE, 0.5f, 0.5f, null);
         SOUL_MAGE = register("soul_mage", SoulMageEntity::new, MobCategory.CREATURE, 0.85f, 1.2f, null);
         LIVING_CANDLE = register("living_candle", LivingCandleEntity::new, MobCategory.CREATURE, 0.5f, 0.75f, null);
+        CROISSANT_DRAGON = register("croissant_dragon", CroissantDragonEntity::new, MobCategory.CREATURE, 1.4f, 1.4f, null);
+        HOSTILE_PUPPET_GLOVE = register("hostile_puppet_glove", HostilePuppetGlove::new, MobCategory.CREATURE, 0.6f, 0.6f, null);
 
         SMALL_ICE_SHARD_PROJECTILE = register("small_ice_shard_projectile", SmallIceShardProjectile::new, MobCategory.MISC, 0.4f, 0.5f, EntityType.Builder::fireImmune);
         BIG_ICE_SHARD_PROJECTILE = register("big_ice_shard_projectile", BigIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, EntityType.Builder::fireImmune);

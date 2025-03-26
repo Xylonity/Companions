@@ -23,6 +23,8 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.GOLDEN_ALLAY.get(), GoldenAllayEntity.setAttributes());
         event.put(CompanionsEntities.SOUL_MAGE.get(), SoulMageEntity.setAttributes());
         event.put(CompanionsEntities.LIVING_CANDLE.get(), LivingCandleEntity.setAttributes());
+        event.put(CompanionsEntities.CROISSANT_DRAGON.get(), CroissantDragonEntity.setAttributes());
+        event.put(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGlove.setAttributes());
     }
 
 }

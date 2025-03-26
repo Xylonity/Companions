@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.event;
 
 import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.client.blockentity.renderer.CroissantEggRenderer;
 import dev.xylonity.companions.client.blockentity.renderer.SoulFurnaceRenderer;
 import dev.xylonity.companions.client.blockentity.renderer.TeslaReceiverRenderer;
 import dev.xylonity.companions.client.entity.renderer.*;
@@ -37,6 +38,8 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.GOLDEN_ALLAY.get(), GoldenAllayRenderer::new);
         EntityRenderers.register(CompanionsEntities.SOUL_MAGE.get(), SoulMageRenderer::new);
         EntityRenderers.register(CompanionsEntities.LIVING_CANDLE.get(), LivingCandleRenderer::new);
+        EntityRenderers.register(CompanionsEntities.CROISSANT_DRAGON.get(), CroissantDragonRenderer::new);
+        EntityRenderers.register(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGloveRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.SMALL_ICE_SHARD_PROJECTILE.get(), IceShardSmallRenderer::new);
         EntityRenderers.register(CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.get(), IceShardBigRenderer::new);
@@ -53,6 +56,7 @@ public class CompanionsClientEvents {
 
         BlockEntityRenderers.register(CompanionsBlockEntities.TESLA_RECEIVER.get(), TeslaReceiverRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.SOUL_FURNACE.get(), SoulFurnaceRenderer::new);
+        BlockEntityRenderers.register(CompanionsBlockEntities.CROISSANT_EGG.get(), CroissantEggRenderer::new);
 
         MenuScreens.register(CompanionsMenuTypes.SOUL_FURNACE.get(), SoulFurnaceScreen::new);
         MenuScreens.register(CompanionsMenuTypes.SOUL_MAGE_CONTAINER.get(), SoulMageScreen::new);

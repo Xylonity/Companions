@@ -42,6 +42,11 @@ public class CompanionsCreativeModeTabs {
 
                                 output.accept(CompanionsBlocks.TESLA_RECEIVER.get());
                                 output.accept(CompanionsBlocks.SOUL_FURNACE.get());
+                                output.accept(CompanionsBlocks.CROISSANT_EGG.get());
+
+                                output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get());
+                                output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get());
+                                output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get());
 
                             })
                             .build());

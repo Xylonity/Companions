@@ -30,12 +30,12 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
     private final RawAnimation DEAD = RawAnimation.begin().thenPlay("dead");
     private final RawAnimation SUMMON = RawAnimation.begin().thenPlay("summon");
 
-    private static final EntityDataAccessor<Integer> TARGET_RED   = SynchedEntityData.defineId(SoulMageBookEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TARGET_RED = SynchedEntityData.defineId(SoulMageBookEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TARGET_GREEN = SynchedEntityData.defineId(SoulMageBookEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> TARGET_BLUE  = SynchedEntityData.defineId(SoulMageBookEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Float> CURRENT_RED   = SynchedEntityData.defineId(SoulMageBookEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> TARGET_BLUE = SynchedEntityData.defineId(SoulMageBookEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> CURRENT_RED = SynchedEntityData.defineId(SoulMageBookEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> CURRENT_GREEN = SynchedEntityData.defineId(SoulMageBookEntity.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float> CURRENT_BLUE  = SynchedEntityData.defineId(SoulMageBookEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> CURRENT_BLUE = SynchedEntityData.defineId(SoulMageBookEntity.class, EntityDataSerializers.FLOAT);
 
     public SoulMageBookEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -46,27 +46,24 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
     public void tick() {
         super.tick();
 
-        if (getOwner() == null || getOwner().isRemoved()) {
-            this.remove(RemovalReason.DISCARDED);
-            return;
-        }
+        if (getOwner() == null || getOwner().isRemoved()) this.remove(RemovalReason.DISCARDED);
 
         if (!this.level().isClientSide) {
             updateTargetColor();
             updateCurrentColor();
         }
 
-        orbit(getOwner());
+        if (getOwner() != null) orbit(getOwner());
     }
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(TARGET_RED,   255);
+        this.entityData.define(TARGET_RED, 255);
         this.entityData.define(TARGET_GREEN, 255);
-        this.entityData.define(TARGET_BLUE,  255);
-        this.entityData.define(CURRENT_RED,   255.0f);
+        this.entityData.define(TARGET_BLUE, 255);
+        this.entityData.define(CURRENT_RED, 255.0f);
         this.entityData.define(CURRENT_GREEN, 255.0f);
-        this.entityData.define(CURRENT_BLUE,  255.0f);
+        this.entityData.define(CURRENT_BLUE, 255.0f);
     }
 
     public float getCurrentRed() {
@@ -82,8 +79,7 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
     }
 
     public void updateTargetColor() {
-        Entity owner = this.getOwner();
-        if (owner instanceof SoulMageEntity soulMageEntity) {
+        if (this.getOwner() instanceof SoulMageEntity soulMageEntity) {
             int[] color = SoulMageEntity.ATTACK_COLORS.getOrDefault(soulMageEntity.getCurrentAttackType(), SoulMageEntity.ATTACK_COLORS.get("NONE"));
             this.entityData.set(TARGET_RED, color[0]);
             this.entityData.set(TARGET_GREEN, color[1]);
@@ -93,6 +89,7 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
             this.entityData.set(TARGET_GREEN, 255);
             this.entityData.set(TARGET_BLUE, 255);
         }
+
     }
 
     public void updateCurrentColor() {
@@ -121,12 +118,11 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
         double radius = 2.0;
         Vec3 orbitOffset = new Vec3(radius * Math.cos(angle), 0, radius * Math.sin(angle));
         Vec3 targetPos = new Vec3(owner.getX(), owner.getY(), owner.getZ()).add(0, owner.getBbHeight(), 0).add(orbitOffset);
-        Vec3 offset = targetPos.subtract(this.position());
         Vec3 vel = this.getDeltaMovement();
 
         double K = 0.006;
         double C = 2.0 * Math.sqrt(K);
-        Vec3 accel = offset.scale(K).subtract(vel.scale(C));
+        Vec3 accel = targetPos.subtract(position()).scale(K).subtract(vel.scale(C));
         vel = vel.add(accel);
 
         this.setDeltaMovement(vel);
@@ -158,6 +154,7 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
             this.entityData.set(CURRENT_GREEN, pCompound.getFloat("CurrentGreen"));
             this.entityData.set(CURRENT_BLUE, pCompound.getFloat("CurrentBlue"));
         }
+
     }
 
     @Override

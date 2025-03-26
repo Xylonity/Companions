@@ -14,6 +14,7 @@ public class CompanionsBlocks {
 
     public static final Supplier<Block> TESLA_RECEIVER;
     public static final Supplier<Block> SOUL_FURNACE;
+    public static final Supplier<Block> CROISSANT_EGG;
 
     static {
         TESLA_RECEIVER = registerBlock("tesla_receiver_block",
@@ -31,6 +32,14 @@ public class CompanionsBlocks {
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
                         .noOcclusion(), BlockType.SOUL_FURNACE);
+
+        CROISSANT_EGG = registerBlock("croissant_egg_block",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.CROISSANT_EGG);
     }
 
     private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType) {
@@ -39,7 +48,8 @@ public class CompanionsBlocks {
 
     public enum BlockType {
         TESLA_RECEIVER,
-        SOUL_FURNACE
+        SOUL_FURNACE,
+        CROISSANT_EGG
     }
 
 }

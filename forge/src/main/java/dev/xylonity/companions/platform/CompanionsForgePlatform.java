@@ -1,6 +1,7 @@
 package dev.xylonity.companions.platform;
 
 import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.common.block.CroissantEggBlock;
 import dev.xylonity.companions.common.block.SoulFurnaceBlock;
 import dev.xylonity.companions.common.block.TeslaReceiverBlock;
 import dev.xylonity.companions.common.item.armor.GenericArmorItem;
@@ -40,6 +41,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     public <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, CompanionsBlocks.BlockType blockType) {
         RegistryObject<T> tr = switch (blockType) {
             case SOUL_FURNACE -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new SoulFurnaceBlock(properties));
+            case CROISSANT_EGG -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new CroissantEggBlock(properties));
             default -> // TESLA_RECEIVER
                     (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new TeslaReceiverBlock(properties));
         };
