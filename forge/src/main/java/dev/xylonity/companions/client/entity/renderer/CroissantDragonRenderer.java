@@ -45,4 +45,5 @@ public class CroissantDragonRenderer extends GeoEntityRenderer<CroissantDragonEn
 
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
+
 }

@@ -22,7 +22,7 @@ public class CroissantEggModel extends GeoModel<CroissantEggBlockEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(CroissantEggBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return new ResourceLocation(Companions.MOD_ID, "animations/croissant_egg_block.animation.json");
     }
 
 }

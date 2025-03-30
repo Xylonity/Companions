@@ -62,7 +62,7 @@ public class SoulFurnaceScreen extends AbstractContainerScreen<SoulFurnaceContai
             int progressWidth = 24;
             int progressHeight = 17;
             int progress = (int) ((float) menu.getProgress() / menu.getProcessingTime() * progressWidth);
-            guiGraphics.blit(TEXTURE, relX + 79, relY + 34, 176, 14, progress, progressHeight);
+            guiGraphics.blit(TEXTURE, relX + 79, relY + 40, 176, 14, progress, progressHeight);
         }
 
         int chargeCount = menu.getCharge();

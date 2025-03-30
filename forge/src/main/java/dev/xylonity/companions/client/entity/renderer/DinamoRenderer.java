@@ -1,14 +1,19 @@
 package dev.xylonity.companions.client.entity.renderer;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.client.blockentity.renderer.TeslaReceiverRenderer;
 import dev.xylonity.companions.client.entity.model.DinamoModel;
 import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.custom.DinamoEntity;
 import dev.xylonity.companions.common.event.ClientEntityTracker;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -39,6 +44,18 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
         ));
         addRenderLayer(new AutoGlowingGeoLayer<>(this));
     }
+
+    //public static RenderType decacheShaderRendering(ResourceLocation texture) {
+    //    return RenderType.create("dynamic_electric_arch", DefaultVertexFormat.NEW_ENTITY,
+    //            VertexFormat.Mode.QUADS, 256, false, true,
+    //            RenderType.CompositeState.builder()
+    //                    .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEntityCutoutShader))
+    //                    .setTextureState(new RenderStateShard.ShaderStateShard.TextureStateShard(texture, false, false))
+    //                    .setCullState(new RenderStateShard.CullStateShard(false))
+    //                    .setLightmapState(new RenderStateShard.LightmapStateShard(true))
+    //                    .setOverlayState(new RenderStateShard.OverlayStateShard(true))
+    //                    .createCompositeState(false));
+    //}
 
     public DinamoRenderer(EntityRendererProvider.Context renderManager) {
         this(renderManager, 8, DinamoEntity.ELECTRICAL_CHARGE_DURATION / 8);
@@ -129,6 +146,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
         // https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
         private void renderConnection(MultiBufferSource bufferSource, PoseStack poseStack, Vec3 p0, Vec3 p1, int frame, int light) {
             VertexConsumer vertexConsumer = bufferSource.getBuffer(AutoGlowingTexture.getRenderType(texture));
+            //VertexConsumer vertexConsumer = bufferSource.getBuffer(decacheShaderRendering(texture));
             //VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
             Matrix4f positionMatrix = poseStack.last().pose();
             Matrix3f normalMatrix = poseStack.last().normal();

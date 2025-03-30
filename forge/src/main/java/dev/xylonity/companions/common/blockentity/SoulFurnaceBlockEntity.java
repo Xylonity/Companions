@@ -3,16 +3,21 @@ package dev.xylonity.companions.common.blockentity;
 import dev.xylonity.companions.common.block.SoulFurnaceBlock;
 import dev.xylonity.companions.common.container.SoulFurnaceContainerMenu;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
+import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -24,7 +29,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +43,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.List;
+import java.util.Random;
 
 public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntity, MenuProvider, Container {
 
@@ -49,14 +57,23 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     private SoulFurnaceRecipe currentRecipe = null;
 
     public static final List<SoulFurnaceRecipe> RECIPES = List.of(
-            new SoulFurnaceRecipe(Items.IRON_INGOT, Items.GOLD_INGOT, 1, 100, null),
-            new SoulFurnaceRecipe(Items.GOLD_INGOT, Items.DIAMOND, 3, 300, null),
-            new SoulFurnaceRecipe(Items.DIAMOND, CompanionsItems.SOUL_GEM.get(), 1, 160, null),
-            new SoulFurnaceRecipe(CompanionsItems.BIG_BREAD.get(), null, 3, 100, CompanionsEntities.LIVING_CANDLE.get())
+            new SoulFurnaceRecipe(Items.CANDLE, null, 1, 100, CompanionsEntities.LIVING_CANDLE.get(), null),
+            new SoulFurnaceRecipe(Items.DIAMOND, CompanionsItems.SOUL_GEM.get(), 1, 160, null, null),
+            new SoulFurnaceRecipe(CompanionsItems.BIG_BREAD.get(), null, 3, 50, null, CompanionsBlocks.CROISSANT_EGG.get())
     );
 
     public SoulFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(CompanionsBlockEntities.SOUL_FURNACE.get(), pos, state);
+    }
+
+    @Override
+    public boolean canPlaceItem(int pIndex, ItemStack pStack) {
+        return pIndex == 0;
+    }
+
+    @Override
+    public boolean canTakeItem(Container pTarget, int pIndex, ItemStack pStack) {
+        return pIndex == 1;
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T F) {
@@ -83,9 +100,10 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
             }
 
             if (furnace.currentRecipe == null && !furnace.getItem(0).isEmpty()) {
-                Item inputItem = furnace.getItem(0).getItem();
+                ItemStack inputStack = furnace.getItem(0);
                 for (SoulFurnaceRecipe recipe : RECIPES) {
-                    if (recipe.input == inputItem && furnace.charge >= recipe.requiredCharges) {
+                    if (recipe.input == inputStack.getItem() && furnace.charge >= recipe.requiredCharges) {
+                        inputStack.shrink(1);
                         furnace.currentRecipe = recipe;
                         furnace.processingTime = recipe.processTime;
                         furnace.currentProgress = 0;
@@ -109,6 +127,42 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
                                 entity.moveTo(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, 0, 0);
                                 level.addFreshEntity(entity);
                             }
+                        } else {
+                            if (recipe.block() != null) {
+                                BlockPos targetPos = pos.relative(state.getValue(SoulFurnaceBlock.FACING));
+                                if (level.isEmptyBlock(targetPos)) {
+                                    level.setBlockAndUpdate(targetPos, recipe.block().defaultBlockState().mirror(Mirror.FRONT_BACK));
+
+                                    Random r = new Random();
+                                    for (int i = 0; i < 25; i++) {
+                                        double dx = (r.nextDouble() - 0.5) * 2.5;
+                                        double dy = (r.nextDouble() - 0.5) * 1.5;
+                                        double dz = (r.nextDouble() - 0.5) * 2.5;
+                                        if (level instanceof ServerLevel serverLevel) {
+                                            serverLevel.sendParticles(ParticleTypes.POOF, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 1, dx, dy, dz, 0.04);
+                                        }
+                                    }
+
+                                } else {
+                                    if (level.getBlockState(targetPos).getBlock() == recipe.block()) {
+                                        BlockPos stackPos = targetPos;
+                                        while (!level.isEmptyBlock(stackPos) && stackPos.getY() < level.getMaxBuildHeight()) {
+                                            stackPos = stackPos.above();
+                                        }
+
+                                        if (level.isEmptyBlock(stackPos)) {
+                                            level.setBlockAndUpdate(stackPos, recipe.block().defaultBlockState());
+                                        } else {
+                                            Containers.dropItemStack(level, targetPos.getX(), targetPos.getY(), targetPos.getZ(), new ItemStack(recipe.block()));
+                                        }
+                                    } else {
+                                        Containers.dropItemStack(level, targetPos.getX(), targetPos.getY(), targetPos.getZ(), new ItemStack(recipe.block()));
+                                    }
+                                }
+
+                                level.playSound(null, pos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS, 1f, 1f);
+                            }
+
                         }
                     } else {
                         if (furnace.getItem(1).isEmpty()) {
@@ -143,16 +197,14 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
         this.charge = tag.getInt("Charge");
         this.currentProgress = tag.getInt("Progress");
         this.processingTime = tag.getInt("ProcessingTime");
-        String recipeInput = tag.getString("CurrentRecipeInput");
-        if (!recipeInput.isEmpty()) {
-            for (SoulFurnaceRecipe recipe : RECIPES) {
-                //ResourceLocation rl = recipe.input.getRegistryName();
-                //if (rl != null && rl.toString().equals(recipeInput)) {
-                //    this.currentRecipe = recipe;
-                //    break;
-                //}
+
+        if (tag.contains("CurrentRecipeIndex")) {
+            int index = tag.getInt("CurrentRecipeIndex");
+            if (index >= 0 && index < RECIPES.size()) {
+                this.currentRecipe = RECIPES.get(index);
             }
         }
+
         this.items = NonNullList.withSize(2, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(tag, this.items);
     }
@@ -163,7 +215,14 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
         tag.putInt("Charge", this.charge);
         tag.putInt("Progress", this.currentProgress);
         tag.putInt("ProcessingTime", this.processingTime);
-        //tag.putString("CurrentRecipeInput", currentRecipe != null && currentRecipe.input.getRegistryName() != null ? currentRecipe.input.getRegistryName().toString() : "");
+
+        if (this.currentRecipe != null) {
+            int index = RECIPES.indexOf(this.currentRecipe);
+            tag.putInt("CurrentRecipeIndex", index);
+        } else {
+            tag.putInt("CurrentRecipeIndex", -1);
+        }
+
         ContainerHelper.saveAllItems(tag, this.items);
     }
 
@@ -265,8 +324,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
 
     @Override
     public void setItem(int index, ItemStack stack) {
-
-        if (index == 0 && !stack.isEmpty()) {
+        if (index == 0 && !stack.isEmpty() && this.currentRecipe == null) {
             for (SoulFurnaceRecipe recipe : RECIPES) {
                 if (recipe.input == stack.getItem() && this.charge >= recipe.requiredCharges) {
                     stack.shrink(1);
@@ -302,5 +360,5 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
         return MAX_CHARGE;
     }
 
-    public record SoulFurnaceRecipe(Item input, Item output, int requiredCharges, int processTime, EntityType<?> entityType) { ;; }
+    public record SoulFurnaceRecipe(Item input, Item output, int requiredCharges, int processTime, EntityType<?> entityType, Block block) { ;; }
 }

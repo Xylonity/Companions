@@ -9,6 +9,7 @@ public class CompanionsConfig {
     public static final ConfigEntry<Boolean> DINAMO_RECEIVER_REDSTONE_MODE = ConfigRegistry.of("DINAMO_RECEIVER_REDSTONE_MODE", true);
 
     public static final ConfigEntry<Double> FIRE_MARK_EFFECT_RADIUS = ConfigRegistry.of("FIRE_MARK_EFFECT_RADIUS", 2.5D);
+    public static final ConfigEntry<Double> HEAL_RING_HEALING = ConfigRegistry.of("HEAL_RING_HEALING", 6D);
 
     public static class ConfigEntry<T> {
         private final String key;

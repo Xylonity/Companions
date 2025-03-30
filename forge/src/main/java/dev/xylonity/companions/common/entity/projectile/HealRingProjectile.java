@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -24,6 +25,7 @@ public class HealRingProjectile extends Projectile implements GeoEntity {
     private final RawAnimation HEAL = RawAnimation.begin().thenPlay("heal");
 
     private final int LIFETIME = 23;
+    private boolean hasHealed = false;
 
     public HealRingProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -39,7 +41,13 @@ public class HealRingProjectile extends Projectile implements GeoEntity {
 
         if (owner == null) this.remove(RemovalReason.DISCARDED);
 
-        if (owner != null && !owner.isRemoved()) {
+        if (owner != null && !owner.isRemoved() && owner instanceof LivingEntity livingEntity) {
+
+            if (tickCount % 10 == 0 && !hasHealed) {
+                livingEntity.heal(CompanionsConfig.HEAL_RING_HEALING.get().floatValue());
+                hasHealed = true;
+            }
+
             Vec3 targetPos = new Vec3(owner.getX(), owner.getY(), owner.getZ());
             Vec3 offset = targetPos.subtract(this.position());
             Vec3 velocity = this.getDeltaMovement();

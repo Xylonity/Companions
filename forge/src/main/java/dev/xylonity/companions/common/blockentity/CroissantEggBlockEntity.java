@@ -8,18 +8,23 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.util.RenderUtils;
 
 public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    private int tickCounter = 0;
-    private static final int MAX_TIMEOUT = 60;
+    private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
 
-    private boolean spasm = false;
+    private int tickCounter = 0;
+    private static final int MAX_TIMEOUT = 100;
 
     public CroissantEggBlockEntity(BlockPos pos, BlockState state) {
         super(CompanionsBlockEntities.CROISSANT_EGG.get(), pos, state);
@@ -27,9 +32,9 @@ public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEnti
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T F) {
         if (F instanceof CroissantEggBlockEntity egg) {
-            if (!level.isClientSide()) {
-                egg.tickCounter++;
+            egg.tickCounter++;
 
+            if (!level.isClientSide()) {
                 if (egg.tickCounter >= MAX_TIMEOUT) {
                     level.removeBlock(pos, false);
 
@@ -48,7 +53,12 @@ public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEnti
                     }
                 }
             }
+
+            if (egg.tickCounter % 40 == 0) {
+
+            }
         }
+
     }
 
     public int getTickCounter() {
@@ -61,7 +71,14 @@ public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEnti
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) { ;; }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
+    }
+
+    private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
+        event.getController().setAnimation(IDLE);
+        return PlayState.CONTINUE;
+    }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

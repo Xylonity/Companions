@@ -2,17 +2,32 @@ package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.entity.ai.soul_mage.control.GoldenAllayMoveControl;
+import dev.xylonity.companions.common.tick.TickScheduler;
+import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -22,14 +37,22 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
 
-public class GoldenAllayEntity extends PathfinderMob implements GeoEntity {
+public class GoldenAllayEntity extends Animal implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("fly_idle");
     private final RawAnimation FLY = RawAnimation.begin().thenPlay("fly");
     private final RawAnimation LEVITATE = RawAnimation.begin().thenPlay("levitate");
+    private final RawAnimation HAT = RawAnimation.begin().thenPlay("hat");
+    private final RawAnimation SHIRT = RawAnimation.begin().thenPlay("tshirt");
+    private final RawAnimation TRANSFORM = RawAnimation.begin().thenPlay("transform");
 
-    public GoldenAllayEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
+    private static final EntityDataAccessor<Integer> ACTIVE_PIECES = SynchedEntityData.defineId(GoldenAllayEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> PIECE_ANIMATION = SynchedEntityData.defineId(GoldenAllayEntity.class, EntityDataSerializers.INT);
+
+    private boolean shouldTransform = false;
+
+    public GoldenAllayEntity(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
         this.moveControl = new GoldenAllayMoveControl(this);
@@ -70,6 +93,38 @@ public class GoldenAllayEntity extends PathfinderMob implements GeoEntity {
             this.level().addParticle(CompanionsParticles.GOLDEN_ALLAY_TRAIL.get(), getX(), getY(), getZ(), 0.35, 0.35, 0.35);
         }
 
+        if (activePieces() == 3 && !shouldTransform) {
+            int transformDelay = 40;
+
+            TickScheduler.scheduleServer(level(), () -> setPieceAnimation(3), transformDelay);
+
+            TickScheduler.scheduleBoth(this.level(), () -> this.remove(RemovalReason.DISCARDED), 80 + transformDelay);
+            TickScheduler.scheduleBoth(this.level(), () -> {
+                for (int i = 0; i < 50; i++) {
+                    double dx = (this.random.nextDouble() - 0.5) * 2.5;
+                    double dy = (this.random.nextDouble() - 0.5) * 1.5;
+                    double dz = (this.random.nextDouble() - 0.5) * 2.5;
+                    if (this.level() instanceof ServerLevel level) {
+                        level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.1);
+                    }
+                }
+            }, 80 + transformDelay);
+
+            shouldTransform = true;
+
+        }
+
+        if (shouldTransform) {
+            this.getNavigation().stop();
+            this.setDeltaMovement(Vec3.ZERO);
+        }
+
+    }
+
+    @Nullable
+    @Override
+    public AgeableMob getBreedOffspring(@NotNull ServerLevel serverLevel, @NotNull AgeableMob ageableMob) {
+        return null;
     }
 
     private class GoldenAllayRandomMoveGoal extends Goal {
@@ -95,6 +150,7 @@ public class GoldenAllayEntity extends PathfinderMob implements GeoEntity {
                     if (GoldenAllayEntity.this.getTarget() == null) {
                         GoldenAllayEntity.this.getLookControl().setLookAt((double)$$2.getX() + 0.5, (double)$$2.getY() + 0.5, (double)$$2.getZ() + 0.5, 180.0F, 20.0F);
                     }
+
                     break;
                 }
             }
@@ -103,9 +159,65 @@ public class GoldenAllayEntity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ACTIVE_PIECES, 0);
+        this.entityData.define(PIECE_ANIMATION, 0);
+    }
+
+    public int activePieces() {
+        return this.entityData.get(ACTIVE_PIECES);
+    }
+
+    public void setActivePieces(int piece) {
+        this.entityData.set(ACTIVE_PIECES, piece);
+    }
+
+    public int pieceAnimation() {
+        return this.entityData.get(PIECE_ANIMATION);
+    }
+
+    public void setPieceAnimation(int piece) {
+        this.entityData.set(PIECE_ANIMATION, piece);
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
+        ItemStack stack = pPlayer.getItemInHand(pHand);
+
+        if (!this.level().isClientSide) {
+            if (stack.getItem() == CompanionsItems.MAGE_HAT.get() && activePieces() != 1 && activePieces() != 3) {
+                this.setActivePieces(activePieces() + 1);
+                this.setPieceAnimation(1);
+                TickScheduler.scheduleServer(this.level(), () -> this.setPieceAnimation(0), 20);
+
+                if (!pPlayer.getAbilities().instabuild) stack.shrink(1);
+
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+
+                return InteractionResult.SUCCESS;
+            } else if (stack.getItem() == CompanionsItems.MAGE_COAT.get() && activePieces() != 2 && activePieces() != 3) {
+                this.setActivePieces(activePieces() + 2);
+                this.setPieceAnimation(2);
+                TickScheduler.scheduleServer(this.level(), () -> this.setPieceAnimation(0), 15);
+
+                if (!pPlayer.getAbilities().instabuild) stack.shrink(1);
+
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+
+                return InteractionResult.SUCCESS;
+            }
+        } else {
+            return InteractionResult.CONSUME;
+        }
+
+        return super.mobInteract(pPlayer, pHand);
+    }
+
+    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 6, this::predicate));
-        controllerRegistrar.add(new AnimationController<>(this, "levitateController", 1, this::levitatePredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
+        controllerRegistrar.add(new AnimationController<>(this, "levitateController", this::levitatePredicate));
     }
 
     private <T extends GeoAnimatable> PlayState levitatePredicate(AnimationState<T> event) {
@@ -114,7 +226,13 @@ public class GoldenAllayEntity extends PathfinderMob implements GeoEntity {
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-        if (event.isMoving()) {
+        if (pieceAnimation() == 3) {
+            event.getController().setAnimation(TRANSFORM);
+        } else if (pieceAnimation() == 1) {
+            event.getController().setAnimation(HAT);
+        } else if (pieceAnimation() == 2) {
+            event.getController().setAnimation(SHIRT);
+        } else if (event.isMoving()) {
             event.getController().setAnimation(FLY);
         } else {
             event.getController().setAnimation(IDLE);
