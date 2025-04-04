@@ -1,9 +1,15 @@
 package dev.xylonity.companions.common.blockentity;
 
-import dev.xylonity.companions.common.block.CroissantEggBlock;
+import dev.xylonity.companions.common.entity.custom.CroissantDragonEntity;
+import dev.xylonity.companions.common.tick.TickScheduler;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
+import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,9 +28,11 @@ public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEnti
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
+    private final RawAnimation SPASM = RawAnimation.begin().thenPlay("spasms");
 
     private int tickCounter = 0;
-    private static final int MAX_TIMEOUT = 100;
+
+    private boolean spasm = false;
 
     public CroissantEggBlockEntity(BlockPos pos, BlockState state) {
         super(CompanionsBlockEntities.CROISSANT_EGG.get(), pos, state);
@@ -34,29 +42,25 @@ public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEnti
         if (F instanceof CroissantEggBlockEntity egg) {
             egg.tickCounter++;
 
-            if (!level.isClientSide()) {
-                if (egg.tickCounter >= MAX_TIMEOUT) {
-                    level.removeBlock(pos, false);
+            if (egg.tickCounter >= CompanionsConfig.CROISSANT_EGG_LIFETIME.get()) {
+                level.destroyBlock(pos, false);
 
-                    for (int i = 0; i < 10; i++) {
-                        double offsetX = 0.5 + (level.random.nextDouble() - 0.5);
-                        double offsetY = 0.5 + (level.random.nextDouble() - 0.5);
-                        double offsetZ = 0.5 + (level.random.nextDouble() - 0.5);
-                        double velX = (level.random.nextDouble() - 0.5) * 0.2;
-                        double velY = (level.random.nextDouble() - 0.5) * 0.2;
-                        double velZ = (level.random.nextDouble() - 0.5) * 0.2;
-                        level.addParticle(ParticleTypes.SMOKE,
-                                pos.getX() + offsetX,
-                                pos.getY() + offsetY,
-                                pos.getZ() + offsetZ,
-                                velX, velY, velZ);
-                    }
+                Entity croissantDragonEntity = CompanionsEntities.CROISSANT_DRAGON.get().create(level);
+                if (croissantDragonEntity instanceof CroissantDragonEntity croissantDragon) {
+                    croissantDragon.moveTo(egg.getBlockPos().getCenter());
+                    level.addFreshEntity(croissantDragon);
                 }
             }
 
-            if (egg.tickCounter % 40 == 0) {
-
+            if (egg.tickCounter % 200 == 0) {
+                egg.spasm = true;
+                TickScheduler.scheduleBoth(level, () -> egg.spasm = false, 40);
             }
+
+            if (egg.tickCounter % 25 == 0) {
+                level.addParticle(ParticleTypes.CLOUD, egg.getBlockPos().getX() + 0.5, egg.getBlockPos().getY(), egg.getBlockPos().getZ() + 0.5, 0.0015, 0.1, 0.0015);
+            }
+
         }
 
     }
@@ -72,11 +76,16 @@ public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEnti
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 5, this::predicate));
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-        event.getController().setAnimation(IDLE);
+        if (spasm) {
+            event.getController().setAnimation(SPASM);
+        } else {
+            event.getController().setAnimation(IDLE);
+        }
+
         return PlayState.CONTINUE;
     }
 

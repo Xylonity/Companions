@@ -67,7 +67,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     @Override
-    public boolean canPlaceItem(int pIndex, ItemStack pStack) {
+    public boolean canPlaceItem(int pIndex, @NotNull ItemStack pStack) {
         return pIndex == 0;
     }
 

@@ -46,4 +46,14 @@ public class CroissantDragonRenderer extends GeoEntityRenderer<CroissantDragonEn
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
+    @Override
+    public void render(CroissantDragonEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        float scale = entity.getMilkAmount() == 0 ? 0.3f
+                : entity.getMilkAmount() == 1 ? 0.5f
+                : entity.getMilkAmount() == 2 ? 0.7f
+                : 1f;
+        poseStack.scale(scale, scale, scale);
+
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
 }

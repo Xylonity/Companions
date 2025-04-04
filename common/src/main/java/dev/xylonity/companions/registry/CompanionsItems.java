@@ -2,6 +2,7 @@ package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.item.EternalLighter;
+import dev.xylonity.companions.common.item.PuppetArm;
 import dev.xylonity.companions.common.material.ArmorMaterials;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -19,6 +20,10 @@ public class CompanionsItems {
     public static final Supplier<Item> NETHERITE_CHAINS = registerItem("netherite_chains", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> BIG_BREAD = registerItem("big_bread", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> SOUL_GEM = registerItem("soul_gem", () -> new Item(new Item.Properties()));
+    public static final Supplier<Item> CANNON_ARM = registerItem("cannon_arm", () -> new PuppetArm(new Item.Properties()));
+    public static final Supplier<Item> WHIP_ARM = registerItem("whip_arm", () -> new PuppetArm(new Item.Properties()));
+    public static final Supplier<Item> BLADE_ARM = registerItem("blade_arm", () -> new PuppetArm(new Item.Properties()));
+    public static final Supplier<Item> MUTANT_ARM = registerItem("mutant_arm", () -> new PuppetArm(new Item.Properties()));
 
     public static final Supplier<Item> CROISSANT_DRAGON_ARMOR_STRAWBERRY = registerItem("croissant_dragon_strawberry_armor", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> CROISSANT_DRAGON_ARMOR_VANILLA = registerItem("croissant_dragon_vanilla_armor", () -> new Item(new Item.Properties()));
@@ -38,6 +43,7 @@ public class CompanionsItems {
 
     public static final Supplier<Item> MAGE_COAT = registerArmorItem("mage_coat", ArmorMaterials.MAGE, ArmorItem.Type.CHESTPLATE, false);
     public static final Supplier<Item> MAGE_HAT = registerArmorItem("mage_hat", ArmorMaterials.MAGE, ArmorItem.Type.HELMET, true);
+    public static final Supplier<Item> MAGE_STAFF = registerItem("mage_staff", () -> new Item(new Item.Properties()));
 
     private static <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item) {
         return CompanionsCommon.COMMON_PLATFORM.registerItem(id, item);

@@ -1,6 +1,9 @@
 package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
+import dev.xylonity.companions.common.entity.custom.DinamoEntity;
+import dev.xylonity.companions.common.event.ClientEntityTracker;
+import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.common.util.interfaces.IActivable;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;

@@ -3,12 +3,15 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.croissant.CroissantDragonAttackGoal;
 import dev.xylonity.companions.common.entity.ai.soul_mage.goal.*;
 import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
 import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
+import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
 import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,6 +22,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,7 +54,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class CroissantDragonEntity extends CompanionEntity implements RangedAttackMob {
+public class CroissantDragonEntity extends CompanionEntity {
     public SimpleContainer inventory;
 
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
@@ -64,6 +69,7 @@ public class CroissantDragonEntity extends CompanionEntity implements RangedAtta
     private static final EntityDataAccessor<String> ARMOR_NAME = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> EATEN_AMOUNT = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> HAS_BEEN_EATEN = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> MILK_AMOUNT = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.INT);
 
     private final int EATEN_DELAY = 10;
     private int nextEatenRecover = 0;
@@ -81,7 +87,9 @@ public class CroissantDragonEntity extends CompanionEntity implements RangedAtta
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(2, new CroissantDragonAttackGoal(this));
+
+        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new SoulMageOwnerHurtTargetGoal(this));
@@ -92,20 +100,18 @@ public class CroissantDragonEntity extends CompanionEntity implements RangedAtta
         super.tick();
 
         if (!this.level().isClientSide) {
-
             if (getEatenAmount() > 0 && this.tickCount >= nextEatenRecover) {
                 setEatenAmount(getEatenAmount() - 1);
 
                 nextEatenRecover = this.tickCount + this.level().getRandom().nextInt(201) + 100;
             }
-
         }
 
     }
 
     public static AttributeSupplier setAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 20D)
+                .add(Attributes.MAX_HEALTH, 80D)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
@@ -152,6 +158,14 @@ public class CroissantDragonEntity extends CompanionEntity implements RangedAtta
         this.entityData.set(HAS_BEEN_EATEN, eaten);
     }
 
+    public int getMilkAmount() {
+        return this.entityData.get(MILK_AMOUNT);
+    }
+
+    public void setMilkAmount(int milk) {
+        this.entityData.set(MILK_AMOUNT, milk);
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -160,6 +174,36 @@ public class CroissantDragonEntity extends CompanionEntity implements RangedAtta
         this.entityData.define(ARMOR_NAME, "default");
         this.entityData.define(EATEN_AMOUNT, 0);
         this.entityData.define(HAS_BEEN_EATEN, false);
+        this.entityData.define(MILK_AMOUNT, 0);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        if (pCompound.contains("milkAmount")) {
+            setMilkAmount(pCompound.getInt("milkAmount"));
+        }
+
+        if (pCompound.contains("eatenAmount")) {
+            setEatenAmount(pCompound.getInt("eatenAmount"));
+        }
+
+        if (pCompound.contains("armorName")) {
+            setArmorName(pCompound.getString("armorName"));
+        }
+
+        if (pCompound.contains("sitVariation")) {
+            setSitVariation(pCompound.getInt("sitVariation"));
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putInt("milkAmount", getMilkAmount());
+        pCompound.putInt("eatenAmount", getEatenAmount());
+        pCompound.putString("armorName", getArmorName());
+        pCompound.putInt("sitVariation", getSitVariation());
     }
 
     @Nullable
@@ -174,20 +218,47 @@ public class CroissantDragonEntity extends CompanionEntity implements RangedAtta
 
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getEatenAmount() < 2 && !hasBeenEaten()) {
             this.playSound(SoundEvents.WOOL_BREAK, 0.5F, 1.0F);
+
             setEatenAmount(getEatenAmount() + 1);
             setHasBeenEaten(true);
             TickScheduler.scheduleServer(this.level(), () -> this.setHasBeenEaten(false), EATEN_DELAY);
+
             nextEatenRecover = this.tickCount + this.level().getRandom().nextInt(201) + 100;
+
+            switch (getArmorName()) {
+                case "chocolate":
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, 0));
+                    break;
+                case "strawberry":
+                    player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 180, 1));
+                    break;
+                case "vanilla":
+                    player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 600, 0));
+                    break;
+                default:
+                    break;
+            }
+
             return InteractionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == Items.MILK_BUCKET && !isTame()) {
+        if (!isTame() && itemstack.getItem() == Items.MILK_BUCKET && getMilkAmount() < 3) {
             if (this.level().isClientSide) {
                 return InteractionResult.CONSUME;
             } else {
-                if (!player.getAbilities().instabuild) itemstack.shrink(1);
+                if (!player.getAbilities().instabuild) {
+                    itemstack.shrink(1);
+                    if (itemstack.isEmpty()) {
+                        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.BUCKET));
+                    } else {
+                        if (!player.getInventory().add(new ItemStack(Items.BUCKET))) {
+                            player.drop(new ItemStack(Items.BUCKET), false);
+                        }
+                    }
 
-                if (!ForgeEventFactory.onAnimalTame(this, player)) {
+                }
+
+                if (!ForgeEventFactory.onAnimalTame(this, player) && getMilkAmount() == 2) {
                     if (!this.level().isClientSide) {
                         super.tame(player);
                         this.navigation.recomputePath();
@@ -198,29 +269,32 @@ public class CroissantDragonEntity extends CompanionEntity implements RangedAtta
                 }
 
                 setSitVariation(getRandom().nextInt(0, 3));
+                setMilkAmount(getMilkAmount() + 1);
                 return InteractionResult.SUCCESS;
             }
         }
 
         if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get()) {
-                this.setArmorName("strawberry");
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
+            if (getArmorName().equals("default")) {
+                if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get()) {
+                    this.setArmorName("strawberry");
+                    if (!player.getAbilities().instabuild) {
+                        itemstack.shrink(1);
+                    }
+                    return InteractionResult.SUCCESS;
+                } else if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get()) {
+                    this.setArmorName("vanilla");
+                    if (!player.getAbilities().instabuild) {
+                        itemstack.shrink(1);
+                    }
+                    return InteractionResult.SUCCESS;
+                } else if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get()) {
+                    this.setArmorName("chocolate");
+                    if (!player.getAbilities().instabuild) {
+                        itemstack.shrink(1);
+                    }
+                    return InteractionResult.SUCCESS;
                 }
-                return InteractionResult.SUCCESS;
-            } else if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get()) {
-                this.setArmorName("vanilla");
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-                return InteractionResult.SUCCESS;
-            } else if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get()) {
-                this.setArmorName("chocolate");
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-                return InteractionResult.SUCCESS;
             }
         }
 
@@ -234,6 +308,7 @@ public class CroissantDragonEntity extends CompanionEntity implements RangedAtta
                 setSitting(!isSitting());
                 setSitVariation(getRandom().nextInt(0, 3));
             }
+
             return InteractionResult.SUCCESS;
         }
 
@@ -281,13 +356,6 @@ public class CroissantDragonEntity extends CompanionEntity implements RangedAtta
     public void aiStep() {
         setNoMovement(isAttacking());
         super.aiStep();
-    }
-
-    @Override
-    public void performRangedAttack(@NotNull LivingEntity target, float v) {
-        if (!level().isClientSide) {
-
-        }
     }
 
 }

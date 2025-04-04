@@ -24,6 +24,10 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.NETHERITE_CHAINS.get());
                                 output.accept(CompanionsItems.BIG_BREAD.get());
                                 output.accept(CompanionsItems.SOUL_GEM.get());
+                                output.accept(CompanionsItems.MUTANT_ARM.get());
+                                output.accept(CompanionsItems.WHIP_ARM.get());
+                                output.accept(CompanionsItems.BLADE_ARM.get());
+                                output.accept(CompanionsItems.CANNON_ARM.get());
 
                                 output.accept(CompanionsItems.BOOK_ICE_SHARD.get());
                                 output.accept(CompanionsItems.BOOK_ICE_TORNADO.get());
@@ -39,6 +43,7 @@ public class CompanionsCreativeModeTabs {
 
                                 output.accept(CompanionsItems.MAGE_HAT.get());
                                 output.accept(CompanionsItems.MAGE_COAT.get());
+                                output.accept(CompanionsItems.MAGE_STAFF.get());
 
                                 output.accept(CompanionsBlocks.TESLA_RECEIVER.get());
                                 output.accept(CompanionsBlocks.SOUL_FURNACE.get());

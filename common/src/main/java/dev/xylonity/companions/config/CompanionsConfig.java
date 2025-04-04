@@ -11,6 +11,8 @@ public class CompanionsConfig {
     public static final ConfigEntry<Double> FIRE_MARK_EFFECT_RADIUS = ConfigRegistry.of("FIRE_MARK_EFFECT_RADIUS", 2.5D);
     public static final ConfigEntry<Double> HEAL_RING_HEALING = ConfigRegistry.of("HEAL_RING_HEALING", 6D);
 
+    public static final ConfigEntry<Integer> CROISSANT_EGG_LIFETIME = ConfigRegistry.of("CROISSANT_EGG_LIFETIME", 6000);
+
     public static class ConfigEntry<T> {
         private final String key;
         private final T defaultValue;

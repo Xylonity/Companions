@@ -250,6 +250,7 @@ public class TeslaConnectionManager {
 
             return tag;
         }
+
         public static ConnectionNode deserialize(CompoundTag tag) {
             ResourceLocation dimension = new ResourceLocation(tag.getString("Dimension"));
 

@@ -3,6 +3,8 @@ package dev.xylonity.companions.registry;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.custom.*;
 import dev.xylonity.companions.common.entity.projectile.*;
+import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
+import dev.xylonity.companions.common.entity.projectile.trigger.GenericTriggerProjectile;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -31,6 +33,7 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<LivingCandleEntity>> LIVING_CANDLE;
     public static final RegistryObject<EntityType<CroissantDragonEntity>> CROISSANT_DRAGON;
     public static final RegistryObject<EntityType<HostilePuppetGlove>> HOSTILE_PUPPET_GLOVE;
+    public static final RegistryObject<EntityType<PuppetEntity>> PUPPET;
 
     public static final RegistryObject<EntityType<SmallIceShardProjectile>> SMALL_ICE_SHARD_PROJECTILE;
     public static final RegistryObject<EntityType<BigIceShardProjectile>> BIG_ICE_SHARD_PROJECTILE;
@@ -44,6 +47,11 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<MagicRayCircleProjectile>> MAGIC_RAY_PIECE_CIRCLE_PROJECTILE;
     public static final RegistryObject<EntityType<BlackHoleProjectile>> BLACK_HOLE_PROJECTILE;
     public static final RegistryObject<EntityType<SoulMageBookEntity>> SOUL_MAGE_BOOK;
+    public static final RegistryObject<EntityType<FloorCakeCreamProjectile>> FLOOR_CAKE_CREAM;
+    public static final RegistryObject<EntityType<StakeProjectile>> STAKE_PROJECTILE;
+
+    public static final RegistryObject<EntityType<GenericTriggerProjectile>> GENERIC_TRIGGER_PROJECTILE;
+    public static final RegistryObject<EntityType<CakeCreamTriggerProjectile>> CAKE_CREAM_TRIGGER_PROJECTILE;
 
     static {
         FROGGY = register("froggy", FroggyEntity::new, MobCategory.CREATURE, 1f, 1f, null);
@@ -58,7 +66,8 @@ public class CompanionsEntities {
         SOUL_MAGE = register("soul_mage", SoulMageEntity::new, MobCategory.CREATURE, 0.85f, 1.2f, null);
         LIVING_CANDLE = register("living_candle", LivingCandleEntity::new, MobCategory.CREATURE, 0.5f, 0.75f, null);
         CROISSANT_DRAGON = register("croissant_dragon", CroissantDragonEntity::new, MobCategory.CREATURE, 1.4f, 1.4f, null);
-        HOSTILE_PUPPET_GLOVE = register("hostile_puppet_glove", HostilePuppetGlove::new, MobCategory.CREATURE, 0.6f, 0.6f, null);
+        HOSTILE_PUPPET_GLOVE = register("hostile_puppet_glove", HostilePuppetGlove::new, MobCategory.CREATURE, 0.8f, 2f, null);
+        PUPPET = register("puppet", PuppetEntity::new, MobCategory.CREATURE, 1f, 2.8f, null);
 
         SMALL_ICE_SHARD_PROJECTILE = register("small_ice_shard_projectile", SmallIceShardProjectile::new, MobCategory.MISC, 0.4f, 0.5f, EntityType.Builder::fireImmune);
         BIG_ICE_SHARD_PROJECTILE = register("big_ice_shard_projectile", BigIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, EntityType.Builder::fireImmune);
@@ -72,6 +81,11 @@ public class CompanionsEntities {
         MAGIC_RAY_PIECE_CIRCLE_PROJECTILE = register("magic_ray_circle_projectile", MagicRayCircleProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
         BLACK_HOLE_PROJECTILE = register("black_hole_projectile", BlackHoleProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
         SOUL_MAGE_BOOK = register("soul_mage_book", SoulMageBookEntity::new, MobCategory.MISC, 0.6f, 0.6f, null);
+        FLOOR_CAKE_CREAM = register("floor_cake_cream_projectile", FloorCakeCreamProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
+        STAKE_PROJECTILE = register("stake_projectile", StakeProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
+
+        GENERIC_TRIGGER_PROJECTILE = register("generic_trigger_projectile", GenericTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
+        CAKE_CREAM_TRIGGER_PROJECTILE = register("cake_cream_trigger_projectile", CakeCreamTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
     }
 
     private static <X extends Entity> RegistryObject<EntityType<X>> register(String name, EntityType.EntityFactory<X> entity, MobCategory category, float width, float height, @Nullable Consumer<EntityType.Builder<X>> properties) {

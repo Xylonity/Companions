@@ -67,13 +67,11 @@ public class StoneSpikesBook extends AbstractMagicBook {
 
             if (spawnPos == null) spawnPos = basePos;
 
-            double finalX = desiredX;
             double finalY = spawnPos.getY();
-            double finalZ = desiredZ;
 
             Projectile spike = CompanionsEntities.STONE_SPIKE_PROJECTILE.get().create(level);
             if (spike != null) {
-                spike.moveTo(finalX, finalY, finalZ, player.getYRot(), 0.0F);
+                spike.moveTo(desiredX, finalY, desiredZ, player.getYRot(), 0.0F);
                 spike.setOwner(player);
 
                 int delay = i * DELAY_INCREMENT;

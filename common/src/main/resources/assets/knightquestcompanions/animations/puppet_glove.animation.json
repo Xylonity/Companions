@@ -245,169 +245,6 @@
 				}
 			}
 		},
-		"attack2": {
-			"animation_length": 0.5,
-			"bones": {
-				"globe": {
-					"rotation": {
-						"0.0": {
-							"vector": [20.35773, -5.23451, -7.26834]
-						},
-						"0.2083": {
-							"vector": [-42.14227, -5.23451, -7.26834]
-						},
-						"0.2917": {
-							"vector": [-14.64227, -5.23451, -7.26834]
-						},
-						"0.5": {
-							"vector": [20.35773, -5.23451, -7.26834]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.2083": {
-							"vector": [0, 5, 16]
-						},
-						"0.2917": {
-							"vector": [0, 3, 19]
-						},
-						"0.5": {
-							"vector": [0, 0, 0]
-						}
-					},
-					"scale": {
-						"0.0": {
-							"vector": ["1-math.cos(query.anim_time*180)*0.0125", "1+math.cos(query.anim_time*180)*0.0125", "1-math.cos(query.anim_time*180)*0.0125"]
-						},
-						"0.5": {
-							"vector": ["1-math.cos(query.anim_time*180)*0.0125", "1+math.cos(query.anim_time*180)*0.0125", "1-math.cos(query.anim_time*180)*0.0125"]
-						}
-					}
-				},
-				"thumb": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, "32.5+math.sin(query.anim_time*180)*3", "math.cos(query.anim_time*180)*3"]
-						},
-						"0.2083": {
-							"vector": [28.18144, "11.6432+math.sin(query.anim_time*180)*3", "74.6296+math.cos(query.anim_time*180)*3"]
-						},
-						"0.2917": {
-							"vector": [28.18144, "11.6432+math.sin(query.anim_time*180)*3", "74.6296+math.cos(query.anim_time*180)*3"]
-						},
-						"0.5": {
-							"vector": [0, "32.5+math.sin(query.anim_time*180)*3", "math.cos(query.anim_time*180)*3"]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0, -2, 0]
-						},
-						"0.2083": {
-							"vector": [3, -3, -1]
-						},
-						"0.2917": {
-							"vector": [3, -3, -1]
-						},
-						"0.5": {
-							"vector": [0, -2, 0]
-						}
-					}
-				},
-				"finger": {
-					"rotation": {
-						"0.0": {
-							"vector": [-78.19234, -6.16137, "19.3607-math.cos(-40+query.anim_time*180)*3"]
-						},
-						"0.2083": {
-							"vector": [46.68133, -8.97683, "1.6388-math.cos(-40+query.anim_time*180)*3"]
-						},
-						"0.2917": {
-							"vector": [46.68133, -8.97683, "1.6388-math.cos(-40+query.anim_time*180)*3"]
-						},
-						"0.5": {
-							"vector": [-78.19234, -6.16137, "19.3607-math.cos(-40+query.anim_time*180)*3"]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [1, -1, 1]
-						},
-						"0.2083": {
-							"vector": [1, -0.1, -1]
-						},
-						"0.2917": {
-							"vector": [1, -0.1, -1]
-						},
-						"0.5": {
-							"vector": [1, -1, 1]
-						}
-					}
-				},
-				"finger2": {
-					"rotation": {
-						"0.0": {
-							"vector": [-35.21712, 17.49458, "-0.4882+math.cos(query.anim_time*180)*3"]
-						},
-						"0.2083": {
-							"vector": [52.28288, 17.49458, "-0.4882+math.cos(query.anim_time*180)*3"]
-						},
-						"0.2917": {
-							"vector": [52.28288, 17.49458, "-0.4882+math.cos(query.anim_time*180)*3"]
-						},
-						"0.5": {
-							"vector": [-35.21712, 17.49458, "-0.4882+math.cos(query.anim_time*180)*3"]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0, 0, 1]
-						},
-						"0.2083": {
-							"vector": [-1, 0, -1]
-						},
-						"0.2917": {
-							"vector": [-1, 0, -1]
-						},
-						"0.5": {
-							"vector": [0, 0, 1]
-						}
-					}
-				},
-				"finger3": {
-					"rotation": {
-						"0.0": {
-							"vector": ["-25-math.cos(-40+query.anim_time*180)*3", 0, 0]
-						},
-						"0.2083": {
-							"vector": ["90-math.cos(-40+query.anim_time*180)*3", 0, 0]
-						},
-						"0.2917": {
-							"vector": ["90-math.cos(-40+query.anim_time*180)*3", 0, 0]
-						},
-						"0.5": {
-							"vector": ["-25-math.cos(-40+query.anim_time*180)*3", 0, 0]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0, -1, 1]
-						},
-						"0.2083": {
-							"vector": [0, 0, -2]
-						},
-						"0.2917": {
-							"vector": [0, 0, -2]
-						},
-						"0.5": {
-							"vector": [0, -1, 1]
-						}
-					}
-				}
-			}
-		},
 		"game_idle": {
 			"loop": true,
 			"bones": {
@@ -975,11 +812,9 @@
 				}
 			}
 		},
-		"animation.model.new": {
-			"loop": true
-		},
 		"broom_idle": {
 			"loop": true,
+			"animation_length": 1.3333,
 			"bones": {
 				"globe": {
 					"rotation": {
@@ -1030,6 +865,12 @@
 					"rotation": {
 						"vector": [0, 0, "math.cos(query.anim_time*270 - 90)*15"]
 					}
+				}
+			},
+			"particle_effects": {
+				"0.8333": {
+					"effect": "dust_left",
+					"locator": "locator"
 				}
 			}
 		},

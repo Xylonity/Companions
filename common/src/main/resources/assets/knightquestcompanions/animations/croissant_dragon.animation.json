@@ -158,10 +158,10 @@
 							"vector": [-13.75, 0, 0]
 						},
 						"0.4583": {
-							"vector": ["2.5 + math.sin(q.anim_time*360 - 20)*1", "math.cos(q.anim_time*360- 20)*1", 0]
+							"vector": ["2.5 + math.sin(query.anim_time*360 - 20)*1", "math.cos(query.anim_time*360- 20)*1", 0]
 						},
 						"2.4167": {
-							"vector": ["2.5 + math.sin(q.anim_time*360)*1", "math.cos(q.anim_time*360)*1", 0]
+							"vector": ["2.5 + math.sin(query.anim_time*360)*1", "math.cos(query.anim_time*360)*1", 0]
 						},
 						"2.5": {
 							"vector": [0, 0, 0]
@@ -183,10 +183,10 @@
 							"vector": [0.625, 0, 0]
 						},
 						"0.4583": {
-							"vector": ["-32.5 + math.sin(q.anim_time*360 + 20)*5", "math.cos(q.anim_time*360+ 20)*5", 0]
+							"vector": ["-32.5 + math.sin(query.anim_time*360 + 20)*5", "math.cos(query.anim_time*360+ 20)*5", 0]
 						},
 						"2.4167": {
-							"vector": ["-32.5 + math.sin(q.anim_time*360)*5", "math.cos(q.anim_time*360)*5", 0]
+							"vector": ["-32.5 + math.sin(query.anim_time*360)*5", "math.cos(query.anim_time*360)*5", 0]
 						},
 						"2.5": {
 							"vector": [0, 0, 0]
@@ -202,7 +202,7 @@
 							"vector": [0, 0, 0]
 						},
 						"0.4583": {
-							"vector": [5.91783, "-16.018235463 - math.cos(q.anim_time*360)*5", 9.92019]
+							"vector": [5.91783, "-16.018235463 - math.cos(query.anim_time*360)*5", 9.92019]
 						},
 						"2.4167": {
 							"vector": [5.92, -16.02, 9.92]
@@ -221,7 +221,7 @@
 							"vector": [0, 0, 0]
 						},
 						"0.4583": {
-							"vector": [5.05471, "13.7785229541 + math.cos(q.anim_time*360)*5", -7.53676]
+							"vector": [5.05471, "13.7785229541 + math.cos(query.anim_time*360)*5", -7.53676]
 						},
 						"2.4167": {
 							"vector": [5.05, 13.78, -7.54]
@@ -383,10 +383,10 @@
 							"vector": [23.75, 0, 0]
 						},
 						"0.4583": {
-							"vector": ["2.5 + math.sin(q.anim_time*360)*5", "math.cos(q.anim_time*360)*5", 0]
+							"vector": ["2.5 + math.sin(query.anim_time*360)*5", "math.cos(query.anim_time*360)*5", 0]
 						},
 						"2.4167": {
-							"vector": ["2.5 + math.sin(q.anim_time*360)*5", "math.cos(q.anim_time*360)*5", 0]
+							"vector": ["2.5 + math.sin(query.anim_time*360)*5", "math.cos(query.anim_time*360)*5", 0]
 						},
 						"2.5": {
 							"vector": [0, 0, 0]

@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.block;
 
+import dev.xylonity.companions.common.blockentity.CroissantEggBlockEntity;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -70,7 +71,7 @@ public class CroissantEggBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.CROISSANT_EGG.get() ? SoulFurnaceBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.CROISSANT_EGG.get() ? CroissantEggBlockEntity::tick : null;
     }
 
 }

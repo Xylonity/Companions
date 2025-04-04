@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.teddy.*;
 import dev.xylonity.companions.common.entity.ai.teddy.control.MutatedTeddyMoveControl;
+import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -233,7 +234,6 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
         if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
             if ((itemstack.getItem().equals(Items.APPLE) || itemstack.getItem().equals(Items.APPLE)) && this.getHealth() < this.getMaxHealth()) {
-
                 if (itemstack.getItem().equals(Items.APPLE)) {
                     this.heal(16.0F);
                 } else if (itemstack.getItem().equals(Items.APPLE)) {
@@ -244,7 +244,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                     itemstack.shrink(1);
                 }
 
-            } else if (itemstack.getItem().equals(Items.ACACIA_SLAB) && getPhase() == 1 && this.getSecondPhaseCounter() == 0) {
+            } else if (itemstack.getItem().equals(CompanionsItems.ETERNAL_LIGHTER.get()) && getPhase() == 1 && this.getSecondPhaseCounter() == 0) {
                 this.setSecondPhaseCounter(this.getSecondPhaseCounter() + 1);
             } else {
                 setSitting(!isSitting());
@@ -278,12 +278,12 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
     }
 

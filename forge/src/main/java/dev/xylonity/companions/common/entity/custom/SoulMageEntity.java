@@ -172,18 +172,19 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
     @Override
     public void tick() {
         super.tick();
+
         if (tickCount == 2) {
             if (getBook() == null) {
-                Projectile bookEntity = CompanionsEntities.SOUL_MAGE_BOOK.get().create(this.level());
+                SoulMageBookEntity bookEntity = CompanionsEntities.SOUL_MAGE_BOOK.get().create(this.level());
                 if (bookEntity instanceof SoulMageBookEntity) {
-                    SoulMageBookEntity book = (SoulMageBookEntity) bookEntity;
-                    book.setOwner(this);
-                    book.moveTo(this.getX(), this.getY(), this.getZ());
-                    this.level().addFreshEntity(book);
-                    setBook(book);
+                    bookEntity.setOwner(this);
+                    bookEntity.moveTo(this.getX(), this.getY(), this.getZ());
+                    this.level().addFreshEntity(bookEntity);
+                    setBook(bookEntity);
                 }
             }
         }
+
     }
 
     public static AttributeSupplier setAttributes() {

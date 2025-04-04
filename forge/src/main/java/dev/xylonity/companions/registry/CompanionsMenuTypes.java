@@ -2,8 +2,10 @@ package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
+import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import dev.xylonity.companions.common.container.SoulFurnaceContainerMenu;
 import dev.xylonity.companions.common.container.SoulMageContainerMenu;
+import dev.xylonity.companions.common.entity.custom.PuppetEntity;
 import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -49,6 +51,16 @@ public class CompanionsMenuTypes {
                 Entity entity = inv.player.level().getEntity(entityId);
                 if (entity instanceof SoulMageEntity soulMage) {
                     return new SoulMageContainerMenu(id, inv, soulMage);
+                }
+                throw new IllegalStateException("" + entityId);
+            });
+
+    public static final RegistryObject<MenuType<PuppetContainerMenu>> PUPPET_CONTAINER =
+            registerMenu("puppet_container_menu", (id, inv, buf) -> {
+                int entityId = buf.readInt();
+                Entity entity = inv.player.level().getEntity(entityId);
+                if (entity instanceof PuppetEntity puppet) {
+                    return new PuppetContainerMenu(id, inv, puppet);
                 }
                 throw new IllegalStateException("" + entityId);
             });
