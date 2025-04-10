@@ -70,10 +70,11 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     private static final EntityDataAccessor<Integer> SIT_VARIATION = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<String> ATTACK_ANIMATION_NAME = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
-    // 0 no, 1 left, 2 right
+    // 0 no, 1 left, 2 right (meant for animation sync)
     private static final EntityDataAccessor<Integer> IS_ATTACKING = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
     // 0 none, 1 left, 2 right, 3 both
     private static final EntityDataAccessor<Integer> ACTIVE_ARMS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
+    // none,none -> left/right
     private static final EntityDataAccessor<String> ARM_NAMES = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
 
     public PuppetEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
@@ -298,7 +299,7 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
         if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttacking() != 0) {
             event.getController().forceAnimationReset();
-            event.setAnimation(ATTACK_R);
+            event.setAnimation(isAttacking() == 1 ? ATTACK_L : ATTACK_R);
         }
 
         return PlayState.CONTINUE;

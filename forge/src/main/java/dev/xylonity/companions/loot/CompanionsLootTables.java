@@ -25,7 +25,7 @@ public class CompanionsLootTables {
                 LootPool customPool = LootPool.lootPool()
                         .name("custom_tesla_receiver_pool")
                         .setRolls(ConstantValue.exactly(1))
-                        .add(LootItem.lootTableItem(CompanionsBlocks.TESLA_RECEIVER.get())
+                        .add(LootItem.lootTableItem(CompanionsBlocks.TESLA_COIL.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 40))))
                         .build();
 

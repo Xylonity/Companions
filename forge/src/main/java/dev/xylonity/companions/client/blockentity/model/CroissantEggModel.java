@@ -1,10 +1,7 @@
 package dev.xylonity.companions.client.blockentity.model;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.blockentity.CroissantEggBlockEntity;
-import dev.xylonity.companions.common.blockentity.TeslaReceiverBlockEntity;
-import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

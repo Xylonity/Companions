@@ -12,18 +12,27 @@ public class CompanionsBlocks {
 
     public static void init() { ;; }
 
-    public static final Supplier<Block> TESLA_RECEIVER;
+    public static final Supplier<Block> TESLA_COIL;
+    public static final Supplier<Block> PLASMA_LAMP;
     public static final Supplier<Block> SOUL_FURNACE;
     public static final Supplier<Block> CROISSANT_EGG;
 
     static {
-        TESLA_RECEIVER = registerBlock("tesla_receiver_block",
+        TESLA_COIL = registerBlock("tesla_coil_block",
                         BlockBehaviour.Properties.of()
                         .mapColor(MapColor.FIRE)
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.TESLA_RECEIVER);
+                        .noOcclusion(), BlockType.TESLA_COIL);
+
+        PLASMA_LAMP = registerBlock("plasma_lamp_block",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.PLASMA_LAMP);
 
         SOUL_FURNACE = registerBlock("soul_furnace_block",
                         BlockBehaviour.Properties.of()
@@ -47,9 +56,10 @@ public class CompanionsBlocks {
     }
 
     public enum BlockType {
-        TESLA_RECEIVER,
+        TESLA_COIL,
         SOUL_FURNACE,
-        CROISSANT_EGG
+        CROISSANT_EGG,
+        PLASMA_LAMP
     }
 
 }

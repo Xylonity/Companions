@@ -54,9 +54,7 @@ public class BlackHoleStarParticle extends TextureSheetParticle {
             this.sprites = spriteSet;
         }
 
-        public Particle createParticle(SimpleParticleType particleType, ClientLevel level,
-                                       double x, double y, double z,
-                                       double dx, double dy, double dz) {
+        public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
             return new BlackHoleStarParticle(level, x, y, z, this.sprites, dx, dy, dz);
         }
     }

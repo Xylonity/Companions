@@ -1,19 +1,14 @@
 package dev.xylonity.companions.client.entity.renderer;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.client.blockentity.renderer.TeslaReceiverRenderer;
 import dev.xylonity.companions.client.entity.model.DinamoModel;
-import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.custom.DinamoEntity;
 import dev.xylonity.companions.common.event.ClientEntityTracker;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -30,7 +25,6 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.texture.AutoGlowingTexture;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
-import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
@@ -42,7 +36,6 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
                 totalFrames,
                 ticksPerFrame
         ));
-        addRenderLayer(new AutoGlowingGeoLayer<>(this));
     }
 
     //public static RenderType decacheShaderRendering(ResourceLocation texture) {

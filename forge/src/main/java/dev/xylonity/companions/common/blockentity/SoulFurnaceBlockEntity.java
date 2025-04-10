@@ -131,7 +131,15 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
                             if (recipe.block() != null) {
                                 BlockPos targetPos = pos.relative(state.getValue(SoulFurnaceBlock.FACING));
                                 if (level.isEmptyBlock(targetPos)) {
-                                    level.setBlockAndUpdate(targetPos, recipe.block().defaultBlockState().mirror(Mirror.FRONT_BACK));
+                                    BlockState recipeBlockState = recipe.block().defaultBlockState();
+
+                                    if (recipeBlockState.hasProperty(SoulFurnaceBlock.FACING)) {
+                                        recipeBlockState = recipeBlockState.setValue(SoulFurnaceBlock.FACING, state.getValue(SoulFurnaceBlock.FACING));
+                                    } else if (recipeBlockState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING)) {
+                                        recipeBlockState = recipeBlockState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, state.getValue(SoulFurnaceBlock.FACING));
+                                    }
+
+                                    level.setBlockAndUpdate(targetPos, recipeBlockState);
 
                                     Random r = new Random();
                                     for (int i = 0; i < 25; i++) {
@@ -177,8 +185,29 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
                     furnace.currentProgress = 0;
                     furnace.processingTime = 0;
                     furnace.setChanged();
+
+                    ItemStack inputStack = furnace.getItem(0);
+                    if (!inputStack.isEmpty()) {
+                        for (SoulFurnaceRecipe r : RECIPES) {
+                            if (r.input == inputStack.getItem() && furnace.charge >= r.requiredCharges) {
+                                inputStack.shrink(1);
+                                furnace.currentRecipe = r;
+                                furnace.processingTime = r.processTime;
+                                furnace.currentProgress = 0;
+                                furnace.setChanged();
+                                break;
+                            }
+                        }
+                    }
                 }
             }
+
+            boolean lit = furnace.currentRecipe != null;
+            BlockState currentState = level.getBlockState(pos);
+            if (currentState.hasProperty(SoulFurnaceBlock.LIT) && currentState.getValue(SoulFurnaceBlock.LIT) != lit) {
+                level.setBlock(pos, currentState.setValue(SoulFurnaceBlock.LIT, lit), 3);
+            }
+
         }
     }
 

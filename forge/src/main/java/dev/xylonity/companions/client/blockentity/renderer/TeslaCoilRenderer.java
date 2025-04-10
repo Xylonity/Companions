@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.client.blockentity.model.TeslaReceiverModel;
-import dev.xylonity.companions.common.blockentity.TeslaReceiverBlockEntity;
-import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
+import dev.xylonity.companions.client.blockentity.model.TeslaCoilModel;
+import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
+import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.event.ClientEntityTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -25,47 +25,81 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.texture.AutoGlowingTexture;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
-import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-import java.util.Set;
+public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> {
 
-public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEntity> {
-
-    public TeslaReceiverRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
-        super(new TeslaReceiverModel());
+    public TeslaCoilRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
+        super(new TeslaCoilModel());
         addRenderLayer(new ElectricConnectionLayer(this,
                 new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"),
                 totalFrames,
                 ticksPerFrame
         ));
-        addRenderLayer(new AutoGlowingGeoLayer<>(this));
+        addRenderLayer(new RayGlowLayer(this));
     }
 
+    private static class RayGlowLayer extends GeoRenderLayer<TeslaCoilBlockEntity> {
+        private static final ResourceLocation EMB_TEXTURE = new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
+
+        public RayGlowLayer(GeoRenderer<TeslaCoilBlockEntity> entityRenderer) {
+            super(entityRenderer);
+        }
+
+        @Override
+        public void render(PoseStack poseStack, TeslaCoilBlockEntity entity, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+            // Use a translucent render type to apply transparency.
+            RenderType glowRenderType = RenderType.entityTranslucent(EMB_TEXTURE);
+            VertexConsumer glowBuffer = bufferSource.getBuffer(glowRenderType);
+
+            // RGB values for white.
+            float red = 1.0f;
+            float green = 1.0f;
+            float blue = 1.0f;
+
+            float alpha = 0.0f;
+            // We now base the fade effect on manual switching.
+            // When the Tesla coil is active, we gradually fade in over 5 ticks.
+            if (entity.isActive()) {
+                int elapsed = entity.tickCount - entity.activationTick;
+                if (elapsed < 5) {
+                    alpha = (float) elapsed / 5.0f;
+                } else {
+                    alpha = 1.0f;
+                }
+            } else {
+                // When the coil is not active (manually switched off) no glow is rendered.
+                alpha = 0.0f;
+            }
+
+            // Only re-render if alpha is above zero.
+            if (alpha > 0.0f) {
+                getRenderer().reRender(bakedModel, poseStack, bufferSource, entity, glowRenderType, glowBuffer, partialTick, packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
+            }
+        }
+    }
+
+
     @Override
-    public boolean shouldRenderOffScreen(@NotNull TeslaReceiverBlockEntity pBlockEntity) {
+    public boolean shouldRenderOffScreen(@NotNull TeslaCoilBlockEntity pBlockEntity) {
         return true;
     }
 
-    public TeslaReceiverRenderer(BlockEntityRendererProvider.Context renderManager) {
-        this(renderManager, 8, TeslaReceiverBlockEntity.ELECTRICAL_CHARGE_DURATION / 8);
+    public TeslaCoilRenderer(BlockEntityRendererProvider.Context renderManager) {
+        this(renderManager, 8, TeslaCoilBlockEntity.ELECTRICAL_CHARGE_DURATION / 8);
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull TeslaReceiverBlockEntity animatable) {
-        TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
-        TeslaConnectionManager.ConnectionNode node = animatable.asConnectionNode();
-        if (animatable.isActive() && (!manager.getOutgoing(node).isEmpty() || !manager.getIncoming(node).isEmpty())) return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
-
+    public @NotNull ResourceLocation getTextureLocation(@NotNull TeslaCoilBlockEntity animatable) {
         return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
     }
 
-    private static class ElectricConnectionLayer extends GeoRenderLayer<TeslaReceiverBlockEntity> {
+    private static class ElectricConnectionLayer extends GeoRenderLayer<TeslaCoilBlockEntity> {
         private final ResourceLocation texture;
         private final int totalFrames;
         private final int ticksPerFrame;
 
-        public ElectricConnectionLayer(GeoRenderer<TeslaReceiverBlockEntity> renderer, ResourceLocation texture, int totalFrames, int ticksPerFrame) {
+        public ElectricConnectionLayer(GeoRenderer<TeslaCoilBlockEntity> renderer, ResourceLocation texture, int totalFrames, int ticksPerFrame) {
             super(renderer);
             this.texture = texture;
             this.totalFrames = totalFrames;
@@ -73,7 +107,9 @@ public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEn
         }
 
         @Override
-        public void render(PoseStack poseStack, TeslaReceiverBlockEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+        public void render(PoseStack poseStack, TeslaCoilBlockEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+
+            System.out.println(animatable.isActive());
 
             if (!animatable.isActive()) return;
 
@@ -106,7 +142,7 @@ public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEn
 
         }
 
-        private int calculateCurrentFrame(TeslaReceiverBlockEntity animatable) {
+        private int calculateCurrentFrame(TeslaCoilBlockEntity animatable) {
             int elapsedTicks = animatable.tickCount - animatable.getAnimationStartTick();
             int frame = elapsedTicks / ticksPerFrame;
 
@@ -115,8 +151,12 @@ public class TeslaReceiverRenderer extends GeoBlockRenderer<TeslaReceiverBlockEn
             return frame;
         }
 
-        // Original idea of the layer embedded in the entity renderer to force the rendering of a singular "electric arch" towards a certain target by mim1q
-        // https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
+        /**
+         * The concept of generating lightning within a renderer layer (as opposed to creating an entity that stretches
+         * between nodes) originated from mim1q, who inspired me.
+         * <p>
+         * https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
+         */
         private void renderConnection(MultiBufferSource bufferSource, PoseStack poseStack, Vec3 p0, Vec3 p1, int frame, int light) {
             VertexConsumer vertexConsumer = bufferSource.getBuffer(AutoGlowingTexture.getRenderType(texture));
             //VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));

@@ -207,8 +207,8 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
                 return InteractionResult.SUCCESS;
             }
             case 1 -> {
-                Item requiredItem = getPhase() == 0 ? KnightLibItems.GREAT_ESSENCE.get() : CompanionsBlocks.TESLA_RECEIVER.get().asItem();
-                String type = getPhase() == 0 ? "great_essence" : "tesla_receiver";
+                Item requiredItem = getPhase() == 0 ? KnightLibItems.GREAT_ESSENCE.get() : CompanionsBlocks.TESLA_COIL.get().asItem();
+                String type = getPhase() == 0 ? "great_essence" : "tesla_coil";
 
                 if (heldItem.getItem() != requiredItem) {
                     player.displayClientMessage(Component.translatable("broken_dinamo.client_message.requires_" + type), true);

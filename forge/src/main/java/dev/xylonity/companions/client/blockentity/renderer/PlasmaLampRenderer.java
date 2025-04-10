@@ -1,56 +1,67 @@
-package dev.xylonity.companions.client.entity.renderer;
+package dev.xylonity.companions.client.blockentity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.client.entity.model.IllagerGolemModel;
-import dev.xylonity.companions.common.entity.custom.IllagerGolemEntity;
+import dev.xylonity.companions.client.blockentity.model.PlasmaLampModel;
+import dev.xylonity.companions.common.blockentity.PlasmaLampBlockEntity;
+import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.event.ClientEntityTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.cache.texture.AutoGlowingTexture;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 
-public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> {
+public class PlasmaLampRenderer extends GeoBlockRenderer<PlasmaLampBlockEntity> {
 
-    public IllagerGolemRenderer(EntityRendererProvider.Context renderManager, int totalFrames, int ticksPerFrame) {
-        super(renderManager, new IllagerGolemModel());
+    public PlasmaLampRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
+        super(new PlasmaLampModel());
         addRenderLayer(new ElectricConnectionLayer(this,
-                new ResourceLocation(Companions.MOD_ID, "textures/misc/illager_golem_electric_arch.png"),
+                new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"),
                 totalFrames,
                 ticksPerFrame
         ));
     }
 
-    public IllagerGolemRenderer(EntityRendererProvider.Context renderManager) {
-        this(renderManager, IllagerGolemEntity.ELECTRICAL_CHARGE_DURATION, 1);
+    @Override
+    public boolean shouldRenderOffScreen(@NotNull PlasmaLampBlockEntity pBlockEntity) {
+        return true;
+    }
+
+    public PlasmaLampRenderer(BlockEntityRendererProvider.Context renderManager) {
+        this(renderManager, 8, PlasmaLampBlockEntity.ELECTRICAL_CHARGE_DURATION / 8);
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull IllagerGolemEntity animatable) {
-        if (animatable.isActive() && !animatable.visibleEntities.isEmpty())
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/illager_golem_charge.png");
+    public @NotNull ResourceLocation getTextureLocation(@NotNull PlasmaLampBlockEntity animatable) {
+        TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
+        TeslaConnectionManager.ConnectionNode node = animatable.asConnectionNode();
+        if (animatable.isActive() && (!manager.getIncoming(node).isEmpty())) return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/block/plasma_lamp_charge_block.png");
 
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/illager_golem.png");
+        return new ResourceLocation(Companions.MOD_ID, "textures/block/plasma_lamp_block.png");
     }
 
-    private static class ElectricConnectionLayer extends GeoRenderLayer<IllagerGolemEntity> {
+    private static class ElectricConnectionLayer extends GeoRenderLayer<PlasmaLampBlockEntity> {
         private final ResourceLocation texture;
         private final int totalFrames;
         private final int ticksPerFrame;
 
-        public ElectricConnectionLayer(GeoRenderer<IllagerGolemEntity> renderer, ResourceLocation texture, int totalFrames, int ticksPerFrame) {
+        public ElectricConnectionLayer(GeoRenderer<PlasmaLampBlockEntity> renderer, ResourceLocation texture, int totalFrames, int ticksPerFrame) {
             super(renderer);
             this.texture = texture;
             this.totalFrames = totalFrames;
@@ -58,7 +69,7 @@ public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> 
         }
 
         @Override
-        public void render(PoseStack poseStack, IllagerGolemEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+        public void render(PoseStack poseStack, PlasmaLampBlockEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
 
             if (!animatable.isActive()) return;
 
@@ -66,16 +77,33 @@ public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> 
 
             if (frame < 0) return;
 
-            for (Entity e : animatable.visibleEntities) {
-                Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.95D, 0.0D);
-                Vec3 direction = e.position().subtract(animatable.position()).add(0.0D, e.getBbHeight() * 0.5D, 0.0D);
-                renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
+            for (TeslaConnectionManager.ConnectionNode e : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
+                if (e.isEntity()) {
+                    Entity entity = ClientEntityTracker.getEntityByUUID(e.entityId());
+                    if (entity instanceof LivingEntity livingEntity) {
+                        Vec3 offset = new Vec3(0.0D, 1.25D, 0.0D);
+                        Vec3 direction = livingEntity.position()
+                                .subtract(animatable.getBlockPos().getCenter())
+                                .add(0.0D, livingEntity.getBbHeight() * 1.1D, 0.0D);
+
+                        renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
+                    }
+                } else if (e.isBlock()) {
+                    Vec3 offset = new Vec3(0.0D, 1.25D, 0.0D);
+                    BlockPos blockPos = e.blockPos();
+
+                    Vec3 blockPosVec = new Vec3(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D);
+                    Vec3 animatablePos = animatable.getBlockPos().getCenter();
+                    Vec3 direction = blockPosVec.subtract(animatablePos).add(0.0D, 1.25D, 0.0D);
+
+                    renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
+                }
             }
 
         }
 
-        private int calculateCurrentFrame(IllagerGolemEntity animatable) {
-            int elapsedTicks = animatable.getTickCount() - animatable.getAnimationStartTick();
+        private int calculateCurrentFrame(PlasmaLampBlockEntity animatable) {
+            int elapsedTicks = animatable.tickCount - animatable.getAnimationStartTick();
             int frame = elapsedTicks / ticksPerFrame;
 
             if (frame >= totalFrames) return -1;
@@ -86,7 +114,8 @@ public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> 
         // Original idea of the layer embedded in the entity renderer to force the rendering of a singular "electric arch" towards a certain target by mim1q
         // https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
         private void renderConnection(MultiBufferSource bufferSource, PoseStack poseStack, Vec3 p0, Vec3 p1, int frame, int light) {
-            VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
+            VertexConsumer vertexConsumer = bufferSource.getBuffer(AutoGlowingTexture.getRenderType(texture));
+            //VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
             Matrix4f positionMatrix = poseStack.last().pose();
             Matrix3f normalMatrix = poseStack.last().normal();
 

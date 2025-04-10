@@ -1,15 +1,27 @@
-package dev.xylonity.companions.common.entity.ai.illagergolem;
+package dev.xylonity.companions.common.tesla;
 
-import dev.xylonity.companions.common.blockentity.TeslaReceiverBlockEntity;
+import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+
 import java.util.*;
 
 /**
- * Dynamic bidirectional algorithm (based on BFS) with memoized generic node tracking (for both UUIDs and block positions), for graphs under a
- * depth constraint (preconfigured with a default cap, which is a config value, `DINAMO_MAX_RECEIVER_CONNECTIONS`).
+ * Implements a hierarchical directed flow network for <i>Tesla Network</i> with
+ * multi-layered propagation constraints. The graph model combines elements of
+ * ADGs and Bipartite graphs as a whole.
+ * <br><br>
+ * The underlying graph is stored in two maps:
+ * <br>
+ * – {@code outgoing}: contains the edges where the node is the source.<br>
+ * – {@code incoming}: contains the edges where the node is the target.
+ * <br><br>
+ * Propagation follows directional BFS from source nodes, enforcing a max-depth constraint
+ * ({@code DINAMO_MAX_COIL_CONNECTIONS}). Unreachable nodes are pruned dynamically.
+ *
+ * @implNote For efficiency, distances are recomputed only on major structural changes (add/remove).
  *
  * @author Xylonity
  */
@@ -17,22 +29,26 @@ public class TeslaConnectionManager {
     private static TeslaConnectionManager instance;
     private final Map<ConnectionNode, Set<ConnectionNode>> outgoing = new HashMap<>();
     private final Map<ConnectionNode, Set<ConnectionNode>> incoming = new HashMap<>();
-    private final Map<ConnectionNode, TeslaReceiverBlockEntity> blockEntities = new HashMap<>();
+    private final Map<ConnectionNode, AbstractTeslaBlockEntity> blockEntities = new HashMap<>();
 
     public static TeslaConnectionManager getInstance() {
         if (instance == null) instance = new TeslaConnectionManager();
         return instance;
     }
 
-    public void registerBlockEntity(TeslaReceiverBlockEntity blockEntity) {
+    public void registerBlockEntity(AbstractTeslaBlockEntity blockEntity) {
         blockEntities.put(blockEntity.asConnectionNode(), blockEntity);
     }
 
-    public void unregisterBlockEntity(TeslaReceiverBlockEntity blockEntity) {
+    public void unregisterBlockEntity(AbstractTeslaBlockEntity blockEntity) {
         ConnectionNode node = blockEntity.asConnectionNode();
         blockEntities.remove(node);
         removeConnectionNode(node);
         recalculateDistances();
+    }
+
+    public AbstractTeslaBlockEntity getBlockEntity(ConnectionNode node) {
+        return blockEntities.get(node);
     }
 
     public void addConnection(ConnectionNode source, ConnectionNode target) {
@@ -41,8 +57,8 @@ public class TeslaConnectionManager {
 
     public void addConnection(ConnectionNode source, ConnectionNode target, boolean bypassValidation) {
         if (!bypassValidation) {
-            if (source.isBlock() && target.isBlock()) {
-                if (!canAddConnection(source, target)) return;
+            if (source.isBlock() && target.isBlock() && !canAddConnection(source, target)) {
+                return;
             }
         }
 
@@ -74,14 +90,24 @@ public class TeslaConnectionManager {
         }
     }
 
+    /**
+     * Recalculate node “distances” based on valid directional propagation from generator nodes.
+     * <br>
+     * Performs a directional BFS (only follow outgoing edges) starting from every entity node.
+     * All block entities that are unreachable (distance remains Integer.MAX_VALUE) are removed
+     * from their independent graph.
+     */
     public void recalculateDistances() {
-        for (TeslaReceiverBlockEntity be : blockEntities.values()) {
+        /* Reset distances */
+        for (AbstractTeslaBlockEntity be : blockEntities.values()) {
             be.setDistance(Integer.MAX_VALUE);
         }
 
         Queue<ConnectionNode> queue = new LinkedList<>();
         Map<ConnectionNode, Integer> distances = new HashMap<>();
+        int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS.get();
 
+        /* Start only from generator nodes (entity nodes) */
         for (ConnectionNode node : getAllNodes()) {
             if (node.isEntity()) {
                 distances.put(node, 0);
@@ -89,43 +115,43 @@ public class TeslaConnectionManager {
             }
         }
 
+        /* Follow only outgoing edges */
         while (!queue.isEmpty()) {
             ConnectionNode current = queue.poll();
             int currentDistance = distances.get(current);
 
-            Set<ConnectionNode> neighbors = new HashSet<>();
-
-            neighbors.addAll(outgoing.getOrDefault(current, Collections.emptySet()));
-            neighbors.addAll(incoming.getOrDefault(current, Collections.emptySet()));
+            /* Get only the outgoing neighbors */
+            Set<ConnectionNode> neighbors = outgoing.getOrDefault(current, Collections.emptySet());
 
             for (ConnectionNode neighbor : neighbors) {
+                /* We pass generator nodes */
                 if (!neighbor.isBlock()) continue;
 
-                int newDistance = current.isBlock() ? currentDistance + 1 : 1;
+                int newDistance = currentDistance + 1;
 
-                if (newDistance > CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS.get()) continue;
+                if (newDistance > maxAllowed) continue;
                 if (!distances.containsKey(neighbor) || newDistance < distances.get(neighbor)) {
                     distances.put(neighbor, newDistance);
                     queue.add(neighbor);
-                    TeslaReceiverBlockEntity be = blockEntities.get(neighbor);
-                    if (be != null) be.setDistance(newDistance);
+                    AbstractTeslaBlockEntity be = blockEntities.get(neighbor);
+                    if (be != null) {
+                        be.setDistance(newDistance);
+                    }
                 }
             }
-
         }
 
-        for (TeslaReceiverBlockEntity be : blockEntities.values()) {
+        /* Clean nodes that could not be reached via a valid directional chain */
+        for (AbstractTeslaBlockEntity be : new ArrayList<>(blockEntities.values())) {
             if (be.getDistance() == Integer.MAX_VALUE) {
                 removeConnectionNode(be.asConnectionNode());
                 be.setDistance(0);
             }
         }
-
     }
 
     private Set<ConnectionNode> getAllNodes() {
         Set<ConnectionNode> nodes = new HashSet<>();
-
         nodes.addAll(outgoing.keySet());
         nodes.addAll(incoming.keySet());
 
@@ -140,6 +166,16 @@ public class TeslaConnectionManager {
         return nodes;
     }
 
+    /**
+     * Checks if the directed connection from source to target can be added.
+     * <br>
+     * This method uses a simulated BFS within the connected component (considering bidirectional
+     * connectivity) to enforce that both source and target are within the allowed maximum distance.
+     *
+     * @param source source node
+     * @param target target node
+     * @return true if the connection is allowed.
+     */
     private boolean canAddConnection(ConnectionNode source, ConnectionNode target) {
         int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS.get();
 
@@ -161,10 +197,10 @@ public class TeslaConnectionManager {
             int d = simDistance.get(cur);
 
             Set<ConnectionNode> neighbors = new HashSet<>();
-
             neighbors.addAll(outgoing.getOrDefault(cur, Collections.emptySet()));
             neighbors.addAll(incoming.getOrDefault(cur, Collections.emptySet()));
 
+            /* Ensure that source and target are connected in at least one direction */
             if (cur.equals(source)) neighbors.add(target);
             if (cur.equals(target)) neighbors.add(source);
 
@@ -179,12 +215,10 @@ public class TeslaConnectionManager {
                     queue.add(neighbor);
                 }
             }
-
         }
 
-        if (!simDistance.containsKey(source) || !simDistance.containsKey(target)) return false;
-
-        return simDistance.get(source) <= maxAllowed && simDistance.get(target) <= maxAllowed;
+        return simDistance.containsKey(source) && simDistance.containsKey(target)
+                && simDistance.get(source) <= maxAllowed && simDistance.get(target) <= maxAllowed;
     }
 
     private Set<ConnectionNode> getConnectedComponentIncluding(ConnectionNode source, ConnectionNode target) {
@@ -199,7 +233,6 @@ public class TeslaConnectionManager {
         while (!queue.isEmpty()) {
             ConnectionNode cur = queue.poll();
             Set<ConnectionNode> neighbors = new HashSet<>();
-
             neighbors.addAll(outgoing.getOrDefault(cur, Collections.emptySet()));
             neighbors.addAll(incoming.getOrDefault(cur, Collections.emptySet()));
 
@@ -209,7 +242,6 @@ public class TeslaConnectionManager {
             for (ConnectionNode nb : neighbors) {
                 if (comp.add(nb)) queue.add(nb);
             }
-
         }
 
         return comp;
@@ -223,6 +255,12 @@ public class TeslaConnectionManager {
         return incoming.getOrDefault(node, Collections.emptySet());
     }
 
+    /**
+     * This is used to serialize and deserialize node connection data on world reload.
+     * @param entityId UUID of the entity node
+     * @param blockPos pos of the block node
+     * @param dimension dimension of the node
+     */
     public record ConnectionNode(UUID entityId, BlockPos blockPos, ResourceLocation dimension) {
 
         public static ConnectionNode forEntity(UUID entityId, ResourceLocation dimension) {
@@ -247,7 +285,6 @@ public class TeslaConnectionManager {
             }
 
             tag.putString("Dimension", dimension.toString());
-
             return tag;
         }
 
@@ -260,7 +297,6 @@ public class TeslaConnectionManager {
                 BlockPos pos = new BlockPos(tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z"));
                 return forBlock(pos, dimension);
             }
-
         }
 
         public boolean isEntity() {
@@ -275,9 +311,7 @@ public class TeslaConnectionManager {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-
             ConnectionNode that = (ConnectionNode) o;
-
             return Objects.equals(entityId, that.entityId) &&
                     Objects.equals(blockPos, that.blockPos) &&
                     Objects.equals(dimension, that.dimension);
@@ -288,18 +322,5 @@ public class TeslaConnectionManager {
             return Objects.hash(entityId, blockPos, dimension);
         }
 
-        public UUID getEntityId() {
-            return this.entityId;
-        }
-
-        public BlockPos getBlockPos() {
-            return blockPos;
-        }
-
-        public ResourceLocation getDimension() {
-            return dimension;
-        }
-
     }
-
 }

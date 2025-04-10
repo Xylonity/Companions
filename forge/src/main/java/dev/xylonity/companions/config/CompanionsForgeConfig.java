@@ -26,7 +26,7 @@ public class CompanionsForgeConfig {
                 .comment("The maximum number of Tesla receivers that can be connected in a chain, starting from a Dinamo.")
                 .comment("For example, if set to 3, the Dinamo can connect to Receiver1, which connects to Receiver2, which connects to Receiver3.")
                 .comment("Any additional receivers beyond this limit will not be powered.")
-                .defineInRange("dinamoMaxReceiverConnections", 3, 0, 50);
+                .defineInRange("dinamoMaxReceiverConnections", 7, 0, 50);
         DINAMO_RECEIVER_REDSTONE_MODE = BUILDER
                 .comment("Determines how the Tesla Receiver interacts with Redstone circuits when powered by a Dinamo.")
                 .comment("If true, the receiver emits a Redstone clock signal (pulses when receiving energy).")

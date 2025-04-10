@@ -4,6 +4,7 @@ import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.item.EternalLighter;
 import dev.xylonity.companions.common.item.PuppetArm;
 import dev.xylonity.companions.common.material.ArmorMaterials;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
@@ -18,7 +19,7 @@ public class CompanionsItems {
     public static final Supplier<Item> NETHER_COIN = registerItem("nether_coin", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> END_COIN = registerItem("end_coin", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> NETHERITE_CHAINS = registerItem("netherite_chains", () -> new Item(new Item.Properties()));
-    public static final Supplier<Item> BIG_BREAD = registerItem("big_bread", () -> new Item(new Item.Properties()));
+    public static final Supplier<Item> BIG_BREAD = registerItem("big_bread", () -> new Item(new Item.Properties().stacksTo(1).food((new FoodProperties.Builder()).nutrition(10).saturationMod(0.6F).meat().build())));
     public static final Supplier<Item> SOUL_GEM = registerItem("soul_gem", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> CANNON_ARM = registerItem("cannon_arm", () -> new PuppetArm(new Item.Properties()));
     public static final Supplier<Item> WHIP_ARM = registerItem("whip_arm", () -> new PuppetArm(new Item.Properties()));

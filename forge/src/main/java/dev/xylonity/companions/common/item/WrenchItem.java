@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.item;
 
-import dev.xylonity.companions.common.blockentity.TeslaReceiverBlockEntity;
-import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
+import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
+import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.custom.DinamoEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -47,7 +47,7 @@ public class WrenchItem extends Item {
         BlockPos pos = context.getClickedPos();
         BlockEntity blockEntity = context.getLevel().getBlockEntity(pos);
 
-        if (blockEntity instanceof TeslaReceiverBlockEntity) {
+        if (blockEntity instanceof AbstractTeslaBlockEntity) {
             TeslaConnectionManager.ConnectionNode node = TeslaConnectionManager.ConnectionNode.forBlock(pos, context.getLevel().dimension().location());
             handleNodeSelection(context.getPlayer(), node);
         }

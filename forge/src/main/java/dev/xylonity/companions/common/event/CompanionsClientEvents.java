@@ -2,8 +2,9 @@ package dev.xylonity.companions.common.event;
 
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.blockentity.renderer.CroissantEggRenderer;
+import dev.xylonity.companions.client.blockentity.renderer.PlasmaLampRenderer;
 import dev.xylonity.companions.client.blockentity.renderer.SoulFurnaceRenderer;
-import dev.xylonity.companions.client.blockentity.renderer.TeslaReceiverRenderer;
+import dev.xylonity.companions.client.blockentity.renderer.TeslaCoilRenderer;
 import dev.xylonity.companions.client.entity.renderer.*;
 import dev.xylonity.companions.client.gui.screen.PuppetScreen;
 import dev.xylonity.companions.client.gui.screen.SoulFurnaceScreen;
@@ -61,9 +62,10 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
         EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
 
-        BlockEntityRenderers.register(CompanionsBlockEntities.TESLA_RECEIVER.get(), TeslaReceiverRenderer::new);
+        BlockEntityRenderers.register(CompanionsBlockEntities.TESLA_COIL.get(), TeslaCoilRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.SOUL_FURNACE.get(), SoulFurnaceRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.CROISSANT_EGG.get(), CroissantEggRenderer::new);
+        BlockEntityRenderers.register(CompanionsBlockEntities.PLASMA_LAMP.get(), PlasmaLampRenderer::new);
 
         MenuScreens.register(CompanionsMenuTypes.SOUL_FURNACE.get(), SoulFurnaceScreen::new);
         MenuScreens.register(CompanionsMenuTypes.SOUL_MAGE_CONTAINER.get(), SoulMageScreen::new);
@@ -82,6 +84,7 @@ public class CompanionsClientEvents {
         event.registerSpriteSet(CompanionsParticles.BLIZZARD_ICE.get(), BlizzardIceParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.GOLDEN_ALLAY_TRAIL.get(), GoldenAllayTrailParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.CAKE_CREAM.get(), CakeCreamParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.SOUL_FLAME.get(), SoulFlameParticle.Provider::new);
     }
 
 }

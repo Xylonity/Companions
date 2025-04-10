@@ -1,3 +1,25 @@
+                      LICENSING INFORMATION
+
+This project is subject to different licensing terms depending on the
+content type:
+
+ Source code located in `src/main/java` is licensed under the GNU General
+Public License v3 (GPLv3) with an additional clause. This clause requires
+attribution to the original author and enforces open-source distribution
+of derivative works.
+
+ Assets located in `src/main/resources/assets` are licensed under **All
+Rights Reserved (ARR), meaning they cannot be used, modified, or
+redistributed without explicit permission from the author.
+
+                        ADDITIONAL CLAUSE
+
+ Any derivative work of this software must include clear attribution to
+the original author in both documentation and/or relevant source files.
+Furthermore, any software that uses, modifies, or incorporates parts
+of this code, whether directly or indirectly, must be released under
+the same terms as this license.
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

@@ -1,19 +1,22 @@
 package dev.xylonity.companions.common.block;
 
-import dev.xylonity.companions.common.blockentity.TeslaReceiverBlockEntity;
-import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
+import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
+import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.PoweredBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -23,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class TeslaReceiverBlock extends PoweredBlock implements EntityBlock {
+public class TeslaCoilBlock extends AbstractTeslaBlock implements EntityBlock {
 
     private static final VoxelShape SHAPE_N = Stream.of(
             Block.box(8.881784197001252e-16, 9, 0, 16, 13, 16),
@@ -31,7 +34,7 @@ public class TeslaReceiverBlock extends PoweredBlock implements EntityBlock {
             Block.box(2, 13, 2, 14, 16, 14)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-    public TeslaReceiverBlock(Properties properties) {
+    public TeslaCoilBlock(Properties properties) {
         super(properties);
     }
 
@@ -43,51 +46,38 @@ public class TeslaReceiverBlock extends PoweredBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.TESLA_RECEIVER.get().create(pos, state);
+        return CompanionsBlockEntities.TESLA_COIL.get().create(pos, state);
     }
 
     @Override
     public int getSignal(@NotNull BlockState pBlockState, BlockGetter pBlockAccess, @NotNull BlockPos pPos, @NotNull Direction pSide) {
-        if (pBlockAccess.getBlockEntity(pPos) instanceof TeslaReceiverBlockEntity receiver) {
-            return receiver.hasSignal() ? 15 : 0;
-        }
+        //if (pBlockAccess.getBlockEntity(pPos) instanceof TeslaCoilBlockEntity receiver) {
+        //    return receiver.hasSignal() ? 15 : 0;
+        //}
 
         return 0;
-    }
-
-    @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
-        if (pLevel.getBlockEntity(pPos) instanceof TeslaReceiverBlockEntity receiver) {
-
-            TeslaConnectionManager connectionManager = TeslaConnectionManager.getInstance();
-            TeslaConnectionManager.getInstance().unregisterBlockEntity(receiver);
-
-            super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
-
-            for (TeslaConnectionManager.ConnectionNode targetNode : connectionManager.getOutgoing(receiver.asConnectionNode())) {
-                connectionManager.getIncoming(targetNode).remove(receiver.asConnectionNode());
-            }
-
-            connectionManager.getOutgoing(receiver.asConnectionNode()).clear();
-
-            for (TeslaConnectionManager.ConnectionNode sourceNode : connectionManager.getIncoming(receiver.asConnectionNode())) {
-                connectionManager.getOutgoing(sourceNode).remove(receiver.asConnectionNode());
-            }
-
-            connectionManager.getIncoming(receiver.asConnectionNode()).clear();
-        } else {
-            super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
-        }
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.TESLA_RECEIVER.get() ? TeslaReceiverBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.TESLA_COIL.get() ? TeslaCoilBlockEntity::tick : null;
     }
 
     public int getAnalogOutputSignal(BlockState blockState, BlockGetter level, BlockPos pos) {
         return 0;
     }
 
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (!pLevel.isClientSide) {
+            BlockEntity be = pLevel.getBlockEntity(pPos);
+            if (be instanceof TeslaCoilBlockEntity && pPlayer.getItemInHand(pHand).getItem() != CompanionsItems.WRENCH.get()) {
+                TeslaCoilBlockEntity coil = (TeslaCoilBlockEntity) be;
+                coil.toggleManualOverride();
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 }

@@ -2,8 +2,11 @@ package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
-import dev.xylonity.companions.common.entity.ai.illagergolem.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.behaviour.DinamoAttackBehaviour;
+import dev.xylonity.companions.common.tesla.behaviour.DinamoCurrentPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.IActivable;
+import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -45,7 +48,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivable {
-    public List<Entity> visibleEntities = new ArrayList<>();
+    public List<LivingEntity> visibleEntities = new ArrayList<>();
     private final TeslaConnectionManager connectionManager;
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
@@ -59,15 +62,20 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
     private static final EntityDataAccessor<Integer> TICKCOUNT = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> SHOULD_ATTACK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
 
-    private static final int TIME_PER_ACTIVATION = 14;
-    private static final int ATTACK_TIME_PER_ACTIVATION = 60;
+    public static final int TIME_PER_ACTIVATION = 14;
+    public static final int ATTACK_TIME_PER_ACTIVATION = 60;
     public static final int ELECTRICAL_CHARGE_DURATION = 8;
-    private static final int MAX_RADIUS = 10;
+    public static final int MAX_RADIUS = 10;
+
+    private final ITeslaGeneratorBehaviour pulseBehavior;
+    private final ITeslaGeneratorBehaviour attackBehavior;
 
     public DinamoEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.noCulling = true;
         this.connectionManager = TeslaConnectionManager.getInstance();
+        this.pulseBehavior = new DinamoCurrentPulseBehaviour();
+        this.attackBehavior = new DinamoAttackBehaviour();
     }
 
     @Override
@@ -212,125 +220,9 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
         }
 
         if (isSitting()) {
-
-            if (getTickCount() % TIME_PER_ACTIVATION == 0) {
-                setActive(true);
-            }
-
-            if (isActive() && getTickCount() % TIME_PER_ACTIVATION >= ELECTRICAL_CHARGE_DURATION) {
-                setActive(false);
-            }
-
-            if (this.isActive() && this.level() instanceof ServerLevel level) {
-                for (TeslaConnectionManager.ConnectionNode connectionNode : TeslaConnectionManager.getInstance().getOutgoing(this.asConnectionNode())) {
-                    if (connectionNode.isEntity()) {
-                        Entity connectedEntity = level.getEntity(connectionNode.entityId());
-                        Vec3 start = this.position().add(0.0, this.getBbHeight() * 0.5D, 0.0);
-
-                        if (connectedEntity != null) {
-
-                            Vec3 end = connectedEntity.position().add(0.0, connectedEntity.getBbHeight() * 0.5D, 0.0);
-
-                            AABB segmentAABB = new AABB(start, end).inflate(1.0D);
-
-                            List<LivingEntity> nearbyEntities = this.level().getEntitiesOfClass(
-                                    LivingEntity.class,
-                                    segmentAABB,
-                                    e -> e != this && e != connectedEntity && e.isAlive()
-                            );
-
-                            for (LivingEntity victim : nearbyEntities) {
-                                if (isEntityNearLine(start, end, victim, 0.75D)) {
-                                    this.doHurtTarget(victim);
-                                    if (random.nextFloat() <= 0.2) {
-                                        victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0));
-                                    }
-                                }
-                            }
-                        }
-                    } else if (connectionNode.isBlock()) {
-                        Vec3 start = this.position().add(0.0, this.getBbHeight() * 0.5D, 0.0);
-                        Vec3 end = connectionNode.blockPos().getCenter().add(0.0, 0.3D, 0.0);
-
-                        AABB segmentAABB = new AABB(start, end).inflate(1.0D);
-
-                        List<LivingEntity> nearbyEntities = this.level().getEntitiesOfClass(
-                                LivingEntity.class,
-                                segmentAABB,
-                                e -> e != this && e.isAlive()
-                        );
-
-                        for (LivingEntity victim : nearbyEntities) {
-                            if (isEntityNearLine(start, end, victim, 0.75D)) {
-                                this.doHurtTarget(victim);
-                                if (random.nextFloat() <= 0.2) {
-                                    victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0));
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-
+            pulseBehavior.tick(this);
         } else {
-
-            if (getTickCount() % ATTACK_TIME_PER_ACTIVATION == 0 && shouldAttack()) {
-                setActiveForAttack(true);
-            }
-
-            if (isActiveForAttack() && getTickCount() % ATTACK_TIME_PER_ACTIVATION >= ELECTRICAL_CHARGE_DURATION && shouldAttack()) {
-                setActiveForAttack(false);
-                visibleEntities.clear();
-            }
-
-            if (isActiveForAttack() && shouldAttack()) {
-                Vec3 currentPosition = this.position();
-                AABB searchBox = new AABB(
-                        currentPosition.x - MAX_RADIUS, currentPosition.y - MAX_RADIUS, currentPosition.z - MAX_RADIUS,
-                        currentPosition.x + MAX_RADIUS, currentPosition.y + MAX_RADIUS, currentPosition.z + MAX_RADIUS
-                );
-
-                visibleEntities = this.level().getEntities(this, searchBox, entity -> {
-                            if (entity instanceof Player player) return !player.isCreative() && !player.isSpectator() && player.equals(getOwner());
-                            return entity instanceof LivingEntity;
-                        })
-                        .stream()
-                        .filter(this::hasLineOfSight)
-                        .collect(Collectors.toList());
-
-                if (!this.visibleEntities.isEmpty()) {
-
-                    if (level().isClientSide()) {
-                        double radius = 0.42;
-                        double centerX = position().x;
-                        double centerZ = position().z;
-                        double initialY = position().y() + this.getBbHeight() - 0.60;
-
-                        for (int i = 0; i < 360; i += 120) {
-                            double angleRadians = Math.toRadians(i);
-
-                            double particleX = centerX + radius * Math.cos(angleRadians);
-                            double particleZ = centerZ + radius * Math.sin(angleRadians);
-
-                            level().addParticle(CompanionsParticles.DINAMO_SPARK.get(), particleX, initialY, particleZ, 0d, 0.35d, 0d);
-                        }
-                    }
-
-                    int elapsed = getTickCount() - getAnimationStartTick();
-
-                    if (!level().isClientSide && elapsed >= 3 && elapsed < ELECTRICAL_CHARGE_DURATION) {
-                        for (Entity entity : visibleEntities) {
-                            if (entity instanceof LivingEntity living) {
-                                living.hurt(level().damageSources().lightningBolt(), 6.0F);
-                            }
-                        }
-                    }
-
-                }
-
-            }
-
+            attackBehavior.tick(this);
         }
 
     }
