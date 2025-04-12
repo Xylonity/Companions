@@ -3,13 +3,10 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
-import dev.xylonity.companions.common.tesla.behaviour.DinamoAttackBehaviour;
-import dev.xylonity.companions.common.tesla.behaviour.DinamoCurrentPulseBehaviour;
-import dev.xylonity.companions.common.util.interfaces.IActivable;
+import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoAttackBehaviour;
+import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
-import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsItems;
-import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -19,12 +16,9 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -33,8 +27,6 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -45,9 +37,8 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivable {
+public class DinamoEntity extends CompanionEntity implements GeoEntity {
     public List<LivingEntity> visibleEntities = new ArrayList<>();
     private final TeslaConnectionManager connectionManager;
 
@@ -59,10 +50,9 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
     private static final EntityDataAccessor<Boolean> ACTIVE_ATTACK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> CONNECTED_ENTITIES = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> TEST_TIMER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> TICKCOUNT = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> CICLE_COUNTER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> SHOULD_ATTACK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public static final int TIME_PER_ACTIVATION = 14;
     public static final int ATTACK_TIME_PER_ACTIVATION = 60;
     public static final int ELECTRICAL_CHARGE_DURATION = 8;
     public static final int MAX_RADIUS = 10;
@@ -74,7 +64,7 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
         super(pEntityType, pLevel);
         this.noCulling = true;
         this.connectionManager = TeslaConnectionManager.getInstance();
-        this.pulseBehavior = new DinamoCurrentPulseBehaviour();
+        this.pulseBehavior = new DinamoPulseBehaviour();
         this.attackBehavior = new DinamoAttackBehaviour();
     }
 
@@ -102,7 +92,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
         }
 
         tag.put("OutgoingConnections", outgoing);
-        tag.putInt("TickCount", getTickCount());
         tag.putInt("AnimationStartTick", getAnimationStartTick());
         tag.putBoolean("IsSitting", isSitting());
     }
@@ -117,12 +106,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-
-        if (tag.contains("TickCount")) {
-            setTickCount(tag.getInt("TickCount"));
-        } else {
-            setTickCount(0);
-        }
 
         if (tag.contains("AnimationStartTick")) {
             setAnimationStartTick(tag.getInt("AnimationStartTick"));
@@ -181,20 +164,20 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
     @Override
     public void setSitting(boolean sitting) {
         super.setSitting(sitting);
-        if (!isSitting()) {
-            Set<TeslaConnectionManager.ConnectionNode> outNodes = new HashSet<>(connectionManager.getOutgoing(asConnectionNode()));
-            for (TeslaConnectionManager.ConnectionNode target : outNodes) {
-                connectionManager.removeConnection(asConnectionNode(), target);
-            }
+        //if (!isSitting()) {
+        //    Set<TeslaConnectionManager.ConnectionNode> outNodes = new HashSet<>(connectionManager.getOutgoing(asConnectionNode()));
+        //    for (TeslaConnectionManager.ConnectionNode target : outNodes) {
+        //        connectionManager.removeConnection(asConnectionNode(), target);
+        //    }
 
-            Set<TeslaConnectionManager.ConnectionNode> inNodes = new HashSet<>(connectionManager.getIncoming(asConnectionNode()));
-            for (TeslaConnectionManager.ConnectionNode source : inNodes) {
-                connectionManager.removeConnection(source, asConnectionNode());
-            }
+        //    Set<TeslaConnectionManager.ConnectionNode> inNodes = new HashSet<>(connectionManager.getIncoming(asConnectionNode()));
+        //    for (TeslaConnectionManager.ConnectionNode source : inNodes) {
+        //        connectionManager.removeConnection(source, asConnectionNode());
+        //    }
 
-            connectionManager.removeConnectionNode(asConnectionNode());
-            connectionManager.recalculateDistances();
-        }
+        //    connectionManager.removeConnectionNode(asConnectionNode());
+        //    connectionManager.recalculateDistances();
+        //}
     }
 
     @Override
@@ -212,11 +195,8 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
     public void tick() {
         super.tick();
 
-        if (!level().isClientSide) this.setTickCount(this.tickCount);
-
         if (!this.isAlive()) {
             setActive(false);
-            setActiveForAttack(false);
         }
 
         if (isSitting()) {
@@ -227,41 +207,8 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
 
     }
 
-    public static boolean isEntityNearLine(Vec3 start, Vec3 end, Entity entity, double threshold) {
-        Vec3 entityPos = entity.position();
-
-        Vec3 ab = end.subtract(start);
-        Vec3 ac = entityPos.subtract(start);
-
-        double abLengthSq = ab.lengthSqr();
-        if (abLengthSq < 1e-8) {
-            return entityPos.distanceTo(start) <= threshold;
-        }
-
-        double t = ac.dot(ab) / abLengthSq;
-        t = Mth.clamp(t, 0.0D, 1.0D);
-
-        Vec3 projection = start.add(ab.scale(t));
-
-        double distance = entityPos.distanceTo(projection);
-
-        return distance <= threshold;
-    }
-
     public void setActive(boolean active) {
-        if (active && !this.isActive()) {
-            setAnimationStartTick(getTickCount());
-        }
-
         this.entityData.set(ACTIVE, active);
-    }
-
-    public void setActiveForAttack(boolean active) {
-        if (active && !this.isActiveForAttack()) {
-            setAnimationStartTick(getTickCount());
-        }
-
-        this.entityData.set(ACTIVE_ATTACK, active);
     }
 
     public boolean isActiveForAttack() {
@@ -281,15 +228,14 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
         this.entityData.set(TEST_TIMER, tick);
     }
 
-    public int getTickCount() {
-        return this.entityData.get(TICKCOUNT);
+    public int getCicleCounter() {
+        return this.entityData.get(CICLE_COUNTER);
     }
 
-    public void setTickCount(int tick) {
-        this.entityData.set(TICKCOUNT, tick);
+    public void setCicleCounter(int tick) {
+        this.entityData.set(CICLE_COUNTER, tick);
     }
 
-    @Override
     public boolean isActive() {
         return this.entityData.get(ACTIVE);
     }
@@ -309,8 +255,8 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity, IActivab
         this.entityData.define(ACTIVE_ATTACK, true);
         this.entityData.define(CONNECTED_ENTITIES, "");
         this.entityData.define(TEST_TIMER, 0);
-        this.entityData.define(TICKCOUNT, 0);
         this.entityData.define(SHOULD_ATTACK, true);
+        this.entityData.define(CICLE_COUNTER, 0);
     }
 
     @Override

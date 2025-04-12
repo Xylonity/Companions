@@ -3,7 +3,6 @@ package dev.xylonity.companions.client.blockentity.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.blockentity.model.TeslaCoilModel;
 import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
@@ -36,49 +35,7 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> {
                 totalFrames,
                 ticksPerFrame
         ));
-        addRenderLayer(new RayGlowLayer(this));
     }
-
-    private static class RayGlowLayer extends GeoRenderLayer<TeslaCoilBlockEntity> {
-        private static final ResourceLocation EMB_TEXTURE = new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
-
-        public RayGlowLayer(GeoRenderer<TeslaCoilBlockEntity> entityRenderer) {
-            super(entityRenderer);
-        }
-
-        @Override
-        public void render(PoseStack poseStack, TeslaCoilBlockEntity entity, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-            // Use a translucent render type to apply transparency.
-            RenderType glowRenderType = RenderType.entityTranslucent(EMB_TEXTURE);
-            VertexConsumer glowBuffer = bufferSource.getBuffer(glowRenderType);
-
-            // RGB values for white.
-            float red = 1.0f;
-            float green = 1.0f;
-            float blue = 1.0f;
-
-            float alpha = 0.0f;
-            // We now base the fade effect on manual switching.
-            // When the Tesla coil is active, we gradually fade in over 5 ticks.
-            if (entity.isActive()) {
-                int elapsed = entity.tickCount - entity.activationTick;
-                if (elapsed < 5) {
-                    alpha = (float) elapsed / 5.0f;
-                } else {
-                    alpha = 1.0f;
-                }
-            } else {
-                // When the coil is not active (manually switched off) no glow is rendered.
-                alpha = 0.0f;
-            }
-
-            // Only re-render if alpha is above zero.
-            if (alpha > 0.0f) {
-                getRenderer().reRender(bakedModel, poseStack, bufferSource, entity, glowRenderType, glowBuffer, partialTick, packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
-            }
-        }
-    }
-
 
     @Override
     public boolean shouldRenderOffScreen(@NotNull TeslaCoilBlockEntity pBlockEntity) {
@@ -91,6 +48,10 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull TeslaCoilBlockEntity animatable) {
+        if (animatable.isActive()) {
+            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
+        }
+
         return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
     }
 
@@ -108,8 +69,6 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> {
 
         @Override
         public void render(PoseStack poseStack, TeslaCoilBlockEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-
-            System.out.println(animatable.isActive());
 
             if (!animatable.isActive()) return;
 
@@ -143,8 +102,7 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> {
         }
 
         private int calculateCurrentFrame(TeslaCoilBlockEntity animatable) {
-            int elapsedTicks = animatable.tickCount - animatable.getAnimationStartTick();
-            int frame = elapsedTicks / ticksPerFrame;
+            int frame = animatable.getAnimationStartTick() / ticksPerFrame;
 
             if (frame >= totalFrames) return -1;
 
@@ -159,7 +117,6 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> {
          */
         private void renderConnection(MultiBufferSource bufferSource, PoseStack poseStack, Vec3 p0, Vec3 p1, int frame, int light) {
             VertexConsumer vertexConsumer = bufferSource.getBuffer(AutoGlowingTexture.getRenderType(texture));
-            //VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
             Matrix4f positionMatrix = poseStack.last().pose();
             Matrix3f normalMatrix = poseStack.last().normal();
 

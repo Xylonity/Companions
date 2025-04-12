@@ -38,18 +38,6 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
         ));
     }
 
-    //public static RenderType decacheShaderRendering(ResourceLocation texture) {
-    //    return RenderType.create("dynamic_electric_arch", DefaultVertexFormat.NEW_ENTITY,
-    //            VertexFormat.Mode.QUADS, 256, false, true,
-    //            RenderType.CompositeState.builder()
-    //                    .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEntityCutoutShader))
-    //                    .setTextureState(new RenderStateShard.ShaderStateShard.TextureStateShard(texture, false, false))
-    //                    .setCullState(new RenderStateShard.CullStateShard(false))
-    //                    .setLightmapState(new RenderStateShard.LightmapStateShard(true))
-    //                    .setOverlayState(new RenderStateShard.OverlayStateShard(true))
-    //                    .createCompositeState(false));
-    //}
-
     public DinamoRenderer(EntityRendererProvider.Context renderManager) {
         this(renderManager, 8, DinamoEntity.ELECTRICAL_CHARGE_DURATION / 8);
     }
@@ -127,8 +115,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
         }
 
         private int calculateCurrentFrame(DinamoEntity animatable) {
-            int elapsedTicks = animatable.getTickCount() - animatable.getAnimationStartTick();
-            int frame = elapsedTicks / ticksPerFrame;
+            int frame = animatable.getAnimationStartTick() / ticksPerFrame;
 
             if (frame >= totalFrames) return -1;
 
@@ -139,8 +126,6 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
         // https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
         private void renderConnection(MultiBufferSource bufferSource, PoseStack poseStack, Vec3 p0, Vec3 p1, int frame, int light) {
             VertexConsumer vertexConsumer = bufferSource.getBuffer(AutoGlowingTexture.getRenderType(texture));
-            //VertexConsumer vertexConsumer = bufferSource.getBuffer(decacheShaderRendering(texture));
-            //VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
             Matrix4f positionMatrix = poseStack.last().pose();
             Matrix3f normalMatrix = poseStack.last().normal();
 

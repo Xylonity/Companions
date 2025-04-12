@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
-import dev.xylonity.companions.common.util.interfaces.IActivable;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -44,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class IllagerGolemEntity extends Raider implements GeoEntity, IActivable {
+public class IllagerGolemEntity extends Raider implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public List<Entity> visibleEntities = new ArrayList<>();
 
@@ -228,7 +227,6 @@ public class IllagerGolemEntity extends Raider implements GeoEntity, IActivable 
         this.entityData.set(ACTIVE, active);
     }
 
-    @Override
     public boolean isActive() {
         return this.entityData.get(ACTIVE);
     }

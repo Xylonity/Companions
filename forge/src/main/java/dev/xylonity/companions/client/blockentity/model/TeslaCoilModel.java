@@ -16,9 +16,9 @@ public class TeslaCoilModel extends GeoModel<TeslaCoilBlockEntity> {
 
     @Override
     public ResourceLocation getTextureResource(TeslaCoilBlockEntity animatable) {
-        TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
-        TeslaConnectionManager.ConnectionNode node = animatable.asConnectionNode();
-        if (animatable.isActive() && (!manager.getOutgoing(node).isEmpty() || !manager.getIncoming(node).isEmpty())) return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
+        if (animatable.isActive()) {
+            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
+        }
 
         return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
     }

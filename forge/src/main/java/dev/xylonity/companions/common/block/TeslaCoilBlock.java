@@ -49,14 +49,6 @@ public class TeslaCoilBlock extends AbstractTeslaBlock implements EntityBlock {
         return CompanionsBlockEntities.TESLA_COIL.get().create(pos, state);
     }
 
-    @Override
-    public int getSignal(@NotNull BlockState pBlockState, BlockGetter pBlockAccess, @NotNull BlockPos pPos, @NotNull Direction pSide) {
-        //if (pBlockAccess.getBlockEntity(pPos) instanceof TeslaCoilBlockEntity receiver) {
-        //    return receiver.hasSignal() ? 15 : 0;
-        //}
-
-        return 0;
-    }
 
     @Nullable
     @Override
@@ -68,16 +60,4 @@ public class TeslaCoilBlock extends AbstractTeslaBlock implements EntityBlock {
         return 0;
     }
 
-    @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (!pLevel.isClientSide) {
-            BlockEntity be = pLevel.getBlockEntity(pPos);
-            if (be instanceof TeslaCoilBlockEntity && pPlayer.getItemInHand(pHand).getItem() != CompanionsItems.WRENCH.get()) {
-                TeslaCoilBlockEntity coil = (TeslaCoilBlockEntity) be;
-                coil.toggleManualOverride();
-                return InteractionResult.SUCCESS;
-            }
-        }
-        return InteractionResult.PASS;
-    }
 }

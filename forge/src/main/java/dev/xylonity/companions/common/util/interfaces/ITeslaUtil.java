@@ -6,6 +6,8 @@ import net.minecraft.world.phys.Vec3;
 
 public interface ITeslaUtil {
 
+    int MAX_LAPSUS = 14;
+
     static boolean isEntityNearLine(Vec3 start, Vec3 end, Entity entity, double threshold) {
         Vec3 entityPos = entity.position();
 
@@ -20,11 +22,7 @@ public interface ITeslaUtil {
         double t = ac.dot(ab) / abLengthSq;
         t = Mth.clamp(t, 0.0D, 1.0D);
 
-        Vec3 projection = start.add(ab.scale(t));
-
-        double distance = entityPos.distanceTo(projection);
-
-        return distance <= threshold;
+        return entityPos.distanceTo(start.add(ab.scale(t))) <= threshold;
     }
 
 }

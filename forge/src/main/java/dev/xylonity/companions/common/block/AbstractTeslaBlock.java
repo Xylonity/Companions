@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.block;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
+import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -23,26 +24,11 @@ public abstract class AbstractTeslaBlock extends Block implements EntityBlock {
     @Override
     public void onRemove(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pNewState, boolean pMovedByPiston) {
         if (pLevel.getBlockEntity(pPos) instanceof AbstractTeslaBlockEntity receiver) {
-
             TeslaConnectionManager connectionManager = TeslaConnectionManager.getInstance();
-            TeslaConnectionManager.getInstance().unregisterBlockEntity(receiver);
-
-            super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
-
-            for (TeslaConnectionManager.ConnectionNode targetNode : connectionManager.getOutgoing(receiver.asConnectionNode())) {
-                connectionManager.getIncoming(targetNode).remove(receiver.asConnectionNode());
-            }
-
-            connectionManager.getOutgoing(receiver.asConnectionNode()).clear();
-
-            for (TeslaConnectionManager.ConnectionNode sourceNode : connectionManager.getIncoming(receiver.asConnectionNode())) {
-                connectionManager.getOutgoing(sourceNode).remove(receiver.asConnectionNode());
-            }
-
-            connectionManager.getIncoming(receiver.asConnectionNode()).clear();
-        } else {
-            super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
+            connectionManager.getIncoming(receiver.asConnectionNode()).forEach(sourceNode -> connectionManager.getOutgoing(sourceNode).remove(receiver.asConnectionNode()));
         }
+
+        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
     }
 
 }
