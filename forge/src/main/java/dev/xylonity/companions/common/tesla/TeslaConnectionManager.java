@@ -5,23 +5,25 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 /**
- * Implements a hierarchical directed flow network for <i>Tesla Network</i> with
+ * Implements a hierarchical directed flow network for Tesla Network with
  * multi-layered propagation constraints. The graph model combines elements of
  * ADGs and Bipartite graphs as a whole.
- * <br><br>
- * The underlying graph is stored in two maps:
- * <br>
- * – {@code outgoing}: contains the edges where the node is the source.<br>
- * – {@code incoming}: contains the edges where the node is the target.
- * <br><br>
- * Propagation follows directional BFS from source nodes, enforcing a max-depth constraint
- * ({@code DINAMO_MAX_COIL_CONNECTIONS}). Unreachable nodes are pruned dynamically.
  *
- * @implNote For efficiency, distances are recomputed only on major structural changes (add/remove).
+ * The underlying graph is stored in two maps:
+ *
+ * - outgoing: contains the edges where the node is the source.
+ * - incoming: contains the edges where the node is the target.
+ *
+ * Propagation follows directional BFS from source nodes, enforcing a max-depth constraint
+ * (DINAMO_MAX_COIL_CONNECTIONS). Unreachable nodes are pruned dynamically.
+ *
+ * For efficiency, distances are recomputed only on major structural changes (add/remove).
  *
  * @author Xylonity
  */
@@ -47,7 +49,7 @@ public class TeslaConnectionManager {
         recalculateDistances();
     }
 
-    public AbstractTeslaBlockEntity getBlockEntity(ConnectionNode node) {
+    public @NotNull AbstractTeslaBlockEntity getBlockEntity(ConnectionNode node) {
         return blockEntities.get(node);
     }
 
@@ -91,7 +93,7 @@ public class TeslaConnectionManager {
     }
 
     /**
-     * Recalculate node “distances” based on valid directional propagation from generator nodes.
+     * Recalculate node 'distances' based on valid directional propagation from generator nodes.
      * <br>
      * Performs a directional BFS (only follow outgoing edges) starting from every entity node.
      * All block entities that are unreachable (distance remains Integer.MAX_VALUE) are removed
