@@ -1,9 +1,7 @@
 package dev.xylonity.companions.common.event;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class ClientEntityTracker {
+public class CompanionsEntityTracker {
     private static final Map<UUID, Entity> uuidToEntityMap = new HashMap<>();
 
     @SubscribeEvent

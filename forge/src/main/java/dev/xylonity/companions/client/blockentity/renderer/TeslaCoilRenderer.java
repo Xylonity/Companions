@@ -6,7 +6,7 @@ import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.blockentity.model.TeslaCoilModel;
 import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
-import dev.xylonity.companions.common.event.ClientEntityTracker;
+import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -78,7 +78,7 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> {
 
             for (TeslaConnectionManager.ConnectionNode e : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
                 if (e.isEntity()) {
-                    Entity entity = ClientEntityTracker.getEntityByUUID(e.entityId());
+                    Entity entity = CompanionsEntityTracker.getEntityByUUID(e.entityId());
                     if (entity instanceof LivingEntity livingEntity) {
                         Vec3 offset = new Vec3(0.0D, 1.25D, 0.0D);
                         Vec3 direction = livingEntity.position()

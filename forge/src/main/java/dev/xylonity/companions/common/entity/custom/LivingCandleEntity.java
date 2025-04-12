@@ -2,14 +2,12 @@ package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
-import dev.xylonity.companions.common.event.ClientEntityTracker;
+import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -17,12 +15,7 @@ import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -62,7 +55,7 @@ public class LivingCandleEntity extends CompanionEntity {
     @Nullable
     @Override
     public LivingEntity getOwner() {
-        return getOwnerUUID() == null ? null : (LivingEntity) ClientEntityTracker.getEntityByUUID(getOwnerUUID());
+        return getOwnerUUID() == null ? null : (LivingEntity) CompanionsEntityTracker.getEntityByUUID(getOwnerUUID());
     }
 
     @Override

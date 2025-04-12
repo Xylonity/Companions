@@ -7,7 +7,7 @@ import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.entity.model.DinamoModel;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.custom.DinamoEntity;
-import dev.xylonity.companions.common.event.ClientEntityTracker;
+import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -78,7 +78,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
 
                 for (TeslaConnectionManager.ConnectionNode e : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
                     if (e.isEntity()) {
-                        Entity entity = ClientEntityTracker.getEntityByUUID(e.entityId());
+                        Entity entity = CompanionsEntityTracker.getEntityByUUID(e.entityId());
                         if (entity instanceof LivingEntity livingEntity) {
                             Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.90D, 0.0D);
                             Vec3 direction = livingEntity.position()
