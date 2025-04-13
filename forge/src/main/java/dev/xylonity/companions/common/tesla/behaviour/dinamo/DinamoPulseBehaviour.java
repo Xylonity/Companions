@@ -28,12 +28,6 @@ public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
 
         if(generator.getCicleCounter() ==  TICKS_BEFORE_SENDING_PULSE){
             System.out.println("Sending pulse");
-
-        }
-
-        //Reset once the time is up
-        if (generator.getCicleCounter() >= MAX_LAPSUS) {
-            System.out.println("Resetting");
             //Starts the cycle for all the nodes around it
             Set<TeslaConnectionManager.ConnectionNode> nodes = TeslaConnectionManager.getInstance().getOutgoing(generator.asConnectionNode());
             for (TeslaConnectionManager.ConnectionNode node : nodes) {
@@ -42,6 +36,12 @@ public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
                     coil.startCycle();
                 }
             }
+        }
+
+        //Reset once the time is up
+        if (generator.getCicleCounter() >= MAX_LAPSUS) {
+            System.out.println("Resetting");
+
             generator.setCicleCounter(0);
         }
 
