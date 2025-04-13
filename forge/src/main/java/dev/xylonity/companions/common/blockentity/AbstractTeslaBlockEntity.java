@@ -38,7 +38,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     public int tickCount;
     public int activationTick;
     public int cycleCounter;
-    public int scheduledStartTick;// = -1;
     protected boolean pendingRemoval = false;
     protected boolean receivesGenerator = false;
 
@@ -101,7 +100,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.activationTick = tag.contains("ActivationTick") ? tag.getInt("ActivationTick") : 0;
         this.cycleCounter = tag.getInt("cycleCounter");
         this.shouldcycle = tag.getBoolean("Shouldcycle");
-        this.scheduledStartTick = tag.getInt("ScheduledStartTick");
         this.receivesGenerator = tag.getBoolean("ReceivesGenerator");
         this.setDistance(tag.getInt("Distance"));
     }
@@ -118,7 +116,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         tag.putInt("ActivationTick", this.activationTick);
         tag.putInt("cycleCounter", this.cycleCounter);
         tag.putBoolean("Shouldcycle", this.shouldcycle);
-        tag.putInt("ScheduledStartTick", this.scheduledStartTick);
         tag.putBoolean("ReceivesGenerator", this.receivesGenerator);
         tag.putInt("Distance", this.distance);
     }
@@ -179,13 +176,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     public void setAnimationStartTick(int tick) {
         this.activationTick = tick;
-    }
-
-    public void scheduleCycleRelative(int delay) {
-        int candidate = this.tickCount + delay;
-        if (this.scheduledStartTick == -1 || candidate < this.scheduledStartTick) {
-            this.scheduledStartTick = candidate;
-        }
     }
 
     public void startCycle() {

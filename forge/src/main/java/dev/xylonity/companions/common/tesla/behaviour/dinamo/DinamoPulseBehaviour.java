@@ -21,13 +21,11 @@ public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
             generator.setActive(true);
         }
         else if(generator.getCicleCounter() == ELECTRICAL_CHARGE_DURATION) {
-            System.out.println("Finished animation");
             generator.setActive(false);
             generator.setAnimationStartTick(0);
         }
 
         if(generator.getCicleCounter() ==  TICKS_BEFORE_SENDING_PULSE){
-            System.out.println("Sending pulse");
             //Starts the cycle for all the nodes around it
             Set<TeslaConnectionManager.ConnectionNode> nodes = TeslaConnectionManager.getInstance().getOutgoing(generator.asConnectionNode());
             for (TeslaConnectionManager.ConnectionNode node : nodes) {
@@ -40,8 +38,6 @@ public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
 
         //Reset once the time is up
         if (generator.getCicleCounter() >= MAX_LAPSUS) {
-            System.out.println("Resetting");
-
             generator.setCicleCounter(0);
         }
 
