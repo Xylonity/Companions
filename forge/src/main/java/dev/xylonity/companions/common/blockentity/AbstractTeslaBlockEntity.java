@@ -32,9 +32,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     public final TeslaConnectionManager connectionManager;
 
-
-    public static final int START_OFFSET = 6;
-
     public int tickCount;
     public int activationTick;
     public int cycleCounter;
@@ -179,12 +176,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     }
 
     public void startCycle() {
-        if (!this.shouldcycle) {
-            this.shouldcycle = true;
-            this.cycleCounter = 0;
-            this.setActive(true);
-            this.setAnimationStartTick(0);
-        }
+        this.shouldcycle = true;
+        this.cycleCounter = 0;
     }
 
     public int getAnimationStartTick() {

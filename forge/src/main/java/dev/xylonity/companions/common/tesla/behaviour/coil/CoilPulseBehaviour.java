@@ -9,8 +9,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import static dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity.*;
-
 public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
 
 
@@ -42,11 +40,12 @@ public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
             if(coil.cycleCounter == TICKS_BEFORE_SENDING_PULSE){
                 if (!coil.isPendingRemoval()) {
                     for (TeslaConnectionManager.ConnectionNode node : coil.connectionManager.getOutgoing(coil.asConnectionNode())) {
-                        BlockEntity be = level.getBlockEntity(node.blockPos());
-                        if (be instanceof TeslaCoilBlockEntity outCoil) {
-                            if (!outCoil.isReceivesGenerator()) { //If the next coil ISN'T the dinamo
-                                //outCoil.scheduleCycleRelative(START_OFFSET);
-                                outCoil.startCycle();
+                        if (!node.isEntity()) {
+                            BlockEntity be = level.getBlockEntity(node.blockPos());
+                            if (be instanceof AbstractTeslaBlockEntity outCoil) {
+                                if (!outCoil.isReceivesGenerator()) { //If the next coil ISN'T the dinamo
+                                    outCoil.startCycle();
+                                }
                             }
                         }
                     }

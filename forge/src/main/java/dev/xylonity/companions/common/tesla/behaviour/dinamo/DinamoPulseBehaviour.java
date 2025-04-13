@@ -28,9 +28,11 @@ public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
             //Starts the cycle for all the nodes around it
             Set<TeslaConnectionManager.ConnectionNode> nodes = TeslaConnectionManager.getInstance().getOutgoing(generator.asConnectionNode());
             for (TeslaConnectionManager.ConnectionNode node : nodes) {
-                BlockEntity be = generator.level().getBlockEntity(node.blockPos());
-                if (be instanceof TeslaCoilBlockEntity coil) {
-                    coil.startCycle();
+                if (!node.isEntity()) {
+                    BlockEntity be = generator.level().getBlockEntity(node.blockPos());
+                    if (be instanceof TeslaCoilBlockEntity coil) {
+                        coil.startCycle();
+                    }
                 }
             }
         }

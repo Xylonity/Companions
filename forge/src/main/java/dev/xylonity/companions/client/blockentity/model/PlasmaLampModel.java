@@ -16,7 +16,7 @@ public class PlasmaLampModel extends GeoModel<PlasmaLampBlockEntity> {
 
     @Override
     public ResourceLocation getTextureResource(PlasmaLampBlockEntity animatable) {
-        if (animatable.isCycling())
+        if (animatable.isActive())
             return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/block/plasma_lamp_charge_block.png");
 
         return new ResourceLocation(Companions.MOD_ID, "textures/block/plasma_lamp_block.png");

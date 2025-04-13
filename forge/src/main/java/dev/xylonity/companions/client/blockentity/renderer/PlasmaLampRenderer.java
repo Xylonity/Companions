@@ -8,6 +8,7 @@ import dev.xylonity.companions.client.blockentity.model.PlasmaLampModel;
 import dev.xylonity.companions.common.blockentity.PlasmaLampBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
+import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -27,7 +28,7 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class PlasmaLampRenderer extends GeoBlockRenderer<PlasmaLampBlockEntity> {
+public class PlasmaLampRenderer extends GeoBlockRenderer<PlasmaLampBlockEntity> implements ITeslaUtil {
 
     public PlasmaLampRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new PlasmaLampModel());
@@ -44,12 +45,12 @@ public class PlasmaLampRenderer extends GeoBlockRenderer<PlasmaLampBlockEntity> 
     }
 
     public PlasmaLampRenderer(BlockEntityRendererProvider.Context renderManager) {
-        this(renderManager, 8, PlasmaLampBlockEntity.ELECTRICAL_CHARGE_DURATION / 8);
+        this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
     }
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull PlasmaLampBlockEntity animatable) {
-        if (animatable.isCycling())
+        if (animatable.isActive())
             return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/block/plasma_lamp_charge_block.png");
 
         return new ResourceLocation(Companions.MOD_ID, "textures/block/plasma_lamp_block.png");
