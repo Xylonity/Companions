@@ -13,10 +13,10 @@ import static dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntit
 
 public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
 
+
     @Override
     public void process(AbstractTeslaBlockEntity coil, Level level, BlockPos blockPos, BlockState blockState) {
-        coil.tickCount++;
-
+        //Check if the last node that sent a signal was the dinamo for further checks later
         boolean flagDinamo = false;
         for (TeslaConnectionManager.ConnectionNode node : coil.connectionManager.getIncoming(coil.asConnectionNode())) {
             if (node.isEntity()) {
@@ -26,46 +26,44 @@ public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
         }
         coil.setReceivesGenerator(flagDinamo);
 
-        if (coil.scheduledStartTick != -1 && coil.tickCount >= coil.scheduledStartTick) {
-            coil.scheduledStartTick = -1;
-            coil.startCycle();
-        }
-
         if (coil.shouldcycle) {
 
-            if (coil.cycleCounter == 0) {
-                coil.setActive(true);
-                coil.setAnimationStartTick(0);
-            }
-
+            //Deal with animation stuff
             if (coil.cycleCounter < ELECTRICAL_CHARGE_DURATION) {
+                coil.setAnimationStartTick(coil.cycleCounter);
                 coil.setActive(true);
-                coil.setAnimationStartTick((coil.getAnimationStartTick() + 1) % ELECTRICAL_CHARGE_DURATION);
-            } else {
+            }
+            else if (coil.cycleCounter == ELECTRICAL_CHARGE_DURATION){
                 coil.setActive(false);
                 coil.setAnimationStartTick(0);
             }
 
-            coil.cycleCounter++;
-
-            if (coil.cycleCounter >= MAX_LAPSUS) {
-                coil.cycleCounter = 0;
-                coil.shouldcycle = false;
-                coil.setActive(false);
-                coil.setAnimationStartTick(0);
-
+            //Send the next pulse after a certain delay
+            if(coil.cycleCounter == TICKS_BEFORE_SENDING_PULSE){
                 if (!coil.isPendingRemoval()) {
                     for (TeslaConnectionManager.ConnectionNode node : coil.connectionManager.getOutgoing(coil.asConnectionNode())) {
                         BlockEntity be = level.getBlockEntity(node.blockPos());
                         if (be instanceof TeslaCoilBlockEntity outCoil) {
-                            if (!outCoil.isReceivesGenerator()) {
-                                outCoil.scheduleCycleRelative(START_OFFSET);
+                            if (!outCoil.isReceivesGenerator()) { //If the next coil ISN'T the dinamo
+                                //outCoil.scheduleCycleRelative(START_OFFSET);
+                                outCoil.startCycle();
                             }
                         }
                     }
                 }
             }
 
+            //Reset the counter when either the animation's finished, or when the pulse has been sent
+            //Whichever number comes last
+            int largestWait = Math.max(ELECTRICAL_CHARGE_DURATION, TICKS_BEFORE_SENDING_PULSE);
+
+            if (coil.cycleCounter == largestWait) {
+                coil.cycleCounter = 0;
+                coil.shouldcycle = false;
+            }
+
+            coil.cycleCounter++;
+            coil.tickCount++;
         }
     }
 }

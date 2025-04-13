@@ -32,13 +32,13 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     public final TeslaConnectionManager connectionManager;
 
-    public static final int ELECTRICAL_CHARGE_DURATION = 8;
+
     public static final int START_OFFSET = 6;
 
     public int tickCount;
     public int activationTick;
     public int cycleCounter;
-    public int scheduledStartTick = -1;
+    public int scheduledStartTick;// = -1;
     protected boolean pendingRemoval = false;
     protected boolean receivesGenerator = false;
 

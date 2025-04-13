@@ -8,6 +8,7 @@ import dev.xylonity.companions.client.entity.model.DinamoModel;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.custom.DinamoEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
+import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -27,7 +28,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
+public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements ITeslaUtil {
 
     public DinamoRenderer(EntityRendererProvider.Context renderManager, int totalFrames, int ticksPerFrame) {
         super(renderManager, new DinamoModel());
@@ -39,7 +40,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> {
     }
 
     public DinamoRenderer(EntityRendererProvider.Context renderManager) {
-        this(renderManager, 8, DinamoEntity.ELECTRICAL_CHARGE_DURATION / 8);
+        this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
     }
 
     @Override
