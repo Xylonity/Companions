@@ -8,19 +8,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.Set;
 
+import static dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity.START_OFFSET;
+
 public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
 
     @Override
     public void tick(DinamoEntity generator) {
 
-        if (generator.getCicleCounter() == 0) {
-            generator.setActive(true);
-            generator.setAnimationStartTick(0);
-        }
-
         if (generator.getCicleCounter() < 8) {
-            int newTick = generator.getAnimationStartTick() + 1;
-            generator.setAnimationStartTick(newTick > 8 ? 0 : newTick);
+            generator.setAnimationStartTick(generator.getCicleCounter());
             generator.setActive(true);
         } else {
             generator.setActive(false);
@@ -37,7 +33,7 @@ public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
             for (TeslaConnectionManager.ConnectionNode node : nodes) {
                 BlockEntity be = generator.level().getBlockEntity(node.blockPos());
                 if (be instanceof TeslaCoilBlockEntity coil) {
-                    coil.startCycle();
+                    coil.scheduleCycleRelative(START_OFFSET);
                 }
             }
         }

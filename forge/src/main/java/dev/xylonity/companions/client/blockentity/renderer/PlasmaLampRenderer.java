@@ -49,9 +49,8 @@ public class PlasmaLampRenderer extends GeoBlockRenderer<PlasmaLampBlockEntity> 
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull PlasmaLampBlockEntity animatable) {
-        TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
-        TeslaConnectionManager.ConnectionNode node = animatable.asConnectionNode();
-        if (animatable.isActive() && (!manager.getIncoming(node).isEmpty())) return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/block/plasma_lamp_charge_block.png");
+        if (animatable.isCycling())
+            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/block/plasma_lamp_charge_block.png");
 
         return new ResourceLocation(Companions.MOD_ID, "textures/block/plasma_lamp_block.png");
     }

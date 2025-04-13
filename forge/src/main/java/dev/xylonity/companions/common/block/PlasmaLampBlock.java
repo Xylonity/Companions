@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.block;
 
 import dev.xylonity.companions.common.blockentity.PlasmaLampBlockEntity;
+import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,10 +16,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -34,6 +38,7 @@ import java.util.stream.Stream;
 public class PlasmaLampBlock extends AbstractTeslaBlock implements EntityBlock {
 
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+    public static final BooleanProperty LIT = BooleanProperty.create("lit");
 
     protected static final VoxelShape UPPER_SHAPE = Block.box(4, 0, 4, 12, 8, 12);
     private static final VoxelShape SHAPE_N = Stream.of(
@@ -45,16 +50,23 @@ public class PlasmaLampBlock extends AbstractTeslaBlock implements EntityBlock {
     public PlasmaLampBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(HALF, DoubleBlockHalf.LOWER));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LIT, Boolean.FALSE));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(HALF);
+        builder.add(LIT);
     }
 
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter getter, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return pState.getValue(HALF) == DoubleBlockHalf.LOWER ? SHAPE_N : UPPER_SHAPE;
+    }
+
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.getValue(LIT) ? 15 : 0;
     }
 
     @Override
@@ -91,6 +103,12 @@ public class PlasmaLampBlock extends AbstractTeslaBlock implements EntityBlock {
         }
 
         return state;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+        return pBlockEntityType == CompanionsBlockEntities.PLASMA_LAMP.get() ? PlasmaLampBlockEntity::tick : null;
     }
 
     @Override

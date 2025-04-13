@@ -45,6 +45,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     protected int distance;
     protected boolean isActive;
     public boolean shouldcycle;
+    private boolean forcedCycle = false;
+    protected boolean cycling = false;
 
     public AbstractTeslaBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -185,16 +187,25 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         int candidate = this.tickCount + delay;
         if (this.scheduledStartTick == -1 || candidate < this.scheduledStartTick) {
             this.scheduledStartTick = candidate;
+            this.forcedCycle = true;
         }
     }
 
     public void startCycle() {
-        if (!this.shouldcycle) {
+        if (!this.shouldcycle && (this.isReceivesGenerator() || this.forcedCycle)) {
             this.shouldcycle = true;
             this.cycleCounter = 0;
             this.setActive(true);
             this.setAnimationStartTick(0);
+            this.forcedCycle = false;
         }
+    }
+
+    public boolean isCycling() {
+        return cycling;
+    }
+    public void setCycling(boolean cycling) {
+        this.cycling = cycling;
     }
 
     public int getAnimationStartTick() {

@@ -26,6 +26,7 @@ public abstract class AbstractTeslaBlock extends Block implements EntityBlock {
         if (pLevel.getBlockEntity(pPos) instanceof AbstractTeslaBlockEntity receiver) {
             TeslaConnectionManager connectionManager = TeslaConnectionManager.getInstance();
             connectionManager.getIncoming(receiver.asConnectionNode()).forEach(sourceNode -> connectionManager.getOutgoing(sourceNode).remove(receiver.asConnectionNode()));
+            TeslaConnectionManager.getInstance().unregisterBlockEntity(receiver);
         }
 
         super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);

@@ -11,11 +11,10 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import static dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity.*;
 
-public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
+public class CoilPulseBehaviour implements ITeslaNodeBehaviour {
 
     @Override
     public void process(AbstractTeslaBlockEntity coil, Level level, BlockPos blockPos, BlockState blockState) {
-        coil.tickCount++;
 
         boolean flagDinamo = false;
         for (TeslaConnectionManager.ConnectionNode node : coil.connectionManager.getIncoming(coil.asConnectionNode())) {
@@ -24,6 +23,7 @@ public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
                 break;
             }
         }
+
         coil.setReceivesGenerator(flagDinamo);
 
         if (coil.scheduledStartTick != -1 && coil.tickCount >= coil.scheduledStartTick) {
@@ -36,9 +36,7 @@ public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
             if (coil.cycleCounter == 0) {
                 coil.setActive(true);
                 coil.setAnimationStartTick(0);
-            }
-
-            if (coil.cycleCounter < ELECTRICAL_CHARGE_DURATION) {
+            } else if (coil.cycleCounter < ELECTRICAL_CHARGE_DURATION) {
                 coil.setActive(true);
                 coil.setAnimationStartTick((coil.getAnimationStartTick() + 1) % ELECTRICAL_CHARGE_DURATION);
             } else {
@@ -57,7 +55,7 @@ public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
                 if (!coil.isPendingRemoval()) {
                     for (TeslaConnectionManager.ConnectionNode node : coil.connectionManager.getOutgoing(coil.asConnectionNode())) {
                         BlockEntity be = level.getBlockEntity(node.blockPos());
-                        if (be instanceof TeslaCoilBlockEntity outCoil) {
+                        if (be instanceof AbstractTeslaBlockEntity outCoil) {
                             if (!outCoil.isReceivesGenerator()) {
                                 outCoil.scheduleCycleRelative(START_OFFSET);
                             }
@@ -67,5 +65,8 @@ public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
             }
 
         }
+
+        coil.tickCount++;
     }
+
 }
