@@ -14,7 +14,6 @@ public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
     @Override
     public void tick(DinamoEntity generator) {
 
-        System.out.println(generator.getCicleCounter());
         //Deal with animation stuff
         if (generator.getCicleCounter() < ELECTRICAL_CHARGE_DURATION) {
             generator.setAnimationStartTick(generator.getCicleCounter());
