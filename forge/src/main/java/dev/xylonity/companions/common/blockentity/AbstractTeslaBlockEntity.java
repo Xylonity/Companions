@@ -40,7 +40,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     protected int distance;
     protected boolean isActive;
-    public boolean shouldcycle;
 
     public AbstractTeslaBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -50,7 +49,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.tickCount = 0;
         this.activationTick = 0;
         this.cycleCounter = 0;
-        this.shouldcycle = false;
     }
 
     public int getDistance() {
@@ -63,14 +61,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     public boolean isActive() {
         return this.isActive;
-    }
-
-    public boolean shouldCycle() {
-        return this.shouldcycle;
-    }
-
-    public void setShouldCycle(boolean cycle) {
-        this.shouldcycle = cycle;
     }
 
     public TeslaConnectionManager.ConnectionNode asConnectionNode() {
@@ -96,7 +86,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.isActive = tag.getBoolean("IsActive");
         this.activationTick = tag.contains("ActivationTick") ? tag.getInt("ActivationTick") : 0;
         this.cycleCounter = tag.getInt("cycleCounter");
-        this.shouldcycle = tag.getBoolean("Shouldcycle");
         this.receivesGenerator = tag.getBoolean("ReceivesGenerator");
         this.setDistance(tag.getInt("Distance"));
     }
@@ -112,7 +101,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         tag.putBoolean("IsActive", this.isActive);
         tag.putInt("ActivationTick", this.activationTick);
         tag.putInt("cycleCounter", this.cycleCounter);
-        tag.putBoolean("Shouldcycle", this.shouldcycle);
         tag.putBoolean("ReceivesGenerator", this.receivesGenerator);
         tag.putInt("Distance", this.distance);
     }
@@ -141,7 +129,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         super.handleUpdateTag(tag);
         this.tickCount = tag.getInt("TickCount");
         this.isActive = tag.getBoolean("IsActive");
-        this.shouldcycle = tag.getBoolean("Shouldcycle");
         this.distance = tag.getInt("Distance");
     }
 
@@ -150,7 +137,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         CompoundTag tag = super.getUpdateTag();
         tag.putInt("TickCount", this.tickCount);
         tag.putBoolean("IsActive", this.isActive);
-        tag.putBoolean("Shouldcycle", this.shouldcycle);
         tag.putInt("Distance", this.distance);
         return tag;
     }
@@ -176,7 +162,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     }
 
     public void startCycle() {
-        this.shouldcycle = true;
         this.cycleCounter = 0;
     }
 

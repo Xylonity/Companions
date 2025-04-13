@@ -42,20 +42,22 @@ public class LampPulseBehaviour implements ITeslaNodeBehaviour {
             }
         }
 
-        if (lamp.shouldcycle) {
+        if (lamp.cycleCounter >= 0) {
 
             // Keeps the lamp active for a full cycle
             lamp.setActive(true);
 
             if (lamp.cycleCounter == MAX_LAPSUS) {
-                lamp.shouldcycle = false;
+                //Things here happen ONCE when the cycle is over
+                lamp.cycleCounter = -1;
+                lamp.setActive(false);
             }
-
-            lamp.cycleCounter++;
-            lamp.tickCount++;
-        } else {
-            lamp.setActive(false);
+            else{
+                lamp.cycleCounter++;
+                lamp.tickCount++;
+            }
         }
+        //With an else statement, things here happen every tick outside the cycle
 
     }
 

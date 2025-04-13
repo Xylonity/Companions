@@ -24,7 +24,7 @@ public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
         }
         coil.setReceivesGenerator(flagDinamo);
 
-        if (coil.shouldcycle) {
+        if (coil.cycleCounter >= 0) {
 
             //Deal with animation stuff
             if (coil.cycleCounter < ELECTRICAL_CHARGE_DURATION) {
@@ -57,12 +57,12 @@ public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
             int largestWait = Math.max(ELECTRICAL_CHARGE_DURATION, TICKS_BEFORE_SENDING_PULSE);
 
             if (coil.cycleCounter == largestWait) {
-                coil.cycleCounter = 0;
-                coil.shouldcycle = false;
+                coil.cycleCounter = -1;
             }
-
-            coil.cycleCounter++;
-            coil.tickCount++;
+            else{
+                coil.cycleCounter++;
+                coil.tickCount++;
+            }
         }
     }
 }
