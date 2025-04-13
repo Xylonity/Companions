@@ -65,11 +65,6 @@ public class PlasmaLampBlock extends AbstractTeslaBlock implements EntityBlock {
     }
 
     @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIT) ? 15 : 0;
-    }
-
-    @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
         Level level = context.getLevel();

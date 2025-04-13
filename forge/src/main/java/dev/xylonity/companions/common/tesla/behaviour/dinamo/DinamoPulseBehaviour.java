@@ -10,7 +10,6 @@ import java.util.Set;
 
 public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
 
-
     @Override
     public void tick(DinamoEntity generator) {
 
