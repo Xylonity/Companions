@@ -48,7 +48,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.isActive = false;
         this.tickCount = 0;
         this.activationTick = 0;
-        this.cycleCounter = 0;
+        this.cycleCounter = -1;
     }
 
     public int getDistance() {
