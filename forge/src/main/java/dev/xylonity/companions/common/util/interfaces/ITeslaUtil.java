@@ -7,6 +7,8 @@ import net.minecraft.world.phys.Vec3;
 public interface ITeslaUtil {
 
     int MAX_LAPSUS = 14;
+    int ELECTRICAL_CHARGE_DURATION = 8;
+    int TICKS_BEFORE_SENDING_PULSE = 5;
 
     static boolean isEntityNearLine(Vec3 start, Vec3 end, Entity entity, double threshold) {
         Vec3 entityPos = entity.position();

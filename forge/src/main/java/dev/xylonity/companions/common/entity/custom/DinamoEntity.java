@@ -54,7 +54,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     private static final EntityDataAccessor<Boolean> SHOULD_ATTACK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
 
     public static final int ATTACK_TIME_PER_ACTIVATION = 60;
-    public static final int ELECTRICAL_CHARGE_DURATION = 8;
     public static final int MAX_RADIUS = 10;
 
     private final ITeslaGeneratorBehaviour pulseBehavior;

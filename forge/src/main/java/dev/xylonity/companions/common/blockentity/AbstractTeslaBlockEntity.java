@@ -32,21 +32,18 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     public final TeslaConnectionManager connectionManager;
 
-    public static final int ELECTRICAL_CHARGE_DURATION = 8;
+
     public static final int START_OFFSET = 6;
 
     public int tickCount;
     public int activationTick;
     public int cycleCounter;
-    public int scheduledStartTick = -1;
     protected boolean pendingRemoval = false;
     protected boolean receivesGenerator = false;
 
     protected int distance;
     protected boolean isActive;
     public boolean shouldcycle;
-    private boolean forcedCycle = false;
-    protected boolean cycling = false;
 
     public AbstractTeslaBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -103,7 +100,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.activationTick = tag.contains("ActivationTick") ? tag.getInt("ActivationTick") : 0;
         this.cycleCounter = tag.getInt("cycleCounter");
         this.shouldcycle = tag.getBoolean("Shouldcycle");
-        this.scheduledStartTick = tag.getInt("ScheduledStartTick");
         this.receivesGenerator = tag.getBoolean("ReceivesGenerator");
         this.setDistance(tag.getInt("Distance"));
     }
@@ -120,7 +116,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         tag.putInt("ActivationTick", this.activationTick);
         tag.putInt("cycleCounter", this.cycleCounter);
         tag.putBoolean("Shouldcycle", this.shouldcycle);
-        tag.putInt("ScheduledStartTick", this.scheduledStartTick);
         tag.putBoolean("ReceivesGenerator", this.receivesGenerator);
         tag.putInt("Distance", this.distance);
     }
@@ -183,29 +178,13 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.activationTick = tick;
     }
 
-    public void scheduleCycleRelative(int delay) {
-        int candidate = this.tickCount + delay;
-        if (this.scheduledStartTick == -1 || candidate < this.scheduledStartTick) {
-            this.scheduledStartTick = candidate;
-            this.forcedCycle = true;
-        }
-    }
-
     public void startCycle() {
-        if (!this.shouldcycle && (this.isReceivesGenerator() || this.forcedCycle)) {
+        if (!this.shouldcycle) {
             this.shouldcycle = true;
             this.cycleCounter = 0;
             this.setActive(true);
             this.setAnimationStartTick(0);
-            this.forcedCycle = false;
         }
-    }
-
-    public boolean isCycling() {
-        return cycling;
-    }
-    public void setCycling(boolean cycling) {
-        this.cycling = cycling;
     }
 
     public int getAnimationStartTick() {
