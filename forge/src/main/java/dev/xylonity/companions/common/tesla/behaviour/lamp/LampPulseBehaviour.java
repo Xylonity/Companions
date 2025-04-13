@@ -15,41 +15,35 @@ import java.util.List;
 
 public class LampPulseBehaviour implements ITeslaNodeBehaviour {
 
+    private void linkLamp(AbstractTeslaBlockEntity lamp, Level level, BlockPos blockPos, List<TeslaConnectionManager.ConnectionNode> oldConnections){
+        BlockEntity newBe = level.getBlockEntity(blockPos);
+        if (newBe instanceof AbstractTeslaBlockEntity newLamp) {
+            for (TeslaConnectionManager.ConnectionNode node : oldConnections) {
+                newLamp.connectionManager.addConnection(node, newLamp.asConnectionNode(), false);
+            }
+        }
+    }
+
     @Override
     public void process(AbstractTeslaBlockEntity lamp, Level level, BlockPos blockPos, BlockState blockState) {
-
-        boolean permutedFlag = false;
 
         List<TeslaConnectionManager.ConnectionNode> oldConnections =
                 new ArrayList<>(lamp.connectionManager.getIncoming(lamp.asConnectionNode()));
 
-        // Due to the need of permuting the original block with a new blockstate, we gotta
-        // simulate new tesla network connections
-        if (!blockState.getValue(PlasmaLampBlock.LIT) && lamp.isActive()) {
-            level.setBlockAndUpdate(blockPos, blockState.setValue(PlasmaLampBlock.LIT, true));
-            permutedFlag = true;
-        } else if (blockState.getValue(PlasmaLampBlock.LIT) && !lamp.isActive()) {
-            level.setBlockAndUpdate(blockPos, blockState.setValue(PlasmaLampBlock.LIT, false));
-            permutedFlag = true;
-        }
-
-        if (permutedFlag) {
-            BlockEntity newBe = level.getBlockEntity(blockPos);
-            if (newBe instanceof AbstractTeslaBlockEntity newLamp) {
-                for (TeslaConnectionManager.ConnectionNode node : oldConnections) {
-                    newLamp.connectionManager.addConnection(node, newLamp.asConnectionNode(), false);
-                }
-            }
-        }
-
         if (lamp.cycleCounter >= 0) {
 
-            // Keeps the lamp active for a full cycle
-            lamp.setActive(true);
+            if (lamp.cycleCounter == 0) {
+                // Keeps the lamp active for a full cycle
+                lamp.setActive(true);
+                level.setBlockAndUpdate(blockPos, blockState.setValue(PlasmaLampBlock.LIT, true));
+                linkLamp(lamp, level, blockPos, oldConnections);
+            }
 
             if (lamp.cycleCounter == MAX_LAPSUS) {
                 //Things here happen ONCE when the cycle is over
                 lamp.cycleCounter = -1;
+                level.setBlockAndUpdate(blockPos, blockState.setValue(PlasmaLampBlock.LIT, false));
+                linkLamp(lamp, level, blockPos, oldConnections);
                 lamp.setActive(false);
             }
             else{
