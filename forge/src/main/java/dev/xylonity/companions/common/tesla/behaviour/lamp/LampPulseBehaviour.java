@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.tesla.behaviour.lamp;
 
 import dev.xylonity.companions.common.block.PlasmaLampBlock;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
+import dev.xylonity.companions.common.blockentity.PlasmaLampBlockEntity;
 import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;

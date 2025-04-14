@@ -49,10 +49,64 @@ public class WrenchItem extends Item {
 
         if (blockEntity instanceof AbstractTeslaBlockEntity) {
             TeslaConnectionManager.ConnectionNode node = TeslaConnectionManager.ConnectionNode.forBlock(pos, context.getLevel().dimension().location());
-            handleNodeSelection(context.getPlayer(), node);
+            handleNodeSelection(context.getPlayer(), node, context);
         }
 
         return InteractionResult.SUCCESS;
+    }
+
+    private void handleNodeSelection(Player player, TeslaConnectionManager.ConnectionNode currentNode, UseOnContext context) {
+        if (firstNode == null) {
+            firstNode = currentNode;
+            player.displayClientMessage(
+                    Component.literal("first node selected!").withStyle(ChatFormatting.GREEN),
+                    true
+            );
+        } else {
+            if (firstNode.equals(currentNode)) {
+                player.displayClientMessage(
+                        Component.literal("cannot select a node to itself!").withStyle(ChatFormatting.RED),
+                        true
+                );
+                firstNode = null;
+                return;
+            }
+
+            TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
+            boolean connectionAtoB = manager.getOutgoing(firstNode).contains(currentNode);
+            boolean connectionBtoA = manager.getOutgoing(currentNode).contains(firstNode);
+            boolean anyConnection = connectionAtoB || connectionBtoA;
+
+            if (anyConnection) {
+                if (connectionAtoB) {
+                    BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
+                    if (first instanceof AbstractTeslaBlockEntity be) {
+                        be.handleNodeRemoval(firstNode, currentNode, context);
+                    }
+
+                    //manager.removeConnection(firstNode, currentNode);
+                }
+                if (connectionBtoA) {
+                    BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
+                    if (first instanceof AbstractTeslaBlockEntity be) {
+                        be.handleNodeRemoval(currentNode, firstNode, context);
+                    }
+
+                    //manager.removeConnection(currentNode, firstNode);
+                }
+
+                player.displayClientMessage(Component.literal("deleted!").withStyle(ChatFormatting.RED), true);
+            } else {
+                BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
+                if (first instanceof AbstractTeslaBlockEntity be) {
+                    be.handleNodeSelection(firstNode, currentNode, context);
+                }
+
+                player.displayClientMessage(Component.literal("added!").withStyle(ChatFormatting.GREEN), true);
+            }
+
+            firstNode = null;
+        }
     }
 
     private void handleNodeSelection(Player player, TeslaConnectionManager.ConnectionNode currentNode) {

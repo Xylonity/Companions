@@ -8,6 +8,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -179,5 +180,21 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     // Position where the electrical charge is received
     public @NotNull abstract Vec3 electricalChargeEndOffset();
+
+    /**
+     * Defers the call from the wrench item when this node is getting connected to another one
+     * Don't override if the connection is simple (one node to another node)
+     */
+    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, UseOnContext ctx) {
+        connectionManager.addConnection(thisNode, nodeToConnect);
+    }
+
+    /**
+     * Defers the call from the wrench item when this node is getting removed from the tesla network
+     * Don't override if the connection is simple (one node to another node)
+     */
+    public void handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, UseOnContext ctx) {
+        connectionManager.removeConnection(thisNode, nodeToConnect);
+    }
 
 }

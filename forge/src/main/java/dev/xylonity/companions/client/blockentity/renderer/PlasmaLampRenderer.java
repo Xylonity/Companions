@@ -12,17 +12,13 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public class PlasmaLampRenderer extends GeoBlockRenderer<PlasmaLampBlockEntity> implements ITeslaUtil {
 
-    public PlasmaLampRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
+    public PlasmaLampRenderer(BlockEntityRendererProvider.Context rendererDispatcher) {
         super(new PlasmaLampModel());
     }
 
     @Override
     public boolean shouldRenderOffScreen(@NotNull PlasmaLampBlockEntity pBlockEntity) {
         return true;
-    }
-
-    public PlasmaLampRenderer(BlockEntityRendererProvider.Context renderManager) {
-        this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
     }
 
     @Override
