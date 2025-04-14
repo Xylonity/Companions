@@ -58,16 +58,10 @@ public class WrenchItem extends Item {
     private void handleNodeSelection(Player player, TeslaConnectionManager.ConnectionNode currentNode, UseOnContext context) {
         if (firstNode == null) {
             firstNode = currentNode;
-            player.displayClientMessage(
-                    Component.literal("first node selected!").withStyle(ChatFormatting.GREEN),
-                    true
-            );
+            player.displayClientMessage(Component.literal("first node selected!").withStyle(ChatFormatting.GREEN), true);
         } else {
             if (firstNode.equals(currentNode)) {
-                player.displayClientMessage(
-                        Component.literal("cannot select a node to itself!").withStyle(ChatFormatting.RED),
-                        true
-                );
+                player.displayClientMessage(Component.literal("cannot select a node to itself!").withStyle(ChatFormatting.RED), true);
                 firstNode = null;
                 return;
             }
@@ -83,16 +77,12 @@ public class WrenchItem extends Item {
                     if (first instanceof AbstractTeslaBlockEntity be) {
                         be.handleNodeRemoval(firstNode, currentNode, context);
                     }
-
-                    //manager.removeConnection(firstNode, currentNode);
                 }
                 if (connectionBtoA) {
                     BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
                     if (first instanceof AbstractTeslaBlockEntity be) {
                         be.handleNodeRemoval(currentNode, firstNode, context);
                     }
-
-                    //manager.removeConnection(currentNode, firstNode);
                 }
 
                 player.displayClientMessage(Component.literal("deleted!").withStyle(ChatFormatting.RED), true);
@@ -112,16 +102,10 @@ public class WrenchItem extends Item {
     private void handleNodeSelection(Player player, TeslaConnectionManager.ConnectionNode currentNode) {
         if (firstNode == null) {
             firstNode = currentNode;
-            player.displayClientMessage(
-                    Component.literal("first node selected!").withStyle(ChatFormatting.GREEN),
-                    true
-            );
+            player.displayClientMessage(Component.literal("first node selected!").withStyle(ChatFormatting.GREEN), true);
         } else {
             if (firstNode.equals(currentNode)) {
-                player.displayClientMessage(
-                        Component.literal("cannot select a node to itself!").withStyle(ChatFormatting.RED),
-                        true
-                );
+                player.displayClientMessage(Component.literal("cannot select a node to itself!").withStyle(ChatFormatting.RED), true);
                 firstNode = null;
                 return;
             }
@@ -138,16 +122,10 @@ public class WrenchItem extends Item {
                 if (connectionBtoA) {
                     manager.removeConnection(currentNode, firstNode);
                 }
-                player.displayClientMessage(
-                        Component.literal("deleted!").withStyle(ChatFormatting.RED),
-                        true
-                );
+                player.displayClientMessage(Component.literal("deleted!").withStyle(ChatFormatting.RED), true);
             } else {
                 manager.addConnection(firstNode, currentNode, false);
-                player.displayClientMessage(
-                        Component.literal("added!").withStyle(ChatFormatting.GREEN),
-                        true
-                );
+                player.displayClientMessage(Component.literal("added!").withStyle(ChatFormatting.GREEN), true);
             }
 
             firstNode = null;
@@ -156,15 +134,9 @@ public class WrenchItem extends Item {
 
     private void handleDinamoAttackToggle(Player player, DinamoEntity dinamoEntity) {
         if (!dinamoEntity.shouldAttack()) {
-            player.displayClientMessage(
-                    Component.literal("activando ataque").withStyle(ChatFormatting.GREEN),
-                    true
-            );
+            player.displayClientMessage(Component.literal("activando ataque").withStyle(ChatFormatting.GREEN), true);
         } else {
-            player.displayClientMessage(
-                    Component.literal("desactivando ataque").withStyle(ChatFormatting.GREEN),
-                    true
-            );
+            player.displayClientMessage(Component.literal("desactivando ataque").withStyle(ChatFormatting.GREEN), true);
         }
 
         dinamoEntity.setShouldAttack(!dinamoEntity.shouldAttack());

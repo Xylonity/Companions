@@ -30,6 +30,7 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implement
         if (!(t instanceof VoltaicPillarBlockEntity pillar)) return;
 
         pillar.pulseBehaviour.process(pillar, level, blockPos, blockState);
+        pillar.defaultAttackBehaviour.process(pillar, level, blockPos, blockState);
 
     }
 
@@ -41,30 +42,6 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implement
     @Override
     public @NotNull Vec3 electricalChargeEndOffset() {
         return new Vec3(0, 0.5, 0);
-    }
-
-    private TeslaCoilBlockEntity searchCoilAbove(List<VoltaicPillarBlockEntity> pillars, BlockPos pos) {
-        if (this.level == null) return null;
-
-        int x = pos.getX();
-        int y = pos.getY() + 1;
-        int z = pos.getZ();
-
-        while (true) {
-            BlockPos currentPos = new BlockPos(x, y, z);
-            BlockEntity entity = level.getBlockEntity(currentPos);
-            if (entity instanceof VoltaicPillarBlockEntity pillarEntity) {
-
-            } else if (entity instanceof TeslaCoilBlockEntity coilEntity) {
-                return coilEntity;
-            } else {
-                break;
-            }
-
-            y++;
-        }
-
-        return null;
     }
 
     @Override
@@ -133,10 +110,8 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implement
 
             }
 
-            return;
         }
 
-        super.handleNodeSelection(thisNode, nodeToConnect, ctx);
     }
 
     private void pillarsBelowAndAbove(List<VoltaicPillarBlockEntity> pillars, BlockPos pos) {

@@ -7,6 +7,7 @@ import net.minecraft.world.phys.Vec3;
 public interface ITeslaUtil {
 
     int MAX_LAPSUS = 14;
+    int DINAMO_ATTACK_DELAY = 60;
     int ELECTRICAL_CHARGE_DURATION = 8;
     int TICKS_BEFORE_SENDING_PULSE = 5;
 

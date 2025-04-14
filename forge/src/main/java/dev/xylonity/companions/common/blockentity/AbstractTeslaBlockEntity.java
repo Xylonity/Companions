@@ -1,6 +1,8 @@
 package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.behaviour.DefaultAttackBehaviour;
+import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -43,6 +45,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     protected int distance;
     protected boolean isActive;
 
+    protected ITeslaNodeBehaviour defaultAttackBehaviour;
+
     public AbstractTeslaBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.connectionManager = TeslaConnectionManager.getInstance();
@@ -51,6 +55,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.tickCount = 0;
         this.activationTick = 0;
         this.cycleCounter = -1;
+        this.defaultAttackBehaviour = new DefaultAttackBehaviour();
     }
 
     public int getDistance() {
@@ -175,7 +180,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.isActive = isActive;
     }
 
-    // Position offset where the electrical charge is emitted (from 0.5, 0, 0.5)
+    // Position offset where the electrical charge is emitted (from x + 0.5, y, z + 0.5)
     public @NotNull abstract Vec3 electricalChargeOriginOffset();
 
     // Position where the electrical charge is received

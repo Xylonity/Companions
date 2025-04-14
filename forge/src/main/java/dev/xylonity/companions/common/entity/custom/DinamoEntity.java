@@ -47,14 +47,12 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
 
     private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> ACTIVE_ATTACK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> ATTACK_ACTIVE = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> CONNECTED_ENTITIES = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> TEST_TIMER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> CICLE_COUNTER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> CYCLE_COUNTER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> ATTACK_CYCLE_COUNTER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> SHOULD_ATTACK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
-
-    public static final int ATTACK_TIME_PER_ACTIVATION = 60;
-    public static final int MAX_RADIUS = 10;
 
     private final ITeslaGeneratorBehaviour pulseBehavior;
     private final ITeslaGeneratorBehaviour attackBehavior;
@@ -181,7 +179,9 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player && player.getMainHandItem().getItem() != CompanionsItems.WRENCH.get()) {
+        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND
+                && getOwner() == player && player.getMainHandItem().getItem() != CompanionsItems.WRENCH.get()) {
+
             setSitting(!isSitting());
 
             return InteractionResult.SUCCESS;
@@ -211,7 +211,11 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     }
 
     public boolean isActiveForAttack() {
-        return this.entityData.get(ACTIVE_ATTACK);
+        return this.entityData.get(ATTACK_ACTIVE);
+    }
+
+    public void setActiveForAttack(boolean active) {
+        this.entityData.set(ATTACK_ACTIVE, active);
     }
 
     @Override
@@ -227,12 +231,20 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         this.entityData.set(TEST_TIMER, tick);
     }
 
-    public int getCicleCounter() {
-        return this.entityData.get(CICLE_COUNTER);
+    public int getCycleCounter() {
+        return this.entityData.get(CYCLE_COUNTER);
     }
 
-    public void setCicleCounter(int tick) {
-        this.entityData.set(CICLE_COUNTER, tick);
+    public void setCycleCounter(int tick) {
+        this.entityData.set(CYCLE_COUNTER, tick);
+    }
+
+    public int getAttackCycleCounter() {
+        return this.entityData.get(ATTACK_CYCLE_COUNTER);
+    }
+
+    public void setAttackCycleCounter(int tick) {
+        this.entityData.set(ATTACK_CYCLE_COUNTER, tick);
     }
 
     public boolean isActive() {
@@ -251,11 +263,12 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ACTIVE, false);
-        this.entityData.define(ACTIVE_ATTACK, true);
+        this.entityData.define(ATTACK_ACTIVE, true);
         this.entityData.define(CONNECTED_ENTITIES, "");
         this.entityData.define(TEST_TIMER, 0);
         this.entityData.define(SHOULD_ATTACK, true);
-        this.entityData.define(CICLE_COUNTER, 0);
+        this.entityData.define(CYCLE_COUNTER, 0);
+        this.entityData.define(ATTACK_CYCLE_COUNTER, 0);
     }
 
     @Override

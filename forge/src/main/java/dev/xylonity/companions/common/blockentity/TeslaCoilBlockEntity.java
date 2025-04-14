@@ -35,6 +35,7 @@ public class TeslaCoilBlockEntity extends AbstractTeslaBlockEntity {
         if (!(t instanceof TeslaCoilBlockEntity coil)) return;
 
         coil.pulseBehaviour.process(coil, level, blockPos, blockState);
+        coil.defaultAttackBehaviour.process(coil, level, blockPos, blockState);
 
     }
 

@@ -101,14 +101,12 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
                 }
 
             } else {
-                if (!animatable.isActiveForAttack() && !animatable.shouldAttack()) return;
+                if (!animatable.isActiveForAttack()) return;
 
-                if (!animatable.isSitting()) {
-                    for (Entity e : animatable.visibleEntities) {
-                        Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.95D, 0.0D);
-                        Vec3 direction = e.position().subtract(animatable.position()).add(0.0D, e.getBbHeight() * 0.5D, 0.0D);
-                        renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
-                    }
+                for (Entity e : animatable.visibleEntities) {
+                    Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.95D, 0.0D);
+                    Vec3 direction = e.position().subtract(animatable.position()).add(0.0D, e.getBbHeight() * 0.5D, 0.0D);
+                    renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
                 }
 
             }
@@ -123,8 +121,12 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
             return frame;
         }
 
-        // Original idea of the layer embedded in the entity renderer to force the rendering of a singular "electric arch" towards a certain target by mim1q
-        // https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
+        /**
+         * The concept of generating 'lightning' within a renderer layer (instead of creating an entity that stretches
+         * between nodes) was inspired by mim1q's work, to whom credit is given for this approach
+         *
+         * https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
+         */
         private void renderConnection(MultiBufferSource bufferSource, PoseStack poseStack, Vec3 p0, Vec3 p1, int frame, int light) {
             VertexConsumer vertexConsumer = bufferSource.getBuffer(AutoGlowingTexture.getRenderType(texture));
             Matrix4f positionMatrix = poseStack.last().pose();

@@ -113,9 +113,9 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> im
         }
 
         /**
-         * The concept of generating lightning within a renderer layer (as opposed to creating an entity that stretches
-         * between nodes) originated from mim1q, who inspired me.
-         * <p>
+         * The concept of generating 'lightning' within a renderer layer (instead of creating an entity that stretches
+         * between nodes) was inspired by mim1q's work, to whom credit is given for this approach
+         *
          * https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
          */
         private void renderConnection(MultiBufferSource bufferSource, PoseStack poseStack, Vec3 p0, Vec3 p1, int frame, int light) {

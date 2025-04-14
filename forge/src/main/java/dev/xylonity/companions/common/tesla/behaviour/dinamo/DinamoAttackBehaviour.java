@@ -1,66 +1,96 @@
 package dev.xylonity.companions.common.tesla.behaviour.dinamo;
 
+import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.custom.DinamoEntity;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
+import dev.xylonity.companions.registry.CompanionsParticles;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
-/**
- * Attack behavior for a non–sitting (active) DinamoEntity.
- * It pulses every ATTACK_TIME_PER_ACTIVATION (60 ticks) for an 8–tick activation window.
- * During the pulse it searches for nearby targets and, on the client side, spawns particles;
- * on the server side, it deals damage/effects if appropriate.
- */
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
 
+    private static final int MAX_ATTACK_RADIUS = 10;
+
     @Override
-    public void tick(DinamoEntity generator) {
-        //int tickCount = generator.getTickCount();
-        //// Activate attack mode periodically if attacking is allowed.
-        //if (tickCount % DinamoEntity.ATTACK_TIME_PER_ACTIVATION == 0 && generator.shouldAttack()) {
-        //    generator.setActiveForAttack(true);
-        //    generator.setAnimationStartTick(tickCount);
-        //}
-        //if (generator.isActiveForAttack() && (tickCount % DinamoEntity.ATTACK_TIME_PER_ACTIVATION) >= DinamoEntity.ELECTRICAL_CHARGE_DURATION && generator.shouldAttack()) {
-        //    generator.setActiveForAttack(false);
-        //    generator.visibleEntities.clear();
-        //}
-        //if (generator.isActiveForAttack() && generator.shouldAttack()) {
-        //    Vec3 currentPosition = generator.position();
-        //    AABB searchBox = new AABB(
-        //            currentPosition.x - DinamoEntity.MAX_RADIUS, currentPosition.y - DinamoEntity.MAX_RADIUS, currentPosition.z - DinamoEntity.MAX_RADIUS,
-        //            currentPosition.x + DinamoEntity.MAX_RADIUS, currentPosition.y + DinamoEntity.MAX_RADIUS, currentPosition.z + DinamoEntity.MAX_RADIUS
-        //    );
-        //    List<LivingEntity> visible = generator.level().getEntitiesOfClass(LivingEntity.class, searchBox, entity -> {
-        //                if (entity instanceof Player player) {
-        //                    return !player.isCreative() && !player.isSpectator() && player.equals(generator.getOwner());
-        //                }
-        //                return entity instanceof LivingEntity;
-        //            }).stream().filter(generator::hasLineOfSight)
-        //            .collect(Collectors.toList());
-//
-        //    generator.visibleEntities = visible;
-//
-        //    if (!visible.isEmpty()) {
-        //        // On the client, spawn particles to visualize the attack pulse.
-        //        if (generator.level().isClientSide()) {
-        //            double radius = 0.42;
-        //            double centerX = generator.position().x;
-        //            double centerZ = generator.position().z;
-        //            double initialY = generator.position().y + generator.getBbHeight() - 0.60;
-        //            for (int i = 0; i < 360; i += 120) {
-        //                double angleRadians = Math.toRadians(i);
-        //                double particleX = centerX + radius * Math.cos(angleRadians);
-        //                double particleZ = centerZ + radius * Math.sin(angleRadians);
-        //                generator.level().addParticle(CompanionsParticles.DINAMO_SPARK.get(), particleX, initialY, particleZ, 0d, 0.35d, 0d);
-        //            }
-        //        }
-        //        int elapsed = tickCount - generator.getAnimationStartTick();
-        //        if (!generator.level().isClientSide() && elapsed >= 3 && elapsed < DinamoEntity.ELECTRICAL_CHARGE_DURATION) {
-        //            for (LivingEntity target : visible) {
-        //                generator.doHurtTarget(target);
-        //            }
-        //        }
-        //    }
-        //}
+    public void tick(DinamoEntity dinamo) {
+
+        // Deal with animation stuff
+        if (dinamo.getAttackCycleCounter() < ELECTRICAL_CHARGE_DURATION) {
+            dinamo.setAnimationStartTick(dinamo.getAttackCycleCounter());
+            dinamo.setActiveForAttack(true);
+        }
+        else if (dinamo.getAttackCycleCounter() == ELECTRICAL_CHARGE_DURATION) {
+            dinamo.setActiveForAttack(false);
+            dinamo.setAnimationStartTick(0);
+        }
+
+        if (dinamo.isActiveForAttack()) {
+            Vec3 pos = dinamo.position();
+            AABB searchBox = new AABB(
+                    pos.x - MAX_ATTACK_RADIUS, pos.y - MAX_ATTACK_RADIUS, pos.z - MAX_ATTACK_RADIUS,
+                    pos.x + MAX_ATTACK_RADIUS, pos.y + MAX_ATTACK_RADIUS, pos.z + MAX_ATTACK_RADIUS
+            );
+
+            // We search for visible monsters
+            // TODO: add extra conditions
+            List<LivingEntity> visible =
+                    dinamo.level().getEntitiesOfClass(LivingEntity.class, searchBox, e -> {
+
+                        if (e instanceof Player player) {
+                            return !player.isCreative() && !player.isSpectator() && player.equals(dinamo.getOwner());
+                        }
+
+                        if (dinamo.getOwner() != null && dinamo.getOwner().getLastHurtMob() == e) {
+                            return true;
+                        }
+
+                        if (e instanceof TamableAnimal) {
+                            return false;
+                        }
+
+                        return e instanceof Monster;
+                    })
+                    .stream().filter(dinamo::hasLineOfSight)
+                    .collect(Collectors.toList());
+
+            dinamo.visibleEntities = visible;
+
+            if (!visible.isEmpty()) {
+                // Decorative particles lol
+                if (dinamo.level().isClientSide()) {
+                    double radius = 0.42;
+                    double initialY = dinamo.position().y + dinamo.getBbHeight() - 0.60;
+                    for (int i = 0; i < 360; i += 120) {
+                        double angleRadians = Math.toRadians(i);
+                        double particleX = dinamo.position().x + radius * Math.cos(angleRadians);
+                        double particleZ = dinamo.position().z + radius * Math.sin(angleRadians);
+                        dinamo.level().addParticle(CompanionsParticles.DINAMO_SPARK.get(), particleX, initialY, particleZ, 0d, 0.35d, 0d);
+                    }
+                }
+
+                // Delay before hurting so it syncs with the electrical charge anim
+                if (dinamo.getAttackCycleCounter() == 3) {
+                    for (LivingEntity target : visible) {
+                        dinamo.doHurtTarget(target);
+                    }
+                }
+            }
+        }
+
+        // Reset once the time is up
+        if (dinamo.getAttackCycleCounter() >= DINAMO_ATTACK_DELAY) {
+            dinamo.setAttackCycleCounter(0);
+        }
+
+        // Up the cicle count
+        dinamo.setAttackCycleCounter(dinamo.getAttackCycleCounter() + 1);
     }
 
 }
