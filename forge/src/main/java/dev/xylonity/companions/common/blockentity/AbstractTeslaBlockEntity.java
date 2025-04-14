@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -141,10 +142,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         return tag;
     }
 
-    public void markPendingRemoval() {
-        this.pendingRemoval = true;
-    }
-
     public boolean isPendingRemoval() {
         return pendingRemoval;
     }
@@ -176,5 +173,11 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     public void setActive(boolean isActive) {
         this.isActive = isActive;
     }
+
+    // Position offset where the electrical charge is emitted (from 0.5, 0, 0.5)
+    public @NotNull abstract Vec3 electricalChargeOriginOffset();
+
+    // Position where the electrical charge is received
+    public @NotNull abstract Vec3 electricalChargeEndOffset();
 
 }

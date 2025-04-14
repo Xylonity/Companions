@@ -47,6 +47,7 @@ public class CompanionsCreativeModeTabs {
 
                                 output.accept(CompanionsBlocks.TESLA_COIL.get());
                                 output.accept(CompanionsBlocks.PLASMA_LAMP.get());
+                                output.accept(CompanionsBlocks.VOLTAIC_PILLAR.get());
                                 output.accept(CompanionsBlocks.SOUL_FURNACE.get());
                                 output.accept(CompanionsBlocks.CROISSANT_EGG.get());
 

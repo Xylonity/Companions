@@ -1,10 +1,7 @@
 package dev.xylonity.companions.platform;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.common.block.CroissantEggBlock;
-import dev.xylonity.companions.common.block.PlasmaLampBlock;
-import dev.xylonity.companions.common.block.SoulFurnaceBlock;
-import dev.xylonity.companions.common.block.TeslaCoilBlock;
+import dev.xylonity.companions.common.block.*;
 import dev.xylonity.companions.common.item.armor.GenericArmorItem;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.companions.common.item.book.books.*;
@@ -44,6 +41,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
             case SOUL_FURNACE -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new SoulFurnaceBlock(properties.lightLevel((v) -> v.getValue(SoulFurnaceBlock.LIT) ? 13 : 0)));
             case CROISSANT_EGG -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new CroissantEggBlock(properties));
             case PLASMA_LAMP -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new PlasmaLampBlock(properties.lightLevel((v) -> v.getValue(PlasmaLampBlock.LIT) ? 15 : 0)));
+            case VOLTAIC_PILLAR -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new VoltaicPillarBlock(properties));
             default -> // TESLA_RECEIVER
                     (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new TeslaCoilBlock(properties));
         };

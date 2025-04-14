@@ -8,6 +8,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class TeslaCoilBlockEntity extends AbstractTeslaBlockEntity {
 
@@ -28,6 +30,16 @@ public class TeslaCoilBlockEntity extends AbstractTeslaBlockEntity {
 
         coil.pulseBehaviour.process(coil, level, blockPos, blockState);
 
+    }
+
+    @Override
+    public @NotNull Vec3 electricalChargeOriginOffset() {
+        return new Vec3(0, 0, 0);
+    }
+
+    @Override
+    public @NotNull Vec3 electricalChargeEndOffset() {
+        return new Vec3(0, 0, 0);
     }
 
 }

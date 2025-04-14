@@ -3,11 +3,11 @@ package dev.xylonity.companions.client.blockentity.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.client.blockentity.model.TeslaCoilModel;
+import dev.xylonity.companions.client.blockentity.model.VoltaicPillarModel;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
-import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
+import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -28,10 +28,10 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> implements ITeslaUtil {
+public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEntity> implements ITeslaUtil {
 
-    public TeslaCoilRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
-        super(new TeslaCoilModel());
+    public VoltaicPillarRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
+        super(new VoltaicPillarModel());
         addRenderLayer(new ElectricConnectionLayer(this,
                 new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"),
                 totalFrames,
@@ -40,16 +40,16 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> im
     }
 
     @Override
-    public boolean shouldRenderOffScreen(@NotNull TeslaCoilBlockEntity pBlockEntity) {
+    public boolean shouldRenderOffScreen(@NotNull VoltaicPillarBlockEntity pBlockEntity) {
         return true;
     }
 
-    public TeslaCoilRenderer(BlockEntityRendererProvider.Context renderManager) {
+    public VoltaicPillarRenderer(BlockEntityRendererProvider.Context renderManager) {
         this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull TeslaCoilBlockEntity animatable) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull VoltaicPillarBlockEntity animatable) {
         if (animatable.isActive()) {
             return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
         }
@@ -57,12 +57,12 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> im
         return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
     }
 
-    private static class ElectricConnectionLayer extends GeoRenderLayer<TeslaCoilBlockEntity> {
+    private static class ElectricConnectionLayer extends GeoRenderLayer<VoltaicPillarBlockEntity> {
         private final ResourceLocation texture;
         private final int totalFrames;
         private final int ticksPerFrame;
 
-        public ElectricConnectionLayer(GeoRenderer<TeslaCoilBlockEntity> renderer, ResourceLocation texture, int totalFrames, int ticksPerFrame) {
+        public ElectricConnectionLayer(GeoRenderer<VoltaicPillarBlockEntity> renderer, ResourceLocation texture, int totalFrames, int ticksPerFrame) {
             super(renderer);
             this.texture = texture;
             this.totalFrames = totalFrames;
@@ -70,13 +70,11 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> im
         }
 
         @Override
-        public void render(PoseStack poseStack, TeslaCoilBlockEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+        public void render(PoseStack poseStack, VoltaicPillarBlockEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
 
             if (!animatable.isActive()) return;
 
-            int frame = calculateCurrentFrame(animatable);
-
-            if (frame < 0) return;
+            int frame = 4;
 
             for (TeslaConnectionManager.ConnectionNode node : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
                 if (node.isEntity()) {
@@ -104,7 +102,7 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> im
 
         }
 
-        private int calculateCurrentFrame(TeslaCoilBlockEntity animatable) {
+        private int calculateCurrentFrame(VoltaicPillarBlockEntity animatable) {
             int frame = animatable.getAnimationStartTick() / ticksPerFrame;
 
             if (frame >= totalFrames) return -1;
@@ -150,11 +148,11 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> im
             float v0 = frame * frameSize;
             float v1 = v0 + frameSize;
 
-            ElectricConnectionLayer.VertexCoordinates[] vertices = {
-                    new ElectricConnectionLayer.VertexCoordinates(x0 + xOffset, y0 - yOffset, z0 + zOffset, 0.0F, v1),
-                    new ElectricConnectionLayer.VertexCoordinates(x1 + xOffset, y1 - yOffset, z1 + zOffset, 1.0F, v1),
-                    new ElectricConnectionLayer.VertexCoordinates(x1 - xOffset, y1 + yOffset, z1 - zOffset, 1.0F, v0),
-                    new ElectricConnectionLayer.VertexCoordinates(x0 - xOffset, y0 + yOffset, z0 - zOffset, 0.0F, v0),
+            VertexCoordinates[] vertices = {
+                    new VertexCoordinates(x0 + xOffset, y0 - yOffset, z0 + zOffset, 0.0F, v1),
+                    new VertexCoordinates(x1 + xOffset, y1 - yOffset, z1 + zOffset, 1.0F, v1),
+                    new VertexCoordinates(x1 - xOffset, y1 + yOffset, z1 - zOffset, 1.0F, v0),
+                    new VertexCoordinates(x0 - xOffset, y0 + yOffset, z0 - zOffset, 0.0F, v0),
             };
 
             int[] indices = {0, 1, 2, 3, 3, 2, 1, 0};

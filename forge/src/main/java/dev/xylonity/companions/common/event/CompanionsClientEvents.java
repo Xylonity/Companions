@@ -1,10 +1,7 @@
 package dev.xylonity.companions.common.event;
 
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.client.blockentity.renderer.CroissantEggRenderer;
-import dev.xylonity.companions.client.blockentity.renderer.PlasmaLampRenderer;
-import dev.xylonity.companions.client.blockentity.renderer.SoulFurnaceRenderer;
-import dev.xylonity.companions.client.blockentity.renderer.TeslaCoilRenderer;
+import dev.xylonity.companions.client.blockentity.renderer.*;
 import dev.xylonity.companions.client.entity.renderer.*;
 import dev.xylonity.companions.client.gui.screen.PuppetScreen;
 import dev.xylonity.companions.client.gui.screen.SoulFurnaceScreen;
@@ -66,6 +63,7 @@ public class CompanionsClientEvents {
         BlockEntityRenderers.register(CompanionsBlockEntities.SOUL_FURNACE.get(), SoulFurnaceRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.CROISSANT_EGG.get(), CroissantEggRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.PLASMA_LAMP.get(), PlasmaLampRenderer::new);
+        BlockEntityRenderers.register(CompanionsBlockEntities.VOLTAIC_PILLAR.get(), VoltaicPillarRenderer::new);
 
         MenuScreens.register(CompanionsMenuTypes.SOUL_FURNACE.get(), SoulFurnaceScreen::new);
         MenuScreens.register(CompanionsMenuTypes.SOUL_MAGE_CONTAINER.get(), SoulMageScreen::new);

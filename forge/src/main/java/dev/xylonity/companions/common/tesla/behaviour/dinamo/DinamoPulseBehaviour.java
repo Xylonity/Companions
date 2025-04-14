@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.tesla.behaviour.dinamo;
 
+import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import dev.xylonity.companions.common.entity.custom.DinamoEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
@@ -29,7 +30,7 @@ public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
             for (TeslaConnectionManager.ConnectionNode node : nodes) {
                 if (!node.isEntity()) {
                     BlockEntity be = generator.level().getBlockEntity(node.blockPos());
-                    if (be instanceof TeslaCoilBlockEntity coil) {
+                    if (be instanceof AbstractTeslaBlockEntity coil) {
                         coil.startCycle();
                     }
                 }

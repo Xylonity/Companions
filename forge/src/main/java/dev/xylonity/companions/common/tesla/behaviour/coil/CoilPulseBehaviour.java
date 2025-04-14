@@ -14,6 +14,7 @@ public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
 
     @Override
     public void process(AbstractTeslaBlockEntity coil, Level level, BlockPos blockPos, BlockState blockState) {
+
         //Check if the last node that sent a signal was the dinamo for further checks later
         boolean flagDinamo = false;
         for (TeslaConnectionManager.ConnectionNode node : coil.connectionManager.getIncoming(coil.asConnectionNode())) {

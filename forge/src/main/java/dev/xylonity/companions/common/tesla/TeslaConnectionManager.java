@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implements a hierarchical directed flow network for Tesla Network with
@@ -29,9 +30,9 @@ import java.util.*;
  */
 public class TeslaConnectionManager {
     private static TeslaConnectionManager instance;
-    private final Map<ConnectionNode, Set<ConnectionNode>> outgoing = new HashMap<>();
-    private final Map<ConnectionNode, Set<ConnectionNode>> incoming = new HashMap<>();
-    private final Map<ConnectionNode, AbstractTeslaBlockEntity> blockEntities = new HashMap<>();
+    private final Map<ConnectionNode, Set<ConnectionNode>> outgoing = new ConcurrentHashMap<>();
+    private final Map<ConnectionNode, Set<ConnectionNode>> incoming = new ConcurrentHashMap<>();
+    private final Map<ConnectionNode, AbstractTeslaBlockEntity> blockEntities = new ConcurrentHashMap<>();
 
     public static TeslaConnectionManager getInstance() {
         if (instance == null) instance = new TeslaConnectionManager();
@@ -106,7 +107,7 @@ public class TeslaConnectionManager {
         }
 
         Queue<ConnectionNode> queue = new LinkedList<>();
-        Map<ConnectionNode, Integer> distances = new HashMap<>();
+        Map<ConnectionNode, Integer> distances = new ConcurrentHashMap<>();
         int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS.get();
 
         /* Start only from generator nodes (entity nodes) */
@@ -182,7 +183,7 @@ public class TeslaConnectionManager {
         int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS.get();
 
         Set<ConnectionNode> comp = getConnectedComponentIncluding(source, target);
-        Map<ConnectionNode, Integer> simDistance = new HashMap<>();
+        Map<ConnectionNode, Integer> simDistance = new ConcurrentHashMap<>();
         Queue<ConnectionNode> queue = new LinkedList<>();
 
         for (ConnectionNode node : comp) {

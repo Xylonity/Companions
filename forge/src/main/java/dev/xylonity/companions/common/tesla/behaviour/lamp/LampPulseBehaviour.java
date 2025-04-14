@@ -15,15 +15,6 @@ import java.util.List;
 
 public class LampPulseBehaviour implements ITeslaNodeBehaviour {
 
-    private void linkLamp(AbstractTeslaBlockEntity lamp, Level level, BlockPos blockPos, List<TeslaConnectionManager.ConnectionNode> oldConnections){
-        BlockEntity newBe = level.getBlockEntity(blockPos);
-        if (newBe instanceof AbstractTeslaBlockEntity newLamp) {
-            for (TeslaConnectionManager.ConnectionNode node : oldConnections) {
-                newLamp.connectionManager.addConnection(node, newLamp.asConnectionNode(), false);
-            }
-        }
-    }
-
     @Override
     public void process(AbstractTeslaBlockEntity lamp, Level level, BlockPos blockPos, BlockState blockState) {
 
@@ -46,12 +37,25 @@ public class LampPulseBehaviour implements ITeslaNodeBehaviour {
                 linkLamp(lamp, level, blockPos, oldConnections);
                 lamp.setActive(false);
             }
-            else{
+            else {
                 lamp.cycleCounter++;
                 lamp.tickCount++;
             }
         }
         //With an else statement, things here happen every tick outside the cycle
+
+    }
+
+    private void linkLamp(AbstractTeslaBlockEntity lamp, Level level, BlockPos blockPos, List<TeslaConnectionManager.ConnectionNode> oldConnections){
+        BlockEntity newBe = level.getBlockEntity(blockPos);
+        if (newBe instanceof AbstractTeslaBlockEntity newLamp) {
+            for (TeslaConnectionManager.ConnectionNode node : oldConnections) {
+                newLamp.connectionManager.addConnection(node, newLamp.asConnectionNode(), false);
+            }
+
+            // The new lamp state is not registered into the tesla network, so we gotta registry it again per se
+            TeslaConnectionManager.getInstance().registerBlockEntity(newLamp);
+        }
 
     }
 

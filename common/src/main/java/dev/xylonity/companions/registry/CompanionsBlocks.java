@@ -14,6 +14,7 @@ public class CompanionsBlocks {
 
     public static final Supplier<Block> TESLA_COIL;
     public static final Supplier<Block> PLASMA_LAMP;
+    public static final Supplier<Block> VOLTAIC_PILLAR;
     public static final Supplier<Block> SOUL_FURNACE;
     public static final Supplier<Block> CROISSANT_EGG;
 
@@ -33,6 +34,14 @@ public class CompanionsBlocks {
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
                         .noOcclusion(), BlockType.PLASMA_LAMP);
+
+        VOLTAIC_PILLAR = registerBlock("voltaic_pillar_block",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.VOLTAIC_PILLAR);
 
         SOUL_FURNACE = registerBlock("soul_furnace_block",
                         BlockBehaviour.Properties.of()
@@ -59,7 +68,8 @@ public class CompanionsBlocks {
         TESLA_COIL,
         SOUL_FURNACE,
         CROISSANT_EGG,
-        PLASMA_LAMP
+        PLASMA_LAMP,
+        VOLTAIC_PILLAR
     }
 
 }
