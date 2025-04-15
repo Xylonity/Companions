@@ -26,6 +26,7 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.CROISSANT_DRAGON.get(), CroissantDragonEntity.setAttributes());
         event.put(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGlove.setAttributes());
         event.put(CompanionsEntities.PUPPET.get(), PuppetEntity.setAttributes());
+        event.put(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGlove.setAttributes());
     }
 
 }

@@ -1,0 +1,66 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 96,
+				"texture_height": 96,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "whole",
+					"pivot": [0, 0, 0],
+					"rotation": [0, 180, 0]
+				},
+				{
+					"name": "globe",
+					"parent": "whole",
+					"pivot": [0.29032, 7.48236, -2.26546],
+					"rotation": [-157.5, 0, 180],
+					"cubes": [
+						{"origin": [-4.70968, 5.48236, -7.76546], "size": [10, 4, 11], "uv": [38, 65]}
+					]
+				},
+				{
+					"name": "thumb",
+					"parent": "globe",
+					"pivot": [5.29032, 9.48236, -1.26546],
+					"rotation": [0, -5, 57.5],
+					"cubes": [
+						{"origin": [5.29032, 5.48236, -2.76546], "size": [7, 4, 3], "uv": [0, 73]}
+					]
+				},
+				{
+					"name": "finger",
+					"parent": "globe",
+					"pivot": [3.79032, 9.48236, -7.76546],
+					"rotation": [37.53784, -26.06578, 4.85806],
+					"cubes": [
+						{"origin": [2.29032, 5.48236, -13.76546], "size": [3, 4, 6], "uv": [20, 70]}
+					]
+				},
+				{
+					"name": "finger2",
+					"parent": "globe",
+					"pivot": [-3.20968, 9.48236, -7.76546],
+					"rotation": [33.66752, 17.33481, -3.32361],
+					"cubes": [
+						{"origin": [-4.70968, 5.48236, -13.76546], "size": [3, 4, 6], "uv": [20, 70]}
+					]
+				},
+				{
+					"name": "finger3",
+					"parent": "globe",
+					"pivot": [0.29032, 9.48236, -7.76546],
+					"cubes": [
+						{"origin": [-1.20968, 5.48236, -13.76546], "size": [3, 4, 6], "uv": [20, 70]}
+					]
+				}
+			]
+		}
+	]
+}

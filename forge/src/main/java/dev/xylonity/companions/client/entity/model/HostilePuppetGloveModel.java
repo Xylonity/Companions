@@ -20,7 +20,7 @@ public class HostilePuppetGloveModel extends GeoModel<HostilePuppetGlove> {
 
     @Override
     public ResourceLocation getAnimationResource(HostilePuppetGlove animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/puppet_glove.animation.json");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/hostile_puppet_glove.animation.json");
     }
 
 }

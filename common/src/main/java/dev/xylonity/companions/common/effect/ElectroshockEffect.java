@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class ElectroshockEffect extends MobEffect {
 
     public ElectroshockEffect() {
-        super(MobEffectCategory.HARMFUL, 0x303030);
+        super(MobEffectCategory.HARMFUL, 0x88D1FF);
     }
 
     public void addAttributeModifiers(@NotNull LivingEntity pLivingEntity, @NotNull AttributeMap pAttributeMap, int pAmplifier) {
