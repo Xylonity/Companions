@@ -50,6 +50,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsBlocks.VOLTAIC_PILLAR.get());
                                 output.accept(CompanionsBlocks.SOUL_FURNACE.get());
                                 output.accept(CompanionsBlocks.CROISSANT_EGG.get());
+                                output.accept(CompanionsBlocks.EMPTY_PUPPET.get());
 
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get());
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get());

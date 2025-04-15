@@ -17,6 +17,7 @@ public class CompanionsBlocks {
     public static final Supplier<Block> VOLTAIC_PILLAR;
     public static final Supplier<Block> SOUL_FURNACE;
     public static final Supplier<Block> CROISSANT_EGG;
+    public static final Supplier<Block> EMPTY_PUPPET;
 
     static {
         TESLA_COIL = registerBlock("tesla_coil_block",
@@ -58,6 +59,14 @@ public class CompanionsBlocks {
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
                         .noOcclusion(), BlockType.CROISSANT_EGG);
+
+        EMPTY_PUPPET = registerBlock("empty_puppet_block",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.EMPTY_PUPPET);
     }
 
     private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType) {
@@ -69,7 +78,8 @@ public class CompanionsBlocks {
         SOUL_FURNACE,
         CROISSANT_EGG,
         PLASMA_LAMP,
-        VOLTAIC_PILLAR
+        VOLTAIC_PILLAR,
+        EMPTY_PUPPET
     }
 
 }

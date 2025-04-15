@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "knightquestcompanions:block/empty_puppet_block" }
+  }
+}
