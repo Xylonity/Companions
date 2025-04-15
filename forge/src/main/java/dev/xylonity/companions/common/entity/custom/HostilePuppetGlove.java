@@ -1,6 +1,5 @@
 package dev.xylonity.companions.common.entity.custom;
 
-import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.tick.TickScheduler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -9,19 +8,14 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -37,10 +31,6 @@ import java.util.UUID;
 
 public class HostilePuppetGlove extends Monster implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
-    private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
-    private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
-    private final RawAnimation ATTACK = RawAnimation.begin().thenPlay("attack");
 
     private final RawAnimation BROOM_IDLE = RawAnimation.begin().thenPlay("broom_idle");
     private final RawAnimation BROOM_DROP = RawAnimation.begin().thenPlay("broom_drop");
@@ -63,12 +53,6 @@ public class HostilePuppetGlove extends Monster implements GeoEntity {
 
     public HostilePuppetGlove(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.moveControl = new MoveControl(this);
-    }
-
-    @Override
-    protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
-        return new GroundNavigator(this, pLevel);
     }
 
     public static AttributeSupplier setAttributes() {
@@ -82,8 +66,7 @@ public class HostilePuppetGlove extends Monster implements GeoEntity {
     }
 
     @Override
-    protected void registerGoals() {
-    }
+    protected void registerGoals() { ;; }
 
     @Override
     public void tick() {
@@ -92,82 +75,96 @@ public class HostilePuppetGlove extends Monster implements GeoEntity {
 
         super.tick();
 
+        if (tickCount > gameAutoStop && !(isPlaying() && getGloveMove() != 0 || !isPlaying() && getBroomPhase() != 0) && playingPlayerUUID != null) {
+            setIsPlaying(false);
+            setBroomPhase(2);
+            TickScheduler.scheduleServer(level(), () -> setBroomPhase(0), 20);
+            playingPlayerUUID = null;
+        }
+
         this.setPos(lastX, getY(), lastZ);
     }
 
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
+        if (isPlaying() && getGloveMove() != 0 || !isPlaying() && getBroomPhase() != 0) return InteractionResult.FAIL;
+
         if (isPlaying()) {
+            // If the player who tries to interact is different from the original one
             if (!pPlayer.getUUID().equals(playingPlayerUUID)) {
                 return InteractionResult.FAIL;
             }
 
-            if (tickCount > gameAutoStop) {
-                setIsPlaying(false);
-                setBroomPhase(2);
-                TickScheduler.scheduleServer(level(), () -> setBroomPhase(0), 20);
-                playingPlayerUUID = null;
-                return InteractionResult.SUCCESS;
-            }
-
             ItemStack stack = pPlayer.getItemInHand(pHand);
             if (!isValidItem(stack)) {
-                pPlayer.displayClientMessage(Component.literal("Necesitas piedra, papel o tijera"), true);
+                pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.wrong_item"), true);
                 return InteractionResult.FAIL;
             }
 
+            // We set a pseudorandom move if the interaction is correct
             if (level() instanceof ServerLevel)
                 setGloveMove(random.nextInt(1, 4));
 
-            int res = doesThePlayerWin(getPlayerMoveFromItem(stack), getGloveMove() - 1);
+            // Checks if the player wins. 0 draw, 1 glove, 2 player
+            int res = doesThePlayerWin(getPlayerMoveFromItem(stack), getGloveMove());
             if (res == 0) {
-                //TickScheduler.scheduleServer(level(), () -> setGloveMove(4), 20);
+                // Triggers playing idle animation
                 TickScheduler.scheduleServer(level(), () -> setGloveMove(0), 20);
-                pPlayer.displayClientMessage(Component.literal("=="), true);
-                //playAnimation(GAME_ATTACK);
+
+                pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.draw"), true);
             } else if (res == 1) {
+                // Punches the player and goes back to idle
                 TickScheduler.scheduleServer(level(), () -> setGloveMove(4), 20);
                 TickScheduler.scheduleServer(level(), () -> setGloveMove(0), 30);
-                pPlayer.displayClientMessage(Component.literal("Gana guante"), true);
-            } else {
-                pPlayer.displayClientMessage(Component.literal("Gana jugador"), true);
 
+                pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.glove_wins"), true);
+            } else {
+                // TODO: lose animation
                 TickScheduler.scheduleServer(level(), () -> setBroomPhase(2), 20);
                 TickScheduler.scheduleServer(level(), () -> setIsPlaying(false), 20);
                 TickScheduler.scheduleServer(level(), () -> setBroomPhase(0), 40);
 
+                pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.player_wins"), true);
+
                 playingPlayerUUID = null;
             }
 
-            pPlayer.displayClientMessage(Component.literal("" + (res == 1 ? "Has perdido" : "Has ganado o empatado")), true);
-            return InteractionResult.SUCCESS;
-        } else {
-            setBroomPhase(1);
-            TickScheduler.scheduleServer(level(), () -> setIsPlaying(true), 20);
-            TickScheduler.scheduleServer(level(), () -> setGloveMove(0), 20);
-
-            playingPlayerUUID = pPlayer.getUUID();
+            // Reset the counter
             gameAutoStop = tickCount + 600;
 
-            pPlayer.displayClientMessage(Component.literal("Vas a jugar al piedra, papel o tijera"), true);
+        } else {
+            // If it's not playing we trigger the broom_drop animation and schedule the start of the game after the animation's end
+            setBroomPhase(1);
+            TickScheduler.scheduleServer(level(), () -> setIsPlaying(true), 20);
+            // Idle state while playing
+            TickScheduler.scheduleServer(level(), () -> setGloveMove(0), 20);
 
-            return InteractionResult.SUCCESS;
+            // The player that started the game is the only one that can play
+            playingPlayerUUID = pPlayer.getUUID();
+            // We will tick this counter to auto-stop the game after 30 seconds
+            gameAutoStop = tickCount + 600;
+
+            pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.game_start"), true);
+
         }
+
+        return InteractionResult.SUCCESS;
     }
 
+    // Handles every move and checks if the players wins
     private int doesThePlayerWin(int playerMove, int gloveMove) {
         if (playerMove == 0) {
-            if (gloveMove == 0) return 0;
-            else if (gloveMove == 1) return 1;
-            else if (gloveMove == 2) return 2;
-        } else if (playerMove == 1) {
-            if (gloveMove == 0) return 2;
-            else if (gloveMove == 1) return 0;
+            if (gloveMove == 1) return 0;
             else if (gloveMove == 2) return 1;
-        } else if (playerMove == 2) {
-            if (gloveMove == 0) return 1;
-            else if (gloveMove == 1) return 2;
+            else if (gloveMove == 3) return 2;
+        } else if (playerMove == 1) {
+            if (gloveMove == 1) return 2;
             else if (gloveMove == 2) return 0;
+            else if (gloveMove == 3) return 1;
+        } else if (playerMove == 2) {
+            if (gloveMove == 1) return 1;
+            else if (gloveMove == 2) return 2;
+            else if (gloveMove == 3) return 0;
         }
 
         return -1;
