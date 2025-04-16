@@ -33,7 +33,7 @@ public class BraceBook extends AbstractMagicBook {
 
             projectile.setOwner(player);
 
-            double speed = 0.7;
+            double speed = 0.75;
             Vec3 initialVelocity = look.scale(speed).add(player.getDeltaMovement());
             projectile.setDeltaMovement(initialVelocity);
 

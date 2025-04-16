@@ -77,6 +77,8 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
             "STONE_SPIKES", new int[]{139, 69, 19},
             "HEAL_RING", new int[]{110, 252, 85},
             "ICE_SHARD", new int[]{134, 236, 255},
+            "FIRE_MARK", new int[]{225, 45, 45},
+            "TORNADO", new int[]{242, 242, 242},
             "NONE", new int[]{169, 134, 60}
     );
 
@@ -116,6 +118,9 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
         this.goalSelector.addGoal(3, new SoulMageStoneSpikesGoal(this, 120, 240));
         this.goalSelector.addGoal(3, new SoulMageHealRingGoal(this, 100, 160));
         this.goalSelector.addGoal(3, new SoulMageIceShardGoal(this, 100, 160));
+        this.goalSelector.addGoal(3, new SoulMageFireMarkGoal(this, 100, 160));
+        this.goalSelector.addGoal(3, new SoulMageTornadoGoal(this, 100, 160));
+        this.goalSelector.addGoal(3, new SoulMageBraceGoal(this, 100, 160));
 
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
 

@@ -18,26 +18,22 @@ import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class BraceProjectile extends Projectile implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private static final int LIFETIME = 200;
-    private static final double GRAVITY = 0.03D;
-    private static final double AIR_FRICTION = 0.98D;
-    private static final double BOUNCE_DAMPING_VERTICAL = 0.6D;
-    private static final double BOUNCE_DAMPING_HORIZONTAL = 0.7D;
-    private static final int MAX_ENTITY_BOUNCES = 5;
-    private static final int MAX_BLOCK_BOUNCES = 5;
-    private static final float DAMAGE_AMOUNT = 3.0F;
-    private static final double SEARCH_RADIUS = 10D;
-    private static final double BASE_SPEED = 0.6D;
-    private static final double MIN_UPWARD = 0.4D;
-    private int entityBounceCount = 0;
-    private int blockBounceCount = 0;
+    private static final double BOUNCE_DAMPING_VERTICAL = 0.6;
+    private static final double BOUNCE_DAMPING_HORIZONTAL = 0.7;
+    private static final int MAX_BOUNCES = 5;
+    private static final double MIN_UPWARD = 0.4;
 
-    private final List<Integer> hitEntityIds = new ArrayList<>();
+    private final List<Integer> hitEntities = new ArrayList<>();
+
+    private int entityBounces = 0;
+    private int blockBounces = 0;
 
     public BraceProjectile(EntityType<? extends Projectile> type, Level level) {
         super(type, level);
@@ -48,103 +44,104 @@ public class BraceProjectile extends Projectile implements GeoEntity {
     public void tick() {
         super.tick();
 
-        if (tickCount > LIFETIME || entityBounceCount >= MAX_ENTITY_BOUNCES) {
+        if (tickCount > LIFETIME || entityBounces >= MAX_BOUNCES) {
             if (!this.level().isClientSide)
                 this.level().broadcastEntityEvent(this, (byte) 3);
 
             this.remove(RemovalReason.DISCARDED);
         }
 
-        Vec3 vel = this.getDeltaMovement();
-        vel = vel.add(0, -GRAVITY, 0);
-        vel = vel.multiply(AIR_FRICTION, AIR_FRICTION, AIR_FRICTION);
+        // We update the velocity here (simulating gravity and friction)
+        Vec3 vel = getDeltaMovement().add(0, -0.03, 0).scale(0.98);
+        Vec3 start = position();
+        Vec3 end = start.add(vel);
 
-        Vec3 startPos = this.position();
-        Vec3 endPos = startPos.add(vel);
+        // And detect collisions from both entities and blocks
+        HitResult entityHit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+        // TODO: block hit are not always detected
+        BlockHitResult blockHit = level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
-        HitResult entityResult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+        double entityDist = entityHit.getType() == HitResult.Type.ENTITY ? entityHit.getLocation().distanceToSqr(start) : Double.MAX_VALUE;
+        double blockDist = blockHit.getType() != HitResult.Type.MISS ? blockHit.getLocation().distanceToSqr(start) : Double.MAX_VALUE;
 
-        ClipContext ctx = new ClipContext(startPos, endPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this);
-        BlockHitResult blockResult = level().clip(ctx);
-
-        double blockDist = (blockResult != null && blockResult.getType() != HitResult.Type.MISS)
-                ? blockResult.getLocation().distanceToSqr(startPos) : Double.MAX_VALUE;
-        double entityDist = (entityResult != null && entityResult.getType() == HitResult.Type.ENTITY)
-                ? entityResult.getLocation().distanceToSqr(startPos) : Double.MAX_VALUE;
-
+        // We check the distances between collisions to arbitrary select one of each (or just normally move)
         if (entityDist < blockDist) {
-            EntityHitResult ehr = (EntityHitResult) entityResult;
-            Entity hit = ehr.getEntity();
-            if (hit instanceof LivingEntity living && living != this.getOwner() && !hitEntityIds.contains(living.getId())) {
-
-                living.hurt(damageSources().thrown(this, this.getOwner()), DAMAGE_AMOUNT);
-                hitEntityIds.add(living.getId());
-                entityBounceCount++;
-
-                Vec3 cPoint = ehr.getLocation();
-
-                if (!this.level().isClientSide)
-                    this.level().broadcastEntityEvent(this, (byte) 3);
-
-                this.setPos(cPoint.x, cPoint.y, cPoint.z);
-                this.setDeltaMovement(Vec3.ZERO);
-
-                if (entityBounceCount >= MAX_ENTITY_BOUNCES) {
-                    this.discard();
-                    return;
-                }
-
-                LivingEntity next = findNextTarget();
-                if (next != null) {
-                    Vec3 center = next.position().add(0, next.getBbHeight() * 0.5, 0);
-                    Vec3 dir = center.subtract(cPoint).normalize();
-
-                    if (dir.y < MIN_UPWARD) {
-                        dir = new Vec3(dir.x, MIN_UPWARD, dir.z).normalize();
-                    }
-
-                    Vec3 newVel = dir.scale(BASE_SPEED);
-                    this.setDeltaMovement(newVel);
-
-                } else {
-                    if (!this.level().isClientSide)
-                        this.level().broadcastEntityEvent(this, (byte) 3);
-
-                    this.discard();
-                }
-            } else {
-                doMove(vel);
-            }
+            handleEntityHit((EntityHitResult) entityHit);
         } else if (blockDist < Double.MAX_VALUE) {
-            Direction face = blockResult.getDirection();
-            Vec3 normal = new Vec3(face.getStepX(), face.getStepY(), face.getStepZ());
-
-            double dot = vel.dot(normal);
-            Vec3 reflected = vel.subtract(normal.scale(2 * dot));
-
-            if (face == Direction.UP || face == Direction.DOWN) {
-                reflected = new Vec3(reflected.x, reflected.y * BOUNCE_DAMPING_VERTICAL, reflected.z);
-            } else {
-                reflected = new Vec3(reflected.x * BOUNCE_DAMPING_HORIZONTAL, reflected.y, reflected.z * BOUNCE_DAMPING_HORIZONTAL);
-            }
-
-            blockBounceCount++;
-            if (blockBounceCount >= MAX_BLOCK_BOUNCES) {
-                reflected = Vec3.ZERO;
-            }
-
-            Vec3 impactPos = blockResult.getLocation().add(normal.scale(0.02));
-            this.setPos(impactPos.x, impactPos.y, impactPos.z);
-
-            doMove(reflected);
+            handleBlockHit(blockHit);
         } else {
-            doMove(vel);
+            move(vel);
         }
 
-        if (tickCount % 3 == 0) this.level().addParticle(CompanionsParticles.EMBER.get(), getX() + getDeltaMovement().x, getY() - getBbHeight() * 0.5, getZ() + getDeltaMovement().z, 0.0, 0.0, 0.0);
+        // Trail
+        if (tickCount % 3 == 0) {
+            level().addParticle(CompanionsParticles.EMBER.get(), getX(), getY() - getBbHeight() * 0.5, getZ(), 0, 0, 0);
+        }
+
     }
 
-    private void spawnSmokeParticles(Vec3 spawnPos) {
+    private void handleEntityHit(EntityHitResult hit) {
+        Entity entity = hit.getEntity();
+        if (!(entity instanceof LivingEntity target) || entity == getOwner() || hitEntities.contains(entity.getId())) {
+            move(getDeltaMovement());
+            return;
+        }
+
+        // Hurts the trigger entity and caches its id so the projectile doesn't attack it again and continues bouncing
+        target.hurt(damageSources().thrown(this, getOwner()), 3);
+        hitEntities.add(target.getId());
+        entityBounces++;
+
+        // We should stop the projectile before rethrowing it again
+        setPos(hit.getLocation());
+        setDeltaMovement(Vec3.ZERO);
+
+        if (entityBounces >= MAX_BOUNCES) {
+            spawnParticles();
+            discard();
+            return;
+        }
+
+        // If we couldn't find another, the projectile will disappear
+        LivingEntity next = findNextTarget();
+        if (next == null) {
+            spawnParticles();
+            discard();
+            return;
+        }
+
+        // Throws the projectile towards the nearest entity
+        Vec3 direction = next.position().add(0, next.getBbHeight() * 0.5, 0).subtract(position()).normalize();
+
+        if (direction.y < MIN_UPWARD) {
+            direction = new Vec3(direction.x, MIN_UPWARD, direction.z).normalize();
+        }
+
+        setDeltaMovement(direction.scale(0.6));
+    }
+
+    private void handleBlockHit(BlockHitResult hit) {
+        // We simulate a 'bounce' reflection on block hit
+        Direction face = hit.getDirection();
+        Vec3 normal = new Vec3(face.getStepX(), face.getStepY(), face.getStepZ());
+        Vec3 reflected = this.getDeltaMovement().subtract(normal.scale(2 * this.getDeltaMovement().dot(normal)));
+
+        // Extra damping
+        if (face.getAxis().isVertical()) {
+            reflected = new Vec3(reflected.x, reflected.y * BOUNCE_DAMPING_VERTICAL, reflected.z);
+        } else {
+            reflected = new Vec3(reflected.x * BOUNCE_DAMPING_HORIZONTAL, reflected.y, reflected.z * BOUNCE_DAMPING_HORIZONTAL);
+        }
+
+        blockBounces++;
+        if (blockBounces >= MAX_BOUNCES) reflected = Vec3.ZERO;
+
+        // We prevent the projectile getting stuck
+        setPos(hit.getLocation().add(normal.scale(0.02)));
+        move(reflected);
+    }
+
+    private void spawnSmokeParticles() {
         for (int i = 0; i < 6; i++) {
             double speedX = (this.random.nextDouble() - 0.5) * 0.1;
             double speedY = (this.random.nextDouble() - 0.5) * 0.1;
@@ -157,46 +154,44 @@ public class BraceProjectile extends Projectile implements GeoEntity {
     @Override
     public void handleEntityEvent(byte pId) {
         if (pId == 3) {
-            spawnSmokeParticles(null);
+            spawnSmokeParticles();
         } else {
             super.handleEntityEvent(pId);
         }
     }
 
-    private void doMove(Vec3 vel) {
-        if (this.onGround() && Math.abs(vel.y) < 0.001 && vel.horizontalDistanceSqr() < 0.0009) vel = Vec3.ZERO;
-
-        this.setDeltaMovement(vel);
-        this.move(MoverType.SELF, vel);
+    private void spawnParticles() {
+        if (level().isClientSide) return;
+        for (int i = 0; i < 6; i++) {
+            double speed = 0.1;
+            level().addParticle(CompanionsParticles.EMBER.get(), getX(), getY(), getZ(),
+                    (random.nextDouble() - 0.5) * speed,
+                    (random.nextDouble() - 0.5) * speed,
+                    (random.nextDouble() - 0.5) * speed);
+        }
     }
 
     private LivingEntity findNextTarget() {
-        AABB area = new AABB(
-                this.getX() - SEARCH_RADIUS, this.getY() - SEARCH_RADIUS, this.getZ() - SEARCH_RADIUS,
-                this.getX() + SEARCH_RADIUS, this.getY() + SEARCH_RADIUS, this.getZ() + SEARCH_RADIUS
-        );
+        // We should find the nearest entity from the one that triggered the entity hit
+        return level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(10),
+                        e -> e.isAlive() && e != getOwner() && !hitEntities.contains(e.getId()))
+                .stream()
+                .min(Comparator.comparingDouble(e -> e.distanceToSqr(this)))
+                .orElse(null);
+    }
 
-        List<LivingEntity> candi = level().getEntitiesOfClass(LivingEntity.class, area, e -> e.isAlive() && e != this.getOwner() && !hitEntityIds.contains(e.getId()));
-
-        if (candi.isEmpty()) return null;
-
-        double minDist = Double.MAX_VALUE;
-        LivingEntity nearest = null;
-
-        for (LivingEntity c : candi) {
-            double dist = c.distanceToSqr(this);
-            if (dist < minDist) {
-                minDist = dist;
-                nearest = c;
-            }
+    private void move(Vec3 vel) {
+        if (onGround() && Math.abs(vel.y) < 0.001 && vel.horizontalDistanceSqr() < 0.0009) {
+            vel = Vec3.ZERO;
         }
 
-        return nearest;
+        setDeltaMovement(vel);
+        move(MoverType.SELF, vel);
     }
 
     protected boolean canHitEntity(@NotNull Entity e) {
         if (e == this.getOwner()) return false;
-        if (hitEntityIds.contains(e.getId())) return false;
+        if (hitEntities.contains(e.getId())) return false;
         return e instanceof LivingEntity;
     }
 

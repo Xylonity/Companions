@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -27,6 +28,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class TornadoProjectile extends Projectile implements GeoEntity {
@@ -99,8 +101,10 @@ public class TornadoProjectile extends Projectile implements GeoEntity {
             this.setStartZ((float) this.getZ());
 
             if (owner != null) {
-                Vec3 look = owner.getLookAngle();
-                this.setAlpha((float) Math.atan2(look.z, look.x));
+                Vec3 ownerPos = owner.getEyePosition(1f);
+                Vec3 projPos = this.position();
+                Vec3 dir = projPos.subtract(ownerPos).normalize();
+                this.setAlpha((float) Math.atan2(dir.z, dir.x));
             } else {
                 this.setAlpha(0);
             }
@@ -132,17 +136,33 @@ public class TornadoProjectile extends Projectile implements GeoEntity {
         this.setPos(finalX, this.getGroundY(), finalZ);
 
         // This will push entities away if they are within the hitbox
-        this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1), e -> !e.equals(getOwner())).forEach(e -> {
-            Vec3 dir = e.position().subtract(this.position()).normalize().scale(1.4);
-            e.push(dir.x + 0.1, dir.y + 0.1, dir.z + 0.1);
-        });
+        this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1),
+                e -> {
+                    if (e.equals(getOwner())) {
+                        return false;
+                    }
+
+                    if (getOwner() instanceof SoulMageEntity entity && Objects.equals(entity.getOwner(), e)) {
+                        return false;
+                    }
+
+                    if (e instanceof SoulMageBookEntity entity && Objects.equals(entity.getOwner(), getOwner())) {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .forEach(e -> {
+                    Vec3 dir = e.position().subtract(this.position()).normalize().scale(1.4);
+                    e.push(dir.x + 0.1, dir.y + 0.1, dir.z + 0.1);
+                });
 
         if (this.level() instanceof ServerLevel sv) {
             if (new Random().nextFloat() <= 0.8) {
                 sv.sendParticles(ParticleTypes.SNOWFLAKE,
-                        getX() + getBbWidth() * Math.random(),
-                        getY() + getBbHeight() * Math.random(),
-                        getZ() + getBbWidth() * Math.random(),
+                        getX() + (getBbWidth() * 2) * Math.random(),
+                        getY() + (getBbHeight() * 2) * Math.random(),
+                        getZ() + (getBbWidth() * 2) * Math.random(),
                         1, 0, 0, 0, 0.05);
             }
         }
@@ -171,9 +191,9 @@ public class TornadoProjectile extends Projectile implements GeoEntity {
 
     private void spawnHitParticles() {
         for (int i = 0; i < 10; i++) {
-            double x = getX() + getBbWidth() * Math.random();
-            double y = getY() + getBbHeight() * Math.random();
-            double z = getZ() + getBbWidth() * Math.random();
+            double x = getX() + (getBbWidth() * 2) * Math.random();
+            double y = getY() + (getBbHeight() * 2) * Math.random();
+            double z = getZ() + (getBbWidth() * 2) * Math.random();
             this.level().addParticle(ParticleTypes.SNOWFLAKE, x, y, z, 0.05, 0.05, 0.05);
         }
     }

@@ -47,7 +47,7 @@ public class CompanionsItems {
 
     public static final Supplier<Item> MAGE_COAT = registerArmorItem("mage_coat", ArmorMaterials.MAGE, ArmorItem.Type.CHESTPLATE, false);
     public static final Supplier<Item> MAGE_HAT = registerArmorItem("mage_hat", ArmorMaterials.MAGE, ArmorItem.Type.HELMET, true);
-    public static final Supplier<Item> MAGE_STAFF = registerItem("mage_staff", () -> new Item(new Item.Properties()));
+    public static final Supplier<Item> MAGE_STAFF = registerItem("mage_staff", () -> new Item(new Item.Properties().stacksTo(1)));
 
     private static <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item) {
         return CompanionsCommon.COMMON_PLATFORM.registerItem(id, item);

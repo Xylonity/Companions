@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.item.book.books;
 
+import dev.xylonity.companions.common.entity.projectile.FireMarkRingProjectile;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +25,7 @@ public class FireMarkBook extends AbstractMagicBook {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
 
-        Projectile fireMarkRing = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get().create(pLevel);
+        FireMarkRingProjectile fireMarkRing = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get().create(pLevel);
         if (fireMarkRing != null) {
             fireMarkRing.moveTo(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
             fireMarkRing.setOwner(pPlayer);
@@ -33,4 +34,5 @@ public class FireMarkBook extends AbstractMagicBook {
 
         return super.use(pLevel, pPlayer, pUsedHand);
     }
+
 }
