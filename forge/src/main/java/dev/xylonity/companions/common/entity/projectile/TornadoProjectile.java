@@ -2,17 +2,21 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.openal.AL;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -23,29 +27,64 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class TornadoProjectile extends AbstractArrow implements GeoEntity {
+import java.util.Random;
+
+public class TornadoProjectile extends Projectile implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private final RawAnimation SPIN = RawAnimation.begin().thenPlay("spin");
 
+    private static final EntityDataAccessor<Float> GROUNDY = SynchedEntityData.defineId(TornadoProjectile.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> STARTX = SynchedEntityData.defineId(TornadoProjectile.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> STARTZ = SynchedEntityData.defineId(TornadoProjectile.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> ALPHA = SynchedEntityData.defineId(TornadoProjectile.class, EntityDataSerializers.FLOAT);
+
     private static final int LIFETIME = 120;
 
-    private static final double PARAM_SCALE = 0.2;
-
-    private double groundY = 0;
-    private double startX, startZ;
-
-    private double alpha = 0;
     private boolean initialized = false;
 
-    public TornadoProjectile(EntityType<? extends AbstractArrow> pEntityType, Level pLevel) {
+    public TornadoProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.pickup = Pickup.DISALLOWED;
     }
 
     @Override
-    protected boolean tryPickup(@NotNull Player pPlayer) {
-        return false;
+    protected void defineSynchedData() {
+        this.entityData.define(GROUNDY, 0f);
+        this.entityData.define(STARTX, 0f);
+        this.entityData.define(STARTZ, 0f);
+        this.entityData.define(ALPHA, 0f);
+    }
+
+    public float getGroundY() {
+        return this.entityData.get(GROUNDY);
+    }
+
+    public void setGroundY(float v) {
+        this.entityData.set(GROUNDY, v);
+    }
+
+    public float getStartX() {
+        return this.entityData.get(STARTX);
+    }
+
+    public void setStartX(float v) {
+        this.entityData.set(STARTX, v);
+    }
+
+    public float getStartZ() {
+        return this.entityData.get(STARTZ);
+    }
+
+    public void setStartZ(float v) {
+        this.entityData.set(STARTZ, v);
+    }
+
+    public float getAlpha() {
+        return this.entityData.get(ALPHA);
+    }
+
+    public void setAlpha(float v) {
+        this.entityData.set(ALPHA, v);
     }
 
     @Override
@@ -54,23 +93,20 @@ public class TornadoProjectile extends AbstractArrow implements GeoEntity {
 
         Entity owner = this.getOwner();
         if (!initialized) {
-            initialized = true;
+            this.setGroundY((float) this.getY());
 
-            this.groundY = this.getY();
-
-            this.startX = this.getX();
-            this.startZ = this.getZ();
+            this.setStartX((float) this.getX());
+            this.setStartZ((float) this.getZ());
 
             if (owner != null) {
                 Vec3 look = owner.getLookAngle();
-                double forwardX = look.x;
-                double forwardZ = look.z;
-                this.alpha = Math.atan2(forwardZ, forwardX);
+                this.setAlpha((float) Math.atan2(look.z, look.x));
             } else {
-                this.alpha = 0;
+                this.setAlpha(0);
             }
 
             this.setNoGravity(true);
+            this.initialized = true;
         }
 
         if (this.tickCount >= LIFETIME) {
@@ -78,23 +114,39 @@ public class TornadoProjectile extends AbstractArrow implements GeoEntity {
             return;
         }
 
-        double t = this.tickCount * PARAM_SCALE;
+        double t = this.tickCount * 0.2;
 
-        //double xLocal = Math.sin(-2.0 * t) + t;
-        //double zLocal = Math.cos(-2.0 * t) + 1.0;
+        double xLocal = Math.sin(0.5 * t) + t;
+        double zLocal = Math.cos(0.5 * t);
 
-        double xLocal = t + Math.pow(Math.E, 0.1 * t) * ((Math.cos(5*t)-1)/2);
-        double zLocal = Math.pow(Math.E, 0.1*t)*Math.sin(5*t);
-
-        double cosA = Math.cos(this.alpha);
-        double sinA = Math.sin(this.alpha);
+        double cosA = Math.cos(this.getAlpha());
+        double sinA = Math.sin(this.getAlpha());
         double rotX = xLocal * cosA - zLocal * sinA;
         double rotZ = xLocal * sinA + zLocal * cosA;
 
-        double finalX = this.startX + rotX;
-        double finalZ = this.startZ + rotZ;
+        double finalX = this.getStartX() + rotX;
+        double finalZ = this.getStartZ() + rotZ;
 
-        this.setPosRaw(finalX, this.groundY, finalZ);
+        // Synched data should fix the problem where the tornado starts tweaking if there are multiple
+        // instances moving in the world towards different directions
+        this.setPos(finalX, this.getGroundY(), finalZ);
+
+        // This will push entities away if they are within the hitbox
+        this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1), e -> !e.equals(getOwner())).forEach(e -> {
+            Vec3 dir = e.position().subtract(this.position()).normalize().scale(1.4);
+            e.push(dir.x + 0.1, dir.y + 0.1, dir.z + 0.1);
+        });
+
+        if (this.level() instanceof ServerLevel sv) {
+            if (new Random().nextFloat() <= 0.8) {
+                sv.sendParticles(ParticleTypes.SNOWFLAKE,
+                        getX() + getBbWidth() * Math.random(),
+                        getY() + getBbHeight() * Math.random(),
+                        getZ() + getBbWidth() * Math.random(),
+                        1, 0, 0, 0, 0.05);
+            }
+        }
+
     }
 
     private void onExpire() {
@@ -119,10 +171,10 @@ public class TornadoProjectile extends AbstractArrow implements GeoEntity {
 
     private void spawnHitParticles() {
         for (int i = 0; i < 10; i++) {
-            double dx = (this.level().getRandom().nextDouble() - 0.5) * 0.1;
-            double dy = (this.level().getRandom().nextDouble() - 0.5) * 0.1;
-            double dz = (this.level().getRandom().nextDouble() - 0.5) * 0.1;
-            this.level().addParticle(ParticleTypes.SNOWFLAKE, this.getX(), this.getY(), this.getZ(), dx, dy, dz);
+            double x = getX() + getBbWidth() * Math.random();
+            double y = getY() + getBbHeight() * Math.random();
+            double z = getZ() + getBbWidth() * Math.random();
+            this.level().addParticle(ParticleTypes.SNOWFLAKE, x, y, z, 0.05, 0.05, 0.05);
         }
     }
 
@@ -143,11 +195,6 @@ public class TornadoProjectile extends AbstractArrow implements GeoEntity {
         }
 
         this.remove(RemovalReason.DISCARDED);
-    }
-
-    @Override
-    protected @NotNull ItemStack getPickupItem() {
-        return ItemStack.EMPTY;
     }
 
     @Override

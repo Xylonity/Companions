@@ -8,6 +8,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class IceTornadoBook extends AbstractMagicBook {
@@ -27,7 +28,9 @@ public class IceTornadoBook extends AbstractMagicBook {
         TornadoProjectile tornadoProjectile = CompanionsEntities.TORNADO_PROJECTILE.get().create(pLevel);
 
         if (tornadoProjectile != null) {
-            tornadoProjectile.moveTo(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
+            Vec3 look = pPlayer.getLookAngle();
+            Vec3 hLook = new Vec3(look.x, 0, look.z).normalize();
+            tornadoProjectile.moveTo(pPlayer.getX() + hLook.x, pPlayer.getY(), pPlayer.getZ() + hLook.z);
             tornadoProjectile.setOwner(pPlayer);
             pLevel.addFreshEntity(tornadoProjectile);
         }
