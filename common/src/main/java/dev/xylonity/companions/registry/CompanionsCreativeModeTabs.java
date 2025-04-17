@@ -11,11 +11,11 @@ public class CompanionsCreativeModeTabs {
 
     public static void init() { ;; }
 
-    public static final Supplier<CreativeModeTab> KNIGHTQUEST_TAB =
-            CompanionsCommon.COMMON_PLATFORM.registerCreativeModeTab("knightquest_tab",
+    public static final Supplier<CreativeModeTab> COMPANIONS_TAB =
+            CompanionsCommon.COMMON_PLATFORM.registerCreativeModeTab("companions_tab",
                     () -> CompanionsCommon.COMMON_PLATFORM.creativeTabBuilder()
                             .icon(() -> new ItemStack(Items.ACACIA_BOAT))
-                            .title(Component.translatable("itemgroup.common"))
+                            .title(Component.translatable("creativetab.companions.title"))
                             .displayItems((itemDisplayParameters, output) -> {
 
                                 output.accept(CompanionsItems.COPPER_COIN.get());
@@ -29,6 +29,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.BLADE_ARM.get());
                                 output.accept(CompanionsItems.CANNON_ARM.get());
                                 output.accept(CompanionsItems.NETHERITE_DAGGER.get());
+                                output.accept(CompanionsItems.HOURGLASS.get());
 
                                 output.accept(CompanionsItems.BOOK_ICE_SHARD.get());
                                 output.accept(CompanionsItems.BOOK_ICE_TORNADO.get());

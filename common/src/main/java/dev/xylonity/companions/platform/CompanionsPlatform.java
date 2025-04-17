@@ -27,6 +27,7 @@ public interface CompanionsPlatform {
     <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, CompanionsBlocks.BlockType blockType);
     <T extends Item> Supplier<T> registerArmorItem(String id, ArmorMaterial armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor);
     <T extends Item> Supplier<T> registerWrenchItem(String id, Item.Properties properties);
+    <T extends Item> Supplier<T> registerHourglassItem(String id, Item.Properties properties);
     <T extends Item> Supplier<T> registerMagicBook(String id, Item.Properties properties, CompanionsItems.MagicType magicType);
     <T extends MobEffect> Supplier<T> registerEffect(String id, Supplier<T> item);
     <T extends ParticleType<?>> Supplier<T> registerParticle(String id, boolean overrideLimiter);

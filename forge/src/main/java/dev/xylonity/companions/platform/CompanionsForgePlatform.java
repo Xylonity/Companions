@@ -2,6 +2,7 @@ package dev.xylonity.companions.platform;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.block.*;
+import dev.xylonity.companions.common.item.HourglassItem;
 import dev.xylonity.companions.common.item.armor.GenericArmorItem;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.companions.common.item.book.books.*;
@@ -70,6 +71,11 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
                 super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
             }
         });
+    }
+
+    @Override
+    public <T extends Item> Supplier<T> registerHourglassItem(String id, Item.Properties properties) {
+        return (Supplier<T>) registerItem(id, () -> new HourglassItem(properties));
     }
 
     @Override

@@ -44,6 +44,7 @@ public class CompanionsItems {
 
     public static final Supplier<Item> ETERNAL_LIGHTER = registerItem("eternal_lighter", () -> new EternalLighter(new Item.Properties()));
     public static final Supplier<Item> WRENCH = registerWrenchItem("wrench", new Item.Properties().durability(64));
+    public static final Supplier<Item> HOURGLASS = registerHourglassItem("hourglass", new Item.Properties().durability(64));
 
     public static final Supplier<Item> MAGE_COAT = registerArmorItem("mage_coat", ArmorMaterials.MAGE, ArmorItem.Type.CHESTPLATE, false);
     public static final Supplier<Item> MAGE_HAT = registerArmorItem("mage_hat", ArmorMaterials.MAGE, ArmorItem.Type.HELMET, true);
@@ -59,6 +60,10 @@ public class CompanionsItems {
 
     private static <T extends Item> Supplier<T> registerWrenchItem(String id, Item.Properties properties) {
         return CompanionsCommon.COMMON_PLATFORM.registerWrenchItem(id, properties);
+    }
+
+    private static <T extends Item> Supplier<T> registerHourglassItem(String id, Item.Properties properties) {
+        return CompanionsCommon.COMMON_PLATFORM.registerHourglassItem(id, properties);
     }
 
     private static <T extends Item> Supplier<T> registerMagicBook(String id, Item.Properties properties, MagicType magicType) {
