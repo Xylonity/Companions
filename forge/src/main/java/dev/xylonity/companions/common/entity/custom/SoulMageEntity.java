@@ -31,6 +31,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -142,27 +143,25 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
         return super.hurt(pSource, pAmount);
     }
 
-    public SoulMageBookEntity getBook() {
-        if (book == null || book.isRemoved()) {
-            if (level().isClientSide) {
-                int id = this.entityData.get(BOOK_ID);
-                if (id != -1) {
-                    Entity entity = level().getEntity(id);
-                    if (entity instanceof SoulMageBookEntity) {
-                        book = (SoulMageBookEntity) entity;
-                    }
+    private @Nullable SoulMageBookEntity getBook() {
+        if ((book == null || book.isRemoved())) {
+            if (getBookId() != -1) {
+                Entity e = this.level().getEntity(getBookId());
+                if (e instanceof SoulMageBookEntity be) {
+                    book = be;
                 }
             }
         }
+
         return book;
     }
 
     public void setBook(SoulMageBookEntity book) {
         this.book = book;
         if (book != null) {
-            this.entityData.set(BOOK_ID, book.getId());
+            setBookId(book.getId());
         } else {
-            this.entityData.set(BOOK_ID, -1);
+            setBookId(-1);
         }
     }
 
@@ -178,15 +177,13 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
     public void tick() {
         super.tick();
 
-        if (tickCount == 2) {
-            if (getBook() == null) {
-                SoulMageBookEntity bookEntity = CompanionsEntities.SOUL_MAGE_BOOK.get().create(this.level());
-                if (bookEntity instanceof SoulMageBookEntity) {
-                    bookEntity.setOwner(this);
-                    bookEntity.moveTo(this.getX(), this.getY(), this.getZ());
-                    this.level().addFreshEntity(bookEntity);
-                    setBook(bookEntity);
-                }
+        if (tickCount == 2 && getBookId() == -1) {
+            SoulMageBookEntity book = CompanionsEntities.SOUL_MAGE_BOOK.get().create(this.level());
+            if (book instanceof SoulMageBookEntity) {
+                book.setOwner(this);
+                book.moveTo(this.getX(), this.getY(), this.getZ());
+                this.level().addFreshEntity(book);
+                setBook(book);
             }
         }
 
@@ -231,6 +228,14 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
 
     public void setAttacking(boolean attacking) {
         this.entityData.set(IS_ATTACKING, attacking);
+    }
+
+    public int getBookId() {
+        return this.entityData.get(BOOK_ID);
+    }
+
+    public void setBookId(int id) {
+        this.entityData.set(BOOK_ID, id);
     }
 
     @Override
@@ -317,16 +322,14 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
         if (pCompound.contains("BookEntityId")) {
             this.entityData.set(BOOK_ID, pCompound.getInt("BookEntityId"));
         }
+        this.setBookId(pCompound.getInt("BookId"));
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.put("Inventory", this.inventory.createTag());
-        int bookId = this.entityData.get(BOOK_ID);
-        if (bookId != -1) {
-            pCompound.putInt("BookEntityId", bookId);
-        }
+        pCompound.putInt("BookId", getBookId());
     }
 
     @Override
@@ -442,6 +445,19 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
             this.entityData.set(DATA_ID_FLAGS, (byte)($$2 & ~$$0));
         }
 
+    }
+
+    protected void dropEquipment() {
+        super.dropEquipment();
+        if (this.inventory != null) {
+            for(int i = 0; i < this.inventory.getContainerSize(); i++) {
+                ItemStack itemStack = this.inventory.getItem(i);
+                if (!itemStack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemStack)) {
+                    this.spawnAtLocation(itemStack);
+                }
+            }
+
+        }
     }
 
 }

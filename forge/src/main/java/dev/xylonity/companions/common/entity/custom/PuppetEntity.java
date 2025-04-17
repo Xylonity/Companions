@@ -40,6 +40,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -438,6 +439,19 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
             this.entityData.set(DATA_ID_FLAGS, (byte)($$2 & ~$$0));
         }
 
+    }
+
+    protected void dropEquipment() {
+        super.dropEquipment();
+        if (this.inventory != null) {
+            for(int i = 0; i < this.inventory.getContainerSize(); i++) {
+                ItemStack itemStack = this.inventory.getItem(i);
+                if (!itemStack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemStack)) {
+                    this.spawnAtLocation(itemStack);
+                }
+            }
+
+        }
     }
 
 }
