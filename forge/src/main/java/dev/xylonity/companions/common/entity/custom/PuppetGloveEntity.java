@@ -23,14 +23,14 @@ import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class PuppetGlove extends CompanionEntity {
+public class PuppetGloveEntity extends CompanionEntity {
 
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation ATTACK = RawAnimation.begin().thenPlay("attack");
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
 
-    public PuppetGlove(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+    public PuppetGloveEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 

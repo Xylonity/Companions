@@ -21,6 +21,7 @@ public class CompanionsBlockEntities {
     public static final RegistryObject<BlockEntityType<SoulFurnaceBlockEntity>> SOUL_FURNACE;
     public static final RegistryObject<BlockEntityType<CroissantEggBlockEntity>> CROISSANT_EGG;
     public static final RegistryObject<BlockEntityType<EmptyPuppetBlockEntity>> EMPTY_PUPPET;
+    public static final RegistryObject<BlockEntityType<RespawnTotemBlockEntity>> RESPAWN_TOTEM;
 
     static {
         TESLA_COIL = register("tesla_coil", TeslaCoilBlockEntity::new, CompanionsBlocks.TESLA_COIL);
@@ -29,6 +30,7 @@ public class CompanionsBlockEntities {
         SOUL_FURNACE = register("soul_furnace", SoulFurnaceBlockEntity::new, CompanionsBlocks.SOUL_FURNACE);
         CROISSANT_EGG = register("croissant_egg", CroissantEggBlockEntity::new, CompanionsBlocks.CROISSANT_EGG);
         EMPTY_PUPPET = register("empty_puppet", EmptyPuppetBlockEntity::new, CompanionsBlocks.EMPTY_PUPPET);
+        RESPAWN_TOTEM = register("respawn_totem", RespawnTotemBlockEntity::new, CompanionsBlocks.RESPAWN_TOTEM);
     }
 
     private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register(String name, BlockEntityType.BlockEntitySupplier<T> supplier, Supplier<Block> block) {

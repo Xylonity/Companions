@@ -43,6 +43,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
             case PLASMA_LAMP -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new PlasmaLampBlock(properties.lightLevel((v) -> v.getValue(PlasmaLampBlock.LIT) ? 15 : 0)));
             case VOLTAIC_PILLAR -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new VoltaicPillarBlock(properties));
             case EMPTY_PUPPET -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new EmptyPuppetBlock(properties));
+            case RESPAWN_TOTEM -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new RespawnTotemBlock(properties));
             default -> // TESLA_RECEIVER
                     (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new TeslaCoilBlock(properties));
         };

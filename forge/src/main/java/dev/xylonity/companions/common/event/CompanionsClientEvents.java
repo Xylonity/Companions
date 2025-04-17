@@ -66,6 +66,7 @@ public class CompanionsClientEvents {
         BlockEntityRenderers.register(CompanionsBlockEntities.PLASMA_LAMP.get(), PlasmaLampRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.VOLTAIC_PILLAR.get(), VoltaicPillarRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.EMPTY_PUPPET.get(), EmptyPuppetRenderer::new);
+        BlockEntityRenderers.register(CompanionsBlockEntities.RESPAWN_TOTEM.get(), RespawnTotemRenderer::new);
 
         MenuScreens.register(CompanionsMenuTypes.SOUL_FURNACE.get(), SoulFurnaceScreen::new);
         MenuScreens.register(CompanionsMenuTypes.SOUL_MAGE_CONTAINER.get(), SoulMageScreen::new);

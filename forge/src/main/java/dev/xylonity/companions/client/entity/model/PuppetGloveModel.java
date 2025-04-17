@@ -1,25 +1,24 @@
 package dev.xylonity.companions.client.entity.model;
 
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.common.entity.custom.HostilePuppetGlove;
-import dev.xylonity.companions.common.entity.custom.PuppetGlove;
+import dev.xylonity.companions.common.entity.custom.PuppetGloveEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-public class PuppetGloveModel extends GeoModel<PuppetGlove> {
+public class PuppetGloveModel extends GeoModel<PuppetGloveEntity> {
 
     @Override
-    public ResourceLocation getModelResource(PuppetGlove animatable) {
+    public ResourceLocation getModelResource(PuppetGloveEntity animatable) {
         return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/puppet_glove.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(PuppetGlove animatable) {
+    public ResourceLocation getTextureResource(PuppetGloveEntity animatable) {
         return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/puppet_glove.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(PuppetGlove animatable) {
+    public ResourceLocation getAnimationResource(PuppetGloveEntity animatable) {
         return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/puppet_glove.animation.json");
     }
 

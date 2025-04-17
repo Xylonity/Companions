@@ -18,6 +18,7 @@ public class CompanionsBlocks {
     public static final Supplier<Block> SOUL_FURNACE;
     public static final Supplier<Block> CROISSANT_EGG;
     public static final Supplier<Block> EMPTY_PUPPET;
+    public static final Supplier<Block> RESPAWN_TOTEM;
 
     static {
         TESLA_COIL = registerBlock("tesla_coil_block",
@@ -67,6 +68,14 @@ public class CompanionsBlocks {
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
                         .noOcclusion(), BlockType.EMPTY_PUPPET);
+
+        RESPAWN_TOTEM = registerBlock("respawn_totem_block",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.RESPAWN_TOTEM);
     }
 
     private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType) {
@@ -79,7 +88,8 @@ public class CompanionsBlocks {
         CROISSANT_EGG,
         PLASMA_LAMP,
         VOLTAIC_PILLAR,
-        EMPTY_PUPPET
+        EMPTY_PUPPET,
+        RESPAWN_TOTEM
     }
 
 }

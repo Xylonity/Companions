@@ -29,7 +29,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class HostilePuppetGlove extends Monster implements GeoEntity {
+public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private final RawAnimation BROOM_IDLE = RawAnimation.begin().thenPlay("broom_idle");
@@ -42,16 +42,16 @@ public class HostilePuppetGlove extends Monster implements GeoEntity {
     private final RawAnimation GAME_PAPER = RawAnimation.begin().thenPlay("game_paper");
     private final RawAnimation GAME_ATTACK = RawAnimation.begin().thenPlay("game_attack");
 
-    private static final EntityDataAccessor<Boolean> IS_PLAYING = SynchedEntityData.defineId(HostilePuppetGlove.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_PLAYING = SynchedEntityData.defineId(HostilePuppetGloveEntity.class, EntityDataSerializers.BOOLEAN);
     // 0 idle, 1 stone, 2 paper, 3 scissors, 4 attack
-    private static final EntityDataAccessor<Integer> GLOVE_MOVE = SynchedEntityData.defineId(HostilePuppetGlove.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> GLOVE_MOVE = SynchedEntityData.defineId(HostilePuppetGloveEntity.class, EntityDataSerializers.INT);
     // 0 idle, 1 drop, 2 pickup
-    private static final EntityDataAccessor<Integer> BROOM_PHASE = SynchedEntityData.defineId(HostilePuppetGlove.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> BROOM_PHASE = SynchedEntityData.defineId(HostilePuppetGloveEntity.class, EntityDataSerializers.INT);
 
     private UUID playingPlayerUUID = null;
     private long gameAutoStop = 0;
 
-    public HostilePuppetGlove(EntityType<? extends Monster> pEntityType, Level pLevel) {
+    public HostilePuppetGloveEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
