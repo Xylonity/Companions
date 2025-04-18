@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.entity.custom.*;
 import dev.xylonity.companions.common.entity.projectile.*;
 import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
 import dev.xylonity.companions.common.entity.projectile.trigger.GenericTriggerProjectile;
+import dev.xylonity.companions.common.entity.summon.FireworkToadEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -14,6 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class CompanionsEntities {
@@ -35,6 +37,8 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<HostilePuppetGloveEntity>> HOSTILE_PUPPET_GLOVE;
     public static final RegistryObject<EntityType<PuppetGloveEntity>> PUPPET_GLOVE;
     public static final RegistryObject<EntityType<PuppetEntity>> PUPPET;
+
+    public static final RegistryObject<EntityType<FireworkToadEntity>> FIREWORK_TOAD;
 
     public static final RegistryObject<EntityType<SmallIceShardProjectile>> SMALL_ICE_SHARD_PROJECTILE;
     public static final RegistryObject<EntityType<BigIceShardProjectile>> BIG_ICE_SHARD_PROJECTILE;
@@ -71,30 +75,36 @@ public class CompanionsEntities {
         PUPPET_GLOVE = register("puppet_glove", PuppetGloveEntity::new, MobCategory.CREATURE, 0.8f, 0.8f, null);
         PUPPET = register("puppet", PuppetEntity::new, MobCategory.CREATURE, 1f, 2.8f, null);
 
-        SMALL_ICE_SHARD_PROJECTILE = register("small_ice_shard_projectile", SmallIceShardProjectile::new, MobCategory.MISC, 0.4f, 0.5f, EntityType.Builder::fireImmune);
-        BIG_ICE_SHARD_PROJECTILE = register("big_ice_shard_projectile", BigIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, EntityType.Builder::fireImmune);
-        TORNADO_PROJECTILE = register("tornado_projectile", TornadoProjectile::new, MobCategory.MISC, 0.8f, 1f, EntityType.Builder::fireImmune);
-        FIRE_MARK_PROJECTILE = register("fire_mark_projectile", FireMarkProjectile::new, MobCategory.MISC, 1f, 1f, EntityType.Builder::fireImmune);
-        FIRE_MARK_RING_PROJECTILE = register("fire_mark_ring_projectile", FireMarkRingProjectile::new, MobCategory.MISC, 1f, 0.2f, EntityType.Builder::fireImmune);
-        STONE_SPIKE_PROJECTILE = register("stone_spike_projectile", StoneSpikeProjectile::new, MobCategory.MISC, 0.5f, 1f, EntityType.Builder::fireImmune);
-        HEAL_RING_PROJECTILE = register("heal_ring_projectile", HealRingProjectile::new, MobCategory.MISC, 0.5f, 1f, EntityType.Builder::fireImmune);
-        BRACE_PROJECTILE = register("brace_projectile", BraceProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
-        MAGIC_RAY_PIECE_PROJECTILE = register("magic_ray_piece_projectile", MagicRayPieceProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
-        MAGIC_RAY_PIECE_CIRCLE_PROJECTILE = register("magic_ray_circle_projectile", MagicRayCircleProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
-        BLACK_HOLE_PROJECTILE = register("black_hole_projectile", BlackHoleProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
-        SOUL_MAGE_BOOK = register("soul_mage_book", SoulMageBookEntity::new, MobCategory.MISC, 0.6f, 0.6f, null);
-        FLOOR_CAKE_CREAM = register("floor_cake_cream_projectile", FloorCakeCreamProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
-        STAKE_PROJECTILE = register("stake_projectile", StakeProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
+        FIREWORK_TOAD = register("firework_toad", FireworkToadEntity::new, MobCategory.CREATURE, 1f, 2.8f, null);
 
-        GENERIC_TRIGGER_PROJECTILE = register("generic_trigger_projectile", GenericTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
-        CAKE_CREAM_TRIGGER_PROJECTILE = register("cake_cream_trigger_projectile", CakeCreamTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, null);
+        SMALL_ICE_SHARD_PROJECTILE = register("small_ice_shard_projectile", SmallIceShardProjectile::new, MobCategory.MISC, 0.4f, 0.5f, List.of(EntityType.Builder::noSummon));
+        BIG_ICE_SHARD_PROJECTILE = register("big_ice_shard_projectile", BigIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, List.of(EntityType.Builder::noSummon));
+        TORNADO_PROJECTILE = register("tornado_projectile", TornadoProjectile::new, MobCategory.MISC, 0.8f, 1f, List.of(EntityType.Builder::noSummon));
+        FIRE_MARK_PROJECTILE = register("fire_mark_projectile", FireMarkProjectile::new, MobCategory.MISC, 1f, 1f, List.of(EntityType.Builder::noSummon));
+        FIRE_MARK_RING_PROJECTILE = register("fire_mark_ring_projectile", FireMarkRingProjectile::new, MobCategory.MISC, 1f, 0.2f, List.of(EntityType.Builder::noSummon));
+        STONE_SPIKE_PROJECTILE = register("stone_spike_projectile", StoneSpikeProjectile::new, MobCategory.MISC, 0.5f, 1f, List.of(EntityType.Builder::noSummon));
+        HEAL_RING_PROJECTILE = register("heal_ring_projectile", HealRingProjectile::new, MobCategory.MISC, 0.5f, 1f, List.of(EntityType.Builder::noSummon));
+        BRACE_PROJECTILE = register("brace_projectile", BraceProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        MAGIC_RAY_PIECE_PROJECTILE = register("magic_ray_piece_projectile", MagicRayPieceProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        MAGIC_RAY_PIECE_CIRCLE_PROJECTILE = register("magic_ray_circle_projectile", MagicRayCircleProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        BLACK_HOLE_PROJECTILE = register("black_hole_projectile", BlackHoleProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        SOUL_MAGE_BOOK = register("soul_mage_book", SoulMageBookEntity::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        FLOOR_CAKE_CREAM = register("floor_cake_cream_projectile", FloorCakeCreamProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        STAKE_PROJECTILE = register("stake_projectile", StakeProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+
+        GENERIC_TRIGGER_PROJECTILE = register("generic_trigger_projectile", GenericTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        CAKE_CREAM_TRIGGER_PROJECTILE = register("cake_cream_trigger_projectile", CakeCreamTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
     }
 
-    private static <X extends Entity> RegistryObject<EntityType<X>> register(String name, EntityType.EntityFactory<X> entity, MobCategory category, float width, float height, @Nullable Consumer<EntityType.Builder<X>> properties) {
+    private static <X extends Entity> RegistryObject<EntityType<X>> register(String name, EntityType.EntityFactory<X> entity, MobCategory category, float width, float height, @Nullable List<Consumer<EntityType.Builder<X>>> properties) {
         return ENTITY.register(name, () -> {
             EntityType.Builder<X> builder = EntityType.Builder.of(entity, category).sized(width, height);
 
-            if (properties != null) properties.accept(builder);
+            if (properties != null) {
+                for (Consumer<EntityType.Builder<X>> property : properties) {
+                    property.accept(builder);
+                }
+            }
 
             return builder.build(new ResourceLocation(Companions.MOD_ID, name).toString());
         });

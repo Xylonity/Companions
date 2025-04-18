@@ -2,7 +2,7 @@ package dev.xylonity.companions.config;
 
 import dev.xylonity.companions.config.api.*;
 
-@AutoConfig(file = "companions-main", style = DecorationType.STARSET, categoryBanner = false)
+@AutoConfig(file = "companions-common", style = DecorationType.STARSET, categoryBanner = false)
 public final class CompanionsConfig {
 
     @ConfigEntry(category = "Dinamo Companion",

@@ -42,6 +42,8 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGloveRenderer::new);
         EntityRenderers.register(CompanionsEntities.PUPPET.get(), PuppetRenderer::new);
 
+        EntityRenderers.register(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadRenderer::new);
+
         EntityRenderers.register(CompanionsEntities.SMALL_ICE_SHARD_PROJECTILE.get(), IceShardSmallRenderer::new);
         EntityRenderers.register(CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.get(), IceShardBigRenderer::new);
         EntityRenderers.register(CompanionsEntities.TORNADO_PROJECTILE.get(), TornadoRenderer::new);

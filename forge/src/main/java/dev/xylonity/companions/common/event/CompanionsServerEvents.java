@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.event;
 
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.entity.custom.*;
+import dev.xylonity.companions.common.entity.summon.FireworkToadEntity;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,6 +28,8 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGloveEntity.setAttributes());
         event.put(CompanionsEntities.PUPPET.get(), PuppetEntity.setAttributes());
         event.put(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGloveEntity.setAttributes());
+
+        event.put(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadEntity.setAttributes());
     }
 
 }
