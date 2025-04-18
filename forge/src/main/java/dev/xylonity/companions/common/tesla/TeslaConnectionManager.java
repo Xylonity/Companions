@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,7 +107,7 @@ public class TeslaConnectionManager {
 
         Queue<ConnectionNode> queue = new LinkedList<>();
         Map<ConnectionNode, Integer> distances = new ConcurrentHashMap<>();
-        int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS;
+        int maxAllowed = CompanionsConfig.DINAMO_MAX_CHAIN_CONNECTIONS;
 
         /* Start only from generator nodes (entity nodes) */
         for (ConnectionNode node : getAllNodes()) {
@@ -180,7 +179,7 @@ public class TeslaConnectionManager {
      * @return true if the connection is allowed.
      */
     private boolean canAddConnection(ConnectionNode source, ConnectionNode target) {
-        int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS;
+        int maxAllowed = CompanionsConfig.DINAMO_MAX_CHAIN_CONNECTIONS;
 
         Set<ConnectionNode> comp = getConnectedComponentIncluding(source, target);
         Map<ConnectionNode, Integer> simDistance = new ConcurrentHashMap<>();

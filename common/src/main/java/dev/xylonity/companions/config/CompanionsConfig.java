@@ -6,11 +6,11 @@ import dev.xylonity.companions.config.api.*;
 public final class CompanionsConfig {
 
     @ConfigEntry(category = "Dinamo Companion",
-                 comment = "The maximum number of Tesla receivers that can be connected in a chain, starting from a Dinamo. " +
-                         "For example, if set to 3, the Dinamo can connect to Receiver1, which connects to Receiver2, which connects to Receiver3.",
-                 note = "Any additional receivers beyond this limit will not be powered.",
+                 comment = "The maximum number of tesla modules that can be connected in a chain without using a voltaic repeater, starting from a Dinamo. " +
+                         "For example, if set to 3, the Dinamo can connect to coil 1, which connects to coil 2, which connects to coil 3.",
+                 note = "Any additional tesla modules beyond this limit will not be powered.",
                  min = 0, max = 50)
-    public static int DINAMO_MAX_RECEIVER_CONNECTIONS = 7;
+    public static int DINAMO_MAX_CHAIN_CONNECTIONS = 7;
 
     @ConfigEntry(category = "Croissant Dragon Companion",
             comment = "The amount of time the croissant dragon needs to hatch.",

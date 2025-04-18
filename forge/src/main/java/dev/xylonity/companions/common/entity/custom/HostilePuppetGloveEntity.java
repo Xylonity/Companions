@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +49,7 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
     // 0 idle, 1 drop, 2 pickup
     private static final EntityDataAccessor<Integer> BROOM_PHASE = SynchedEntityData.defineId(HostilePuppetGloveEntity.class, EntityDataSerializers.INT);
 
-    private UUID playingPlayerUUID = null;
+    public UUID playingPlayerUUID = null;
     private long gameAutoStop = 0;
 
     public HostilePuppetGloveEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
@@ -66,7 +67,18 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
     }
 
     @Override
-    protected void registerGoals() { ;; }
+    protected void registerGoals() {
+        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 15.0F, 0.01F) {
+            @Override
+            public boolean canUse() {
+                if (mob instanceof HostilePuppetGloveEntity glove) {
+                    return glove.playingPlayerUUID != null && super.canUse();
+                }
+
+                return super.canUse();
+            }
+        });
+    }
 
     @Override
     public void tick() {
