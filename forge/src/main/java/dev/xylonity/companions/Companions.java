@@ -1,8 +1,8 @@
 package dev.xylonity.companions;
 
-import dev.xylonity.companions.common.item.WrenchItem;
 import dev.xylonity.companions.common.tick.TickScheduler;
-import dev.xylonity.companions.config.CompanionsForgeConfig;
+import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.config.impl.ConfigManager;
 import dev.xylonity.companions.registry.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
@@ -19,16 +18,14 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -56,7 +53,7 @@ public class Companions {
         MOB_EFFECTS.register(modEventBus);
         PARTICLES.register(modEventBus);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CompanionsForgeConfig.SPEC, "kqcompanions.toml");
+        ConfigManager.init(FMLPaths.CONFIGDIR.get(), CompanionsConfig.class);
 
         CompanionsCommon.init();
 

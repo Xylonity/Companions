@@ -33,7 +33,7 @@ public class FireMarkRingRenderer extends GeoEntityRenderer<FireMarkRingProjecti
 
     @Override
     public void render(@NotNull FireMarkRingProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        float desiredRadius = CompanionsConfig.FIRE_MARK_EFFECT_RADIUS.get().floatValue();
+        float desiredRadius = (float) CompanionsConfig.FIRE_MARK_EFFECT_RADIUS;
         float scale = desiredRadius / MODEL_ORIGINAL_SIZE;
 
         poseStack.scale(scale, scale, scale);

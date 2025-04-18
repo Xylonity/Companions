@@ -42,7 +42,7 @@ public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEnti
         if (F instanceof CroissantEggBlockEntity egg) {
             egg.tickCounter++;
 
-            if (egg.tickCounter >= CompanionsConfig.CROISSANT_EGG_LIFETIME.get()) {
+            if (egg.tickCounter >= CompanionsConfig.CROISSANT_EGG_LIFETIME) {
                 level.destroyBlock(pos, false);
 
                 Entity croissantDragonEntity = CompanionsEntities.CROISSANT_DRAGON.get().create(level);

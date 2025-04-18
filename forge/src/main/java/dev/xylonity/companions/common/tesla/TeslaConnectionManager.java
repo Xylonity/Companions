@@ -108,7 +108,7 @@ public class TeslaConnectionManager {
 
         Queue<ConnectionNode> queue = new LinkedList<>();
         Map<ConnectionNode, Integer> distances = new ConcurrentHashMap<>();
-        int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS.get();
+        int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS;
 
         /* Start only from generator nodes (entity nodes) */
         for (ConnectionNode node : getAllNodes()) {
@@ -180,7 +180,7 @@ public class TeslaConnectionManager {
      * @return true if the connection is allowed.
      */
     private boolean canAddConnection(ConnectionNode source, ConnectionNode target) {
-        int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS.get();
+        int maxAllowed = CompanionsConfig.DINAMO_MAX_RECEIVER_CONNECTIONS;
 
         Set<ConnectionNode> comp = getConnectedComponentIncluding(source, target);
         Map<ConnectionNode, Integer> simDistance = new ConcurrentHashMap<>();

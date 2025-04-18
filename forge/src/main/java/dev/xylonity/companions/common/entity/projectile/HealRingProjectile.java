@@ -44,7 +44,7 @@ public class HealRingProjectile extends Projectile implements GeoEntity {
         if (owner != null && !owner.isRemoved() && owner instanceof LivingEntity livingEntity) {
 
             if (tickCount % 10 == 0 && !hasHealed) {
-                livingEntity.heal(CompanionsConfig.HEAL_RING_HEALING.get().floatValue());
+                livingEntity.heal(CompanionsConfig.HEAL_RING_HEALING);
                 hasHealed = true;
             }
 

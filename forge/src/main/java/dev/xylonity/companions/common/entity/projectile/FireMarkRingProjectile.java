@@ -34,7 +34,7 @@ public class FireMarkRingProjectile extends Projectile implements GeoEntity {
     private static final EntityDataAccessor<String> MAGE_OWNER_UUID = SynchedEntityData.defineId(FireMarkRingProjectile.class, EntityDataSerializers.STRING);
 
     private final int LIFETIME = 30;
-    private final double RADIUS = CompanionsConfig.FIRE_MARK_EFFECT_RADIUS.get();
+    private final double RADIUS = CompanionsConfig.FIRE_MARK_EFFECT_RADIUS;
 
     public FireMarkRingProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);

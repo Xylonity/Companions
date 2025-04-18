@@ -1,60 +1,31 @@
 package dev.xylonity.companions.config;
 
-import java.util.HashMap;
-import java.util.Map;
+import dev.xylonity.companions.config.api.*;
 
-public class CompanionsConfig {
+@AutoConfig(file = "companions-main", style = DecorationType.STARSET, categoryBanner = false)
+public final class CompanionsConfig {
 
-    public static final ConfigEntry<Integer> DINAMO_MAX_RECEIVER_CONNECTIONS = ConfigRegistry.of("DINAMO_MAX_RECEIVER_CONNECTIONS", 7);
-    public static final ConfigEntry<Boolean> DINAMO_RECEIVER_REDSTONE_MODE = ConfigRegistry.of("DINAMO_RECEIVER_REDSTONE_MODE", true);
+    @ConfigEntry(category = "Dinamo Companion",
+                 comment = "The maximum number of Tesla receivers that can be connected in a chain, starting from a Dinamo. " +
+                         "For example, if set to 3, the Dinamo can connect to Receiver1, which connects to Receiver2, which connects to Receiver3.",
+                 note = "Any additional receivers beyond this limit will not be powered.",
+                 min = 0, max = 50)
+    public static int DINAMO_MAX_RECEIVER_CONNECTIONS = 7;
 
-    public static final ConfigEntry<Double> FIRE_MARK_EFFECT_RADIUS = ConfigRegistry.of("FIRE_MARK_EFFECT_RADIUS", 2.5D);
-    public static final ConfigEntry<Double> HEAL_RING_HEALING = ConfigRegistry.of("HEAL_RING_HEALING", 6D);
+    @ConfigEntry(category = "Croissant Dragon Companion",
+            comment = "The amount of time the croissant dragon needs to hatch.",
+            note = "The time is measured in ticks",
+            min = 10, max = 100000)
+    public static int CROISSANT_EGG_LIFETIME = 6000;
 
-    public static final ConfigEntry<Integer> CROISSANT_EGG_LIFETIME = ConfigRegistry.of("CROISSANT_EGG_LIFETIME", 6000);
+    @ConfigEntry(category = "Magic Books",
+            comment = "The radius (in blocks) of the Fire Mark book's effect area.",
+            min = 1.0, max = 10.0)
+    public static double FIRE_MARK_EFFECT_RADIUS = 2.5;
 
-    public static class ConfigEntry<T> {
-        private final String key;
-        private final T defaultValue;
-        private T value;
-
-        public ConfigEntry(String key, T defaultValue) {
-            this.key = key;
-            this.defaultValue = defaultValue;
-            this.value = defaultValue;
-        }
-
-        public String getName() {
-            return key;
-        }
-
-        public T getDefaultValue() {
-            return defaultValue;
-        }
-
-        public T get() {
-            return value;
-        }
-
-        public void set(T value) {
-            this.value = value;
-        }
-
-    }
-
-    protected static class ConfigRegistry {
-        private static final Map<String, ConfigEntry<?>> entries = new HashMap<>();
-
-        public static <T> ConfigEntry<T> of(String key, T defaultValue) {
-            ConfigEntry<T> entry = new ConfigEntry<>(key, defaultValue);
-            entries.put(key, entry);
-            return entry;
-        }
-
-        public static ConfigEntry<?> getEntry(String key) {
-            return entries.get(key);
-        }
-
-    }
+    @ConfigEntry(category = "Magic Books",
+            comment = "The amount of HP the heal ring heals",
+            min = 0.0F, max = 100.0F)
+    public static float HEAL_RING_HEALING = 6.0F;
 
 }
