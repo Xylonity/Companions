@@ -1,9 +1,8 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.common.entity.custom.LivingCandleEntity;
+import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
 import dev.xylonity.companions.registry.CompanionsParticles;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -11,16 +10,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -30,11 +25,9 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
-public class BlackHoleProjectile extends Projectile implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class BlackHoleProjectile extends BaseProjectile implements GeoEntity {
     private static final RawAnimation APPEAR = RawAnimation.begin().thenPlay("appear");
     private static final RawAnimation DISAPPEAR = RawAnimation.begin().thenPlay("disappear");
     private static final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
@@ -42,18 +35,18 @@ public class BlackHoleProjectile extends Projectile implements GeoEntity {
     private static final EntityDataAccessor<Boolean> IS_LOCKED = SynchedEntityData.defineId(BlackHoleProjectile.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> TICKCOUNT = SynchedEntityData.defineId(BlackHoleProjectile.class, EntityDataSerializers.INT);
 
-    private static final int LIFETIME = 100;
     private static final double ATTRACT_RADIUS = 12.0;
     private static final double ATTRACT_STRENGTH = 0.3;
     private static final float GRAVITY = 0.03F;
 
-    public BlackHoleProjectile(EntityType<? extends Projectile> type, Level level) {
+    public BlackHoleProjectile(EntityType<? extends BaseProjectile> type, Level level) {
         super(type, level);
         this.noPhysics = false;
     }
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(IS_LOCKED, false);
         this.entityData.define(TICKCOUNT, 0);
     }
@@ -89,7 +82,7 @@ public class BlackHoleProjectile extends Projectile implements GeoEntity {
 
         super.tick();
 
-        if (new Random().nextFloat() < 0.44 && getTickCount() < LIFETIME - 20) for (int i = 0; i < 1; i++) {
+        if (new Random().nextFloat() < 0.44 && getTickCount() < getLifetime() - 20) for (int i = 0; i < 1; i++) {
             if (this.level() instanceof ServerLevel level) {
                 double offsetX = (Math.random() - 0.5) * 0.5;
                 double offsetZ = (Math.random() - 0.5) * 0.5;
@@ -101,7 +94,7 @@ public class BlackHoleProjectile extends Projectile implements GeoEntity {
             }
         }
 
-        if (this.getTickCount() >= LIFETIME) {
+        if (this.getTickCount() >= getLifetime()) {
             this.discard();
             return;
         }
@@ -206,18 +199,18 @@ public class BlackHoleProjectile extends Projectile implements GeoEntity {
     }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
-    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "extraController", this::extraPredicate));
         controllers.add(new AnimationController<>(this, "controller", this::predicate));
     }
 
+    @Override
+    protected int baseLifetime() {
+        return 100;
+    }
+
     private <T extends GeoAnimatable> PlayState extraPredicate(AnimationState<T> event) {
-        if (getTickCount() >= LIFETIME - 7) event.getController().setAnimation(DISAPPEAR);
+        if (getTickCount() >= getLifetime() - 7) event.getController().setAnimation(DISAPPEAR);
         //else if (getTickCount() <= 4) event.getController().setAnimation(APPEAR);
 
         return PlayState.CONTINUE;

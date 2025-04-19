@@ -137,8 +137,14 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        setMainAction(pCompound.getInt("CompanionsMainAction"), null);
-        setSitVariation(pCompound.getInt("CompanionsSitVariation"));
+
+        if (pCompound.contains("CompanionsMainAction")) {
+            setMainAction(pCompound.getInt("CompanionsMainAction"), null);
+        }
+
+        if (pCompound.contains("CompanionsSitVariation")) {
+            setSitVariation(pCompound.getInt("CompanionsSitVariation"));
+        }
     }
 
     @Override

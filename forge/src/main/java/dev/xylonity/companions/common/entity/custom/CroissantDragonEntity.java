@@ -154,10 +154,18 @@ public class CroissantDragonEntity extends CompanionEntity {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        setMilkAmount(pCompound.getInt("MilkAmount"));
-        setEatenAmount(pCompound.getInt("EatenAmount"));
-        setArmorName(pCompound.getString("ArmorName"));
-        setSitVariation(pCompound.getInt("SitVariation"));
+        if (pCompound.contains("MilkAmount")) {
+            setMilkAmount(pCompound.getInt("MilkAmount"));
+        }
+
+        if (pCompound.contains("EatenAmount")) {
+            setEatenAmount(pCompound.getInt("EatenAmount"));
+        }
+
+        if (pCompound.contains("ArmorName")) {
+            setArmorName(pCompound.getString("ArmorName"));
+        }
+
     }
 
     @Override
@@ -166,7 +174,6 @@ public class CroissantDragonEntity extends CompanionEntity {
         pCompound.putInt("MilkAmount", getMilkAmount());
         pCompound.putInt("EatenAmount", getEatenAmount());
         pCompound.putString("ArmorName", getArmorName());
-        pCompound.putInt("SitVariation", getSitVariation());
     }
 
     @Override

@@ -1,13 +1,11 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.common.entity.custom.CroissantDragonEntity;
-import dev.xylonity.companions.registry.CompanionsEffects;
+import dev.xylonity.companions.common.entity.BaseProjectile;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -19,17 +17,14 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 import java.util.Random;
 
-public class FloorCakeCreamProjectile extends Projectile implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
-    private static final EntityDataAccessor<Integer> LIFETIME = SynchedEntityData.defineId(FloorCakeCreamProjectile.class, EntityDataSerializers.INT);
+public class FloorCakeCreamProjectile extends BaseProjectile implements GeoEntity {
     private static final EntityDataAccessor<Float> SIZE = SynchedEntityData.defineId(FloorCakeCreamProjectile.class, EntityDataSerializers.FLOAT);
 
-    public FloorCakeCreamProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
+    public FloorCakeCreamProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         if (!this.level().isClientSide) {
             this.entityData.set(SIZE, new Random().nextFloat(1, 2));
-            this.entityData.set(LIFETIME, new Random().nextInt(80, 180));
+            this.setLifetime(new Random().nextInt(80, 180));
         }
     }
 
@@ -55,12 +50,8 @@ public class FloorCakeCreamProjectile extends Projectile implements GeoEntity {
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(LIFETIME, 200);
+        super.defineSynchedData();
         this.entityData.define(SIZE, 1.2f);
-    }
-
-    public int getLifetime() {
-        return this.entityData.get(LIFETIME);
     }
 
     public float getSize() {
@@ -68,11 +59,11 @@ public class FloorCakeCreamProjectile extends Projectile implements GeoEntity {
     }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
-    }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) { ;; }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) { ;; }
+    protected int baseLifetime() {
+        return 200;
+    }
 
 }

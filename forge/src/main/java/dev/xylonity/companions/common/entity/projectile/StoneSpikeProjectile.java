@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEffects;
@@ -33,29 +34,21 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class StoneSpikeProjectile extends Projectile implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
+public class StoneSpikeProjectile extends BaseProjectile implements GeoEntity {
     private final RawAnimation APPEAR = RawAnimation.begin().thenPlay("appear");
 
-    private final int LIFETIME = 36;
     private final float DAMAGE = 4.0F;
     private final double COLLISION_RADIUS = 0.3;
 
-    public StoneSpikeProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
+    public StoneSpikeProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (this.tickCount >= LIFETIME) {
+        if (this.tickCount >= getLifetime()) {
             if (!this.level().isClientSide)
                 this.level().broadcastEntityEvent(this, (byte) 3);
 
@@ -85,10 +78,6 @@ public class StoneSpikeProjectile extends Projectile implements GeoEntity {
         }
     }
 
-    public int getLifetime() {
-        return LIFETIME;
-    }
-
     private void spawnHitParticles() {
         for (int i = 0; i < 5; i++) {
             double dx = (this.level().getRandom().nextDouble() - 0.5) * 0.1;
@@ -103,13 +92,13 @@ public class StoneSpikeProjectile extends Projectile implements GeoEntity {
     public void playerTouch(@NotNull Player pEntity) { }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
+    protected int baseLifetime() {
+        return 36;
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {

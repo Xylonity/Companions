@@ -1,9 +1,8 @@
 package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
-import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.froggy.summon.goal.FireworkToadGoal;
-import dev.xylonity.companions.common.entity.custom.PuppetEntity;
+import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -27,7 +26,7 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class FireworkToadEntity extends CompanionEntity {
+public class FireworkToadEntity extends CompanionSummonEntity {
 
     private static final EntityDataAccessor<Boolean> CAN_EXPLODE = SynchedEntityData.defineId(FireworkToadEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -61,16 +60,6 @@ public class FireworkToadEntity extends CompanionEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(CAN_EXPLODE, false);
-    }
-
-    @Override
-    protected boolean canThisCompanionWork() {
-        return false;
-    }
-
-    @Override
-    protected int sitAnimationsAmount() {
-        return 1;
     }
 
     @Override

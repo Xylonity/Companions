@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
+import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -9,7 +9,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -24,19 +23,16 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class FireMarkRingProjectile extends Projectile implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
+public class FireMarkRingProjectile extends BaseProjectile implements GeoEntity {
     private final RawAnimation ACTIVATE = RawAnimation.begin().thenPlay("activate");
 
     private static final EntityDataAccessor<Boolean> MAY_AFFECT_OWNER = SynchedEntityData.defineId(FireMarkRingProjectile.class, EntityDataSerializers.BOOLEAN);
     // This way we prevent the fire mark mage attack from affecting the mage's owner
     private static final EntityDataAccessor<String> MAGE_OWNER_UUID = SynchedEntityData.defineId(FireMarkRingProjectile.class, EntityDataSerializers.STRING);
 
-    private final int LIFETIME = 30;
     private final double RADIUS = CompanionsConfig.FIRE_MARK_EFFECT_RADIUS;
 
-    public FireMarkRingProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
+    public FireMarkRingProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
@@ -72,7 +68,7 @@ public class FireMarkRingProjectile extends Projectile implements GeoEntity {
             }
         }
 
-        if (tickCount >= LIFETIME) this.remove(RemovalReason.DISCARDED);
+        if (tickCount >= getLifetime()) this.remove(RemovalReason.DISCARDED);
     }
 
     public boolean mayAffectOwner() {
@@ -98,13 +94,13 @@ public class FireMarkRingProjectile extends Projectile implements GeoEntity {
     }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
+    protected int baseLifetime() {
+        return 30;
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {

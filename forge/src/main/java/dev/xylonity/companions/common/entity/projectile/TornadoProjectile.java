@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -11,13 +12,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.openal.AL;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -31,9 +30,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Objects;
 import java.util.Random;
 
-public class TornadoProjectile extends Projectile implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
+public class TornadoProjectile extends BaseProjectile implements GeoEntity {
     private final RawAnimation SPIN = RawAnimation.begin().thenPlay("spin");
 
     private static final EntityDataAccessor<Float> GROUNDY = SynchedEntityData.defineId(TornadoProjectile.class, EntityDataSerializers.FLOAT);
@@ -41,16 +38,15 @@ public class TornadoProjectile extends Projectile implements GeoEntity {
     private static final EntityDataAccessor<Float> STARTZ = SynchedEntityData.defineId(TornadoProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> ALPHA = SynchedEntityData.defineId(TornadoProjectile.class, EntityDataSerializers.FLOAT);
 
-    private static final int LIFETIME = 120;
-
     private boolean initialized = false;
 
-    public TornadoProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
+    public TornadoProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(GROUNDY, 0f);
         this.entityData.define(STARTX, 0f);
         this.entityData.define(STARTZ, 0f);
@@ -113,7 +109,7 @@ public class TornadoProjectile extends Projectile implements GeoEntity {
             this.initialized = true;
         }
 
-        if (this.tickCount >= LIFETIME) {
+        if (this.tickCount >= getLifetime()) {
             onExpire();
             return;
         }
@@ -221,13 +217,13 @@ public class TornadoProjectile extends Projectile implements GeoEntity {
     public void playerTouch(@NotNull Player pEntity) { ;; }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
+    protected int baseLifetime() {
+        return 120;
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {

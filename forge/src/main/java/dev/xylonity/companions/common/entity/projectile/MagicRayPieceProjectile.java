@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -28,22 +29,18 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class MagicRayPieceProjectile extends Projectile implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
+public class MagicRayPieceProjectile extends BaseProjectile implements GeoEntity {
     private static final RawAnimation APPEAR = RawAnimation.begin().thenPlay("appear");
     private static final RawAnimation DISAPPEAR = RawAnimation.begin().thenPlay("disappear");
     private static final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
 
     private static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(MagicRayPieceProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(MagicRayPieceProjectile.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Integer> LIFETIME = SynchedEntityData.defineId(MagicRayPieceProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TICKCOUNT = SynchedEntityData.defineId(MagicRayPieceProjectile.class, EntityDataSerializers.INT);
 
-    public MagicRayPieceProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
+    public MagicRayPieceProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.noPhysics = false;
-        this.setMaxLifetime(18);
     }
 
     @Override
@@ -62,7 +59,7 @@ public class MagicRayPieceProjectile extends Projectile implements GeoEntity {
             }
         }
 
-        if (this.tickCount > getMaxLifetime()) {
+        if (this.tickCount > getLifetime()) {
             this.discard();
         }
     }
@@ -83,14 +80,6 @@ public class MagicRayPieceProjectile extends Projectile implements GeoEntity {
         entityData.set(PITCH, pitch);
     }
 
-    public void setMaxLifetime(int ticks) {
-        this.entityData.set(LIFETIME, ticks);
-    }
-
-    public int getMaxLifetime() {
-        return this.entityData.get(LIFETIME);
-    }
-
     public int getTickCount() {
         return this.entityData.get(TICKCOUNT);
     }
@@ -101,15 +90,10 @@ public class MagicRayPieceProjectile extends Projectile implements GeoEntity {
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(YAW, 0F);
         this.entityData.define(PITCH, 0F);
-        this.entityData.define(LIFETIME, 0);
         this.entityData.define(TICKCOUNT, 0);
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
     }
 
     @Override
@@ -118,8 +102,13 @@ public class MagicRayPieceProjectile extends Projectile implements GeoEntity {
         controllers.add(new AnimationController<>(this, "extraController", this::extraPredicate));
     }
 
+    @Override
+    protected int baseLifetime() {
+        return 18;
+    }
+
     private <T extends GeoAnimatable> PlayState extraPredicate(AnimationState<T> event) {
-        if (getTickCount() >= getMaxLifetime() - 6) event.getController().setAnimation(DISAPPEAR);
+        if (getTickCount() >= getLifetime() - 6) event.getController().setAnimation(DISAPPEAR);
         else if (getTickCount() <= 4) event.getController().setAnimation(APPEAR);
 
         return PlayState.CONTINUE;

@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
@@ -21,10 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class BraceProjectile extends Projectile implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
-    private static final int LIFETIME = 200;
+public class BraceProjectile extends BaseProjectile implements GeoEntity {
     private static final double BOUNCE_DAMPING_VERTICAL = 0.6;
     private static final double BOUNCE_DAMPING_HORIZONTAL = 0.7;
     private static final int MAX_BOUNCES = 5;
@@ -35,7 +33,7 @@ public class BraceProjectile extends Projectile implements GeoEntity {
     private int entityBounces = 0;
     private int blockBounces = 0;
 
-    public BraceProjectile(EntityType<? extends Projectile> type, Level level) {
+    public BraceProjectile(EntityType<? extends BaseProjectile> type, Level level) {
         super(type, level);
         this.noPhysics = false;
     }
@@ -44,7 +42,7 @@ public class BraceProjectile extends Projectile implements GeoEntity {
     public void tick() {
         super.tick();
 
-        if (tickCount > LIFETIME || entityBounces >= MAX_BOUNCES) {
+        if (tickCount > getLifetime() || entityBounces >= MAX_BOUNCES) {
             if (!this.level().isClientSide)
                 this.level().broadcastEntityEvent(this, (byte) 3);
 
@@ -196,7 +194,9 @@ public class BraceProjectile extends Projectile implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() { ;; }
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+    }
 
     @Override
     public void playerTouch(@NotNull Player player) { ;; }
@@ -205,13 +205,13 @@ public class BraceProjectile extends Projectile implements GeoEntity {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) { ;; }
 
     @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return super.getAddEntityPacket();
+    protected int baseLifetime() {
+        return 200;
     }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return super.getAddEntityPacket();
     }
 
 }

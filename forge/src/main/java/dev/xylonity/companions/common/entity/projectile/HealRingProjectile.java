@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.world.entity.Entity;
@@ -19,15 +20,12 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class HealRingProjectile extends Projectile implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
+public class HealRingProjectile extends BaseProjectile implements GeoEntity {
     private final RawAnimation HEAL = RawAnimation.begin().thenPlay("heal");
 
-    private final int LIFETIME = 23;
     private boolean hasHealed = false;
 
-    public HealRingProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
+    public HealRingProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.noPhysics = true;
         this.noCulling = true;
@@ -62,20 +60,20 @@ public class HealRingProjectile extends Projectile implements GeoEntity {
             this.move(MoverType.SELF, velocity);
         }
 
-        if (tickCount >= LIFETIME) this.remove(RemovalReason.DISCARDED);
+        if (tickCount >= getLifetime()) this.remove(RemovalReason.DISCARDED);
     }
 
     @Override
     protected void defineSynchedData() { ;; }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
+    protected int baseLifetime() {
+        return 23;
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
