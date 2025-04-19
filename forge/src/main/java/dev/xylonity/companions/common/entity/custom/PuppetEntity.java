@@ -2,13 +2,12 @@ package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.container.PuppetContainerMenu;
-import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetBladeAttackGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetCannonAttackGoal;
 import dev.xylonity.companions.common.entity.ai.soul_mage.goal.*;
 import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
 import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
-import dev.xylonity.companions.common.entity.projectile.SoulMageBookEntity;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.BlockPos;
@@ -21,12 +20,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
@@ -35,7 +34,6 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -54,9 +52,6 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class PuppetEntity extends CompanionEntity implements RangedAttackMob, ContainerListener {
@@ -68,7 +63,6 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     private final RawAnimation ATTACK_L = RawAnimation.begin().thenPlay("attack_l");
     private final RawAnimation ATTACK_R = RawAnimation.begin().thenPlay("attack_r");
 
-    private static final EntityDataAccessor<Integer> SIT_VARIATION = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<String> ATTACK_ANIMATION_NAME = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
     // 0 no, 1 left, 2 right (meant for animation sync)
@@ -112,9 +106,11 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
-        this.goalSelector.addGoal(1, new PuppetCannonAttackGoal(this, 30, 50));
+        this.goalSelector.addGoal(2, new PuppetCannonAttackGoal(this, 30, 50));
+        this.goalSelector.addGoal(2, new PuppetBladeAttackGoal(this, 30, 50));
 
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
 
@@ -137,14 +133,6 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
-    }
-
-    private void setSitVariation(int variation) {
-        this.entityData.set(SIT_VARIATION, variation);
-    }
-
-    private int getSitVariation() {
-        return this.entityData.get(SIT_VARIATION);
     }
 
     public void setActiveArms(int candleCount) {
@@ -182,7 +170,6 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SIT_VARIATION, 0);
         this.entityData.define(IS_ATTACKING, 0);
         this.entityData.define(DATA_ID_FLAGS, (byte)0);
         this.entityData.define(ATTACK_ANIMATION_NAME, "");
@@ -251,11 +238,7 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
                 if (!ForgeEventFactory.onAnimalTame(this, player)) {
                     if (!this.level().isClientSide) {
-                        super.tame(player);
-                        this.navigation.recomputePath();
-                        this.setTarget(null);
-                        this.level().broadcastEntityEvent(this, (byte) 7);
-                        setSitting(true);
+                        tameInteraction(player);
                     }
                 }
                 setSitVariation(getRandom().nextInt(0, 3));
@@ -270,8 +253,7 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
                     itemstack.shrink(1);
                 }
             } else {
-                setSitting(!isSitting());
-                setSitVariation(getRandom().nextInt(0, 3));
+                defaultMainActionInteraction(player);
             }
             return InteractionResult.SUCCESS;
         }
@@ -292,6 +274,16 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     }
 
     @Override
+    protected boolean canThisCompanionWork() {
+        return true;
+    }
+
+    @Override
+    protected int sitAnimationsAmount() {
+        return 1;
+    }
+
+    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
         controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
@@ -307,7 +299,7 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-        if (this.isSitting()) {
+        if (this.getMainAction() == 0) {
             event.setAnimation(SIT);
         } else if (event.isMoving()) {
             event.setAnimation(WALK);

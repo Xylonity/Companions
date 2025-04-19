@@ -171,19 +171,19 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
                 String type = getPhase() == 0 ? "oak" : "iron";
 
                 if (heldItem.getItem() != requiredItem) {
-                    player.displayClientMessage(Component.translatable("broken_dinamo.client_message.requires_" + type, transArgsParam0), true);
+                    player.displayClientMessage(Component.translatable("broken_dinamo.companions.client_message.requires_" + type, transArgsParam0), true);
                     player.level().playSound(null, this.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
                     return InteractionResult.SUCCESS;
                 }
 
                 if (!ironOrPlanksConfirmation) {
-                    player.displayClientMessage(Component.translatable("broken_dinamo.client_message." + type + "_will_get_consumed", transArgsParam0), true);
+                    player.displayClientMessage(Component.translatable("broken_dinamo.companions.client_message." + type + "_will_get_consumed", transArgsParam0), true);
                     ironOrPlanksConfirmation = true;
                 } else {
 
                     if (heldItem.getCount() < requiredAmount) {
-                        player.displayClientMessage(Component.translatable("broken_dinamo.client_message.not_enough_" + type, transArgsParam0),true);
+                        player.displayClientMessage(Component.translatable("broken_dinamo.companions.client_message.not_enough_" + type, transArgsParam0),true);
                         ironOrPlanksConfirmation = false;
 
                         return InteractionResult.SUCCESS;
@@ -193,7 +193,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
                         heldItem.shrink(requiredAmount);
                     }
 
-                    player.displayClientMessage(Component.translatable("broken_dinamo.client_message." + type + "_consumed", transArgsParam0), true);
+                    player.displayClientMessage(Component.translatable("broken_dinamo.companions.client_message." + type + "_consumed", transArgsParam0), true);
 
                     if (level() instanceof ServerLevel serverLevel) {
                         serverLevel.sendParticles(ParticleTypes.WAX_OFF, this.getX(), this.getY() + 0.5, this.getZ(), 8, 0.5, 0.5, 0.5, 0.05);
@@ -211,7 +211,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
                 String type = getPhase() == 0 ? "great_essence" : "tesla_coil";
 
                 if (heldItem.getItem() != requiredItem) {
-                    player.displayClientMessage(Component.translatable("broken_dinamo.client_message.requires_" + type), true);
+                    player.displayClientMessage(Component.translatable("broken_dinamo.companions.client_message.requires_" + type), true);
                     player.level().playSound(null, this.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
                     return InteractionResult.SUCCESS;
@@ -221,7 +221,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
                     heldItem.shrink(1);
                 }
 
-                player.displayClientMessage(Component.translatable("broken_dinamo.client_message."+ type + "_consumed"), true);
+                player.displayClientMessage(Component.translatable("broken_dinamo.companions.client_message."+ type + "_consumed"), true);
 
                 if (level() instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(ParticleTypes.WAX_OFF, this.getX(), this.getY() + 0.5, this.getZ(), 8, 0.5, 0.5, 0.5, 0.05);
@@ -234,7 +234,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
             }
             case 2 -> {
                 if (heldItem.getItem() != CompanionsItems.WRENCH.get()) {
-                    player.displayClientMessage(Component.translatable("broken_dinamo.client_message.requires_wrench"), true);
+                    player.displayClientMessage(Component.translatable("broken_dinamo.companions.client_message.requires_wrench"), true);
                     player.level().playSound(null, this.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
                     return InteractionResult.SUCCESS;

@@ -42,7 +42,7 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (this.teddy.getPhase() != 2 || this.teddy.isSitting()) {
+        if (this.teddy.getPhase() != 2 || this.teddy.getMainAction() == 0) {
             return false;
         }
 
@@ -57,7 +57,7 @@ public class MutatedTeddyChargeAttackGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (this.teddy.getPhase() != 2 || this.teddy.isSitting()) {
+        if (this.teddy.getPhase() != 2 || this.teddy.getMainAction() == 0) {
             return false;
         }
 

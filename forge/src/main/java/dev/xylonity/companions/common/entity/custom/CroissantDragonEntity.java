@@ -1,30 +1,19 @@
 package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
-import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.croissant.CroissantDragonAttackGoal;
 import dev.xylonity.companions.common.entity.ai.soul_mage.goal.*;
-import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
-import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
-import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
 import dev.xylonity.companions.common.tick.TickScheduler;
-import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
-import dev.xylonity.companions.registry.CompanionsParticles;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -35,16 +24,11 @@ import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -64,7 +48,6 @@ public class CroissantDragonEntity extends CompanionEntity {
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation EATEN = RawAnimation.begin().thenPlay("eaten");
 
-    private static final EntityDataAccessor<Integer> SIT_VARIATION = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> ARMOR_NAME = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> EATEN_AMOUNT = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.INT);
@@ -118,14 +101,6 @@ public class CroissantDragonEntity extends CompanionEntity {
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
 
-    private void setSitVariation(int variation) {
-        this.entityData.set(SIT_VARIATION, variation);
-    }
-
-    private int getSitVariation() {
-        return this.entityData.get(SIT_VARIATION);
-    }
-
     public void setEatenAmount(int eatenAmount) {
         this.entityData.set(EATEN_AMOUNT, eatenAmount);
     }
@@ -169,7 +144,6 @@ public class CroissantDragonEntity extends CompanionEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SIT_VARIATION, 0);
         this.entityData.define(IS_ATTACKING, false);
         this.entityData.define(ARMOR_NAME, "default");
         this.entityData.define(EATEN_AMOUNT, 0);
@@ -180,30 +154,29 @@ public class CroissantDragonEntity extends CompanionEntity {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        if (pCompound.contains("milkAmount")) {
-            setMilkAmount(pCompound.getInt("milkAmount"));
-        }
-
-        if (pCompound.contains("eatenAmount")) {
-            setEatenAmount(pCompound.getInt("eatenAmount"));
-        }
-
-        if (pCompound.contains("armorName")) {
-            setArmorName(pCompound.getString("armorName"));
-        }
-
-        if (pCompound.contains("sitVariation")) {
-            setSitVariation(pCompound.getInt("sitVariation"));
-        }
+        setMilkAmount(pCompound.getInt("MilkAmount"));
+        setEatenAmount(pCompound.getInt("EatenAmount"));
+        setArmorName(pCompound.getString("ArmorName"));
+        setSitVariation(pCompound.getInt("SitVariation"));
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putInt("milkAmount", getMilkAmount());
-        pCompound.putInt("eatenAmount", getEatenAmount());
-        pCompound.putString("armorName", getArmorName());
-        pCompound.putInt("sitVariation", getSitVariation());
+        pCompound.putInt("MilkAmount", getMilkAmount());
+        pCompound.putInt("EatenAmount", getEatenAmount());
+        pCompound.putString("ArmorName", getArmorName());
+        pCompound.putInt("SitVariation", getSitVariation());
+    }
+
+    @Override
+    protected boolean canThisCompanionWork() {
+        return false;
+    }
+
+    @Override
+    protected int sitAnimationsAmount() {
+        return 2;
     }
 
     @Nullable
@@ -260,11 +233,7 @@ public class CroissantDragonEntity extends CompanionEntity {
 
                 if (!ForgeEventFactory.onAnimalTame(this, player) && getMilkAmount() == 2) {
                     if (!this.level().isClientSide) {
-                        super.tame(player);
-                        this.navigation.recomputePath();
-                        this.setTarget(null);
-                        this.level().broadcastEntityEvent(this, (byte) 7);
-                        setSitting(true);
+                        tameInteraction(player);
                     }
                 }
 
@@ -305,8 +274,7 @@ public class CroissantDragonEntity extends CompanionEntity {
                     itemstack.shrink(1);
                 }
             } else {
-                setSitting(!isSitting());
-                setSitVariation(getRandom().nextInt(0, 3));
+                defaultMainActionInteraction(player);
             }
 
             return InteractionResult.SUCCESS;
@@ -341,7 +309,7 @@ public class CroissantDragonEntity extends CompanionEntity {
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-        if (this.isSitting()) {
+        if (this.getMainAction() == 0) {
             event.getController().setAnimation(getSitVariation() == 0 ? SIT : SIT2);
         } else if (event.isMoving()) {
             event.setAnimation(WALK);

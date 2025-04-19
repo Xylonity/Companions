@@ -90,31 +90,21 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
         tag.put("OutgoingConnections", outgoing);
         tag.putInt("AnimationStartTick", getAnimationStartTick());
-        tag.putBoolean("IsSitting", isSitting());
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
-        setAnimationStartTick(tag.getInt("TickCount"));
-        setAnimationStartTick(tag.getInt("AnimationStartTick"));
+    protected boolean canThisCompanionWork() {
+        return false;
+    }
+
+    @Override
+    protected int sitAnimationsAmount() {
+        return 1;
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-
-        if (tag.contains("AnimationStartTick")) {
-            setAnimationStartTick(tag.getInt("AnimationStartTick"));
-        } else {
-            setAnimationStartTick(0);
-        }
-
-        if (tag.contains("IsSitting")) {
-            setSitting(tag.getBoolean("IsSitting"));
-        } else {
-            setSitting(false);
-        }
 
         TeslaConnectionManager.getInstance().getOutgoing(asConnectionNode()).clear();
         TeslaConnectionManager.getInstance().getIncoming(asConnectionNode()).clear();
@@ -158,9 +148,9 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
 
-    @Override
-    public void setSitting(boolean sitting) {
-        super.setSitting(sitting);
+    //@Override
+    //public void setSitting(boolean sitting) {
+    //    super.setSitting(sitting);
         //if (!isSitting()) {
         //    Set<TeslaConnectionManager.ConnectionNode> outNodes = new HashSet<>(connectionManager.getOutgoing(asConnectionNode()));
         //    for (TeslaConnectionManager.ConnectionNode target : outNodes) {
@@ -175,14 +165,14 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         //    connectionManager.removeConnectionNode(asConnectionNode());
         //    connectionManager.recalculateDistances();
         //}
-    }
+    //}
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND
                 && getOwner() == player && player.getMainHandItem().getItem() != CompanionsItems.WRENCH.get()) {
 
-            setSitting(!isSitting());
+            defaultMainActionInteraction(player);
 
             return InteractionResult.SUCCESS;
         }
@@ -198,7 +188,7 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
             setActive(false);
         }
 
-        if (isSitting()) {
+        if (getMainAction() == 0) {
             pulseBehavior.tick(this);
         } else {
             attackBehavior.tick(this);
@@ -282,8 +272,7 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-
-        if (isSitting()) {
+        if (getMainAction() == 0) {
             event.getController().setAnimation(SIT);
         } else if (event.isMoving()) {
             event.getController().setAnimation(WALK);

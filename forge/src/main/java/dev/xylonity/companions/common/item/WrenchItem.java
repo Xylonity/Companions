@@ -31,7 +31,7 @@ public class WrenchItem extends Item {
         if (!(target instanceof DinamoEntity dinamoEntity) || player.level().isClientSide()) return InteractionResult.PASS;
         if (dinamoEntity.getOwner() != null && !player.equals(dinamoEntity.getOwner())) return InteractionResult.PASS;
 
-        if (dinamoEntity.isSitting()) {
+        if (dinamoEntity.getMainAction() == 0) {
             handleNodeSelection(player, TeslaConnectionManager.ConnectionNode.forEntity(target.getUUID(), player.level().dimension().location()));
         } else {
             handleDinamoAttackToggle(player, dinamoEntity);

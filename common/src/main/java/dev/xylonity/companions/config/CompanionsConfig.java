@@ -28,4 +28,8 @@ public final class CompanionsConfig {
             min = 0.0F, max = 100.0F)
     public static float HEAL_RING_HEALING = 6.0F;
 
+    @ConfigEntry(
+            comment = "Should certain companions have the ability to work?")
+    public static boolean COMPANIONS_SHOULD_WORK = true;
+
 }

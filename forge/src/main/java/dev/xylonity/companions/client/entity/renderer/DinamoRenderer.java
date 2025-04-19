@@ -74,7 +74,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
 
             if (frame < 0) return;
 
-            if (animatable.isSitting()) {
+            if (animatable.getMainAction() == 0) {
                 if (!animatable.isActive()) return;
 
                 for (TeslaConnectionManager.ConnectionNode e : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {

@@ -35,6 +35,16 @@ public class PuppetGloveEntity extends CompanionEntity {
     }
 
     @Override
+    protected boolean canThisCompanionWork() {
+        return false;
+    }
+
+    @Override
+    protected int sitAnimationsAmount() {
+        return 1;
+    }
+
+    @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
         return new GroundNavigator(this, pLevel);
     }
@@ -77,11 +87,7 @@ public class PuppetGloveEntity extends CompanionEntity {
 
                 if (!ForgeEventFactory.onAnimalTame(this, player)) {
                     if (!this.level().isClientSide) {
-                        super.tame(player);
-                        this.navigation.recomputePath();
-                        this.setTarget(null);
-                        this.level().broadcastEntityEvent(this, (byte) 7);
-                        setSitting(true);
+                        tameInteraction(player);
                     }
                 }
 
@@ -104,7 +110,7 @@ public class PuppetGloveEntity extends CompanionEntity {
                 }
 
             } else {
-                setSitting(!isSitting());
+                defaultMainActionInteraction(player);
             }
 
             return InteractionResult.SUCCESS;

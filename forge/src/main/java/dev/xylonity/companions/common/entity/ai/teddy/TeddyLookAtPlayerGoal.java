@@ -16,7 +16,7 @@ public class TeddyLookAtPlayerGoal extends LookAtPlayerGoal {
 
     @Override
     public boolean canUse() {
-        if (this.mob.getRandom().nextFloat() >= this.probability || this.mob.isSitting()) {
+        if (this.mob.getRandom().nextFloat() >= this.probability || this.mob.getMainAction() == 0) {
             return false;
         } else {
             if (this.mob.getTarget() != null) {

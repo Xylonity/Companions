@@ -77,6 +77,16 @@ public class LivingCandleEntity extends CompanionEntity {
     }
 
     @Override
+    protected boolean canThisCompanionWork() {
+        return false;
+    }
+
+    @Override
+    protected int sitAnimationsAmount() {
+        return 1;
+    }
+
+    @Override
     public void handleEntityEvent(byte pId) {
         if (pId == 3) {
             spawnDeadParticles();

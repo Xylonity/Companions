@@ -133,11 +133,7 @@ public class MinionEntity extends CompanionEntity implements GeoEntity {
 
                 if (!ForgeEventFactory.onAnimalTame(this, player)) {
                     if (!this.level().isClientSide) {
-                        super.tame(player);
-                        this.navigation.recomputePath();
-                        this.setTarget(null);
-                        this.level().broadcastEntityEvent(this, (byte)7);
-                        setSitting(true);
+                        tameInteraction(player);
                     }
                 }
 
@@ -160,7 +156,7 @@ public class MinionEntity extends CompanionEntity implements GeoEntity {
                 }
 
             } else {
-                setSitting(!isSitting());
+                defaultMainActionInteraction(player);
             }
 
             return InteractionResult.SUCCESS;
@@ -179,6 +175,16 @@ public class MinionEntity extends CompanionEntity implements GeoEntity {
         this.entityData.define(VARIANT, Variant.NETHER.getName());
         this.entityData.define(IS_LOCKED, false);
         this.entityData.define(IS_FLYING, false);
+    }
+
+    @Override
+    protected boolean canThisCompanionWork() {
+        return false;
+    }
+
+    @Override
+    protected int sitAnimationsAmount() {
+        return 1;
     }
 
     public boolean isPhaseLocked() {

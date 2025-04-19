@@ -27,7 +27,6 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -198,14 +197,6 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
 
-    private void setSitVariation(int variation) {
-        this.entityData.set(SIT_VARIATION, variation);
-    }
-
-    private int getSitVariation() {
-        return this.entityData.get(SIT_VARIATION);
-    }
-
     public void setCandleCount(int candleCount) {
         this.entityData.set(CANDLE_COUNT, candleCount);
     }
@@ -287,11 +278,7 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
 
                 if (!ForgeEventFactory.onAnimalTame(this, player)) {
                     if (!this.level().isClientSide) {
-                        super.tame(player);
-                        this.navigation.recomputePath();
-                        this.setTarget(null);
-                        this.level().broadcastEntityEvent(this, (byte) 7);
-                        setSitting(true);
+                        tameInteraction(player);
                     }
                 }
                 setSitVariation(getRandom().nextInt(0, 3));
@@ -306,8 +293,7 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
                     itemstack.shrink(1);
                 }
             } else {
-                setSitting(!isSitting());
-                setSitVariation(getRandom().nextInt(0, 3));
+                defaultMainActionInteraction(player);
             }
             return InteractionResult.SUCCESS;
         }
@@ -333,6 +319,16 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
     }
 
     @Override
+    protected boolean canThisCompanionWork() {
+        return false;
+    }
+
+    @Override
+    protected int sitAnimationsAmount() {
+        return 1;
+    }
+
+    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
         controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
@@ -348,7 +344,7 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-        if (this.isSitting()) {
+        if (this.getMainAction() == 0) {
             event.setAnimation(SIT);
         } else if (event.isMoving()) {
             event.setAnimation(WALK);

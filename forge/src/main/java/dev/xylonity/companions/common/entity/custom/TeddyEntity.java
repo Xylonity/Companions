@@ -115,14 +115,6 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         this.refreshDimensions();
     }
 
-    private void setSitVariation(int variation) {
-        this.entityData.set(SIT_VARIATION, variation);
-    }
-
-    private int getSitVariation() {
-        return this.entityData.get(SIT_VARIATION);
-    }
-
     public int getSecondPhaseCounter() {
         return this.entityData.get(SECOND_PHASE_COUNTER);
     }
@@ -213,20 +205,13 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             if (this.level().isClientSide) {
                 return InteractionResult.CONSUME;
             } else {
-
                 if (!player.getAbilities().instabuild) itemstack.shrink(1);
 
                 if (!ForgeEventFactory.onAnimalTame(this, player)) {
                     if (!this.level().isClientSide) {
-                        super.tame(player);
-                        this.navigation.recomputePath();
-                        this.setTarget(null);
-                        this.level().broadcastEntityEvent(this, (byte) 7);
-                        setSitting(true);
+                        tameInteraction(player);
                     }
                 }
-
-                setSitVariation(getRandom().nextInt(0, 3));
 
                 return InteractionResult.SUCCESS;
             }
@@ -247,8 +232,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             } else if (itemstack.getItem().equals(CompanionsItems.ETERNAL_LIGHTER.get()) && getPhase() == 1 && this.getSecondPhaseCounter() == 0) {
                 this.setSecondPhaseCounter(this.getSecondPhaseCounter() + 1);
             } else {
-                setSitting(!isSitting());
-                setSitVariation(getRandom().nextInt(0, 3));
+                defaultMainActionInteraction(player);
             }
 
             return InteractionResult.SUCCESS;
@@ -288,6 +272,16 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     }
 
     @Override
+    protected boolean canThisCompanionWork() {
+        return false;
+    }
+
+    @Override
+    protected int sitAnimationsAmount() {
+        return 3;
+    }
+
+    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
         controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
@@ -307,7 +301,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
 
         if (getPhase() == 1) {
-            if (this.isSitting()) {
+            if (this.getMainAction() == 0) {
                 RawAnimation sitVariation = getSitVariation() == 0 ? SIT1 : getSitVariation() == 1 ? SIT2 : SIT3;
                 event.getController().setAnimation(sitVariation);
             } else if (this.getSecondPhaseCounter() != 0 && this.getSecondPhaseCounter() <= ANIMATION_TRANSFORM_MAX_TICKS) {
@@ -320,7 +314,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         } else {
             if (isDeadOrDying()) {
               event.getController().setAnimation(MUTATED_DEATH);
-            } else if (this.isSitting()) {
+            } else if (this.getMainAction() == 0) {
                 RawAnimation sitVariation = getSitVariation() == 0 ? MUTATED_SIT1 : MUTATED_SIT2;
                 event.getController().setAnimation(sitVariation);
             } else {
