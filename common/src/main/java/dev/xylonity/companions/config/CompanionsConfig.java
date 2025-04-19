@@ -30,6 +30,10 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             comment = "Should certain companions have the ability to work?")
-    public static boolean COMPANIONS_SHOULD_WORK = true;
+    public static boolean SHOULD_COMPANIONS_WORK = true;
+
+    @ConfigEntry(
+            comment = "Can companions wander around if either not following the owner nor sitting?")
+    public static boolean SHOULD_COMPANIONS_WANDER = true;
 
 }

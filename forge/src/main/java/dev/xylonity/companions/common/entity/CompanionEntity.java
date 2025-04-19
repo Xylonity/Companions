@@ -20,6 +20,8 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public abstract class CompanionEntity extends TamableAnimal implements GeoEntity {
@@ -64,7 +66,22 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
 
     public void setMainAction(int action, @Nullable Player player) {
         // This way we can just cycle the main action
-        int newAction = action % (CompanionsConfig.COMPANIONS_SHOULD_WORK && this.canThisCompanionWork() ? 4 : 3);
+        List<Integer> allowedActions = new ArrayList<>();
+        allowedActions.add(0);
+        allowedActions.add(1);
+
+        if (CompanionsConfig.SHOULD_COMPANIONS_WANDER) {
+            allowedActions.add(2);
+        }
+
+        if (CompanionsConfig.SHOULD_COMPANIONS_WORK && this.canThisCompanionWork()) {
+            allowedActions.add(3);
+        }
+
+        int totalAllowed = allowedActions.size();
+        int newActionIndex = action % totalAllowed;
+        int newAction = allowedActions.get(newActionIndex);
+
         this.entityData.set(MAIN_ACTION, newAction);
 
         // TODO: the name of the companion
