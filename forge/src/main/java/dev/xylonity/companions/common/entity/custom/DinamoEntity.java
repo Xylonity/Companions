@@ -2,6 +2,10 @@ package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.dinamo.DinamoSearchTargetsGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoAttackBehaviour;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoPulseBehaviour;
@@ -22,8 +26,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
@@ -39,7 +46,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.*;
 
 public class DinamoEntity extends CompanionEntity implements GeoEntity {
-    public List<LivingEntity> visibleEntities = new ArrayList<>();
+    public List<Monster> visibleEntities = new ArrayList<>();
     private final TeslaConnectionManager connectionManager;
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
@@ -72,7 +79,15 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.5D, 5.0F, 2.0F, false));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+
+        this.goalSelector.addGoal(2, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(2, new CompanionRandomStrollGoal(this, 0.43));
+
+        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
+        this.goalSelector.addGoal(3, new DinamoSearchTargetsGoal(this, 10));
     }
 
     public TeslaConnectionManager.ConnectionNode asConnectionNode() {

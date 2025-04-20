@@ -3,11 +3,7 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.froggy.goal.FroggyFireworkToadGoal;
-import dev.xylonity.companions.common.entity.ai.soul_mage.goal.*;
-import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
-import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
-import dev.xylonity.companions.registry.CompanionsEntities;
-import net.minecraft.core.BlockPos;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -27,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -89,7 +84,7 @@ public class FroggyEntity extends CompanionEntity implements ContainerListener {
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new SoulMageOwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
     public String getCurrentAttackType() {

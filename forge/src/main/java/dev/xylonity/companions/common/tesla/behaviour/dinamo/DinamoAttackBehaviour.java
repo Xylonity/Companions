@@ -1,22 +1,11 @@
 package dev.xylonity.companions.common.tesla.behaviour.dinamo;
 
-import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.custom.DinamoEntity;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
-
-    private static final int MAX_ATTACK_RADIUS = 10;
 
     @Override
     public void tick(DinamoEntity dinamo) {
@@ -32,37 +21,8 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
         }
 
         if (dinamo.isActiveForAttack()) {
-            Vec3 pos = dinamo.position();
-            AABB searchBox = new AABB(
-                    pos.x - MAX_ATTACK_RADIUS, pos.y - MAX_ATTACK_RADIUS, pos.z - MAX_ATTACK_RADIUS,
-                    pos.x + MAX_ATTACK_RADIUS, pos.y + MAX_ATTACK_RADIUS, pos.z + MAX_ATTACK_RADIUS
-            );
 
-            // We search for visible monsters
-            // TODO: add extra conditions
-            List<LivingEntity> visible =
-                    dinamo.level().getEntitiesOfClass(LivingEntity.class, searchBox, e -> {
-
-                        if (e instanceof Player player) {
-                            return !player.isCreative() && !player.isSpectator() && player.equals(dinamo.getOwner());
-                        }
-
-                        if (dinamo.getOwner() != null && dinamo.getOwner().getLastHurtMob() == e) {
-                            return true;
-                        }
-
-                        if (e instanceof TamableAnimal) {
-                            return false;
-                        }
-
-                        return e instanceof Monster;
-                    })
-                    .stream().filter(dinamo::hasLineOfSight)
-                    .collect(Collectors.toList());
-
-            dinamo.visibleEntities = visible;
-
-            if (!visible.isEmpty()) {
+            if (!dinamo.visibleEntities.isEmpty()) {
                 // Decorative particles lol
                 if (dinamo.level().isClientSide()) {
                     double radius = 0.42;
@@ -77,7 +37,7 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
 
                 // Delay before hurting so it syncs with the electrical charge anim
                 if (dinamo.getAttackCycleCounter() == 3) {
-                    for (LivingEntity target : visible) {
+                    for (LivingEntity target : dinamo.visibleEntities) {
                         dinamo.doHurtTarget(target);
                     }
                 }

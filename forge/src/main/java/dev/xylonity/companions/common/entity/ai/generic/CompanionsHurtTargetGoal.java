@@ -1,17 +1,19 @@
-package dev.xylonity.companions.common.entity.ai.soul_mage.goal;
+package dev.xylonity.companions.common.entity.ai.generic;
 
 import java.util.EnumSet;
+
+import dev.xylonity.companions.common.entity.CompanionEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
-public class SoulMageOwnerHurtTargetGoal extends TargetGoal {
-    private final TamableAnimal tameAnimal;
+public class CompanionsHurtTargetGoal extends TargetGoal {
+    private final CompanionEntity tameAnimal;
     private LivingEntity ownerLastHurt;
     private int timestamp;
 
-    public SoulMageOwnerHurtTargetGoal(TamableAnimal pTameAnimal) {
+    public CompanionsHurtTargetGoal(CompanionEntity pTameAnimal) {
         super(pTameAnimal, false);
         this.tameAnimal = pTameAnimal;
         this.setFlags(EnumSet.of(Flag.TARGET));
@@ -61,8 +63,7 @@ public class SoulMageOwnerHurtTargetGoal extends TargetGoal {
     }
 
     private LivingEntity getUltimateOwner(LivingEntity entity) {
-        if (entity instanceof TamableAnimal) {
-            TamableAnimal tame = (TamableAnimal) entity;
+        if (entity instanceof TamableAnimal tame) {
             LivingEntity owner = tame.getOwner();
             if (owner != null) {
                 return getUltimateOwner(owner);

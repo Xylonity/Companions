@@ -3,7 +3,10 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.croissant.CroissantDragonAttackGoal;
-import dev.xylonity.companions.common.entity.ai.soul_mage.goal.*;
+import dev.xylonity.companions.common.entity.ai.dinamo.DinamoSearchTargetsGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +22,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -72,10 +74,11 @@ public class CroissantDragonEntity extends CompanionEntity {
 
         this.goalSelector.addGoal(2, new CroissantDragonAttackGoal(this));
 
-        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(3, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(3, new CompanionRandomStrollGoal(this, 0.43));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new SoulMageOwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
     @Override
@@ -244,7 +247,6 @@ public class CroissantDragonEntity extends CompanionEntity {
                     }
                 }
 
-                setSitVariation(getRandom().nextInt(0, 3));
                 setMilkAmount(getMilkAmount() + 1);
                 return InteractionResult.SUCCESS;
             }
@@ -254,21 +256,27 @@ public class CroissantDragonEntity extends CompanionEntity {
             if (getArmorName().equals("default")) {
                 if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get()) {
                     this.setArmorName("strawberry");
+
                     if (!player.getAbilities().instabuild) {
                         itemstack.shrink(1);
                     }
+
                     return InteractionResult.SUCCESS;
                 } else if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get()) {
                     this.setArmorName("vanilla");
+
                     if (!player.getAbilities().instabuild) {
                         itemstack.shrink(1);
                     }
+
                     return InteractionResult.SUCCESS;
                 } else if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get()) {
                     this.setArmorName("chocolate");
+
                     if (!player.getAbilities().instabuild) {
                         itemstack.shrink(1);
                     }
+
                     return InteractionResult.SUCCESS;
                 }
             }
