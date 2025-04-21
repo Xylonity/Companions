@@ -1,8 +1,8 @@
 package dev.xylonity.companions;
 
 import dev.xylonity.companions.common.tick.TickScheduler;
+import dev.xylonity.companions.config.BuildSidedConfig;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.config.impl.ConfigManager;
 import dev.xylonity.companions.registry.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
@@ -25,7 +25,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -53,7 +52,7 @@ public class Companions {
         MOB_EFFECTS.register(modEventBus);
         PARTICLES.register(modEventBus);
 
-        ConfigManager.init(FMLPaths.CONFIGDIR.get(), CompanionsConfig.class);
+        BuildSidedConfig.of(modEventBus, CompanionsConfig.class);
 
         CompanionsCommon.init();
 

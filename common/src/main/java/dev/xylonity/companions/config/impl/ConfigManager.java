@@ -103,7 +103,7 @@ public final class ConfigManager {
             }
             case RUSTIC -> ">>>> [" + title + "] <<<<";
             case STARSET -> {
-                String line = "═".repeat(70);
+                String line = "=".repeat(70);
                 yield String.join("\n", line, centerText("«✦»  " + title + "  «✦»", 70), line);
             }
             default -> title.toLowerCase().replace(" settings", "") + " §§";

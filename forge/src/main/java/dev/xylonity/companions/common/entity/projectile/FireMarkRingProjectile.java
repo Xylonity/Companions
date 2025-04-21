@@ -89,6 +89,7 @@ public class FireMarkRingProjectile extends BaseProjectile implements GeoEntity 
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(MAY_AFFECT_OWNER, false);
         this.entityData.define(MAGE_OWNER_UUID, "");
     }
