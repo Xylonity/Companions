@@ -54,6 +54,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsBlocks.CROISSANT_EGG.get());
                                 output.accept(CompanionsBlocks.EMPTY_PUPPET.get());
                                 output.accept(CompanionsBlocks.RESPAWN_TOTEM.get());
+                                output.accept(CompanionsBlocks.RECALL_PLATFORM.get());
 
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get());
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get());

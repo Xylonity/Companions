@@ -121,18 +121,19 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
 
-        TeslaConnectionManager.getInstance().getOutgoing(asConnectionNode()).clear();
-        TeslaConnectionManager.getInstance().getIncoming(asConnectionNode()).clear();
+        TeslaConnectionManager.ConnectionNode me = asConnectionNode();
+        connectionManager.getOutgoing(me).clear();
+        connectionManager.getIncoming(me).clear();
 
         if (tag.contains("OutgoingConnections")) {
             ListTag outgoingList = tag.getList("OutgoingConnections", 10);
-
             for (Tag t : outgoingList) {
                 TeslaConnectionManager.ConnectionNode node = TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t);
-                TeslaConnectionManager.getInstance().addConnection(asConnectionNode(), node);
+                connectionManager.addConnection(me, node, true);
             }
         }
 
+        connectionManager.recalculateDistances();
     }
 
     @Override
@@ -162,25 +163,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
-
-    //@Override
-    //public void setSitting(boolean sitting) {
-    //    super.setSitting(sitting);
-        //if (!isSitting()) {
-        //    Set<TeslaConnectionManager.ConnectionNode> outNodes = new HashSet<>(connectionManager.getOutgoing(asConnectionNode()));
-        //    for (TeslaConnectionManager.ConnectionNode target : outNodes) {
-        //        connectionManager.removeConnection(asConnectionNode(), target);
-        //    }
-
-        //    Set<TeslaConnectionManager.ConnectionNode> inNodes = new HashSet<>(connectionManager.getIncoming(asConnectionNode()));
-        //    for (TeslaConnectionManager.ConnectionNode source : inNodes) {
-        //        connectionManager.removeConnection(source, asConnectionNode());
-        //    }
-
-        //    connectionManager.removeConnectionNode(asConnectionNode());
-        //    connectionManager.recalculateDistances();
-        //}
-    //}
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {

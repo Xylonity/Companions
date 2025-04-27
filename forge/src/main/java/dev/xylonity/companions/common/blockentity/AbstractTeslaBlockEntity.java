@@ -39,13 +39,14 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     public int tickCount;
     public int activationTick;
     public int cycleCounter;
-    protected boolean pendingRemoval = false;
-    protected boolean receivesGenerator = false;
 
+    protected boolean pendingRemoval;
+    protected boolean receivesGenerator;
     protected int distance;
     protected boolean isActive;
 
     protected ITeslaNodeBehaviour defaultAttackBehaviour;
+
 
     public AbstractTeslaBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -55,6 +56,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.tickCount = 0;
         this.activationTick = 0;
         this.cycleCounter = -1;
+        this.pendingRemoval = false;
+        this.receivesGenerator = false;
         this.defaultAttackBehaviour = new DefaultAttackBehaviour();
     }
 
@@ -86,13 +89,15 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     @Override
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
-        tag.getList("OutgoingConnections", 10).forEach(t ->
-                TeslaConnectionManager.getInstance().addConnection(asConnectionNode(), TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t), true)
-        );
+        tag.getList("OutgoingConnections", 10).forEach(t -> {
+            TeslaConnectionManager.getInstance().addConnection(asConnectionNode(), TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t), true);
+        });
         this.tickCount = tag.getInt("TickCount");
         this.isActive = tag.getBoolean("IsActive");
         this.activationTick = tag.contains("ActivationTick") ? tag.getInt("ActivationTick") : 0;
-        this.cycleCounter = tag.getInt("cycleCounter");
+        if (this.cycleCounter >= 0) {
+            tag.putInt("cycleCounter", this.cycleCounter);
+        }
         this.receivesGenerator = tag.getBoolean("ReceivesGenerator");
         this.setDistance(tag.getInt("Distance"));
     }
@@ -101,7 +106,9 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         ListTag outgoing = new ListTag();
-        connectionManager.getOutgoing(asConnectionNode()).forEach(node -> outgoing.add(node.serialize()));
+        connectionManager.getOutgoing(asConnectionNode()).forEach(node -> {
+            outgoing.add(node.serialize());
+        });
         tag.put("OutgoingConnections", outgoing);
 
         tag.putInt("TickCount", this.tickCount);
@@ -178,6 +185,11 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     public void setActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    // Can the module connect to other modules
+    public boolean canConnectToOtherModules() {
+        return true;
     }
 
     // Position offset where the electrical charge is emitted (from x + 0.5, y, z + 0.5)

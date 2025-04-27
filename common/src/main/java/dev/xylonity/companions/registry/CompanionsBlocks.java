@@ -19,6 +19,7 @@ public class CompanionsBlocks {
     public static final Supplier<Block> CROISSANT_EGG;
     public static final Supplier<Block> EMPTY_PUPPET;
     public static final Supplier<Block> RESPAWN_TOTEM;
+    public static final Supplier<Block> RECALL_PLATFORM;
 
     static {
         TESLA_COIL = registerBlock("tesla_coil_block",
@@ -76,6 +77,14 @@ public class CompanionsBlocks {
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
                         .noOcclusion(), BlockType.RESPAWN_TOTEM);
+
+        RECALL_PLATFORM = registerBlock("recall_platform_block",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.RECALL_PLATFORM);
     }
 
     private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType) {
@@ -89,7 +98,8 @@ public class CompanionsBlocks {
         PLASMA_LAMP,
         VOLTAIC_PILLAR,
         EMPTY_PUPPET,
-        RESPAWN_TOTEM
+        RESPAWN_TOTEM,
+        RECALL_PLATFORM
     }
 
 }

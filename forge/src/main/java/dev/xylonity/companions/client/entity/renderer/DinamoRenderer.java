@@ -43,18 +43,6 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
         this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull DinamoEntity animatable) {
-        TeslaConnectionManager connectionManager = TeslaConnectionManager.getInstance();
-        TeslaConnectionManager.ConnectionNode node = animatable.asConnectionNode();
-
-        if ((!connectionManager.getIncoming(node).isEmpty() || !connectionManager.getOutgoing(node).isEmpty()) && animatable.isActive()) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
-        }
-
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
-    }
-
     private static class ElectricConnectionLayer extends GeoRenderLayer<DinamoEntity> {
         private final ResourceLocation texture;
         private final int totalFrames;

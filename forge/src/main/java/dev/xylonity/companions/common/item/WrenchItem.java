@@ -17,6 +17,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.*;
+import java.util.stream.IntStream;
+
 public class WrenchItem extends Item {
 
     @Nullable
@@ -87,9 +90,13 @@ public class WrenchItem extends Item {
 
                 player.displayClientMessage(Component.literal("deleted!").withStyle(ChatFormatting.RED), true);
             } else {
-                BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
-                if (first instanceof AbstractTeslaBlockEntity be) {
-                    be.handleNodeSelection(firstNode, currentNode, context);
+                if (!firstNode.isEntity()) {
+                    BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
+                    if (first instanceof AbstractTeslaBlockEntity be) {
+                        be.handleNodeSelection(firstNode, currentNode, context);
+                    }
+                } else {
+                    manager.addConnection(firstNode, currentNode, false);
                 }
 
                 player.displayClientMessage(Component.literal("added!").withStyle(ChatFormatting.GREEN), true);

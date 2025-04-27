@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.tesla;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
+import dev.xylonity.companions.common.blockentity.RecallPlatformBlockEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * ADGs and Bipartite graphs as a whole.
  *
  * The underlying graph is stored in two maps:
- *
  * - outgoing: contains the edges where the node is the source.
  * - incoming: contains the edges where the node is the target.
  *
@@ -40,6 +40,9 @@ public class TeslaConnectionManager {
 
     public void registerBlockEntity(AbstractTeslaBlockEntity blockEntity) {
         blockEntities.put(blockEntity.asConnectionNode(), blockEntity);
+
+        recalculateDistances();
+        refreshRecallCachesAround(blockEntity.asConnectionNode());
     }
 
     public void unregisterBlockEntity(AbstractTeslaBlockEntity blockEntity) {
@@ -47,6 +50,7 @@ public class TeslaConnectionManager {
         blockEntities.remove(node);
         removeConnectionNode(node);
         recalculateDistances();
+        refreshRecallCachesAround(node);
     }
 
     public @NotNull AbstractTeslaBlockEntity getBlockEntity(ConnectionNode node) {
@@ -55,18 +59,79 @@ public class TeslaConnectionManager {
 
     public void addConnection(ConnectionNode source, ConnectionNode target) {
         addConnection(source, target, false);
+        refreshRecallCachesAround(source, target);
     }
 
     public void addConnection(ConnectionNode source, ConnectionNode target, boolean bypassValidation) {
-        if (!bypassValidation) {
-            if (source.isBlock() && target.isBlock() && !canAddConnection(source, target)) {
+        if (!bypassValidation && source.isBlock()) {
+            AbstractTeslaBlockEntity be = blockEntities.get(source);
+            if (be != null && !be.canConnectToOtherModules()) {
                 return;
             }
         }
 
         outgoing.computeIfAbsent(source, k -> new HashSet<>()).add(target);
         incoming.computeIfAbsent(target, k -> new HashSet<>()).add(source);
-        recalculateDistances();
+
+        if (!bypassValidation) {
+            recalculateDistances();
+        }
+    }
+
+    private void refreshRecallCachesAround(ConnectionNode... seeds) {
+        Set<ConnectionNode> visitedComponents = new HashSet<>();
+
+        for (ConnectionNode seed : seeds) {
+            if (visitedComponents.contains(seed))
+                continue;
+
+            Set<ConnectionNode> component = getConnectedComponent(seed);
+            visitedComponents.addAll(component);
+
+            List<RecallPlatformBlockEntity> recalls = new ArrayList<>();
+            for (ConnectionNode n : component) {
+                AbstractTeslaBlockEntity be = blockEntities.get(n);
+                if (be instanceof RecallPlatformBlockEntity rp) {
+                    recalls.add(rp);
+                }
+            }
+
+            if (recalls.size() < 2) {
+                for (RecallPlatformBlockEntity rp : recalls) {
+                    rp.updatePartners(Collections.emptySet());
+                }
+                continue;
+            }
+
+            List<BlockPos> allPos = recalls.stream()
+                    .map(AbstractTeslaBlockEntity::getBlockPos)
+                    .toList();
+            for (RecallPlatformBlockEntity rp : recalls) {
+                Set<BlockPos> partners = new HashSet<>(allPos);
+                partners.remove(rp.getBlockPos());
+                rp.updatePartners(partners);
+            }
+        }
+
+    }
+
+    public Set<ConnectionNode> getConnectedComponent(ConnectionNode start) {
+        Set<ConnectionNode> comp = new HashSet<>();
+        Deque<ConnectionNode> q   = new ArrayDeque<>();
+        comp.add(start); q.add(start);
+
+        while (!q.isEmpty()) {
+            ConnectionNode cur = q.poll();
+            comp.add(cur);
+
+            Set<ConnectionNode> neigh = new HashSet<>();
+            neigh.addAll(outgoing.getOrDefault(cur, Collections.emptySet()));
+            neigh.addAll(incoming.getOrDefault(cur, Collections.emptySet()));
+
+            for (ConnectionNode n : neigh)
+                if (comp.add(n)) q.add(n);
+        }
+        return comp;
     }
 
     public void removeConnection(ConnectionNode source, ConnectionNode target) {
@@ -77,6 +142,7 @@ public class TeslaConnectionManager {
         if (inSet != null) inSet.remove(source);
 
         recalculateDistances();
+        refreshRecallCachesAround(source, target);
     }
 
     public void removeConnectionNode(ConnectionNode node) {
@@ -92,65 +158,81 @@ public class TeslaConnectionManager {
         }
     }
 
-    /**
-     * Recalculate node 'distances' based on valid directional propagation from generator nodes.
-     * <br>
-     * Performs a directional BFS (only follow outgoing edges) starting from every entity node.
-     * All block entities that are unreachable (distance remains Integer.MAX_VALUE) are removed
-     * from their independent graph.
-     */
     public void recalculateDistances() {
-        /* Reset distances */
         for (AbstractTeslaBlockEntity be : blockEntities.values()) {
             be.setDistance(Integer.MAX_VALUE);
         }
 
-        Queue<ConnectionNode> queue = new LinkedList<>();
-        Map<ConnectionNode, Integer> distances = new ConcurrentHashMap<>();
-        int maxAllowed = CompanionsConfig.DINAMO_MAX_CHAIN_CONNECTIONS;
+        Set<ConnectionNode> all = getAllNodes();
+        Set<ConnectionNode> visited = new HashSet<>();
 
-        /* Start only from generator nodes (entity nodes) */
-        for (ConnectionNode node : getAllNodes()) {
-            if (node.isEntity()) {
-                distances.put(node, 0);
-                queue.add(node);
+        for (ConnectionNode start : all) {
+            if (!visited.add(start)) continue;
+
+            Queue<ConnectionNode> q = new LinkedList<>();
+            Set<ConnectionNode> comp = new HashSet<>();
+            q.add(start);
+            comp.add(start);
+            while (!q.isEmpty()) {
+                ConnectionNode cur = q.poll();
+                for (ConnectionNode nb : outgoing.getOrDefault(cur, Collections.emptySet())) {
+                    if (comp.add(nb)) q.add(nb);
+                }
+                for (ConnectionNode nb : incoming.getOrDefault(cur, Collections.emptySet())) {
+                    if (comp.add(nb)) q.add(nb);
+                }
             }
-        }
 
-        /* Follow only outgoing edges */
-        while (!queue.isEmpty()) {
-            ConnectionNode current = queue.poll();
-            int currentDistance = distances.get(current);
+            visited.addAll(comp);
 
-            /* Get only the outgoing neighbors */
-            Set<ConnectionNode> neighbors = outgoing.getOrDefault(current, Collections.emptySet());
+            List<ConnectionNode> seeds = comp.stream().filter(ConnectionNode::isEntity).toList();
+            if (seeds.isEmpty()) continue;
 
-            for (ConnectionNode neighbor : neighbors) {
-                /* We pass generator nodes */
-                if (!neighbor.isBlock()) continue;
+            Map<ConnectionNode,Integer> dist = new HashMap<>();
+            Queue<ConnectionNode> q2 = new LinkedList<>(seeds);
+            seeds.forEach(n -> dist.put(n, 0));
 
-                int newDistance = currentDistance + 1;
+            int max = CompanionsConfig.DINAMO_MAX_CHAIN_CONNECTIONS;
+            while (!q2.isEmpty()) {
+                ConnectionNode cur = q2.poll();
+                int d = dist.get(cur);
 
-                if (newDistance > maxAllowed) continue;
-                if (!distances.containsKey(neighbor) || newDistance < distances.get(neighbor)) {
-                    distances.put(neighbor, newDistance);
-                    queue.add(neighbor);
-                    AbstractTeslaBlockEntity be = blockEntities.get(neighbor);
-                    if (be != null) {
-                        be.setDistance(newDistance);
+                AbstractTeslaBlockEntity currentBe = blockEntities.get(cur);
+
+                for (ConnectionNode nb : outgoing.getOrDefault(cur, Collections.emptySet())) {
+                    if (!nb.isBlock()) continue;
+
+                    final int nd;
+                    //if (currentBe instanceof TeslaRepeaterBlockEntity) {
+                    //    nd = 1;
+                    //} else {
+                    //    nd = d + 1;
+                    //}
+                    nd = d + 1;
+
+                    if (nd > max) continue;
+                    if (!dist.containsKey(nb) || nd < dist.get(nb)) {
+                        dist.put(nb, nd);
+                        q2.add(nb);
                     }
                 }
             }
-        }
 
-        /* Clean nodes that could not be reached via a valid directional chain */
-        for (AbstractTeslaBlockEntity be : new ArrayList<>(blockEntities.values())) {
-            if (be.getDistance() == Integer.MAX_VALUE) {
-                removeConnectionNode(be.asConnectionNode());
-                be.setDistance(0);
+            for (Map.Entry<ConnectionNode,Integer> e : dist.entrySet()) {
+                AbstractTeslaBlockEntity be = blockEntities.get(e.getKey());
+                if (be != null) be.setDistance(e.getValue());
+            }
+
+            for (ConnectionNode node : comp) {
+                if (!node.isEntity() && !dist.containsKey(node)) {
+                    removeConnectionNode(node);
+                    AbstractTeslaBlockEntity be = blockEntities.get(node);
+                    if (be != null) be.setDistance(0);
+                }
             }
         }
     }
+
 
     private Set<ConnectionNode> getAllNodes() {
         Set<ConnectionNode> nodes = new HashSet<>();
@@ -168,16 +250,6 @@ public class TeslaConnectionManager {
         return nodes;
     }
 
-    /**
-     * Checks if the directed connection from source to target can be added.
-     * <br>
-     * This method uses a simulated BFS within the connected component (considering bidirectional
-     * connectivity) to enforce that both source and target are within the allowed maximum distance.
-     *
-     * @param source source node
-     * @param target target node
-     * @return true if the connection is allowed.
-     */
     private boolean canAddConnection(ConnectionNode source, ConnectionNode target) {
         int maxAllowed = CompanionsConfig.DINAMO_MAX_CHAIN_CONNECTIONS;
 
