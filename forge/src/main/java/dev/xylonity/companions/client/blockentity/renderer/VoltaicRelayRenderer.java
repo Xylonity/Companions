@@ -1,21 +1,18 @@
-package dev.xylonity.companions.client.entity.renderer;
+package dev.xylonity.companions.client.blockentity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.client.entity.model.DinamoModel;
+import dev.xylonity.companions.client.blockentity.model.VoltaicRelayModel;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
-import dev.xylonity.companions.common.entity.custom.DinamoEntity;
+import dev.xylonity.companions.common.blockentity.VoltaicRelayBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
+import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -26,14 +23,14 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.texture.AutoGlowingTexture;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements ITeslaUtil {
+public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEntity> implements ITeslaUtil {
 
-    public DinamoRenderer(EntityRendererProvider.Context renderManager, int totalFrames, int ticksPerFrame) {
-        super(renderManager, new DinamoModel());
+    public VoltaicRelayRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
+        super(new VoltaicRelayModel());
         addRenderLayer(new ElectricConnectionLayer(this,
                 new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"),
                 totalFrames,
@@ -41,16 +38,30 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
         ));
     }
 
-    public DinamoRenderer(EntityRendererProvider.Context renderManager) {
+    @Override
+    public boolean shouldRenderOffScreen(@NotNull VoltaicRelayBlockEntity pBlockEntity) {
+        return true;
+    }
+
+    public VoltaicRelayRenderer(BlockEntityRendererProvider.Context renderManager) {
         this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
     }
 
-    private static class ElectricConnectionLayer extends GeoRenderLayer<DinamoEntity> {
+    @Override
+    public @NotNull ResourceLocation getTextureLocation(@NotNull VoltaicRelayBlockEntity animatable) {
+        if (animatable.isActive()) {
+            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
+        }
+
+        return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
+    }
+
+    private static class ElectricConnectionLayer extends GeoRenderLayer<VoltaicRelayBlockEntity> {
         private final ResourceLocation texture;
         private final int totalFrames;
         private final int ticksPerFrame;
 
-        public ElectricConnectionLayer(GeoRenderer<DinamoEntity> renderer, ResourceLocation texture, int totalFrames, int ticksPerFrame) {
+        public ElectricConnectionLayer(GeoRenderer<VoltaicRelayBlockEntity> renderer, ResourceLocation texture, int totalFrames, int ticksPerFrame) {
             super(renderer);
             this.texture = texture;
             this.totalFrames = totalFrames;
@@ -58,39 +69,41 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
         }
 
         @Override
-        public void render(PoseStack poseStack, DinamoEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+        public void render(PoseStack poseStack, VoltaicRelayBlockEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+
+            if (!animatable.isActive()) return;
 
             int frame = calculateCurrentFrame(animatable);
 
             if (frame < 0) return;
 
-            if (animatable.getMainAction() == 0 && animatable.isActive()) {
-                Vec3 origin = animatable.position();
-                Vec3 originOffset = new Vec3(0, animatable.getBbHeight() * 0.8, 0);
+            for (TeslaConnectionManager.ConnectionNode node : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
+                if (node.isEntity()) {
+                    Entity entity = CompanionsEntityTracker.getEntityByUUID(node.entityId());
+                    if (entity instanceof LivingEntity livingEntity) {
+                        Vec3 offset = new Vec3(0.0D, 1.25D, 0.0D);
+                        Vec3 direction = livingEntity.position()
+                                .subtract(animatable.getBlockPos().getCenter())
+                                .add(0.0D, livingEntity.getBbHeight() * 1.1D, 0.0D);
 
-                for (TeslaConnectionManager.ConnectionNode node : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
-                    Vec3 direction;
-                    if (node.isEntity()) {
-                        Entity target = CompanionsEntityTracker.getEntityByUUID(node.entityId());
-                        if (!(target instanceof LivingEntity le)) continue;
-
-                        Vec3 end = le.position().add(0, animatable.getBbHeight() * 0.8, 0);
-                        direction = end.subtract(origin);
-                    } else {
-                        AbstractTeslaBlockEntity be = TeslaConnectionManager.getInstance().getBlockEntity(node);
-                        Vec3 base = new Vec3(be.getBlockPos().getX() + 0.5D, be.getBlockPos().getY(), be.getBlockPos().getZ() + 0.5D);
-                        Vec3 end = base.add(be.electricalChargeEndOffset());
-
-                        direction = end.subtract(origin);
+                        renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
                     }
+                } else if (node.isBlock()) {
+                    AbstractTeslaBlockEntity be = TeslaConnectionManager.getInstance().getBlockEntity(node);
 
-                    renderConnection(bufferSource, poseStack, originOffset, direction, frame, packedLight);
+                    Vec3 offset = animatable.electricalChargeOriginOffset();
+                    Vec3 blockPos = be.getBlockPos().getCenter();
+
+                    Vec3 blockPosVec = new Vec3(blockPos.x, blockPos.y, blockPos.z);
+                    Vec3 direction = blockPosVec.subtract(animatable.getBlockPos().getCenter()).add(be.electricalChargeEndOffset());
+
+                    renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
                 }
             }
 
         }
 
-        private int calculateCurrentFrame(DinamoEntity animatable) {
+        private int calculateCurrentFrame(VoltaicRelayBlockEntity animatable) {
             int frame = animatable.getAnimationStartTick() / ticksPerFrame;
 
             if (frame >= totalFrames) return -1;
@@ -99,7 +112,8 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
         }
 
         /**
-         * renderConnection method derived from the work of mim1q.
+         * The concept of generating 'lightning' within a renderer layer (instead of creating an entity that stretches
+         * between nodes) was inspired by mim1q's work, to whom credit is given for this approach
          *
          * https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
          */
@@ -144,7 +158,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
 
             int[] indices = {0, 1, 2, 3, 3, 2, 1, 0};
             for (int i : indices) {
-                produceVertex(vertexConsumer, positionMatrix, normalMatrix, light, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
+                produceVertex(vertexConsumer, positionMatrix, normalMatrix, 15728880, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
             }
         }
 

@@ -46,6 +46,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
             case EMPTY_PUPPET -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new EmptyPuppetBlock(properties));
             case RESPAWN_TOTEM -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new RespawnTotemBlock(properties));
             case RECALL_PLATFORM -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new RecallPlatformBlock(properties));
+            case VOLTAIC_RELAY -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new VoltaicRelayBlock(properties));
             default -> // TESLA_RECEIVER
                     (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new TeslaCoilBlock(properties));
         };

@@ -20,6 +20,7 @@ public class CompanionsBlocks {
     public static final Supplier<Block> EMPTY_PUPPET;
     public static final Supplier<Block> RESPAWN_TOTEM;
     public static final Supplier<Block> RECALL_PLATFORM;
+    public static final Supplier<Block> VOLTAIC_RELAY;
 
     static {
         TESLA_COIL = registerBlock("tesla_coil_block",
@@ -85,6 +86,14 @@ public class CompanionsBlocks {
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
                         .noOcclusion(), BlockType.RECALL_PLATFORM);
+
+        VOLTAIC_RELAY = registerBlock("voltaic_relay_block",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.VOLTAIC_RELAY);
     }
 
     private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType) {
@@ -99,7 +108,8 @@ public class CompanionsBlocks {
         VOLTAIC_PILLAR,
         EMPTY_PUPPET,
         RESPAWN_TOTEM,
-        RECALL_PLATFORM
+        RECALL_PLATFORM,
+        VOLTAIC_RELAY
     }
 
 }

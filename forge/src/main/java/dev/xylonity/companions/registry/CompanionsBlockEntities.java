@@ -23,6 +23,7 @@ public class CompanionsBlockEntities {
     public static final RegistryObject<BlockEntityType<EmptyPuppetBlockEntity>> EMPTY_PUPPET;
     public static final RegistryObject<BlockEntityType<RespawnTotemBlockEntity>> RESPAWN_TOTEM;
     public static final RegistryObject<BlockEntityType<RecallPlatformBlockEntity>> RECALL_PLATFORM;
+    public static final RegistryObject<BlockEntityType<VoltaicRelayBlockEntity>> VOLTAIC_RELAY;
 
     static {
         TESLA_COIL = register("tesla_coil", TeslaCoilBlockEntity::new, CompanionsBlocks.TESLA_COIL);
@@ -33,6 +34,7 @@ public class CompanionsBlockEntities {
         EMPTY_PUPPET = register("empty_puppet", EmptyPuppetBlockEntity::new, CompanionsBlocks.EMPTY_PUPPET);
         RESPAWN_TOTEM = register("respawn_totem", RespawnTotemBlockEntity::new, CompanionsBlocks.RESPAWN_TOTEM);
         RECALL_PLATFORM = register("recall_platform", RecallPlatformBlockEntity::new, CompanionsBlocks.RECALL_PLATFORM);
+        VOLTAIC_RELAY = register("voltaic_relay", VoltaicRelayBlockEntity::new, CompanionsBlocks.VOLTAIC_RELAY);
     }
 
     private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register(String name, BlockEntityType.BlockEntitySupplier<T> supplier, Supplier<Block> block) {
