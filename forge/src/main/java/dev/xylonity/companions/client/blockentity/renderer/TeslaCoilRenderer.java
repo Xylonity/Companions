@@ -159,7 +159,7 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> im
 
             int[] indices = {0, 1, 2, 3, 3, 2, 1, 0};
             for (int i : indices) {
-                produceVertex(vertexConsumer, positionMatrix, normalMatrix, light, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
+                produceVertex(vertexConsumer, positionMatrix, normalMatrix, 15728880, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
             }
         }
 

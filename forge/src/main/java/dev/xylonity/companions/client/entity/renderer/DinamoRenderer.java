@@ -5,12 +5,14 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.entity.model.DinamoModel;
+import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.custom.DinamoEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -62,41 +64,28 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
 
             if (frame < 0) return;
 
-            if (animatable.getMainAction() == 0) {
-                if (!animatable.isActive()) return;
+            if (animatable.getMainAction() == 0 && animatable.isActive()) {
+                Vec3 origin = animatable.position();
+                Vec3 originOffset = new Vec3(0, animatable.getBbHeight() * 0.8, 0);
 
-                for (TeslaConnectionManager.ConnectionNode e : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
-                    if (e.isEntity()) {
-                        Entity entity = CompanionsEntityTracker.getEntityByUUID(e.entityId());
-                        if (entity instanceof LivingEntity livingEntity) {
-                            Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.90D, 0.0D);
-                            Vec3 direction = livingEntity.position()
-                                    .subtract(animatable.position())
-                                    .add(0.0D, livingEntity.getBbHeight() * 0.90D, 0.0D);
+                for (TeslaConnectionManager.ConnectionNode node : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
+                    Vec3 direction;
+                    if (node.isEntity()) {
+                        Entity target = CompanionsEntityTracker.getEntityByUUID(node.entityId());
+                        if (!(target instanceof LivingEntity le)) continue;
 
-                            renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
-                        }
-                    } else if (e.isBlock()) {
-                        Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.90D, 0.0D);
-                        BlockPos blockPos = e.blockPos();
+                        Vec3 end = le.position().add(0, animatable.getBbHeight() * 0.8, 0);
+                        direction = end.subtract(origin);
+                    } else {
+                        AbstractTeslaBlockEntity be = TeslaConnectionManager.getInstance().getBlockEntity(node);
+                        Vec3 base = new Vec3(be.getBlockPos().getX() + 0.5D, be.getBlockPos().getY(), be.getBlockPos().getZ() + 0.5D);
+                        Vec3 end = base.add(be.electricalChargeEndOffset());
 
-                        Vec3 blockPosVec = new Vec3(blockPos.getX() + 0.5D, blockPos.getY(), blockPos.getZ() + 0.5D);
-                        Vec3 animatablePos = animatable.position();
-                        Vec3 direction = blockPosVec.subtract(animatablePos).add(0.0D, 1.25D, 0.0D);
-
-                        renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
+                        direction = end.subtract(origin);
                     }
+
+                    renderConnection(bufferSource, poseStack, originOffset, direction, frame, packedLight);
                 }
-
-            } else {
-                if (!animatable.isActiveForAttack()) return;
-
-                for (Entity e : animatable.visibleEntities) {
-                    Vec3 offset = new Vec3(0.0D, animatable.getBbHeight() * 0.95D, 0.0D);
-                    Vec3 direction = e.position().subtract(animatable.position()).add(0.0D, e.getBbHeight() * 0.5D, 0.0D);
-                    renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
-                }
-
             }
 
         }

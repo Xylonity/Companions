@@ -9,12 +9,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CoilPulseBehaviour  implements ITeslaNodeBehaviour {
-
+public class CoilPulseBehaviour implements ITeslaNodeBehaviour {
 
     @Override
     public void process(AbstractTeslaBlockEntity coil, Level level, BlockPos blockPos, BlockState blockState) {
-
         //Check if the last node that sent a signal was the dinamo for further checks later
         boolean flagDinamo = false;
         for (TeslaConnectionManager.ConnectionNode node : coil.connectionManager.getIncoming(coil.asConnectionNode())) {

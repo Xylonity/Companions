@@ -20,6 +20,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -33,7 +34,9 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.world.ForgeChunkManager;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -63,6 +66,8 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
     private final ITeslaGeneratorBehaviour pulseBehavior;
     private final ITeslaGeneratorBehaviour attackBehavior;
+
+    private ChunkPos lastChunkPos;
 
     public DinamoEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -185,12 +190,38 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
             setActive(false);
         }
 
+        if (level() instanceof ServerLevel level) {
+            ChunkPos currentChunkPos = new ChunkPos(blockPosition());
+            if (!currentChunkPos.equals(lastChunkPos)) {
+                if (lastChunkPos != null) {
+                    level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);
+                }
+
+                level.setChunkForced(currentChunkPos.x, currentChunkPos.z, true);
+                lastChunkPos = currentChunkPos;
+            }
+        }
+
         if (getMainAction() == 0) {
             pulseBehavior.tick(this);
         } else {
             attackBehavior.tick(this);
         }
 
+    }
+
+    @Override
+    public boolean isPersistenceRequired() {
+        return true;
+    }
+
+    @Override
+    public void remove(@NotNull RemovalReason pReason) {
+        if (level() instanceof ServerLevel level && lastChunkPos != null) {
+            level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);
+        }
+
+        super.remove(pReason);
     }
 
     public void setActive(boolean active) {

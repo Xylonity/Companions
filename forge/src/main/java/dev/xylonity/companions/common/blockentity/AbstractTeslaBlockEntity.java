@@ -10,7 +10,9 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,7 +48,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     protected boolean isActive;
 
     protected ITeslaNodeBehaviour defaultAttackBehaviour;
-
 
     public AbstractTeslaBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -96,10 +97,11 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.isActive = tag.getBoolean("IsActive");
         this.activationTick = tag.contains("ActivationTick") ? tag.getInt("ActivationTick") : 0;
         if (this.cycleCounter >= 0) {
-            tag.putInt("cycleCounter", this.cycleCounter);
+            tag.putInt("CycleCounter", this.cycleCounter);
         }
         this.receivesGenerator = tag.getBoolean("ReceivesGenerator");
         this.setDistance(tag.getInt("Distance"));
+        this.setAnimationStartTick(tag.getInt("AnimationTick"));
     }
 
     @Override
@@ -114,9 +116,10 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         tag.putInt("TickCount", this.tickCount);
         tag.putBoolean("IsActive", this.isActive);
         tag.putInt("ActivationTick", this.activationTick);
-        tag.putInt("cycleCounter", this.cycleCounter);
+        tag.putInt("CycleCounter", this.cycleCounter);
         tag.putBoolean("ReceivesGenerator", this.receivesGenerator);
         tag.putInt("Distance", this.distance);
+        tag.putInt("AnimationTick", this.getAnimationStartTick());
     }
 
     @Override
@@ -144,6 +147,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.tickCount = tag.getInt("TickCount");
         this.isActive = tag.getBoolean("IsActive");
         this.distance = tag.getInt("Distance");
+        this.setAnimationStartTick(tag.getInt("AnimationTick"));
+        this.cycleCounter = tag.getInt("CycleCounter");
     }
 
     @Override
@@ -152,7 +157,18 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         tag.putInt("TickCount", this.tickCount);
         tag.putBoolean("IsActive", this.isActive);
         tag.putInt("Distance", this.distance);
+        tag.putInt("AnimationTick", this.getAnimationStartTick());
+        tag.putInt("CycleCounter", this.cycleCounter);
         return tag;
+    }
+
+    public void sync() {
+        if (!(level instanceof ServerLevel serverLevel)) return;
+
+        Packet<ClientGamePacketListener> pkt = ClientboundBlockEntityDataPacket.create(this);
+        ChunkPos chunkPos = new ChunkPos(worldPosition);
+
+        serverLevel.getChunkSource().chunkMap.getPlayers(chunkPos, false).forEach(p -> p.connection.send(pkt));
     }
 
     public boolean isPendingRemoval() {
@@ -173,6 +189,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     public void startCycle() {
         this.cycleCounter = 0;
+        this.setChanged();
     }
 
     public int getAnimationStartTick() {
