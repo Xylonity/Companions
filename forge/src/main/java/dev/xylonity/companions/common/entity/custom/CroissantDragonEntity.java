@@ -3,7 +3,6 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.croissant.CroissantDragonAttackGoal;
-import dev.xylonity.companions.common.entity.ai.dinamo.DinamoSearchTargetsGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;

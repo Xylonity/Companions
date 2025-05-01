@@ -17,6 +17,9 @@
 
   "broken_dinamo.companions.client_message.requires_wrench": "You need a Wrench repair the entity.",
 
+  "dinamo.companions.client_message.no_attack": "Dectivating attack mode",
+  "dinamo.companions.client_message.attack": "Activating attack mode",
+
   "tooltip.companions.wrench": "\uEA0C Press \uEA0B for more information.",
 
   "hostile_puppet_glove.companions.client_message.game_start": "You're going to start playing rock, paper, scissors.",

@@ -3,7 +3,6 @@ package dev.xylonity.companions.client.entity.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.entity.model.DinamoModel;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
@@ -12,16 +11,13 @@ import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -83,6 +79,16 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
 
                         direction = end.subtract(origin);
                     }
+
+                    renderConnection(bufferSource, poseStack, originOffset, direction, frame, packedLight);
+                }
+            } else if (animatable.getMainAction() != 0 && animatable.isActiveForAttack()) {
+                Vec3 origin = animatable.position();
+                Vec3 originOffset = new Vec3(0, animatable.getBbHeight() * 0.8, 0);
+
+                for (LivingEntity entity : animatable.entitiesToAttack) {
+                    Vec3 end = entity.position().add(0, entity.getBbHeight() * 0.5, 0);
+                    Vec3 direction = end.subtract(origin);
 
                     renderConnection(bufferSource, poseStack, originOffset, direction, frame, packedLight);
                 }

@@ -17,9 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.stream.IntStream;
-
 public class WrenchItem extends Item {
 
     @Nullable
@@ -36,8 +33,6 @@ public class WrenchItem extends Item {
 
         if (dinamoEntity.getMainAction() == 0) {
             handleNodeSelection(player, TeslaConnectionManager.ConnectionNode.forEntity(target.getUUID(), player.level().dimension().location()));
-        } else {
-            handleDinamoAttackToggle(player, dinamoEntity);
         }
 
         return InteractionResult.SUCCESS;
@@ -137,16 +132,6 @@ public class WrenchItem extends Item {
 
             firstNode = null;
         }
-    }
-
-    private void handleDinamoAttackToggle(Player player, DinamoEntity dinamoEntity) {
-        if (!dinamoEntity.shouldAttack()) {
-            player.displayClientMessage(Component.literal("activando ataque").withStyle(ChatFormatting.GREEN), true);
-        } else {
-            player.displayClientMessage(Component.literal("desactivando ataque").withStyle(ChatFormatting.GREEN), true);
-        }
-
-        dinamoEntity.setShouldAttack(!dinamoEntity.shouldAttack());
     }
 
 }
