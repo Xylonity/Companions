@@ -287,6 +287,10 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         this.entityData.set(SHOULD_ATTACK, shouldAttack);
     }
 
+    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect) {
+        connectionManager.addConnection(thisNode, nodeToConnect);
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();

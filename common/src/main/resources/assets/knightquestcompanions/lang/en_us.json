@@ -20,6 +20,11 @@
   "dinamo.companions.client_message.no_attack": "Dectivating attack mode",
   "dinamo.companions.client_message.attack": "Activating attack mode",
 
+  "wrench.companions.client_message.first_node_selection": "First node selected",
+  "wrench.companions.client_message.invalid_selection": "Invalid selection, cannot connect a node to itself",
+  "wrench.companions.client_message.connection_established": "Connection established successfully",
+  "wrench.companions.client_message.connection_deleted": "Connection successfully deleted",
+
   "tooltip.companions.wrench": "\uEA0C Press \uEA0B for more information.",
 
   "hostile_puppet_glove.companions.client_message.game_start": "You're going to start playing rock, paper, scissors.",

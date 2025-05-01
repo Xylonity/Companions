@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.event;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,8 +17,8 @@ public class CompanionsEntityTracker {
 
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getEntity() != null) {
-            uuidToEntityMap.put(event.getEntity().getUUID(), event.getEntity());
+        if (event.getEntity() instanceof LivingEntity livingEntity) {
+            uuidToEntityMap.put(livingEntity.getUUID(), livingEntity);
         }
     }
 

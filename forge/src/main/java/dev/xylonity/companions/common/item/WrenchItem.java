@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.item;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
+import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.custom.DinamoEntity;
 import net.minecraft.ChatFormatting;
@@ -8,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -32,7 +34,7 @@ public class WrenchItem extends Item {
         if (dinamoEntity.getOwner() != null && !player.equals(dinamoEntity.getOwner())) return InteractionResult.PASS;
 
         if (dinamoEntity.getMainAction() == 0) {
-            handleNodeSelection(player, TeslaConnectionManager.ConnectionNode.forEntity(target.getUUID(), player.level().dimension().location()));
+            handleNodeSelection(player, TeslaConnectionManager.ConnectionNode.forEntity(target.getUUID(), player.level().dimension().location()), null);
         }
 
         return InteractionResult.SUCCESS;
@@ -43,9 +45,9 @@ public class WrenchItem extends Item {
         if (context.getLevel().isClientSide()) return InteractionResult.PASS;
 
         BlockPos pos = context.getClickedPos();
-        BlockEntity blockEntity = context.getLevel().getBlockEntity(pos);
+        BlockEntity be = context.getLevel().getBlockEntity(pos);
 
-        if (blockEntity instanceof AbstractTeslaBlockEntity) {
+        if (be instanceof AbstractTeslaBlockEntity) {
             TeslaConnectionManager.ConnectionNode node = TeslaConnectionManager.ConnectionNode.forBlock(pos, context.getLevel().dimension().location());
             handleNodeSelection(context.getPlayer(), node, context);
         }
@@ -53,13 +55,13 @@ public class WrenchItem extends Item {
         return InteractionResult.SUCCESS;
     }
 
-    private void handleNodeSelection(Player player, TeslaConnectionManager.ConnectionNode currentNode, UseOnContext context) {
+    private void handleNodeSelection(Player player, TeslaConnectionManager.ConnectionNode currentNode, @Nullable UseOnContext context) {
         if (firstNode == null) {
             firstNode = currentNode;
-            player.displayClientMessage(Component.literal("first node selected!").withStyle(ChatFormatting.GREEN), true);
+            player.displayClientMessage(Component.translatable("wrench.companions.client_message.first_node_selection").withStyle(ChatFormatting.GREEN), true);
         } else {
             if (firstNode.equals(currentNode)) {
-                player.displayClientMessage(Component.literal("cannot select a node to itself!").withStyle(ChatFormatting.RED), true);
+                player.displayClientMessage(Component.translatable("wrench.companions.client_message.invalid_selection").withStyle(ChatFormatting.RED), true);
                 firstNode = null;
                 return;
             }
@@ -70,68 +72,59 @@ public class WrenchItem extends Item {
             boolean anyConnection = connectionAtoB || connectionBtoA;
 
             if (anyConnection) {
-                if (connectionAtoB) {
-                    BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
-                    if (first instanceof AbstractTeslaBlockEntity be) {
-                        be.handleNodeRemoval(firstNode, currentNode, context);
+                // The context is null if the second node selected is a dinamo (and I assume so), so we just add a generic connection
+                if (context == null) {
+                    if (connectionAtoB) {
+                        manager.removeConnection(firstNode, currentNode);
+                    }
+                    else if (connectionBtoA) {
+                        manager.removeConnection(currentNode, firstNode);
                     }
                 }
-                if (connectionBtoA) {
-                    BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
-                    if (first instanceof AbstractTeslaBlockEntity be) {
-                        be.handleNodeRemoval(currentNode, firstNode, context);
+                else {
+                    // For example, dinamo -> tesla module
+                    if (firstNode.isEntity()) {
+                        manager.removeConnection(firstNode, currentNode);
+                    }
+                    else {
+                        BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
+                        if (first instanceof AbstractTeslaBlockEntity be) {
+                            if (connectionAtoB) {
+                                be.handleNodeRemoval(firstNode, currentNode, context);
+                            } else if (connectionBtoA) {
+                                be.handleNodeRemoval(currentNode, firstNode, context);
+                            }
+                        }
                     }
                 }
 
-                player.displayClientMessage(Component.literal("deleted!").withStyle(ChatFormatting.RED), true);
+                player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_deleted").withStyle(ChatFormatting.RED), true);
             } else {
-                if (!firstNode.isEntity()) {
-                    BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
-                    if (first instanceof AbstractTeslaBlockEntity be) {
-                        be.handleNodeSelection(firstNode, currentNode, context);
-                    }
-                } else {
+                // The context is null if the second node selected is a dinamo (and I assume so), so we just add a generic connection
+                if (context == null) {
                     manager.addConnection(firstNode, currentNode, false);
                 }
+                else {
+                    if (firstNode.isEntity()) {
+                        Entity entity = CompanionsEntityTracker.getEntityByUUID(firstNode.entityId());
+                        if (entity instanceof DinamoEntity dinamo) {
+                            dinamo.handleNodeSelection(firstNode, currentNode);
+                        }
+                    }
+                    else {
+                        BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
+                        if (first instanceof AbstractTeslaBlockEntity be) {
+                            be.handleNodeSelection(firstNode, currentNode, context);
+                        }
+                    }
+                }
 
-                player.displayClientMessage(Component.literal("added!").withStyle(ChatFormatting.GREEN), true);
+                player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_established").withStyle(ChatFormatting.GREEN), true);
             }
 
             firstNode = null;
         }
-    }
 
-    private void handleNodeSelection(Player player, TeslaConnectionManager.ConnectionNode currentNode) {
-        if (firstNode == null) {
-            firstNode = currentNode;
-            player.displayClientMessage(Component.literal("first node selected!").withStyle(ChatFormatting.GREEN), true);
-        } else {
-            if (firstNode.equals(currentNode)) {
-                player.displayClientMessage(Component.literal("cannot select a node to itself!").withStyle(ChatFormatting.RED), true);
-                firstNode = null;
-                return;
-            }
-
-            TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
-            boolean connectionAtoB = manager.getOutgoing(firstNode).contains(currentNode);
-            boolean connectionBtoA = manager.getOutgoing(currentNode).contains(firstNode);
-            boolean anyConnection = connectionAtoB || connectionBtoA;
-
-            if (anyConnection) {
-                if (connectionAtoB) {
-                    manager.removeConnection(firstNode, currentNode);
-                }
-                if (connectionBtoA) {
-                    manager.removeConnection(currentNode, firstNode);
-                }
-                player.displayClientMessage(Component.literal("deleted!").withStyle(ChatFormatting.RED), true);
-            } else {
-                manager.addConnection(firstNode, currentNode, false);
-                player.displayClientMessage(Component.literal("added!").withStyle(ChatFormatting.GREEN), true);
-            }
-
-            firstNode = null;
-        }
     }
 
 }

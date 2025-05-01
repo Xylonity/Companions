@@ -219,7 +219,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
      * Defers the call from the wrench item when this node is getting connected to another one
      * Don't override if the connection is simple (one node to another node)
      */
-    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, UseOnContext ctx) {
+    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @NotNull UseOnContext ctx) {
         connectionManager.addConnection(thisNode, nodeToConnect);
     }
 
@@ -227,7 +227,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
      * Defers the call from the wrench item when this node is getting removed from the tesla network
      * Don't override if the connection is simple (one node to another node)
      */
-    public void handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, UseOnContext ctx) {
+    public void handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @NotNull UseOnContext ctx) {
         connectionManager.removeConnection(thisNode, nodeToConnect);
     }
 
