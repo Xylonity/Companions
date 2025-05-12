@@ -29,7 +29,6 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.FROGGY.get(), FroggyRenderer::new);
         EntityRenderers.register(CompanionsEntities.TEDDY.get(), TeddyRenderer::new);
         EntityRenderers.register(CompanionsEntities.ANTLION.get(), AntlionRenderer::new);
-        EntityRenderers.register(CompanionsEntities.ILLAGER_GOLEM.get(), IllagerGolemRenderer::new);
         EntityRenderers.register(CompanionsEntities.DINAMO.get(), DinamoRenderer::new);
         EntityRenderers.register(CompanionsEntities.BROKEN_DINAMO.get(), BrokenDinamoRenderer::new);
         EntityRenderers.register(CompanionsEntities.HOSTILE_IMP.get(), HostileImpRenderer::new);
@@ -38,11 +37,15 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.SOUL_MAGE.get(), SoulMageRenderer::new);
         EntityRenderers.register(CompanionsEntities.LIVING_CANDLE.get(), LivingCandleRenderer::new);
         EntityRenderers.register(CompanionsEntities.CROISSANT_DRAGON.get(), CroissantDragonRenderer::new);
-        EntityRenderers.register(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGloveRenderer::new);
+
         EntityRenderers.register(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGloveRenderer::new);
         EntityRenderers.register(CompanionsEntities.PUPPET.get(), PuppetRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadRenderer::new);
+
+        EntityRenderers.register(CompanionsEntities.ILLAGER_GOLEM.get(), IllagerGolemRenderer::new);
+        EntityRenderers.register(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGloveRenderer::new);
+        EntityRenderers.register(CompanionsEntities.SACRED_PONTIFF.get(), SacredPontiffRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.SMALL_ICE_SHARD_PROJECTILE.get(), IceShardSmallRenderer::new);
         EntityRenderers.register(CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.get(), IceShardBigRenderer::new);
@@ -53,6 +56,7 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.HEAL_RING_PROJECTILE.get(), HealRingRenderer::new);
         EntityRenderers.register(CompanionsEntities.BRACE_PROJECTILE.get(), BraceRenderer::new);
         EntityRenderers.register(CompanionsEntities.MAGIC_RAY_PIECE_PROJECTILE.get(), MagicRayPieceRenderer::new);
+        EntityRenderers.register(CompanionsEntities.FIRE_RAY_PIECE_PROJECTILE.get(), FireRayPieceRenderer::new);
         EntityRenderers.register(CompanionsEntities.MAGIC_RAY_PIECE_CIRCLE_PROJECTILE.get(), MagicRayCircleRenderer::new);
         EntityRenderers.register(CompanionsEntities.BLACK_HOLE_PROJECTILE.get(), BlackHoleRenderer::new);
         EntityRenderers.register(CompanionsEntities.SOUL_MAGE_BOOK.get(), SoulMageBookRenderer::new);
@@ -61,6 +65,7 @@ public class CompanionsClientEvents {
 
         EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
         EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
+        EntityRenderers.register(CompanionsEntities.FIRE_RAY_BEAM_ENTITY.get(), FireRayBeamRenderer::new);
 
         BlockEntityRenderers.register(CompanionsBlockEntities.TESLA_COIL.get(), TeslaCoilRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.SOUL_FURNACE.get(), SoulFurnaceRenderer::new);

@@ -2,8 +2,10 @@ package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.custom.*;
+import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.entity.projectile.*;
 import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
+import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.GenericTriggerProjectile;
 import dev.xylonity.companions.common.entity.summon.FireworkToadEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +27,6 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<FroggyEntity>> FROGGY;
     public static final RegistryObject<EntityType<TeddyEntity>> TEDDY;
     public static final RegistryObject<EntityType<AntlionEntity>> ANTLION;
-    public static final RegistryObject<EntityType<IllagerGolemEntity>> ILLAGER_GOLEM;
     public static final RegistryObject<EntityType<DinamoEntity>> DINAMO;
     public static final RegistryObject<EntityType<BrokenDinamoEntity>> BROKEN_DINAMO;
     public static final RegistryObject<EntityType<HostileImpEntity>> HOSTILE_IMP;
@@ -34,11 +35,14 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<SoulMageEntity>> SOUL_MAGE;
     public static final RegistryObject<EntityType<LivingCandleEntity>> LIVING_CANDLE;
     public static final RegistryObject<EntityType<CroissantDragonEntity>> CROISSANT_DRAGON;
-    public static final RegistryObject<EntityType<HostilePuppetGloveEntity>> HOSTILE_PUPPET_GLOVE;
     public static final RegistryObject<EntityType<PuppetGloveEntity>> PUPPET_GLOVE;
     public static final RegistryObject<EntityType<PuppetEntity>> PUPPET;
 
     public static final RegistryObject<EntityType<FireworkToadEntity>> FIREWORK_TOAD;
+
+    public static final RegistryObject<EntityType<IllagerGolemEntity>> ILLAGER_GOLEM;
+    public static final RegistryObject<EntityType<HostilePuppetGloveEntity>> HOSTILE_PUPPET_GLOVE;
+    public static final RegistryObject<EntityType<SacredPontiffEntity>> SACRED_PONTIFF;
 
     public static final RegistryObject<EntityType<SmallIceShardProjectile>> SMALL_ICE_SHARD_PROJECTILE;
     public static final RegistryObject<EntityType<BigIceShardProjectile>> BIG_ICE_SHARD_PROJECTILE;
@@ -49,6 +53,7 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<HealRingProjectile>> HEAL_RING_PROJECTILE;
     public static final RegistryObject<EntityType<BraceProjectile>> BRACE_PROJECTILE;
     public static final RegistryObject<EntityType<MagicRayPieceProjectile>> MAGIC_RAY_PIECE_PROJECTILE;
+    public static final RegistryObject<EntityType<FireRayPieceProjectile>> FIRE_RAY_PIECE_PROJECTILE;
     public static final RegistryObject<EntityType<MagicRayCircleProjectile>> MAGIC_RAY_PIECE_CIRCLE_PROJECTILE;
     public static final RegistryObject<EntityType<BlackHoleProjectile>> BLACK_HOLE_PROJECTILE;
     public static final RegistryObject<EntityType<SoulMageBookEntity>> SOUL_MAGE_BOOK;
@@ -57,12 +62,12 @@ public class CompanionsEntities {
 
     public static final RegistryObject<EntityType<GenericTriggerProjectile>> GENERIC_TRIGGER_PROJECTILE;
     public static final RegistryObject<EntityType<CakeCreamTriggerProjectile>> CAKE_CREAM_TRIGGER_PROJECTILE;
+    public static final RegistryObject<EntityType<FireRayBeamEntity>> FIRE_RAY_BEAM_ENTITY;
 
     static {
         FROGGY = register("froggy", FroggyEntity::new, MobCategory.CREATURE, 1f, 1f, null);
         TEDDY = register("teddy", TeddyEntity::new, MobCategory.CREATURE, 1f, 1f, null);
         ANTLION = register("antlion", AntlionEntity::new, MobCategory.CREATURE, 1f, 1f, null);
-        ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f, null);
         DINAMO = register("dinamo", DinamoEntity::new, MobCategory.CREATURE, 1f, 2f, null);
         BROKEN_DINAMO = register("broken_dinamo", BrokenDinamoEntity::new, MobCategory.CREATURE, 1f, 0.5f, null);
         HOSTILE_IMP = register("hostile_imp", HostileImpEntity::new, MobCategory.MONSTER, 0.85f, 1.5f, null);
@@ -71,11 +76,14 @@ public class CompanionsEntities {
         SOUL_MAGE = register("soul_mage", SoulMageEntity::new, MobCategory.CREATURE, 0.85f, 1.2f, null);
         LIVING_CANDLE = register("living_candle", LivingCandleEntity::new, MobCategory.CREATURE, 0.5f, 0.75f, null);
         CROISSANT_DRAGON = register("croissant_dragon", CroissantDragonEntity::new, MobCategory.CREATURE, 1.4f, 1.4f, null);
-        HOSTILE_PUPPET_GLOVE = register("hostile_puppet_glove", HostilePuppetGloveEntity::new, MobCategory.CREATURE, 0.8f, 2f, null);
         PUPPET_GLOVE = register("puppet_glove", PuppetGloveEntity::new, MobCategory.CREATURE, 0.8f, 0.8f, null);
         PUPPET = register("puppet", PuppetEntity::new, MobCategory.CREATURE, 1f, 2.8f, null);
 
         FIREWORK_TOAD = register("firework_toad", FireworkToadEntity::new, MobCategory.CREATURE, 1f, 1f, null);
+
+        ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f, null);
+        HOSTILE_PUPPET_GLOVE = register("hostile_puppet_glove", HostilePuppetGloveEntity::new, MobCategory.CREATURE, 0.8f, 2f, null);
+        SACRED_PONTIFF = register("sacred_pontiff", SacredPontiffEntity::new, MobCategory.CREATURE, 2f, 4f, null);
 
         SMALL_ICE_SHARD_PROJECTILE = register("small_ice_shard_projectile", SmallIceShardProjectile::new, MobCategory.MISC, 0.4f, 0.5f, List.of(EntityType.Builder::noSummon));
         BIG_ICE_SHARD_PROJECTILE = register("big_ice_shard_projectile", BigIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, List.of(EntityType.Builder::noSummon));
@@ -86,6 +94,7 @@ public class CompanionsEntities {
         HEAL_RING_PROJECTILE = register("heal_ring_projectile", HealRingProjectile::new, MobCategory.MISC, 0.5f, 1f, List.of(EntityType.Builder::noSummon));
         BRACE_PROJECTILE = register("brace_projectile", BraceProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         MAGIC_RAY_PIECE_PROJECTILE = register("magic_ray_piece_projectile", MagicRayPieceProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        FIRE_RAY_PIECE_PROJECTILE = register("fire_ray_piece_projectile", FireRayPieceProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         MAGIC_RAY_PIECE_CIRCLE_PROJECTILE = register("magic_ray_circle_projectile", MagicRayCircleProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         BLACK_HOLE_PROJECTILE = register("black_hole_projectile", BlackHoleProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         SOUL_MAGE_BOOK = register("soul_mage_book", SoulMageBookEntity::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
@@ -94,6 +103,7 @@ public class CompanionsEntities {
 
         GENERIC_TRIGGER_PROJECTILE = register("generic_trigger_projectile", GenericTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         CAKE_CREAM_TRIGGER_PROJECTILE = register("cake_cream_trigger_projectile", CakeCreamTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        FIRE_RAY_BEAM_ENTITY = register("fire_ray_beam_entity", FireRayBeamEntity::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
     }
 
     private static <X extends Entity> RegistryObject<EntityType<X>> register(String name, EntityType.EntityFactory<X> entity, MobCategory category, float width, float height, @Nullable List<Consumer<EntityType.Builder<X>>> properties) {
