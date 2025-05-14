@@ -2,13 +2,16 @@ package dev.xylonity.companions.common.entity.hostile;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.HostileEntity;
-import dev.xylonity.companions.common.entity.ai.pontiff.goal.RotatingFireRayGoal;
-import dev.xylonity.companions.common.entity.ai.pontiff.goal.StrafeAroundTargetGoal;
+import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
 import dev.xylonity.companions.common.tick.TickScheduler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -28,6 +31,8 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
+
+import javax.annotation.Nullable;
 
 public class SacredPontiffEntity extends HostileEntity {
 
@@ -54,6 +59,8 @@ public class SacredPontiffEntity extends HostileEntity {
     // Flags
     private boolean hasBeenActivated;
 
+    private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
+
     public SacredPontiffEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.hasBeenActivated = false;
@@ -69,14 +76,19 @@ public class SacredPontiffEntity extends HostileEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
-        this.goalSelector.addGoal(1, new RotatingFireRayGoal(this, 100, 200));
+        this.goalSelector.addGoal(1, new PontiffRotatingFireRayGoal(this, 200, 600));
+        this.goalSelector.addGoal(1, new PontiffMeleeAttackGoal(this, 60, 120));
+        this.goalSelector.addGoal(1, new PontiffStaffKnockAttackGoal(this, 160, 360));
+        this.goalSelector.addGoal(1, new PontiffDashAttackGoal(this, 20, 80));
 
-        this.goalSelector.addGoal(2, new StrafeAroundTargetGoal(this, 0.5, 10));
+        this.goalSelector.addGoal(2, new PontiffStrafeAroundTargetGoal(this, 0.5, 10));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
     @Override
     public void tick() {
+
+        this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
 
         super.tick();
     }
@@ -88,6 +100,22 @@ public class SacredPontiffEntity extends HostileEntity {
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.45f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
+    }
+
+    @Override
+    public void setCustomName(@Nullable Component pName) {
+        super.setCustomName(pName);
+        this.bossInfo.setName(this.getDisplayName());
+    }
+
+    public void startSeenByPlayer(@NotNull ServerPlayer pPlayer) {
+        super.startSeenByPlayer(pPlayer);
+        this.bossInfo.addPlayer(pPlayer);
+    }
+
+    public void stopSeenByPlayer(@NotNull ServerPlayer pPlayer) {
+        super.stopSeenByPlayer(pPlayer);
+        this.bossInfo.removePlayer(pPlayer);
     }
 
     public int getPhase() {

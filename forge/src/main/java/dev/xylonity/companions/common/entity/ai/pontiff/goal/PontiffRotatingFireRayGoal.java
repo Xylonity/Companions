@@ -6,16 +6,13 @@ import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntit
 import dev.xylonity.companions.common.tick.TickScheduler;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.EnumSet;
 import java.util.Random;
 
-public class RotatingFireRayGoal extends AbstractSacredPontiffAttackGoal {
+public class PontiffRotatingFireRayGoal extends AbstractSacredPontiffAttackGoal {
 
-    public RotatingFireRayGoal(SacredPontiffEntity boss, int minCd, int maxCd) {
+    public PontiffRotatingFireRayGoal(SacredPontiffEntity boss, int minCd, int maxCd) {
         super(boss, 171, minCd, maxCd);
     }
 
@@ -35,10 +32,10 @@ public class RotatingFireRayGoal extends AbstractSacredPontiffAttackGoal {
         if (!(pontiff.level() instanceof ServerLevel s)) return;
 
         Vec3 origin = pontiff.position().add(0, pontiff.getBbHeight() + 3.5, 0);
-        float yaw0   = pontiff.getRandom().nextFloat() * 360f;
-        float pitch0 = -pontiff.getRandom().nextFloat() * 60f;
+        float yaw = pontiff.getRandom().nextFloat() * 360f;
+        float pitch = -pontiff.getRandom().nextFloat() * 60f;
 
-        FireRayBeamEntity beam = new FireRayBeamEntity(s, origin, yaw0, pitch0, 150, 30, 1.0f, pontiff);
+        FireRayBeamEntity beam = new FireRayBeamEntity(s, origin, yaw, pitch, 150, 30, 1.0f, pontiff);
         s.addFreshEntity(beam);
     }
 
