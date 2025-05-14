@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.mixin;
+package dev.xylonity.companions.mixin;
 
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.accessor.RaidAccessor;
