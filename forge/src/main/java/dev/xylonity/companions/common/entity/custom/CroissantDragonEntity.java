@@ -89,6 +89,10 @@ public class CroissantDragonEntity extends CompanionEntity {
             if (getEatenAmount() > 0 && this.tickCount >= nextEatenRecover) {
                 setEatenAmount(getEatenAmount() - 1);
 
+                // Animation purposes
+                setHasBeenEaten(true);
+                TickScheduler.scheduleServer(this.level(), () -> this.setHasBeenEaten(false), EATEN_DELAY);
+
                 nextEatenRecover = this.tickCount + this.level().getRandom().nextInt(201) + 100;
             }
         }
