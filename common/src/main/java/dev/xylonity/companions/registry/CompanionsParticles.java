@@ -19,6 +19,8 @@ public class CompanionsParticles {
     public static final Supplier<SimpleParticleType> BLIZZARD_ICE = registerParticle("blizzard_ice", true);
     public static final Supplier<SimpleParticleType> GOLDEN_ALLAY_TRAIL = registerParticle("golden_allay_trail", true);
     public static final Supplier<SimpleParticleType> CAKE_CREAM = registerParticle("cake_cream", true);
+    public static final Supplier<SimpleParticleType> CAKE_CREAM_STRAWBERRY = registerParticle("cake_cream_strawberry", true);
+    public static final Supplier<SimpleParticleType> CAKE_CREAM_CHOCOLATE = registerParticle("cake_cream_chocolate", true);
     public static final Supplier<SimpleParticleType> SOUL_FLAME = registerParticle("soul_flame", true);
     public static final Supplier<SimpleParticleType> FIREWORK_TOAD = registerParticle("firework_toad", true);
 

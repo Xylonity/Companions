@@ -6,9 +6,8 @@ import dev.xylonity.companions.common.particle.CakeCreamParticle;
 import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
@@ -90,19 +89,19 @@ public class CroissantDragonAttackGoal extends Goal {
 
             CakeCreamParticle.setDefaultVelocity(viewVector.x * 0.5, viewVector.y * 0.5, viewVector.z * 0.5);
 
-            if (!dragon.level().isClientSide()) {
-                ServerLevel serverLevel = (ServerLevel) dragon.level();
-                serverLevel.sendParticles(CompanionsParticles.CAKE_CREAM.get(),
-                        spawnPos.x,
-                        spawnPos.y,
-                        spawnPos.z,
+            if (dragon.level() instanceof ServerLevel level) {
+                SimpleParticleType particle = dragon.getArmorName().equals("chocolate") ?
+                    CompanionsParticles.CAKE_CREAM_CHOCOLATE.get() : dragon.getArmorName().equals("strawberry") ?
+                    CompanionsParticles.CAKE_CREAM_STRAWBERRY.get() : CompanionsParticles.CAKE_CREAM.get();
+
+                level.sendParticles(particle, spawnPos.x, spawnPos.y, spawnPos.z,
                         12, 0.0, 0.0, 0.0, 0.0);
             }
 
             if (!dragon.level().isClientSide() && tickCount % 2 == 0) {
                 CakeCreamTriggerProjectile projectile = new CakeCreamTriggerProjectile(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), dragon.level());
                 projectile.setPos(spawnPos.x, spawnPos.y + new Random().nextDouble(0, 1), spawnPos.z);
-
+                projectile.setArmorName(dragon.getArmorName());
 
                 Vec3 variedVector = randomVectorInCone(viewVector, 15.0, new Random());
                 double factor = 0.8 + new Random().nextDouble() * 0.4;

@@ -15,6 +15,12 @@ public class FloorCakeCreamModel extends GeoModel<FloorCakeCreamProjectile> {
 
     @Override
     public ResourceLocation getTextureResource(FloorCakeCreamProjectile animatable) {
+        if (animatable.getArmorName().equals("chocolate")) {
+            return new ResourceLocation(Companions.MOD_ID, "textures/entity/floor_cake_cream_chocolate.png");
+        } else if (animatable.getArmorName().equals("strawberry")) {
+            return new ResourceLocation(Companions.MOD_ID, "textures/entity/floor_cake_cream_strawberry.png");
+        }
+
         return new ResourceLocation(Companions.MOD_ID, "textures/entity/floor_cake_cream.png");
     }
 

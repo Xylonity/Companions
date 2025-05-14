@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -19,6 +21,7 @@ import java.util.Random;
 
 public class FloorCakeCreamProjectile extends BaseProjectile implements GeoEntity {
     private static final EntityDataAccessor<Float> SIZE = SynchedEntityData.defineId(FloorCakeCreamProjectile.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<String> ARMOR_NAME = SynchedEntityData.defineId(FloorCakeCreamProjectile.class, EntityDataSerializers.STRING);
 
     public FloorCakeCreamProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -49,13 +52,36 @@ public class FloorCakeCreamProjectile extends BaseProjectile implements GeoEntit
     }
 
     @Override
+    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        if (pCompound.contains("ArmorName")) {
+            setArmorName(pCompound.getString("ArmorName"));
+        }
+    }
+
+    @Override
+    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putString("ArmorName", getArmorName());
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(SIZE, 1.2f);
+        this.entityData.define(ARMOR_NAME, "default");
     }
 
     public float getSize() {
         return this.entityData.get(SIZE);
+    }
+
+    public void setArmorName(String name) {
+        this.entityData.set(ARMOR_NAME, name);
+    }
+
+    public String getArmorName() {
+        return this.entityData.get(ARMOR_NAME);
     }
 
     @Override

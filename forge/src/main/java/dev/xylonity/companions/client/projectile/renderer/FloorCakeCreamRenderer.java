@@ -21,11 +21,6 @@ public class FloorCakeCreamRenderer extends GeoEntityRenderer<FloorCakeCreamProj
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull FloorCakeCreamProjectile animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/floor_cake_cream.png");
-    }
-
-    @Override
     public RenderType getRenderType(FloorCakeCreamProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }

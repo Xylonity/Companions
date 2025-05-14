@@ -92,6 +92,8 @@ public class CompanionsClientEvents {
         event.registerSpriteSet(CompanionsParticles.BLIZZARD_ICE.get(), BlizzardIceParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.GOLDEN_ALLAY_TRAIL.get(), GoldenAllayTrailParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.CAKE_CREAM.get(), CakeCreamParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.CAKE_CREAM_STRAWBERRY.get(), CakeCreamParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.CAKE_CREAM_CHOCOLATE.get(), CakeCreamParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.SOUL_FLAME.get(), SoulFlameParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.FIREWORK_TOAD.get(), FireworkToadParticle.Provider::new);
     }
