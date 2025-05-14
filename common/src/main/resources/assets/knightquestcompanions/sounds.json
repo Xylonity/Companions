@@ -1,0 +1,10 @@
+{
+  "angel_of_gertrude": {
+    "sounds": [
+      {
+        "name": "knightquestcompanions:angel_of_gertrude",
+        "stream": true
+      }
+    ]
+  }
+}

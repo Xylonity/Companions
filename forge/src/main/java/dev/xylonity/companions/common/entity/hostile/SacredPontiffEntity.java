@@ -4,6 +4,8 @@ import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
 import dev.xylonity.companions.common.tick.TickScheduler;
+import dev.xylonity.companions.common.util.interfaces.IBossMusicProvider;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -11,6 +13,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -34,7 +37,7 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import javax.annotation.Nullable;
 
-public class SacredPontiffEntity extends HostileEntity {
+public class SacredPontiffEntity extends HostileEntity implements IBossMusicProvider {
 
     // Phase 1 animations
     private final RawAnimation INACTIVE = RawAnimation.begin().thenPlay("inactive");
@@ -100,6 +103,11 @@ public class SacredPontiffEntity extends HostileEntity {
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.45f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double pDistanceToClosestPlayer) {
+        return false;
     }
 
     @Override
@@ -237,6 +245,19 @@ public class SacredPontiffEntity extends HostileEntity {
         }
 
         return PlayState.CONTINUE;
+    }
+
+    @Override
+    public @NotNull SoundEvent getBossMusic() {
+        return CompanionsSounds.ANGEL_OF_GERTRUDE.get();
+    }
+
+    @Override
+    public boolean shouldPlayBossMusic(Player listener) {
+        if (!this.isAlive()) return false;
+        if (this.getActivationPhase() < 2) return false;
+        if (this.distanceToSqr(listener) > getMusicRangeSqr()) return false;
+        return true;
     }
 
 }

@@ -13,6 +13,7 @@ import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -116,6 +117,11 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     @Override
     public <T extends ParticleType<?>> Supplier<T> registerParticle(String id, boolean overrideLimiter) {
         return Companions.PARTICLES.register(id, () -> (T) new SimpleParticleType(overrideLimiter));
+    }
+
+    @Override
+    public <T extends SoundEvent> Supplier<T> registerSound(String id, Supplier<T> sound) {
+        return Companions.SOUNDS.register(id, sound);
     }
 
     @Override

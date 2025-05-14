@@ -1,5 +1,6 @@
 package dev.xylonity.companions;
 
+import dev.xylonity.companions.common.event.ClientBossMusicHandler;
 import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.config.BuildSidedConfig;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -8,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -37,6 +39,7 @@ public class Companions {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Companions.MOD_ID);
     public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Companions.MOD_ID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Companions.MOD_ID);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Companions.MOD_ID);
 
     public Companions() {
 
@@ -51,9 +54,9 @@ public class Companions {
         CREATIVE_TABS.register(modEventBus);
         MOB_EFFECTS.register(modEventBus);
         PARTICLES.register(modEventBus);
+        SOUNDS.register(modEventBus);
 
         BuildSidedConfig.of(modEventBus, CompanionsConfig.class);
-
         CompanionsCommon.init();
 
         MinecraftForge.EVENT_BUS.register(new Testing());

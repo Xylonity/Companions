@@ -23,6 +23,7 @@ public class CompanionsCommon {
         CompanionsCreativeModeTabs.init();
         CompanionsEffects.init();
         CompanionsParticles.init();
+        CompanionsSounds.init();
     }
 
 }
