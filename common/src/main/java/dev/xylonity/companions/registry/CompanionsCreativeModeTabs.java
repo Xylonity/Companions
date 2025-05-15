@@ -18,9 +18,9 @@ public class CompanionsCreativeModeTabs {
                             .title(Component.translatable("creativetab.companions.title"))
                             .displayItems((itemDisplayParameters, output) -> {
 
-                                output.accept(CompanionsItems.COPPER_COIN.get());
-                                output.accept(CompanionsItems.NETHER_COIN.get());
-                                output.accept(CompanionsItems.END_COIN.get());
+                                output.accept(CompanionsBlocks.COPPER_COIN.get());
+                                output.accept(CompanionsBlocks.NETHER_COIN.get());
+                                output.accept(CompanionsBlocks.END_COIN.get());
                                 output.accept(CompanionsItems.NETHERITE_CHAINS.get());
                                 output.accept(CompanionsItems.BIG_BREAD.get());
                                 output.accept(CompanionsItems.SOUL_GEM.get());

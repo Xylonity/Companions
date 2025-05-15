@@ -20,9 +20,35 @@ public class CompanionsBlocks {
     public static final Supplier<Block> EMPTY_PUPPET;
     public static final Supplier<Block> RESPAWN_TOTEM;
 
+    public static final Supplier<Block> COPPER_COIN;
+    public static final Supplier<Block> NETHER_COIN;
+    public static final Supplier<Block> END_COIN;
+
     static {
+
+        COPPER_COIN = registerBlock("copper_coin",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.COLOR_ORANGE)
+                        .strength(0.1F)
+                        .sound(SoundType.CHAIN)
+                        .noOcclusion(), BlockType.COIN_BLOCK);
+
+        NETHER_COIN = registerBlock("nether_coin",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.COLOR_BLACK)
+                        .strength(0.1F)
+                        .sound(SoundType.CHAIN)
+                        .noOcclusion(), BlockType.COIN_BLOCK);
+
+        END_COIN = registerBlock("end_coin",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.COLOR_PURPLE)
+                        .strength(0.1F)
+                        .sound(SoundType.CHAIN)
+                        .noOcclusion(), BlockType.COIN_BLOCK);
+
         TESLA_COIL = registerBlock("tesla_coil_block",
-                        BlockBehaviour.Properties.of()
+                BlockBehaviour.Properties.of()
                         .mapColor(MapColor.FIRE)
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
@@ -46,7 +72,7 @@ public class CompanionsBlocks {
                         .noOcclusion(), BlockType.VOLTAIC_PILLAR);
 
         SOUL_FURNACE = registerBlock("soul_furnace_block",
-                        BlockBehaviour.Properties.of()
+                BlockBehaviour.Properties.of()
                         .mapColor(MapColor.FIRE)
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
@@ -89,7 +115,8 @@ public class CompanionsBlocks {
         PLASMA_LAMP,
         VOLTAIC_PILLAR,
         EMPTY_PUPPET,
-        RESPAWN_TOTEM
+        RESPAWN_TOTEM,
+        COIN_BLOCK
     }
 
 }

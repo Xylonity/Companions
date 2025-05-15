@@ -17,9 +17,6 @@ public class CompanionsItems {
 
     public static void init() { ;; }
 
-    public static final Supplier<Item> COPPER_COIN = registerItem("copper_coin", () -> new Item(new Item.Properties()));
-    public static final Supplier<Item> NETHER_COIN = registerItem("nether_coin", () -> new Item(new Item.Properties()));
-    public static final Supplier<Item> END_COIN = registerItem("end_coin", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> NETHERITE_CHAINS = registerItem("netherite_chains", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> BIG_BREAD = registerItem("big_bread", () -> new Item(new Item.Properties().stacksTo(1).food((new FoodProperties.Builder()).nutrition(10).saturationMod(0.6F).meat().build())));
     public static final Supplier<Item> SOUL_GEM = registerItem("soul_gem", () -> new Item(new Item.Properties()));

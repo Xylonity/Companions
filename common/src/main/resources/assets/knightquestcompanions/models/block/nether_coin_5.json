@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "knightquestcompanions:block/nether_coin_solid_side",
+    "end": "knightquestcompanions:block/nether_coin_solid_end"
+  }
+}

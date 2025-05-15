@@ -40,6 +40,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     @Override
     public <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, CompanionsBlocks.BlockType blockType) {
         RegistryObject<T> tr = switch (blockType) {
+            case COIN_BLOCK -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new CoinBlock(properties));
             case SOUL_FURNACE -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new SoulFurnaceBlock(properties.lightLevel((v) -> v.getValue(SoulFurnaceBlock.LIT) ? 13 : 0)));
             case CROISSANT_EGG -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new CroissantEggBlock(properties));
             case PLASMA_LAMP -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new PlasmaLampBlock(properties.lightLevel((v) -> v.getValue(PlasmaLampBlock.LIT) ? 15 : 0)));

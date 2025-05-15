@@ -58,8 +58,8 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
 
     public static final List<SoulFurnaceRecipe> RECIPES = List.of(
             new SoulFurnaceRecipe(Items.CANDLE, null, 1, 100, CompanionsEntities.LIVING_CANDLE.get(), null),
-            new SoulFurnaceRecipe(Items.DIAMOND, CompanionsItems.SOUL_GEM.get(), 1, 160, null, null),
-            new SoulFurnaceRecipe(CompanionsItems.BIG_BREAD.get(), null, 3, 50, null, CompanionsBlocks.CROISSANT_EGG.get())
+            new SoulFurnaceRecipe(Items.DIAMOND, CompanionsItems.SOUL_GEM.get(), 3, 160, null, null),
+            new SoulFurnaceRecipe(CompanionsItems.BIG_BREAD.get(), null, 5, 50, null, CompanionsBlocks.CROISSANT_EGG.get())
     );
 
     public SoulFurnaceBlockEntity(BlockPos pos, BlockState state) {
