@@ -2,6 +2,7 @@ package dev.xylonity.companions.config;
 
 import dev.xylonity.companions.config.api.AutoConfig;
 import dev.xylonity.companions.config.api.ConfigEntry;
+import dev.xylonity.companions.config.api.DecorationType;
 import dev.xylonity.companions.config.impl.ConfigManager;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -13,20 +14,23 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 // Abstraction of the config api to use ForgeConfigSpec, so any mod that adds a general config GUI,
 // such as Configured, detects this mod. This should also enable hot-reloading
 @Deprecated
-public final class BuildSidedConfig {
+public final class ConfigComposer {
     private static final Map<Field, ForgeConfigSpec.ConfigValue<?>> VALUES = new ConcurrentHashMap<>();
 
-    public static void of(IEventBus modBus, Class<?> clazz) {
+    public static void registerConfig(Class<?> clazz, IEventBus modBus) {
         // Let's create the default config from the specified config class
         ConfigManager.init(FMLPaths.CONFIGDIR.get(), clazz);
 
+        AutoConfig ac = clazz.getAnnotation(AutoConfig.class);
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-        makeConfig(builder, clazz);
+
+        makeConfig(builder, clazz, ac.style(), ac.categoryBanner());
 
         ForgeConfigSpec spec = builder.build();
 
@@ -45,47 +49,76 @@ public final class BuildSidedConfig {
         return clazz.getAnnotation(AutoConfig.class).file() + ".toml";
     }
 
-    private static void makeConfig(ForgeConfigSpec.Builder b, Class<?> clazz) {
+    private static void makeConfig(ForgeConfigSpec.Builder b, Class<?> clazz, DecorationType style, boolean categoryBanner) {
         // We sort by category so the entry insertion order won't matter at all
         Map<String, List<Field>> byCategory = Arrays.stream(clazz.getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(ConfigEntry.class))
                 .collect(Collectors.groupingBy(f -> f.getAnnotation(ConfigEntry.class).category()));
 
-        for (var entry : byCategory.entrySet()) {
-            String category = entry.getKey();
-            if (!category.isEmpty()) b.push(category);
+        for (var catEntry : byCategory.entrySet()) {
+            String category = catEntry.getKey();
+            if (!category.isEmpty()) {
+                if (categoryBanner) {
+                    String[] bannerLines = ConfigManager.buildCategoryBanner(category, style).split("\n");
+                    b.comment(bannerLines);
+                }
 
-            for (Field f : entry.getValue()) {
-                ConfigEntry meta = f.getAnnotation(ConfigEntry.class);
-                f.setAccessible(true);
-                // We 'simulate' the actual entry typedef for the config stack
-                ForgeConfigSpec.ConfigValue<?> v = defineValue(b, f, meta);
-                VALUES.put(f, v);
+                b.push(category);
             }
 
-            if (!category.isEmpty()) b.pop();
+            for (Field field : catEntry.getValue()) {
+                ConfigEntry meta = field.getAnnotation(ConfigEntry.class);
+                field.setAccessible(true);
+                Object defaultVal;
+
+                try {
+                    defaultVal = field.get(null);
+                } catch (IllegalAccessException e) {
+                    defaultVal = null;
+                }
+
+                // Raw comments and such
+                String rawComment = ConfigManager.buildEntryComment(meta, defaultVal, style);
+                String wrapped = ConfigManager.wrapText(rawComment);
+                b.comment(wrapped.split("\n"));
+
+                // We 'simulate' the actual entry typedef for the config stack
+                ForgeConfigSpec.ConfigValue<?> cfgValue = defineValue(b, field, meta);
+                VALUES.put(field, cfgValue);
+            }
+
+            if (!category.isEmpty()) {
+                b.pop();
+            }
         }
+
     }
 
-    private static ForgeConfigSpec.ConfigValue<?> defineValue(ForgeConfigSpec.Builder b, Field field, ConfigEntry meta) {
+    private static ForgeConfigSpec.ConfigValue<?> defineValue(ForgeConfigSpec.Builder b, Field field, ConfigEntry entry) {
         try {
             String name = field.getName();
-            b.comment(meta.comment());
             Class<?> type = field.getType();
+
+            // Cap predicates to hard bypass forge's stack adding duplicated comments
+            Predicate<Object> inIntRange = v -> v instanceof Integer i && i >= entry.min() && i <= entry.max();
+            Predicate<Object> inLongRange = v -> v instanceof Long l && l >= (long) entry.min() && l <= (long) entry.max();
+            Predicate<Object> inFloatRange = v -> v instanceof Float f && f >= (float) entry.min() && f <= (float) entry.max();
+            Predicate<Object> inDoubleRange = v -> v instanceof Double d && d >= entry.min() && d <= entry.max();
+
             if (type == int.class) {
-                return b.defineInRange(name, field.getInt(null), (int) meta.min(), (int) meta.max());
+                return b.define(name, field.getInt(null), inIntRange);
             }
 
             if (type == double.class) {
-                return b.defineInRange(name, field.getDouble(null), meta.min(), meta.max());
+                return b.define(name, field.getDouble(null), inDoubleRange);
             }
 
             if (type == float.class) {
-                return b.defineInRange(name, field.getFloat(null), (float) meta.min(), (float) meta.max());
+                return b.define(name, field.getFloat(null), inFloatRange);
             }
 
             if (type == long.class) {
-                return b.defineInRange(name, field.getLong(null), (long) meta.min(), (long) meta.max());
+                return b.define(name, field.getLong(null), inLongRange);
             }
 
             if (type == boolean.class) {

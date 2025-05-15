@@ -94,7 +94,7 @@ public final class ConfigManager {
         cfg.save();
     }
 
-    private static String buildCategoryBanner(String cat, DecorationType style) {
+    public static String buildCategoryBanner(String cat, DecorationType style) {
         String title = (cat.isEmpty() ? "GENERAL" : cat.toUpperCase()) + " SETTINGS";
         return switch (style) {
             case VERBOSE -> {
@@ -111,7 +111,7 @@ public final class ConfigManager {
 
     }
 
-    private static String buildEntryComment(ConfigEntry entry, Object defaultRawValue, DecorationType style) {
+    public static String buildEntryComment(ConfigEntry entry, Object defaultRawValue, DecorationType style) {
         String base = entry.comment().trim();
         String note = entry.note().trim();
 
@@ -204,7 +204,7 @@ public final class ConfigManager {
         return Double.toString(d);
     }
 
-    private static String wrapText(String text) {
+    public static String wrapText(String text) {
         // Parser that jumps to the next line each 100 characters (mostly used by normal comments)
         StringBuilder out = new StringBuilder();
         for (String paragraph : text.split("\n")) {

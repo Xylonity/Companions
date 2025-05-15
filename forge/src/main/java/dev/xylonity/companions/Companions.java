@@ -1,8 +1,7 @@
 package dev.xylonity.companions;
 
-import dev.xylonity.companions.common.event.ClientBossMusicHandler;
 import dev.xylonity.companions.common.tick.TickScheduler;
-import dev.xylonity.companions.config.BuildSidedConfig;
+import dev.xylonity.companions.config.ConfigComposer;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.*;
 import net.minecraft.client.Minecraft;
@@ -56,7 +55,7 @@ public class Companions {
         PARTICLES.register(modEventBus);
         SOUNDS.register(modEventBus);
 
-        BuildSidedConfig.of(modEventBus, CompanionsConfig.class);
+        ConfigComposer.registerConfig(CompanionsConfig.class, modEventBus);
         CompanionsCommon.init();
 
         MinecraftForge.EVENT_BUS.register(new Testing());

@@ -28,12 +28,10 @@ public final class CompanionsConfig {
             min = 0.0F, max = 100.0F)
     public static float HEAL_RING_HEALING = 6.0F;
 
-    @ConfigEntry(
-            comment = "Should certain companions have the ability to work?")
+    @ConfigEntry(comment = "Should certain companions have the ability to work?")
     public static boolean SHOULD_COMPANIONS_WORK = true;
 
-    @ConfigEntry(
-            comment = "Can companions wander around if either not following the owner nor sitting?")
+    @ConfigEntry(comment = "Can companions wander around if either not following the owner nor sitting?")
     public static boolean SHOULD_COMPANIONS_WANDER = true;
 
 }
