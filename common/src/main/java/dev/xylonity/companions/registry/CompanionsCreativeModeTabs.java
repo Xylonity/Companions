@@ -30,6 +30,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.CANNON_ARM.get());
                                 output.accept(CompanionsItems.NETHERITE_DAGGER.get());
                                 output.accept(CompanionsItems.HOURGLASS.get());
+                                output.accept(CompanionsItems.ANGEL_OF_GERTRUDE_DISC.get());
 
                                 output.accept(CompanionsItems.BOOK_ICE_SHARD.get());
                                 output.accept(CompanionsItems.BOOK_ICE_TORNADO.get());

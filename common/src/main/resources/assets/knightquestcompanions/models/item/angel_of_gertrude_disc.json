@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "knightquestcompanions:item/angel_of_gertrude_disc"
+  }
+}

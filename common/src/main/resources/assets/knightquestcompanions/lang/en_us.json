@@ -23,5 +23,8 @@
   "hostile_puppet_glove.companions.client_message.wrong_item": "You need rock, paper, or scissors.",
   "hostile_puppet_glove.companions.client_message.draw": "Draw!",
   "hostile_puppet_glove.companions.client_message.glove_wins": "The glove wins!",
-  "hostile_puppet_glove.companions.client_message.player_wins": "You win!"
+  "hostile_puppet_glove.companions.client_message.player_wins": "You win!",
+
+  "item.knightquestcompanions.angel_of_gertrude_disc": "Angel of Gertrude Music Disc",
+  "item.knightquestcompanions.angel_of_gertrude_disc.desc": "Solas Composer - Angel of Gertrude"
 }
