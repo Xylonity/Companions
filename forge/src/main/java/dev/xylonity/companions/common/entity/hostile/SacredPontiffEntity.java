@@ -68,6 +68,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         super(pEntityType, pLevel);
         this.hasBeenActivated = false;
         this.setNoMovement(true);
+        this.setMaxUpStep(1f);
     }
 
     @Override

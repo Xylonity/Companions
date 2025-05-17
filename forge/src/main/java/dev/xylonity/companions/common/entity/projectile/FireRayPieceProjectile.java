@@ -94,7 +94,7 @@ public class FireRayPieceProjectile extends BaseProjectile {
     @Override public void tick() {
         super.tick();
 
-        if (!level().isClientSide) {
+        if (!level().isClientSide && !isInvisible()) {
             List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.25),
                     e -> e != getOwner()
             );

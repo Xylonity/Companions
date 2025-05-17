@@ -1,8 +1,10 @@
 package dev.xylonity.companions.common.entity.ai.pontiff;
 
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
@@ -69,6 +71,13 @@ public abstract class AbstractSacredPontiffAttackGoal extends Goal {
         }
 
         attackTicks++;
+    }
+
+    public static boolean isEntityInFront(LivingEntity viewer, Entity target, double fov) {
+        Vec3 view = viewer.getLookAngle().normalize();
+        Vec3 toTarget = new Vec3(target.getX(), viewer.getY(), target.getZ()).subtract(viewer.position()).normalize();
+        double angle = Math.acos(view.dot(toTarget)) * (180.0 / Math.PI);
+        return angle < (fov / 2);
     }
 
     @Override

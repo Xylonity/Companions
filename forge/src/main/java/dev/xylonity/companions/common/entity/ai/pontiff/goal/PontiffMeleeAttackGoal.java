@@ -34,7 +34,7 @@ public class PontiffMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
 
     @Override
     public boolean canUse() {
-        return super.canUse() && pontiff.getTarget() != null && pontiff.distanceTo(pontiff.getTarget()) < 5;
+        return super.canUse() && pontiff.getTarget() != null && pontiff.distanceTo(pontiff.getTarget()) < 4 && isEntityInFront(pontiff, pontiff.getTarget(), 200);
     }
 
     @Override
@@ -45,9 +45,9 @@ public class PontiffMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         for (Entity e : target.level().getEntitiesOfClass(Entity.class,
-                new AABB(new BlockPos((int) target.getX(), (int) target.getY(), (int) target.getZ())).inflate(2),
+                new AABB(new BlockPos((int) target.getX(), (int) target.getY(), (int) target.getZ())).inflate(3),
                 e -> !(e instanceof HostileEntity) )) {
-            if (e instanceof LivingEntity livingEntity) {
+            if (e instanceof LivingEntity livingEntity && pontiff.hasLineOfSight(livingEntity) && isEntityInFront(pontiff, livingEntity, 180)) {
                 pontiff.doHurtTarget(livingEntity);
                 livingEntity.knockback(0.5f, pontiff.getX() - target.getX(), pontiff.getZ() - target.getZ());
             }

@@ -20,7 +20,7 @@ public class FireRayPieceModel extends GeoModel<FireRayPieceProjectile> {
 
     @Override
     public ResourceLocation getAnimationResource(FireRayPieceProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/magic_ray_piece.animation.json");
+        return new ResourceLocation(Companions.MOD_ID, "animations/fire_ray_piece.animation.json");
     }
 
 }
