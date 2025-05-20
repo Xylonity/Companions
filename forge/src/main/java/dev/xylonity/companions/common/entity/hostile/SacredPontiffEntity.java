@@ -210,16 +210,6 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
-        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
-    }
-
-    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
-
-        if (this.swinging && event.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
-            this.swinging = false;
-        }
-
-        return PlayState.CONTINUE;
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {

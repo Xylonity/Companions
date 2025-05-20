@@ -1,0 +1,105 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "knightquestcompanions:nether_coin",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "level": "0"
+                  }
+                }
+              ],
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            },
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "knightquestcompanions:nether_coin",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "level": "1"
+                  }
+                }
+              ],
+              "count": 2.0,
+              "function": "minecraft:set_count"
+            },
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "knightquestcompanions:nether_coin",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "level": "2"
+                  }
+                }
+              ],
+              "count": 3.0,
+              "function": "minecraft:set_count"
+            },
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "knightquestcompanions:nether_coin",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "level": "3"
+                  }
+                }
+              ],
+              "count": 4.0,
+              "function": "minecraft:set_count"
+            },
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "knightquestcompanions:nether_coin",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "level": "4"
+                  }
+                }
+              ],
+              "count": 5.0,
+              "function": "minecraft:set_count"
+            },
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "knightquestcompanions:nether_coin",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "level": "5"
+                  }
+                }
+              ],
+              "count": 6.0,
+              "function": "minecraft:set_count"
+            },
+            {
+              "function": "minecraft:explosion_decay"
+            }
+          ],
+          "name": "knightquestcompanions:nether_coin"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "minecraft:blocks/candle"
+}

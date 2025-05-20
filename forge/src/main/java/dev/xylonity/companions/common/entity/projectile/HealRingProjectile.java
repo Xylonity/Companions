@@ -60,11 +60,7 @@ public class HealRingProjectile extends BaseProjectile implements GeoEntity {
             this.move(MoverType.SELF, velocity);
         }
 
-        if (tickCount >= getLifetime()) this.remove(RemovalReason.DISCARDED);
     }
-
-    @Override
-    protected void defineSynchedData() { ;; }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {

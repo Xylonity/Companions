@@ -6,7 +6,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -19,7 +18,7 @@ public class CoinBlock extends Block {
     private static final VoxelShape SHAPE_3 = Block.box(0, 0, 0, 16, 4, 16);
     private static final VoxelShape SHAPE_4 = Block.box(0, 0, 0, 16, 6, 16);
     private static final VoxelShape SHAPE_5 = Block.box(0, 0, 0, 16, 11, 16);
-    public static final IntegerProperty LEVEL = BlockStateProperties.LEVEL;
+    public static final IntegerProperty LEVEL = IntegerProperty.create("level", 0, 5);
 
     public CoinBlock(Properties properties) {
         super(properties);

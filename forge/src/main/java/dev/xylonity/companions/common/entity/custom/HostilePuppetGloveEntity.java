@@ -8,7 +8,9 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -17,6 +19,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -28,6 +32,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
 import java.util.UUID;
 
 public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
@@ -127,6 +132,13 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
             } else if (res == 1) {
                 // Punches the player and goes back to idle
                 TickScheduler.scheduleServer(level(), () -> setGloveMove(4), 20);
+
+                // Delayed hurt
+                List<Player> list = this.level().getEntitiesOfClass(Player.class, new AABB(this.blockPosition()).inflate(4));
+                if (list.contains(pPlayer) && isEntityInFront(this, pPlayer, 120)) {
+                    TickScheduler.scheduleServer(level(), () -> doHurtTarget(pPlayer), 25);
+                }
+
                 TickScheduler.scheduleServer(level(), () -> setGloveMove(0), 30);
 
                 pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.glove_wins"), true);
@@ -161,6 +173,13 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
         }
 
         return InteractionResult.SUCCESS;
+    }
+
+    public static boolean isEntityInFront(LivingEntity viewer, Entity target, double fov) {
+        Vec3 view = viewer.getLookAngle().normalize();
+        Vec3 toTarget = new Vec3(target.getX(), viewer.getY(), target.getZ()).subtract(viewer.position()).normalize();
+        double angle = Math.acos(view.dot(toTarget)) * (180.0 / Math.PI);
+        return angle < (fov / 2);
     }
 
     // Handles every move and checks if the players wins

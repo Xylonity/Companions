@@ -183,7 +183,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
             double dy = (this.level().getRandom().nextDouble() - 0.5) * 0.1;
             double dz = (this.level().getRandom().nextDouble() - 0.5) * 0.1;
             this.level().addParticle(ParticleTypes.SNOWFLAKE, this.getX(), this.getY(), this.getZ(), dx, dy, dz);
-            if (i % 2 == 0) this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.ICE)), this.getX(), this.getY(), this.getZ(), dx, dy, dz);
+            if (i % 2 == 0) this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.ICE)), this.getX(), this.getY() + getBbHeight() * 0.5, this.getZ(), dx, dy, dz);
         }
     }
 
