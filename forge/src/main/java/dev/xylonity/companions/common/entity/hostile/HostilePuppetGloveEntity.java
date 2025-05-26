@@ -1,6 +1,9 @@
-package dev.xylonity.companions.common.entity.custom;
+package dev.xylonity.companions.common.entity.hostile;
 
+import dev.xylonity.companions.common.entity.custom.PuppetGloveEntity;
 import dev.xylonity.companions.common.tick.TickScheduler;
+import dev.xylonity.companions.registry.CompanionsEntities;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -47,15 +50,18 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
     private final RawAnimation GAME_ROCK = RawAnimation.begin().thenPlay("game_rock");
     private final RawAnimation GAME_PAPER = RawAnimation.begin().thenPlay("game_paper");
     private final RawAnimation GAME_ATTACK = RawAnimation.begin().thenPlay("game_attack");
+    private final RawAnimation GAME_LOOSE = RawAnimation.begin().thenPlay("game_loose");
+    private final RawAnimation GAME_TAME = RawAnimation.begin().thenPlay("game_tame");
 
     private static final EntityDataAccessor<Boolean> IS_PLAYING = SynchedEntityData.defineId(HostilePuppetGloveEntity.class, EntityDataSerializers.BOOLEAN);
-    // 0 idle, 1 stone, 2 paper, 3 scissors, 4 attack
+    // 0 idle, 1 stone, 2 paper, 3 scissors, 4 attack, 5 round loose, 6 tame
     private static final EntityDataAccessor<Integer> GLOVE_MOVE = SynchedEntityData.defineId(HostilePuppetGloveEntity.class, EntityDataSerializers.INT);
     // 0 idle, 1 drop, 2 pickup
     private static final EntityDataAccessor<Integer> BROOM_PHASE = SynchedEntityData.defineId(HostilePuppetGloveEntity.class, EntityDataSerializers.INT);
 
     public UUID playingPlayerUUID = null;
     private long gameAutoStop = 0;
+    private long roundsLost = 0;
 
     public HostilePuppetGloveEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -106,6 +112,12 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
     protected @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (isPlaying() && getGloveMove() != 0 || !isPlaying() && getBroomPhase() != 0) return InteractionResult.FAIL;
 
+        Vec3 entityEyePos = this.position().add(0, this.getEyeHeight(), 0);
+        Vec3 playerEyePos = pPlayer.position().add(0, pPlayer.getEyeHeight(), 0);
+        if (this.getLookAngle().dot(playerEyePos.subtract(entityEyePos).normalize()) < Math.cos(Math.toRadians(45.0))) {
+            return InteractionResult.FAIL;
+        }
+
         if (isPlaying()) {
             // If the player who tries to interact is different from the original one
             if (!pPlayer.getUUID().equals(playingPlayerUUID)) {
@@ -122,7 +134,10 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
             if (level() instanceof ServerLevel)
                 setGloveMove(random.nextInt(1, 4));
 
-            // Checks if the player wins. 0 draw, 1 glove, 2 player
+            // 20 ticks delay from now on because of the glove move above, which is 20 ticks long, so the consecutive tasks
+            // are delayed
+
+            // Checks if the player wins. 0 draw, 1 glove, 2 player.
             int res = doesThePlayerWin(getPlayerMoveFromItem(stack), getGloveMove());
             if (res == 0) {
                 // Triggers playing idle animation
@@ -143,14 +158,44 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
 
                 pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.glove_wins"), true);
             } else {
-                // TODO: lose animation
-                TickScheduler.scheduleServer(level(), () -> setBroomPhase(2), 20);
-                TickScheduler.scheduleServer(level(), () -> setIsPlaying(false), 20);
-                TickScheduler.scheduleServer(level(), () -> setBroomPhase(0), 40);
+                if (roundsLost != 3) {
+                    TickScheduler.scheduleServer(level(), () -> setGloveMove(5), 20);
+                    TickScheduler.scheduleServer(level(), () -> setGloveMove(0), 20 + 33);
 
-                pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.player_wins"), true);
+                    pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.player_wins_round"), true);
 
-                playingPlayerUUID = null;
+                    roundsLost++;
+                } else {
+                    TickScheduler.scheduleServer(level(), () -> setGloveMove(6), 20);
+
+                    TickScheduler.scheduleServer(level(), () -> {
+
+                        PuppetGloveEntity glove = CompanionsEntities.PUPPET_GLOVE.get().create(level());
+                        if (glove != null) {
+                            for (int i = 0; i < 50; i++) {
+                                double dx = (this.random.nextDouble() - 0.5) * 2.0;
+                                double dy = (this.random.nextDouble() - 0.5) * 2.0;
+                                double dz = (this.random.nextDouble() - 0.5) * 2.0;
+                                if (this.level() instanceof ServerLevel level) {
+                                    level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + getBbHeight() * 0.5, this.getZ(), 1, dx, dy, dz, 0.1);
+                                }
+                            }
+
+                            glove.tame(pPlayer);
+                            glove.moveTo(this.blockPosition().getCenter());
+
+                            glove.setXRot(this.getXRot());
+                            glove.setYRot(this.getYRot());
+                            level().addFreshEntity(glove);
+                        }
+
+                        this.remove(RemovalReason.DISCARDED);
+                    }, 64);
+
+                    pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.player_wins"), true);
+
+                    playingPlayerUUID = null;
+                }
             }
 
             // Reset the counter
@@ -266,6 +311,10 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
                 event.setAnimation(GAME_SCISSORS);
             } else if (getGloveMove() == 4) {
                 event.setAnimation(GAME_ATTACK);
+            } else if (getGloveMove() == 5) {
+                event.setAnimation(GAME_LOOSE);
+            } else if (getGloveMove() == 6) {
+                event.setAnimation(GAME_TAME);
             } else {
                 event.setAnimation(GAME_IDLE);
             }
