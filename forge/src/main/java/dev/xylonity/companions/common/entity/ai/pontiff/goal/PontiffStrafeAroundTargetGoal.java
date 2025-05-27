@@ -7,7 +7,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import java.util.EnumSet;
 
 public class PontiffStrafeAroundTargetGoal extends Goal {
-    private final SacredPontiffEntity mob;
+    private final SacredPontiffEntity pontiff;
     private final double speed;
     private final float radiusSqr;
 
@@ -17,45 +17,51 @@ public class PontiffStrafeAroundTargetGoal extends Goal {
     private int strafeTime = -1;
 
     public PontiffStrafeAroundTargetGoal(SacredPontiffEntity mob, double speed, float radius) {
-        this.mob = mob;
+        this.pontiff = mob;
         this.speed = speed;
         this.radiusSqr = (float) Math.pow(radius, 2);
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
-    @Override public boolean canUse() {
-        return mob.getTarget() != null && mob.getAttackType() == 0 && mob.getActivationPhase() == 2;
+    @Override
+    public boolean canUse() {
+        if (pontiff.getTarget() == null) return false;
+        if (pontiff.getAttackType() != 0) return false;
+        if (pontiff.getActivationPhase() != 2) return false;
+        return true;
     }
 
-    @Override public boolean canContinueToUse() {
+    @Override
+    public boolean canContinueToUse() {
         return canUse();
     }
 
-    @Override public boolean requiresUpdateEveryTick() {
+    @Override
+    public boolean requiresUpdateEveryTick() {
         return true;
     }
 
     @Override
     public void tick() {
-        LivingEntity target = mob.getTarget();
+        LivingEntity target = pontiff.getTarget();
         if (target == null) return;
 
-        double distSqr = mob.distanceToSqr(target);
-        boolean canSee = mob.getSensing().hasLineOfSight(target);
+        double distSqr = pontiff.distanceToSqr(target);
+        boolean canSee = pontiff.getSensing().hasLineOfSight(target);
 
         seeTime = canSee ? Math.min(seeTime+1, 20) : seeTime-1;
 
         if (distSqr <= radiusSqr && seeTime >= 20) {
-            mob.getNavigation().stop();
+            pontiff.getNavigation().stop();
             ++strafeTime;
         } else {
-            mob.getNavigation().moveTo(target, speed);
+            pontiff.getNavigation().moveTo(target, speed);
             strafeTime = -1;
         }
 
         if (strafeTime >= 20) {
-            if (mob.getRandom().nextFloat() < 0.3) clockwise  = !clockwise;
-            if (mob.getRandom().nextFloat() < 0.3) backwards  = !backwards;
+            if (pontiff.getRandom().nextFloat() < 0.3) clockwise  = !clockwise;
+            if (pontiff.getRandom().nextFloat() < 0.3) backwards  = !backwards;
             strafeTime = 0;
         }
 
@@ -63,10 +69,10 @@ public class PontiffStrafeAroundTargetGoal extends Goal {
             if (distSqr > radiusSqr * 0.75f) backwards = false;
             else if (distSqr < radiusSqr * 0.25f) backwards = true;
 
-            mob.getMoveControl().strafe(backwards ? -0.5F : 0.5F, clockwise ? 0.5F  : -0.5F);
-            mob.lookAt(target, 30f, 30f);
+            pontiff.getMoveControl().strafe(backwards ? -0.5F : 0.5F, clockwise ? 0.5F  : -0.5F);
+            if (pontiff.shouldLookAtTarget()) pontiff.lookAt(target, 30f, 30f);
         } else {
-            mob.getLookControl().setLookAt(target, 30f, 30f);
+            if (pontiff.shouldLookAtTarget()) pontiff.getLookControl().setLookAt(target, 30f, 30f);
         }
     }
 

@@ -106,4 +106,9 @@ public class PontiffDashAttackGoal extends AbstractSacredPontiffAttackGoal {
         return 32;
     }
 
+    @Override
+    protected int phase() {
+        return 1;
+    }
+
 }

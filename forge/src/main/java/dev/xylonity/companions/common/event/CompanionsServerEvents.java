@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.event;
 
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.entity.custom.*;
+import dev.xylonity.companions.common.entity.hostile.HostilePuppetGloveEntity;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.entity.summon.FireworkToadEntity;
 import dev.xylonity.companions.registry.CompanionsEntities;

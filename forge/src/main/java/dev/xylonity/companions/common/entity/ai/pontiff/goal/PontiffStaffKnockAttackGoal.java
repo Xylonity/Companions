@@ -37,4 +37,9 @@ public class PontiffStaffKnockAttackGoal extends AbstractSacredPontiffAttackGoal
         return 26;
     }
 
+    @Override
+    protected int phase() {
+        return 1;
+    }
+
 }

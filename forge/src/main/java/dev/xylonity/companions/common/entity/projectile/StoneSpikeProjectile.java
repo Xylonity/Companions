@@ -34,7 +34,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class StoneSpikeProjectile extends BaseProjectile implements GeoEntity {
+public class StoneSpikeProjectile extends BaseProjectile {
     private final RawAnimation APPEAR = RawAnimation.begin().thenPlay("appear");
 
     private final float DAMAGE = 4.0F;

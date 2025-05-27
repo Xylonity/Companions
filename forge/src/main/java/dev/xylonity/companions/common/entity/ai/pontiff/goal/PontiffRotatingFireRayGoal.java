@@ -56,4 +56,9 @@ public class PontiffRotatingFireRayGoal extends AbstractSacredPontiffAttackGoal 
         return 10;
     }
 
+    @Override
+    protected int phase() {
+        return 1;
+    }
+
 }

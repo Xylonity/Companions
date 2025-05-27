@@ -3,38 +3,34 @@ package dev.xylonity.companions.common.entity.ai.pontiff.goal;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
-import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
-import dev.xylonity.companions.common.tick.TickScheduler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
-import java.util.Random;
+public class HolinessStakeAttackGoal extends AbstractSacredPontiffAttackGoal {
 
-public class PontiffMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
-
-    public PontiffMeleeAttackGoal(SacredPontiffEntity boss, int minCd, int maxCd) {
-        super(boss, 31, minCd, maxCd);
+    public HolinessStakeAttackGoal(SacredPontiffEntity boss, int minCd, int maxCd) {
+        super(boss, 25, minCd, maxCd);
     }
 
     @Override
     public void start() {
         super.start();
         pontiff.setNoMovement(true);
+        pontiff.setShouldLookAtTarget(false);
     }
 
     @Override
     public void stop() {
         super.stop();
         pontiff.setNoMovement(false);
+        pontiff.setShouldLookAtTarget(true);
     }
 
     @Override
     public boolean canUse() {
-        return super.canUse() && pontiff.getTarget() != null && pontiff.distanceTo(pontiff.getTarget()) < 3 && isEntityInFront(pontiff, pontiff.getTarget(), 200);
+        return super.canUse() && pontiff.getTarget() != null && pontiff.distanceTo(pontiff.getTarget()) < 8 && isEntityInFront(pontiff, pontiff.getTarget(), 200);
     }
 
     @Override
@@ -47,9 +43,9 @@ public class PontiffMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
         for (Entity e : target.level().getEntitiesOfClass(Entity.class,
                 new AABB(new BlockPos((int) target.getX(), (int) target.getY(), (int) target.getZ())).inflate(3),
                 e -> !(e instanceof HostileEntity) )) {
-            if (e instanceof LivingEntity livingEntity && pontiff.hasLineOfSight(livingEntity) && isEntityInFront(pontiff, livingEntity, 180)) {
+            if (e instanceof LivingEntity livingEntity && pontiff.hasLineOfSight(livingEntity) && isEntityInFront(pontiff, livingEntity, 90)) {
                 pontiff.doHurtTarget(livingEntity);
-                livingEntity.knockback(0.5f, pontiff.getX() - target.getX(), pontiff.getZ() - target.getZ());
+                livingEntity.knockback(1f, pontiff.getX() - target.getX(), pontiff.getZ() - target.getZ());
             }
         }
 
@@ -57,12 +53,12 @@ public class PontiffMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
 
     @Override
     protected int attackDelay() {
-        return 10;
+        return 12;
     }
 
     @Override
     protected int phase() {
-        return 1;
+        return 2;
     }
 
 }

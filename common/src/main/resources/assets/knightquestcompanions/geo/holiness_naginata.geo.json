@@ -1,0 +1,27 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 12,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "spear2",
+					"pivot": [0.1, 0.13531, 0.375],
+					"cubes": [
+						{"origin": [13.6, -4.63969, -24], "size": [22, 13, 0], "pivot": [-0.4, 3.86031, -23.5], "rotation": [0, -90, 0], "uv": [66, 78]},
+						{"origin": [-23.4, 2.56031, 48], "size": [14, 2, 2], "pivot": [-0.4, 3.06031, 49.5], "rotation": [0, -90, 0], "uv": [63, 97]},
+						{"origin": [21.6, 2.56031, -11], "size": [14, 2, 2], "pivot": [-0.4, 3.06031, -9.5], "rotation": [0, -90, 0], "uv": [31, 97]},
+						{"origin": [-9.4, 2.56031, 48], "size": [45, 2, 2], "pivot": [-0.4, 3.06031, 49.5], "rotation": [0, -90, 0], "uv": [34, 92]}
+					]
+				}
+			]
+		}
+	]
+}

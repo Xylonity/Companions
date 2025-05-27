@@ -2,6 +2,13 @@ package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.puppet.glove.goal.PuppetGloveAttackGoal;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -10,7 +17,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -29,6 +35,8 @@ public class PuppetGloveEntity extends CompanionEntity {
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation ATTACK = RawAnimation.begin().thenPlay("attack");
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
+
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(PuppetGloveEntity.class, EntityDataSerializers.BOOLEAN);
 
     public PuppetGloveEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -61,14 +69,14 @@ public class PuppetGloveEntity extends CompanionEntity {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        //this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
-        //this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 0.6D, true));
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+
+        this.goalSelector.addGoal(1, new PuppetGloveAttackGoal(this, 10, 40));
+
+        this.goalSelector.addGoal(3, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(3, new CompanionRandomStrollGoal(this, 0.43));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
     @Override
@@ -124,25 +132,31 @@ public class PuppetGloveEntity extends CompanionEntity {
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
-        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 2, this::attackPredicate));
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(IS_ATTACKING, false);
     }
 
-    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
+    public boolean isAttacking() {
+        return this.entityData.get(IS_ATTACKING);
+    }
 
-        if (this.swinging && event.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
-            event.getController().forceAnimationReset();
-            event.getController().setAnimation(ATTACK);
-            this.swinging = false;
-        }
+    public void setAttacking(boolean attacking) {
+        this.entityData.set(IS_ATTACKING, attacking);
+    }
 
-        return PlayState.CONTINUE;
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
 
-        if (event.isMoving()) {
+        if (isAttacking()) {
+          event.getController().setAnimation(ATTACK);
+        } else if (this.getMainAction() == 0) {
+            event.getController().setAnimation(SIT);
+        } else if (event.isMoving()) {
             event.getController().setAnimation(WALK);
         } else {
             event.getController().setAnimation(IDLE);

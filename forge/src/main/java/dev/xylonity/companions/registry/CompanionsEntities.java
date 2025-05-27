@@ -2,6 +2,7 @@ package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.custom.*;
+import dev.xylonity.companions.common.entity.hostile.HostilePuppetGloveEntity;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.entity.projectile.*;
 import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
@@ -59,6 +60,8 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<SoulMageBookEntity>> SOUL_MAGE_BOOK;
     public static final RegistryObject<EntityType<FloorCakeCreamProjectile>> FLOOR_CAKE_CREAM;
     public static final RegistryObject<EntityType<StakeProjectile>> STAKE_PROJECTILE;
+    public static final RegistryObject<EntityType<HolinessNaginataProjectile>> HOLINESS_NAGINATA;
+    public static final RegistryObject<EntityType<HolinessStartProjectile>> HOLINESS_STAR;
 
     public static final RegistryObject<EntityType<GenericTriggerProjectile>> GENERIC_TRIGGER_PROJECTILE;
     public static final RegistryObject<EntityType<CakeCreamTriggerProjectile>> CAKE_CREAM_TRIGGER_PROJECTILE;
@@ -100,6 +103,8 @@ public class CompanionsEntities {
         SOUL_MAGE_BOOK = register("soul_mage_book", SoulMageBookEntity::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         FLOOR_CAKE_CREAM = register("floor_cake_cream_projectile", FloorCakeCreamProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         STAKE_PROJECTILE = register("stake_projectile", StakeProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        HOLINESS_NAGINATA = register("holiness_naginata", HolinessNaginataProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        HOLINESS_STAR = register("holiness_star", HolinessStartProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
 
         GENERIC_TRIGGER_PROJECTILE = register("generic_trigger_projectile", GenericTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         CAKE_CREAM_TRIGGER_PROJECTILE = register("cake_cream_trigger_projectile", CakeCreamTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));

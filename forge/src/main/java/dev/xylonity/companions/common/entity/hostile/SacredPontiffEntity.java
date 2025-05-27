@@ -19,10 +19,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -36,37 +36,61 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class SacredPontiffEntity extends HostileEntity implements IBossMusicProvider {
+
+    private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
+    private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
 
     // Phase 1 animations
     private final RawAnimation INACTIVE = RawAnimation.begin().thenPlay("inactive");
     private final RawAnimation ACTIVATE = RawAnimation.begin().thenPlay("activate");
-    private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
-    private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
     private final RawAnimation UP_ATTACK = RawAnimation.begin().thenPlay("up_attack");
     private final RawAnimation FRONT_ATTACK = RawAnimation.begin().thenPlay("front_attack");
     private final RawAnimation HOLD_ATTACK = RawAnimation.begin().thenPlay("hold_attack");
     private final RawAnimation AREA_ATTACK = RawAnimation.begin().thenPlay("area_attack");
     private final RawAnimation TRANSFORMATION = RawAnimation.begin().thenPlay("transformation");
 
-    // 0 inactive, 1 activating, 2 active
+    // Phase 2 animations
+    private final RawAnimation APPEAR = RawAnimation.begin().thenPlay("appear");
+    private final RawAnimation STAB = RawAnimation.begin().thenPlay("stab");
+    private final RawAnimation STAKE = RawAnimation.begin().thenPlay("stake");
+    private final RawAnimation DOUBLE_THROW = RawAnimation.begin().thenPlay("double_throw");
+    private final RawAnimation IMPACT = RawAnimation.begin().thenPlay("impact");
+    private final RawAnimation STAR_ATTACK = RawAnimation.begin().thenPlay("star_attack");
+
+    // 0 inactive, 1 activating, 2 active, 3 transformation
     private static final EntityDataAccessor<Integer> ACTIVATION_PHASE = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.INT);
-    // 0 none, 1 up, 2 front, 3 hold, 4 area
+    // phase 1: 0 none, 1 up, 2 front, 3 hold, 4 area_attack
+    // phase 2: 0 none, 1 stab, 2 stake, 3 double throw, 4 impact, 5 star_attack
     private static final EntityDataAccessor<Integer> ATTACK_TYPE = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> SHOULD_SEARCH_TARGET = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> APPEAR_ANIMATION = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SHOULD_ATTACK = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SHOUL_LOOK_AT_TARGET = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.BOOLEAN);
 
-    // Cap counters
+    // Caps
     private static final int ANIMATION_ACTIVATION_MAX_TICKS = 65;
+    private static final int ANIMATION_TRANSFORMATION_MAX_TICKS = 138;
+    private static final int ANIMATION_APPEAR_MAX_TICKS = 115; // Healing ticks too
+    private static final int INVISIBLE_BETWEEN_PHASE_TICKS = 60;
+    private static final int PHASE_2_MAX_HEALTH = 250;
 
     // Flags
     private boolean hasBeenActivated;
+    private boolean hasAppeared;
+    private boolean isTransforming;
 
     private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
 
     public SacredPontiffEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.hasBeenActivated = false;
+        this.hasAppeared = false;
+        this.noCulling = true;
+        this.isTransforming = false;
         this.setNoMovement(true);
         this.setMaxUpStep(1f);
     }
@@ -81,18 +105,56 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
         this.goalSelector.addGoal(1, new PontiffRotatingFireRayGoal(this, 200, 600));
-        this.goalSelector.addGoal(1, new PontiffMeleeAttackGoal(this, 60, 120));
+        this.goalSelector.addGoal(1, new PontiffMeleeAttackGoal(this, 40, 100));
         this.goalSelector.addGoal(1, new PontiffStaffKnockAttackGoal(this, 160, 360));
-        this.goalSelector.addGoal(1, new PontiffDashAttackGoal(this, 20, 80));
+        this.goalSelector.addGoal(1, new PontiffDashAttackGoal(this, 20, 140));
+
+        this.goalSelector.addGoal(1, new HolinessMeleeAttackGoal(this, 40, 100));
+        this.goalSelector.addGoal(1, new HolinessStakeAttackGoal(this, 60, 140));
+        this.goalSelector.addGoal(1, new HolinessDoubleThrowAttackGoal(this, 200, 400));
+        this.goalSelector.addGoal(1, new HolinessImpactAttackGoal(this, 80, 300));
+        this.goalSelector.addGoal(1, new HolinessStarAttackGoal(this, 200, 500));
 
         this.goalSelector.addGoal(2, new PontiffStrafeAroundTargetGoal(this, 0.5, 10));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.targetSelector.addGoal(1, new PontiffNearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
     @Override
     public void tick() {
 
+        // Bossbar progress
         this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
+
+        // Phase 2 appear animation
+        if (getPhase() == 2 && !hasAppeared) {
+
+            // Because of the 2 tick transition of the controller
+            TickScheduler.scheduleServer(level(), () -> this.setShouldPlayAppearAnimation(true), INVISIBLE_BETWEEN_PHASE_TICKS - 2);
+
+            // The content is executed after the logical delay between phases
+            TickScheduler.scheduleServer(level(), () -> {
+
+                this.setInvisible(false);
+                this.bossInfo.setName(this.getDisplayName());
+                TickScheduler.scheduleServer(level(), () -> this.setShouldPlayAppearAnimation(false), ANIMATION_APPEAR_MAX_TICKS);
+                TickScheduler.scheduleServer(level(), () -> this.setShouldSearchTarget(true), ANIMATION_APPEAR_MAX_TICKS);
+                TickScheduler.scheduleServer(level(), () -> this.setNoMovement(false), ANIMATION_APPEAR_MAX_TICKS);
+                TickScheduler.scheduleServer(level(), () -> this.setShouldAttack(true), ANIMATION_APPEAR_MAX_TICKS);
+                TickScheduler.scheduleServer(level(), () -> this.setInvulnerable(false), ANIMATION_APPEAR_MAX_TICKS);
+                TickScheduler.scheduleServer(level(), () -> this.setActivationPhase(2), ANIMATION_APPEAR_MAX_TICKS);
+
+                AttributeInstance maxHealth = this.getAttribute(Attributes.MAX_HEALTH);
+                if (maxHealth != null) maxHealth.setBaseValue(PHASE_2_MAX_HEALTH);
+
+            }, INVISIBLE_BETWEEN_PHASE_TICKS);
+
+            hasAppeared = true;
+        }
+
+        // Healing recover
+        if (getPhase() == 2 && shouldPlayAppearAnimation()) {
+            this.heal(this.getMaxHealth() / ANIMATION_APPEAR_MAX_TICKS);
+        }
 
         super.tick();
     }
@@ -148,6 +210,38 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.entityData.set(ACTIVATION_PHASE, phase);
     }
 
+    public boolean shouldSearchTarget() {
+        return this.entityData.get(SHOULD_SEARCH_TARGET);
+    }
+
+    public void setShouldSearchTarget(boolean shouldSearchTarget) {
+        this.entityData.set(SHOULD_SEARCH_TARGET, shouldSearchTarget);
+    }
+
+    public boolean shouldAttack() {
+        return this.entityData.get(SHOULD_ATTACK);
+    }
+
+    public void setShouldAttack(boolean shouldAttack) {
+        this.entityData.set(SHOULD_ATTACK, shouldAttack);
+    }
+
+    public boolean shouldLookAtTarget() {
+        return this.entityData.get(SHOUL_LOOK_AT_TARGET);
+    }
+
+    public void setShouldLookAtTarget(boolean shouldLookAtTarget) {
+        this.entityData.set(SHOUL_LOOK_AT_TARGET, shouldLookAtTarget);
+    }
+
+    public boolean shouldPlayAppearAnimation() {
+        return this.entityData.get(APPEAR_ANIMATION);
+    }
+
+    public void setShouldPlayAppearAnimation(boolean shouldPlayAppearAnimation) {
+        this.entityData.set(APPEAR_ANIMATION, shouldPlayAppearAnimation);
+    }
+
     public int getAttackType() {
         return this.entityData.get(ATTACK_TYPE);
     }
@@ -160,7 +254,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     protected @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
 
         // Activation start
-        if ((getActivationPhase() == 0 || getActivationPhase() == 1) && !hasBeenActivated) {
+        if (getActivationPhase() != 2 && !hasBeenActivated) {
 
             // Change the inactive state to the activation sequence and hold some ticks until the animation is done
             setActivationPhase(1);
@@ -174,7 +268,23 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+
+        // Phase 2 transformation start
+        if (this.getHealth() - pAmount <= 0 && getPhase() == 1 && !isTransforming) {
+            this.setHealth(0.1f);
+            this.setInvulnerable(true);
+            this.setShouldSearchTarget(false);
+            this.setNoMovement(true);
+            this.setActivationPhase(3);
+            this.setShouldAttack(false);
+            this.isTransforming = true;
+            TickScheduler.scheduleServer(level(), () -> this.setPhase(2), ANIMATION_TRANSFORMATION_MAX_TICKS);
+            TickScheduler.scheduleServer(level(), () -> this.setInvisible(true), ANIMATION_TRANSFORMATION_MAX_TICKS);
+            TickScheduler.scheduleServer(level(), () -> this.bossInfo.setName(Component.translatable("entity.companions.sacred_pontiff_invisible")), ANIMATION_TRANSFORMATION_MAX_TICKS);
+
+            return false;
+        }
 
         // Disables attack during the activation sequence
         if (getActivationPhase() == 0 || getActivationPhase() == 1) {
@@ -185,11 +295,29 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     }
 
     @Override
+    public void knockback(double pStrength, double pX, double pZ) {
+        ;;
+    }
+
+    @Override
+    public @NotNull Component getName() {
+        if (this.getPhase() == 2) {
+            return Component.translatable("entity.companions.his_holiness");
+        } else {
+            return Component.translatable("entity.companions.sacred_pontiff");
+        }
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ACTIVATION_PHASE, 0);
         this.entityData.define(PHASE, 1);
         this.entityData.define(ATTACK_TYPE, 0);
+        this.entityData.define(SHOULD_SEARCH_TARGET, true);
+        this.entityData.define(APPEAR_ANIMATION, false);
+        this.entityData.define(SHOULD_ATTACK, true);
+        this.entityData.define(SHOUL_LOOK_AT_TARGET, true);
     }
 
     @Override
@@ -214,25 +342,46 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
 
-        // Default activation/inactive animations
-        if (getActivationPhase() == 0) {
-            event.setAnimation(INACTIVE);
-        } else if (getActivationPhase() == 1) {
-            event.setAnimation(ACTIVATE);
-        }
+        if (getPhase() == 2) {
+            if (shouldPlayAppearAnimation()) {
+                event.setAnimation(APPEAR);
+            } else if (getAttackType() == 1) {
+                event.setAnimation(STAB);
+            } else if (getAttackType() == 2) {
+                event.setAnimation(STAKE);
+            } else if (getAttackType() == 3) {
+                event.setAnimation(DOUBLE_THROW);
+            } else if (getAttackType() == 4) {
+                event.setAnimation(IMPACT);
+            } else if (getAttackType() == 5) {
+                event.setAnimation(STAR_ATTACK);
+            } else if (event.isMoving()) {
+                event.setAnimation(WALK);
+            } else {
+                event.setAnimation(IDLE);
+            }
 
-        else if (getAttackType() == 1) {
-            event.setAnimation(UP_ATTACK);
-        } else if (getAttackType() == 2) {
-            event.setAnimation(FRONT_ATTACK);
-        } else if (getAttackType() == 3) {
-            event.setAnimation(HOLD_ATTACK);
-        } else if (getAttackType() == 4) {
-            event.setAnimation(AREA_ATTACK);
-        } else if (event.isMoving()) {
-            event.setAnimation(WALK);
         } else {
-            event.setAnimation(IDLE);
+            if (getActivationPhase() == 0) {
+                event.setAnimation(INACTIVE);
+            } else if (getActivationPhase() == 1) {
+                event.setAnimation(ACTIVATE);
+            } else if (getActivationPhase() == 3) {
+                event.setAnimation(TRANSFORMATION);
+            } else if (getAttackType() == 1) {
+                event.setAnimation(UP_ATTACK);
+            } else if (getAttackType() == 2) {
+                event.setAnimation(FRONT_ATTACK);
+            } else if (getAttackType() == 3) {
+                event.setAnimation(HOLD_ATTACK);
+            } else if (getAttackType() == 4) {
+                event.setAnimation(AREA_ATTACK);
+            } else if (event.isMoving()) {
+                event.setAnimation(WALK);
+            } else {
+                event.setAnimation(IDLE);
+            }
+
         }
 
         return PlayState.CONTINUE;

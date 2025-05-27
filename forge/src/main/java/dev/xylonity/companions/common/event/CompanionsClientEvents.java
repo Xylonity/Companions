@@ -62,6 +62,8 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.SOUL_MAGE_BOOK.get(), SoulMageBookRenderer::new);
         EntityRenderers.register(CompanionsEntities.FLOOR_CAKE_CREAM.get(), FloorCakeCreamRenderer::new);
         EntityRenderers.register(CompanionsEntities.STAKE_PROJECTILE.get(), StakeRenderer::new);
+        EntityRenderers.register(CompanionsEntities.HOLINESS_NAGINATA.get(), HolinessNaginataRenderer::new);
+        EntityRenderers.register(CompanionsEntities.HOLINESS_STAR.get(), HolinessStarRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
         EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);

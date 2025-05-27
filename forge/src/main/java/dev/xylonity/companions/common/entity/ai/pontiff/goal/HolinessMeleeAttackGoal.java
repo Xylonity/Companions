@@ -3,21 +3,15 @@ package dev.xylonity.companions.common.entity.ai.pontiff.goal;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
-import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
-import dev.xylonity.companions.common.tick.TickScheduler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
-import java.util.Random;
+public class HolinessMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
 
-public class PontiffMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
-
-    public PontiffMeleeAttackGoal(SacredPontiffEntity boss, int minCd, int maxCd) {
-        super(boss, 31, minCd, maxCd);
+    public HolinessMeleeAttackGoal(SacredPontiffEntity boss, int minCd, int maxCd) {
+        super(boss, 25, minCd, maxCd);
     }
 
     @Override
@@ -34,12 +28,12 @@ public class PontiffMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
 
     @Override
     public boolean canUse() {
-        return super.canUse() && pontiff.getTarget() != null && pontiff.distanceTo(pontiff.getTarget()) < 3 && isEntityInFront(pontiff, pontiff.getTarget(), 200);
+        return super.canUse() && pontiff.getTarget() != null && pontiff.distanceTo(pontiff.getTarget()) < 4 && isEntityInFront(pontiff, pontiff.getTarget(), 200);
     }
 
     @Override
     protected int getAttackType() {
-        return 2;
+        return 1;
     }
 
     @Override
@@ -62,7 +56,7 @@ public class PontiffMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
 
     @Override
     protected int phase() {
-        return 1;
+        return 2;
     }
 
 }
