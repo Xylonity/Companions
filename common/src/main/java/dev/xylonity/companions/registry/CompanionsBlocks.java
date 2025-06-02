@@ -19,6 +19,7 @@ public class CompanionsBlocks {
     public static final Supplier<Block> CROISSANT_EGG;
     public static final Supplier<Block> EMPTY_PUPPET;
     public static final Supplier<Block> RESPAWN_TOTEM;
+    public static final Supplier<Block> SHADE_SWORD_ALTAR;
 
     public static final Supplier<Block> COPPER_COIN;
     public static final Supplier<Block> NETHER_COIN;
@@ -46,6 +47,14 @@ public class CompanionsBlocks {
                         .strength(0.1F)
                         .sound(SoundType.CHAIN)
                         .noOcclusion(), BlockType.COIN_BLOCK);
+
+        SHADE_SWORD_ALTAR = registerBlock("shade_sword_altar",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.SHADE_SWORD_ALTAR);
 
         TESLA_COIL = registerBlock("tesla_coil_block",
                 BlockBehaviour.Properties.of()
@@ -116,7 +125,8 @@ public class CompanionsBlocks {
         VOLTAIC_PILLAR,
         EMPTY_PUPPET,
         RESPAWN_TOTEM,
-        COIN_BLOCK
+        COIN_BLOCK,
+        SHADE_SWORD_ALTAR
     }
 
 }

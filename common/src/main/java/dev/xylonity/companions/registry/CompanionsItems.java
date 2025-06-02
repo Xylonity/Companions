@@ -38,8 +38,10 @@ public class CompanionsItems {
     public static final Supplier<Item> BOOK_BLACK_HOLE = registerMagicBook("book_black_hole", new Item.Properties().stacksTo(1), MagicType.BLACK_HOLE);
 
     public static final Supplier<Item> ETERNAL_LIGHTER = registerItem("eternal_lighter", () -> new EternalLighter(new Item.Properties()));
-    public static final Supplier<Item> WRENCH = registerWrenchItem("wrench", new Item.Properties().durability(64));
-    public static final Supplier<Item> HOURGLASS = registerHourglassItem("hourglass", new Item.Properties().durability(64));
+    public static final Supplier<Item> WRENCH = registerSpecificItem("wrench", new Item.Properties().durability(64), ItemType.WRENCH);
+    public static final Supplier<Item> HOURGLASS = registerSpecificItem("hourglass", new Item.Properties().durability(64), ItemType.HOURGLASS);
+    public static final Supplier<Item> SHADOW_BELL = registerSpecificItem("shadow_bell", new Item.Properties().stacksTo(1).fireResistant(), ItemType.SHADOW_BELL);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD = registerSpecificItem("crystallized_blood", new Item.Properties(), ItemType.CRYSTALLIZED_BLOOD);
 
     public static final Supplier<Item> MAGE_COAT = registerArmorItem("mage_coat", ArmorMaterials.MAGE, ArmorItem.Type.CHESTPLATE, false);
     public static final Supplier<Item> MAGE_HAT = registerArmorItem("mage_hat", ArmorMaterials.MAGE, ArmorItem.Type.HELMET, true);
@@ -49,16 +51,12 @@ public class CompanionsItems {
         return CompanionsCommon.COMMON_PLATFORM.registerItem(id, item);
     }
 
+    private static <T extends Item> Supplier<T> registerSpecificItem(String id, Item.Properties properties, ItemType itemType) {
+        return CompanionsCommon.COMMON_PLATFORM.registerSpecificItem(id, properties, itemType);
+    }
+
     private static <T extends Item> Supplier<T> registerArmorItem(String id, ArmorMaterial armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
         return CompanionsCommon.COMMON_PLATFORM.registerArmorItem(id, armorMaterial, armorType, isGeckoArmor);
-    }
-
-    private static <T extends Item> Supplier<T> registerWrenchItem(String id, Item.Properties properties) {
-        return CompanionsCommon.COMMON_PLATFORM.registerWrenchItem(id, properties);
-    }
-
-    private static <T extends Item> Supplier<T> registerHourglassItem(String id, Item.Properties properties) {
-        return CompanionsCommon.COMMON_PLATFORM.registerHourglassItem(id, properties);
     }
 
     private static <T extends Item> Supplier<T> registerMagicBook(String id, Item.Properties properties, MagicType magicType) {
@@ -74,6 +72,13 @@ public class CompanionsItems {
         BRACE,
         BLACK_HOLE,
         MAGIC_RAY
+    }
+
+    public enum ItemType {
+        HOURGLASS,
+        WRENCH,
+        SHADOW_BELL,
+        CRYSTALLIZED_BLOOD
     }
 
 }

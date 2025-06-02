@@ -23,6 +23,8 @@ public class CompanionsParticles {
     public static final Supplier<SimpleParticleType> CAKE_CREAM_CHOCOLATE = registerParticle("cake_cream_chocolate", true);
     public static final Supplier<SimpleParticleType> SOUL_FLAME = registerParticle("soul_flame", true);
     public static final Supplier<SimpleParticleType> FIREWORK_TOAD = registerParticle("firework_toad", true);
+    public static final Supplier<SimpleParticleType> SHADE_TRAIL = registerParticle("shade_trail", true);
+    public static final Supplier<SimpleParticleType> SHADE_SUMMON = registerParticle("shade_summon", true);
 
     private static <T extends SimpleParticleType> Supplier<T> registerParticle(String id, boolean overrideLimiter) {
         return CompanionsCommon.COMMON_PLATFORM.registerParticle(id, overrideLimiter);

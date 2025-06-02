@@ -36,7 +36,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 public class SacredPontiffEntity extends HostileEntity implements IBossMusicProvider {
 
@@ -69,7 +68,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     private static final EntityDataAccessor<Boolean> SHOULD_SEARCH_TARGET = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> APPEAR_ANIMATION = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> SHOULD_ATTACK = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> SHOUL_LOOK_AT_TARGET = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SHOULD_LOOK_AT_TARGET = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.BOOLEAN);
 
     // Caps
     private static final int ANIMATION_ACTIVATION_MAX_TICKS = 65;
@@ -227,11 +226,11 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     }
 
     public boolean shouldLookAtTarget() {
-        return this.entityData.get(SHOUL_LOOK_AT_TARGET);
+        return this.entityData.get(SHOULD_LOOK_AT_TARGET);
     }
 
     public void setShouldLookAtTarget(boolean shouldLookAtTarget) {
-        this.entityData.set(SHOUL_LOOK_AT_TARGET, shouldLookAtTarget);
+        this.entityData.set(SHOULD_LOOK_AT_TARGET, shouldLookAtTarget);
     }
 
     public boolean shouldPlayAppearAnimation() {
@@ -317,7 +316,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.entityData.define(SHOULD_SEARCH_TARGET, true);
         this.entityData.define(APPEAR_ANIMATION, false);
         this.entityData.define(SHOULD_ATTACK, true);
-        this.entityData.define(SHOUL_LOOK_AT_TARGET, true);
+        this.entityData.define(SHOULD_LOOK_AT_TARGET, true);
     }
 
     @Override

@@ -40,6 +40,7 @@ public class CompanionsClientEvents {
 
         EntityRenderers.register(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGloveRenderer::new);
         EntityRenderers.register(CompanionsEntities.PUPPET.get(), PuppetRenderer::new);
+        EntityRenderers.register(CompanionsEntities.SHADE_SWORD.get(), ShadeSwordRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadRenderer::new);
 
@@ -64,6 +65,7 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.STAKE_PROJECTILE.get(), StakeRenderer::new);
         EntityRenderers.register(CompanionsEntities.HOLINESS_NAGINATA.get(), HolinessNaginataRenderer::new);
         EntityRenderers.register(CompanionsEntities.HOLINESS_STAR.get(), HolinessStarRenderer::new);
+        EntityRenderers.register(CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.get(), ShadeAltarUpgradeHaloRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
         EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
@@ -76,6 +78,7 @@ public class CompanionsClientEvents {
         BlockEntityRenderers.register(CompanionsBlockEntities.VOLTAIC_PILLAR.get(), VoltaicPillarRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.EMPTY_PUPPET.get(), EmptyPuppetRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.RESPAWN_TOTEM.get(), RespawnTotemRenderer::new);
+        BlockEntityRenderers.register(CompanionsBlockEntities.SHADE_SWORD_ALTAR.get(), ShadeSwordAltarRenderer::new);
 
         MenuScreens.register(CompanionsMenuTypes.SOUL_FURNACE.get(), SoulFurnaceScreen::new);
         MenuScreens.register(CompanionsMenuTypes.SOUL_MAGE_CONTAINER.get(), SoulMageScreen::new);
@@ -98,6 +101,8 @@ public class CompanionsClientEvents {
         event.registerSpriteSet(CompanionsParticles.CAKE_CREAM_CHOCOLATE.get(), CakeCreamParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.SOUL_FLAME.get(), SoulFlameParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.FIREWORK_TOAD.get(), FireworkToadParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.SHADE_TRAIL.get(), ShadeTrailParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.SHADE_SUMMON.get(), ShadeSummonParticle.Provider::new);
     }
 
 }

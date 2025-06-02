@@ -28,6 +28,7 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.CROISSANT_DRAGON.get(), CroissantDragonEntity.setAttributes());
         event.put(CompanionsEntities.PUPPET.get(), PuppetEntity.setAttributes());
         event.put(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGloveEntity.setAttributes());
+        event.put(CompanionsEntities.SHADE_SWORD.get(), ShadeSwordEntity.setAttributes());
 
         event.put(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadEntity.setAttributes());
 

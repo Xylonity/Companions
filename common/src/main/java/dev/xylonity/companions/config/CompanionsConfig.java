@@ -28,6 +28,16 @@ public final class CompanionsConfig {
             min = 0.0F, max = 100.0F)
     public static float HEAL_RING_HEALING = 6.0F;
 
+    @ConfigEntry(category = "Shadow",
+            comment = "The amount of charges a single altar can cap",
+            min = 0, max = 1000)
+    public static int SHADOW_ALTAR_MAX_CHARGES = 20;
+
+    @ConfigEntry(category = "Shadow",
+            comment = "The amount of blood charges a single altar can cap",
+            min = 0, max = 1000)
+    public static int SHADOW_ALTAR_BLOOD_CHARGES_AMOUNT = 4;
+
     @ConfigEntry(comment = "Should certain companions have the ability to work?")
     public static boolean SHOULD_COMPANIONS_WORK = true;
 

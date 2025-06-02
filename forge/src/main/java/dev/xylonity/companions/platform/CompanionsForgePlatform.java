@@ -2,7 +2,9 @@ package dev.xylonity.companions.platform;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.block.*;
+import dev.xylonity.companions.common.item.CrystallizedBloodItem;
 import dev.xylonity.companions.common.item.HourglassItem;
+import dev.xylonity.companions.common.item.ShadowBellItem;
 import dev.xylonity.companions.common.item.armor.GenericArmorItem;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.companions.common.item.book.books.*;
@@ -12,21 +14,16 @@ import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
@@ -35,6 +32,25 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     @Override
     public <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item) {
         return Companions.ITEMS.register(id, item);
+    }
+
+    @Override
+    public <T extends Item> Supplier<T> registerSpecificItem(String id, Item.Properties properties, CompanionsItems.ItemType itemType) {
+        switch (itemType) {
+            case HOURGLASS -> {
+                return (Supplier<T>) registerItem(id, () -> new HourglassItem(properties));
+            }
+            case WRENCH -> {
+                return (Supplier<T>) registerItem(id, () -> new WrenchItem(properties));
+            }
+            case CRYSTALLIZED_BLOOD -> {
+                return (Supplier<T>) registerItem(id, () -> new CrystallizedBloodItem(properties));
+            }
+            default -> // SHADOW_BELL
+            {
+                return (Supplier<T>) registerItem(id, () -> new ShadowBellItem(properties));
+            }
+        }
     }
 
     @Override
@@ -47,6 +63,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
             case VOLTAIC_PILLAR -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new VoltaicPillarBlock(properties));
             case EMPTY_PUPPET -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new EmptyPuppetBlock(properties));
             case RESPAWN_TOTEM -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new RespawnTotemBlock(properties));
+            case SHADE_SWORD_ALTAR -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new ShadeSwordAltarBlock(properties));
             default -> // TESLA_RECEIVER
                     (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new TeslaCoilBlock(properties));
         };
@@ -62,22 +79,6 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
         } else {
             return (Supplier<T>) registerItem(id, () -> new ArmorItem(armorMaterial, armorType, new Item.Properties()));
         }
-    }
-
-    @Override
-    public <T extends Item> Supplier<T> registerWrenchItem(String id, Item.Properties properties) {
-        return (Supplier<T>) registerItem(id, () -> new WrenchItem(properties) {
-            @Override
-            public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-                pTooltipComponents.add(Component.translatable("tooltip.companions.wrench"));
-                super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-            }
-        });
-    }
-
-    @Override
-    public <T extends Item> Supplier<T> registerHourglassItem(String id, Item.Properties properties) {
-        return (Supplier<T>) registerItem(id, () -> new HourglassItem(properties));
     }
 
     @Override

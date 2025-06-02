@@ -1,0 +1,16 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"upgrade": {
+			"loop": true,
+			"bones": {
+				"halo": {
+					"scale": {
+						"vector": ["math.cos(90+query.anim_time*180)*1.8", 1, "math.cos(90+query.anim_time*180)*1.8"]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

@@ -1,0 +1,43 @@
+package dev.xylonity.companions.common.item;
+
+import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+
+public class CrystallizedBloodItem extends Item {
+
+    public CrystallizedBloodItem(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public @NotNull InteractionResult useOn(UseOnContext ctx) {
+        Level level = ctx.getLevel();
+        BlockPos pos = ctx.getClickedPos();
+
+        if (!(level.getBlockEntity(pos) instanceof AbstractShadeAltarBlockEntity altar))
+            return InteractionResult.PASS;
+
+        if (altar.addCharge() && ctx.getPlayer() != null) {
+            if (!ctx.getPlayer().isCreative()) {
+                ctx.getItemInHand().shrink(1);
+            }
+
+            if (!level.isClientSide) {
+                ctx.getPlayer().sendSystemMessage(
+                        Component.literal("Carga añadida: " + altar.getCharges() + "/" + altar.getMaxCharges()));
+            }
+        } else if (!level.isClientSide && ctx.getPlayer() != null) {
+            ctx.getPlayer().sendSystemMessage(
+                    Component.literal("El altar ya está al máximo de cargas."));
+        }
+
+        return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+}

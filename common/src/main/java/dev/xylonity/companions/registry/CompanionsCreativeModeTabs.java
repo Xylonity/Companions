@@ -30,6 +30,8 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.CANNON_ARM.get());
                                 output.accept(CompanionsItems.NETHERITE_DAGGER.get());
                                 output.accept(CompanionsItems.HOURGLASS.get());
+                                output.accept(CompanionsItems.SHADOW_BELL.get());
+                                output.accept(CompanionsItems.CRYSTALLIZED_BLOOD.get());
                                 output.accept(CompanionsItems.ANGEL_OF_GERTRUDE_DISC.get());
 
                                 output.accept(CompanionsItems.BOOK_ICE_SHARD.get());
@@ -55,6 +57,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsBlocks.CROISSANT_EGG.get());
                                 output.accept(CompanionsBlocks.EMPTY_PUPPET.get());
                                 output.accept(CompanionsBlocks.RESPAWN_TOTEM.get());
+                                output.accept(CompanionsBlocks.SHADE_SWORD_ALTAR.get());
 
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get());
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get());
