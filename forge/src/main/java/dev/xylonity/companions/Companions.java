@@ -1,9 +1,11 @@
 package dev.xylonity.companions;
 
+import dev.xylonity.companions.common.entity.custom.ShadeMawEntity;
 import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.config.ConfigComposer;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.*;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;

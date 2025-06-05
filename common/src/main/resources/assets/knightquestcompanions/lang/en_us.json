@@ -28,8 +28,15 @@
 
   "item.knightquestcompanions.angel_of_gertrude_disc": "Angel of Gertrude Music Disc",
   "item.knightquestcompanions.angel_of_gertrude_disc.desc": "Solas Composer - Angel of Gertrude",
+  "item.knightquestcompanions.shadow_bell": "Shadow Bell",
 
   "entity.companions.sacred_pontiff_invisible": "Sacred Pontiff Invisible",
   "entity.companions.sacred_pontiff": "Sacred Pontiff",
-  "entity.companions.his_holiness": "His Holiness"
+  "entity.companions.his_holiness": "His Holiness",
+  "entity.knightquestcompanions.shade_maw": "Shade Maw",
+
+  "item.companions.shadow_bell.linked_to": "\uEA0E Linked to %1$s",
+  "item.companions.shadow_bell.lifetime": "\uEA10 Until Death: %1$ds",
+  "item.companions.shadow_bell.charges_remaining": "\uEA0F %1$d charges remaining",
+  "item.companions.shadow_bell.default": "Interact with an altar to link"
 }

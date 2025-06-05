@@ -38,9 +38,10 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<CroissantDragonEntity>> CROISSANT_DRAGON;
     public static final RegistryObject<EntityType<PuppetGloveEntity>> PUPPET_GLOVE;
     public static final RegistryObject<EntityType<PuppetEntity>> PUPPET;
+    public static final RegistryObject<EntityType<ShadeSwordEntity>> SHADE_SWORD;
+    public static final RegistryObject<EntityType<ShadeMawEntity>> SHADE_MAW;
 
     public static final RegistryObject<EntityType<FireworkToadEntity>> FIREWORK_TOAD;
-    public static final RegistryObject<EntityType<ShadeSwordEntity>> SHADE_SWORD;
 
     public static final RegistryObject<EntityType<IllagerGolemEntity>> ILLAGER_GOLEM;
     public static final RegistryObject<EntityType<HostilePuppetGloveEntity>> HOSTILE_PUPPET_GLOVE;
@@ -64,6 +65,7 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<HolinessNaginataProjectile>> HOLINESS_NAGINATA;
     public static final RegistryObject<EntityType<HolinessStartProjectile>> HOLINESS_STAR;
     public static final RegistryObject<EntityType<ShadeAltarUpgradeHaloProjectile>> SHADE_ALTAR_UPGRADE_HALO;
+    public static final RegistryObject<EntityType<ShadeSwordImpactProjectile>> SHADE_SWORD_IMPACT_PROJECTILE;
 
     public static final RegistryObject<EntityType<GenericTriggerProjectile>> GENERIC_TRIGGER_PROJECTILE;
     public static final RegistryObject<EntityType<CakeCreamTriggerProjectile>> CAKE_CREAM_TRIGGER_PROJECTILE;
@@ -83,7 +85,8 @@ public class CompanionsEntities {
         CROISSANT_DRAGON = register("croissant_dragon", CroissantDragonEntity::new, MobCategory.CREATURE, 1.4f, 1.4f, null);
         PUPPET_GLOVE = register("puppet_glove", PuppetGloveEntity::new, MobCategory.CREATURE, 0.8f, 0.8f, null);
         PUPPET = register("puppet", PuppetEntity::new, MobCategory.CREATURE, 1f, 2.8f, null);
-        SHADE_SWORD = register("shade_sword", ShadeSwordEntity::new, MobCategory.CREATURE, 1.25f, 4f, null);
+        SHADE_SWORD = register("shade_sword", ShadeSwordEntity::new, MobCategory.CREATURE, 1.25f, 4f, List.of(EntityType.Builder::fireImmune));
+        SHADE_MAW = register("shade_maw", ShadeMawEntity::new, MobCategory.CREATURE, 3f, 2.5f, List.of(EntityType.Builder::fireImmune));
 
         FIREWORK_TOAD = register("firework_toad", FireworkToadEntity::new, MobCategory.CREATURE, 1f, 1f, null);
 
@@ -109,6 +112,7 @@ public class CompanionsEntities {
         HOLINESS_NAGINATA = register("holiness_naginata", HolinessNaginataProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         HOLINESS_STAR = register("holiness_star", HolinessStartProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         SHADE_ALTAR_UPGRADE_HALO = register("shade_altar_upgrade_halo", ShadeAltarUpgradeHaloProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
+        SHADE_SWORD_IMPACT_PROJECTILE = register("shade_sword_impact", ShadeSwordImpactProjectile::new, MobCategory.MISC, 1.2f, 1.2f, List.of(EntityType.Builder::noSummon, b -> b.clientTrackingRange(64), b -> b.updateInterval(1)));
 
         GENERIC_TRIGGER_PROJECTILE = register("generic_trigger_projectile", GenericTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         CAKE_CREAM_TRIGGER_PROJECTILE = register("cake_cream_trigger_projectile", CakeCreamTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));

@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.entity.ShadeEntity;
+import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -17,19 +18,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
+public class ShadeMawAltarBlockEntity extends AbstractShadeAltarBlockEntity {
 
     private int tickCount;
     private boolean shouldSpawnParticleExplosion;
 
-    public ShadeSwordAltarBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.SHADE_SWORD_ALTAR.get(), pos, state);
+    public ShadeMawAltarBlockEntity(BlockPos pos, BlockState state) {
+        super(CompanionsBlockEntities.SHADE_MAW_ALTAR.get(), pos, state);
         this.tickCount = 0;
         this.shouldSpawnParticleExplosion = false;
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T F) {
-        if (F instanceof ShadeSwordAltarBlockEntity altar) {
+        if (F instanceof ShadeMawAltarBlockEntity altar) {
             if (altar.tickCount % 20 == 0 && altar.getCharges() >= altar.getMaxCharges() - altar.getBloodCharges()) {
                 double dx = (new Random().nextDouble() - 0.5) * 0.5;
                 double dy = (new Random().nextDouble() - 0.5) * 0.5;
@@ -82,7 +83,7 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
 
     @Override
     public ShadeEntity spawnShade(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        ShadeEntity entity = CompanionsEntities.SHADE_SWORD.get().create(pLevel);
+        ShadeEntity entity = CompanionsEntities.SHADE_MAW.get().create(pPlayer.level());
         if (entity != null) {
             entity.tame(pPlayer);
 
@@ -101,15 +102,19 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
             double pz = blockZ + 0.5;
             entity.moveTo(px, py, pz);
 
-            for (int i = 0; i < 20; i++) {
-                double vx = (pLevel.random.nextDouble() - 0.5) * entity.getBbWidth();
-                double vy = (pLevel.random.nextDouble() - 0.5) * entity.getBbHeight();
-                double vz = (pLevel.random.nextDouble() - 0.5) * entity.getBbWidth();
-                if (pLevel instanceof ServerLevel svlvl) {
-                    svlvl.sendParticles(CompanionsParticles.SHADE_TRAIL.get(), px, py, pz, 1, vx, vy, vz, 0.15);
-                    if (i % 3 == 0) svlvl.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), px, py, pz, 1, vx, vy, vz, 0.35);
-                }
-            }
+            TickScheduler.scheduleServer(pLevel, () ->
+                {
+                    for (int i = 0; i < 20; i++) {
+                        double vx = (pLevel.random.nextDouble() - 0.5) * entity.getBbWidth();
+                        double vy = (pLevel.random.nextDouble() - 0.5) * entity.getBbHeight();
+                        double vz = (pLevel.random.nextDouble() - 0.5) * entity.getBbWidth();
+                        if (pLevel instanceof ServerLevel level) {
+                            level.sendParticles(CompanionsParticles.SHADE_TRAIL.get(), px, py, pz, 1, vx, vy, vz, 0.15);
+                            if (i % 3 == 0) level.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), px, py, pz, 1, vx, vy, vz, 0.35);
+                        }
+                    }
+                }, 104
+            );
 
             if (isBloodUpgradeActive()) {
                 entity.setIsBlood(true);
@@ -129,7 +134,7 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
             entity.xRotO = pitch;
 
             entity.setInvisible(true);
-            pLevel.addFreshEntity(entity);
+            pPlayer.level().addFreshEntity(entity);
             this.activeShadeUUID = entity.getUUID();
             return entity;
         }

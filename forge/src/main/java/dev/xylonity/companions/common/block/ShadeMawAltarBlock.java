@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.block;
 
-import dev.xylonity.companions.common.blockentity.ShadeSwordAltarBlockEntity;
+import dev.xylonity.companions.common.blockentity.ShadeMawAltarBlockEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,12 +19,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ShadeSwordAltarBlock extends AbstractShadeAltarBlock implements EntityBlock {
+public class ShadeMawAltarBlock extends AbstractShadeAltarBlock implements EntityBlock {
 
     private static final VoxelShape SHAPE = Block.box(3, 0, 3, 13, 16, 13);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
-    public ShadeSwordAltarBlock(Properties properties) {
+    public ShadeMawAltarBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
@@ -58,13 +58,13 @@ public class ShadeSwordAltarBlock extends AbstractShadeAltarBlock implements Ent
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.SHADE_SWORD_ALTAR.get().create(pos, state);
+        return CompanionsBlockEntities.SHADE_MAW_ALTAR.get().create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.SHADE_SWORD_ALTAR.get() ? ShadeSwordAltarBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.SHADE_MAW_ALTAR.get() ? ShadeMawAltarBlockEntity::tick : null;
     }
 
 }

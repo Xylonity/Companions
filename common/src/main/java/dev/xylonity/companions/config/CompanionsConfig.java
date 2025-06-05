@@ -28,15 +28,23 @@ public final class CompanionsConfig {
             min = 0.0F, max = 100.0F)
     public static float HEAL_RING_HEALING = 6.0F;
 
-    @ConfigEntry(category = "Shadow",
-            comment = "The amount of charges a single altar can cap",
-            min = 0, max = 1000)
+    @ConfigEntry(comment = "The amount of charges a single altar can cap", min = 0, max = 1000)
     public static int SHADOW_ALTAR_MAX_CHARGES = 20;
 
-    @ConfigEntry(category = "Shadow",
-            comment = "The amount of blood charges a single altar can cap",
-            min = 0, max = 1000)
+    @ConfigEntry(comment = "The amount of blood charges a single altar can cap", min = 0, max = 1000)
     public static int SHADOW_ALTAR_BLOOD_CHARGES_AMOUNT = 4;
+
+    @ConfigEntry(category = "Shadow Maw",
+            comment = "The amount of lifetime of the shadow maw",
+            note = "The time is measured in ticks (20 ticks = 1 second)",
+            min = 0, max = 100000)
+    public static int SHADOW_MAW_LIFETIME = 4800;
+
+    @ConfigEntry(category = "Shadow Sword",
+            comment = "The amount of lifetime of the shadow sword",
+            note = "The time is measured in ticks (20 ticks = 1 second)",
+            min = 0, max = 100000)
+    public static int SHADOW_SWORD_LIFETIME = 4800;
 
     @ConfigEntry(comment = "Should certain companions have the ability to work?")
     public static boolean SHOULD_COMPANIONS_WORK = true;

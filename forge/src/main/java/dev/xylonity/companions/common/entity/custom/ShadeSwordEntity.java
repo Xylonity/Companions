@@ -5,11 +5,9 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.shade.sword.ShadeSwordMoveControl;
-import dev.xylonity.companions.common.entity.ai.shade.sword.goal.ShadeSwordFollowOwnerGoal;
-import dev.xylonity.companions.common.entity.ai.shade.sword.goal.ShadeSwordFollowTargetGoal;
-import dev.xylonity.companions.common.entity.ai.shade.sword.goal.ShadeSwordMeleeAttackGoal;
-import dev.xylonity.companions.common.entity.ai.shade.sword.goal.ShadeSwordSpinAttackGoal;
+import dev.xylonity.companions.common.entity.ai.shade.sword.goal.*;
 import dev.xylonity.companions.common.tick.TickScheduler;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
@@ -37,7 +35,7 @@ public class ShadeSwordEntity extends ShadeEntity {
     private final RawAnimation GROUND_ATTACK = RawAnimation.begin().thenPlay("nail_to_ground"); // AttackType 3
     private final RawAnimation SPIN_ATTACK = RawAnimation.begin().thenPlay("spin"); // AttackType 4
 
-    private static final int ANIMATION_SPAWN_MAX_TICKS = 77;
+    private static final int ANIMATION_SPAWN_MAX_TICKS = 72;
     private boolean hasSpawned;
 
     public ShadeSwordEntity(EntityType<? extends CompanionEntity> pEntityType, Level pLevel) {
@@ -51,19 +49,23 @@ public class ShadeSwordEntity extends ShadeEntity {
     }
 
     @Override
+    public int getMaxLifetime() {
+        return CompanionsConfig.SHADOW_SWORD_LIFETIME;
+    }
+
+    @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
         return new GroundNavigator(this, pLevel);
     }
 
     @Override
     protected void registerGoals() {
-
         this.goalSelector.addGoal(1, new ShadeSwordMeleeAttackGoal(this, 20, 60));
-        this.goalSelector.addGoal(1, new ShadeSwordSpinAttackGoal(this, 60, 120));
+        this.goalSelector.addGoal(1, new ShadeSwordSpinAttackGoal(this, 70, 200));
+        this.goalSelector.addGoal(1, new ShadeSwordGroundAttackGoal(this, 120, 300));
 
         this.goalSelector.addGoal(2, new ShadeSwordFollowTargetGoal(this));
         this.goalSelector.addGoal(3, new ShadeSwordFollowOwnerGoal(this));
-        //this.goalSelector.addGoal(3, new CompanionRandomStrollGoal(this, 0.43));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
@@ -96,6 +98,8 @@ public class ShadeSwordEntity extends ShadeEntity {
                 level.sendParticles(CompanionsParticles.SHADE_TRAIL.get(), this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.1);
             }
         }
+
+        setLifetime(getLifetime() - 1);
     }
 
     @Override

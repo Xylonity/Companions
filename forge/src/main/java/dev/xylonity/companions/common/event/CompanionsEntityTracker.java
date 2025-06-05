@@ -6,30 +6,31 @@ import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CompanionsEntityTracker {
-    private static final Map<UUID, Entity> uuidToEntityMap = new ConcurrentHashMap<>();
+
+    private static final Map<UUID, WeakReference<Entity>> entities = new ConcurrentHashMap<>();
 
     @SubscribeEvent
-    public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getEntity() != null) {
-            uuidToEntityMap.put(event.getEntity().getUUID(), event.getEntity());
-        }
+    public static void onJoin(EntityJoinLevelEvent e) {
+        entities.put(e.getEntity().getUUID(), new WeakReference<>(e.getEntity()));
     }
 
     @SubscribeEvent
-    public static void onEntityLeaveWorld(EntityLeaveLevelEvent event) {
-        if (event.getEntity() != null) {
-            uuidToEntityMap.remove(event.getEntity().getUUID());
-        }
+    public static void onLeave(EntityLeaveLevelEvent e) {
+        entities.remove(e.getEntity().getUUID());
     }
 
-    public static Entity getEntityByUUID(UUID uuid) {
-        return uuidToEntityMap.get(uuid);
+    @Nullable
+    public static Entity getEntityByUUID(UUID id) {
+        WeakReference<Entity> ref = entities.get(id);
+        return ref != null ? ref.get() : null;
     }
 
 }

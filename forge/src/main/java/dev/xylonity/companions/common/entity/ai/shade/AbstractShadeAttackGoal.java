@@ -27,6 +27,7 @@ public abstract class AbstractShadeAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
+        if (shade.isSpawning()) return false;
         if (shade.getClass() != shadeType()) return false;
         if (shade.getAttackType() != 0) return false;
         if (shade.getTarget() == null) return false;

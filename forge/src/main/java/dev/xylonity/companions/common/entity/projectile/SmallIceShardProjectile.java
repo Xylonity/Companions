@@ -94,7 +94,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
             if (level().isClientSide) {
                 spawnHitParticles();
             } else {
-                level().broadcastEntityEvent(this, (byte)3);
+                level().broadcastEntityEvent(this, (byte) 3);
                 playSound(SoundEvents.AMETHYST_BLOCK_RESONATE);
             }
 

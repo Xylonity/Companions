@@ -11,4 +11,9 @@ public class ShadeSwordRenderer extends GeoEntityRenderer<ShadeSwordEntity> {
         super(renderManager, new ShadeSwordModel());
     }
 
+    @Override
+    protected float getDeathMaxRotation(ShadeSwordEntity animatable) {
+        return 0f;
+    }
+
 }

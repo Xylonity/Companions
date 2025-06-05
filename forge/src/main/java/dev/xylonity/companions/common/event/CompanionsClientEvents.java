@@ -66,6 +66,8 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.HOLINESS_NAGINATA.get(), HolinessNaginataRenderer::new);
         EntityRenderers.register(CompanionsEntities.HOLINESS_STAR.get(), HolinessStarRenderer::new);
         EntityRenderers.register(CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.get(), ShadeAltarUpgradeHaloRenderer::new);
+        EntityRenderers.register(CompanionsEntities.SHADE_SWORD_IMPACT_PROJECTILE.get(), ShadeSwordImpactRenderer::new);
+        EntityRenderers.register(CompanionsEntities.SHADE_MAW.get(), ShadeMawRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
         EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
@@ -79,6 +81,7 @@ public class CompanionsClientEvents {
         BlockEntityRenderers.register(CompanionsBlockEntities.EMPTY_PUPPET.get(), EmptyPuppetRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.RESPAWN_TOTEM.get(), RespawnTotemRenderer::new);
         BlockEntityRenderers.register(CompanionsBlockEntities.SHADE_SWORD_ALTAR.get(), ShadeSwordAltarRenderer::new);
+        BlockEntityRenderers.register(CompanionsBlockEntities.SHADE_MAW_ALTAR.get(), ShadeMawAltarRenderer::new);
 
         MenuScreens.register(CompanionsMenuTypes.SOUL_FURNACE.get(), SoulFurnaceScreen::new);
         MenuScreens.register(CompanionsMenuTypes.SOUL_MAGE_CONTAINER.get(), SoulMageScreen::new);
