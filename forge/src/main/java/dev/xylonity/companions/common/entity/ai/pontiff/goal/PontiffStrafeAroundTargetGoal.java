@@ -70,6 +70,9 @@ public class PontiffStrafeAroundTargetGoal extends Goal {
             else if (distSqr < radiusSqr * 0.25f) backwards = true;
 
             pontiff.getMoveControl().strafe(backwards ? -0.5F : 0.5F, clockwise ? 0.5F  : -0.5F);
+
+            if (!pontiff.onGround()) pontiff.setDeltaMovement(pontiff.getDeltaMovement().x, pontiff.getDeltaMovement().y - 0.3, pontiff.getDeltaMovement().z);
+
             if (pontiff.shouldLookAtTarget()) pontiff.lookAt(target, 30f, 30f);
         } else {
             if (pontiff.shouldLookAtTarget()) pontiff.getLookControl().setLookAt(target, 30f, 30f);

@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.BossEvent;
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -75,14 +77,14 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     private static final int ANIMATION_TRANSFORMATION_MAX_TICKS = 138;
     private static final int ANIMATION_APPEAR_MAX_TICKS = 115; // Healing ticks too
     private static final int INVISIBLE_BETWEEN_PHASE_TICKS = 60;
-    private static final int PHASE_2_MAX_HEALTH = 250;
+    private static final int PHASE_2_MAX_HEALTH = 350;
 
     // Flags
     private boolean hasBeenActivated;
     private boolean hasAppeared;
     private boolean isTransforming;
 
-    private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
+    private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
 
     public SacredPontiffEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -92,6 +94,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.isTransforming = false;
         this.setNoMovement(true);
         this.setMaxUpStep(1f);
+        this.bossInfo.setCreateWorldFog(true);
     }
 
     @Override
@@ -106,7 +109,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.goalSelector.addGoal(1, new PontiffRotatingFireRayGoal(this, 200, 600));
         this.goalSelector.addGoal(1, new PontiffMeleeAttackGoal(this, 40, 100));
         this.goalSelector.addGoal(1, new PontiffStaffKnockAttackGoal(this, 160, 360));
-        this.goalSelector.addGoal(1, new PontiffDashAttackGoal(this, 20, 140));
+        this.goalSelector.addGoal(1, new PontiffDashAttackGoal(this, 60, 200));
 
         this.goalSelector.addGoal(1, new HolinessMeleeAttackGoal(this, 40, 100));
         this.goalSelector.addGoal(1, new HolinessStakeAttackGoal(this, 60, 140));
@@ -115,14 +118,32 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.goalSelector.addGoal(1, new HolinessStarAttackGoal(this, 200, 500));
 
         this.goalSelector.addGoal(2, new PontiffStrafeAroundTargetGoal(this, 0.5, 10));
-        this.targetSelector.addGoal(1, new PontiffNearestAttackableTargetGoal<>(this, Player.class, true));
+
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new PontiffNearestAttackableTargetGoal<>(this, Player.class, true));
     }
+
+    private boolean hasRegisteredBossBar = false;
 
     @Override
     public void tick() {
 
         // Bossbar progress
         this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
+
+        // Delayed bossinfo until activation
+        if (this.getActivationPhase() == 2 && !this.hasRegisteredBossBar) {
+            this.hasRegisteredBossBar = true;
+
+            this.bossInfo.setName(this.getDisplayName());
+            if (this.level() instanceof ServerLevel serverLevel) {
+                for (ServerPlayer p : serverLevel.getPlayers(p2 -> true)) {
+                    if (p.distanceToSqr(this) < 4096) {
+                        this.bossInfo.addPlayer(p);
+                    }
+                }
+            }
+        }
 
         // Phase 2 appear animation
         if (getPhase() == 2 && !hasAppeared) {
@@ -160,7 +181,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 50)
+                .add(Attributes.MAX_HEALTH, 225f)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.45f)
@@ -180,7 +201,9 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
     public void startSeenByPlayer(@NotNull ServerPlayer pPlayer) {
         super.startSeenByPlayer(pPlayer);
-        this.bossInfo.addPlayer(pPlayer);
+        if (this.getActivationPhase() >= 2) {
+            this.bossInfo.addPlayer(pPlayer);
+        }
     }
 
     public void stopSeenByPlayer(@NotNull ServerPlayer pPlayer) {

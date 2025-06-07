@@ -41,6 +41,7 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGloveRenderer::new);
         EntityRenderers.register(CompanionsEntities.PUPPET.get(), PuppetRenderer::new);
         EntityRenderers.register(CompanionsEntities.SHADE_SWORD.get(), ShadeSwordRenderer::new);
+        EntityRenderers.register(CompanionsEntities.SHADE_MAW.get(), ShadeMawRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadRenderer::new);
 
@@ -64,10 +65,11 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.FLOOR_CAKE_CREAM.get(), FloorCakeCreamRenderer::new);
         EntityRenderers.register(CompanionsEntities.STAKE_PROJECTILE.get(), StakeRenderer::new);
         EntityRenderers.register(CompanionsEntities.HOLINESS_NAGINATA.get(), HolinessNaginataRenderer::new);
+        EntityRenderers.register(CompanionsEntities.HOLINESS_NAGINATA.get(), HolinessNaginataRenderer::new);
         EntityRenderers.register(CompanionsEntities.HOLINESS_STAR.get(), HolinessStarRenderer::new);
         EntityRenderers.register(CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.get(), ShadeAltarUpgradeHaloRenderer::new);
         EntityRenderers.register(CompanionsEntities.SHADE_SWORD_IMPACT_PROJECTILE.get(), ShadeSwordImpactRenderer::new);
-        EntityRenderers.register(CompanionsEntities.SHADE_MAW.get(), ShadeMawRenderer::new);
+        EntityRenderers.register(CompanionsEntities.PONTIFF_FIRE_RING.get(), PontiffFireRingRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
         EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);

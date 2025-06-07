@@ -51,7 +51,7 @@ public class ShadowBellItem extends Item {
     public int getBarWidth(@NotNull ItemStack stack) {
         CompoundTag t = stack.getTag();
         int curr = t != null ? t.getInt(BELL_CURR) : 0;
-        int max  = t != null ? t.getInt(BELL_MAX)  : 1;
+        int max = t != null ? t.getInt(BELL_MAX) : 1;
         return Math.round((float) curr * 13f / (float) max);
     }
 
@@ -178,7 +178,7 @@ public class ShadowBellItem extends Item {
 
         ServerLevel world = pLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString(ST_DIM))));
         if (world == null) {
-            pPlayer.sendSystemMessage(Component.translatable("item.companions.shadow_bell.dimension_doesnt_exist"));
+            pPlayer.displayClientMessage(Component.translatable("item.companions.shadow_bell.dimension_doesnt_exist"), true);
 
             clearLink(stack);
             return InteractionResultHolder.pass(stack);
@@ -187,7 +187,7 @@ public class ShadowBellItem extends Item {
         if (world.getBlockEntity(new BlockPos(tag.getInt(ST_X), tag.getInt(ST_Y), tag.getInt(ST_Z))) instanceof AbstractShadeAltarBlockEntity altar) {
 
             if (altar.getCharges() <= 0) {
-                pPlayer.sendSystemMessage(Component.translatable("item.companions.shadow_bell.no_charges"));
+                pPlayer.displayClientMessage(Component.translatable("item.companions.shadow_bell.no_charges"), true);
                 clearLink(stack);
                 return InteractionResultHolder.pass(stack);
             }
@@ -213,13 +213,13 @@ public class ShadowBellItem extends Item {
                 tag.putInt(BELL_CURR, altar.getCharges());
                 stack.setTag(tag);
             } else {
-                pPlayer.sendSystemMessage(Component.translatable("item.companions.shadow_bell.no_charges"));
+                pPlayer.displayClientMessage(Component.translatable("item.companions.shadow_bell.no_charges"), true);
                 clearLink(stack);
             }
 
         } else {
             clearLink(stack);
-            pPlayer.sendSystemMessage(Component.translatable("item.companions.shadow_bell.couldnt_find"));
+            pPlayer.displayClientMessage(Component.translatable("item.companions.shadow_bell.couldnt_find"), true);
         }
 
         return InteractionResultHolder.sidedSuccess(stack, false);

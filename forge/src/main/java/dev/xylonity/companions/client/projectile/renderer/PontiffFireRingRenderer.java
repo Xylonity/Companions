@@ -1,0 +1,25 @@
+package dev.xylonity.companions.client.projectile.renderer;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import dev.xylonity.companions.client.projectile.model.PontiffFireRingModel;
+import dev.xylonity.companions.client.projectile.model.ShadeAltarUpgradeHaloModel;
+import dev.xylonity.companions.common.entity.projectile.PontiffFireRingProjectile;
+import dev.xylonity.companions.common.entity.projectile.ShadeAltarUpgradeHaloProjectile;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
+public class PontiffFireRingRenderer extends GeoEntityRenderer<PontiffFireRingProjectile> {
+
+    public PontiffFireRingRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new PontiffFireRingModel());
+    }
+
+    @Override
+    public void render(@NotNull PontiffFireRingProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        poseStack.scale(6f, 6f, 6f);
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
+
+}

@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.item;
 
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
@@ -18,9 +17,8 @@ public class CrystallizedBloodItem extends Item {
     @Override
     public @NotNull InteractionResult useOn(UseOnContext ctx) {
         Level level = ctx.getLevel();
-        BlockPos pos = ctx.getClickedPos();
 
-        if (!(level.getBlockEntity(pos) instanceof AbstractShadeAltarBlockEntity altar))
+        if (!(level.getBlockEntity(ctx.getClickedPos()) instanceof AbstractShadeAltarBlockEntity altar))
             return InteractionResult.PASS;
 
         if (altar.addCharge() && ctx.getPlayer() != null) {
@@ -29,12 +27,10 @@ public class CrystallizedBloodItem extends Item {
             }
 
             if (!level.isClientSide) {
-                ctx.getPlayer().sendSystemMessage(
-                        Component.literal("Carga añadida: " + altar.getCharges() + "/" + altar.getMaxCharges()));
+                ctx.getPlayer().displayClientMessage(Component.translatable("item.companions.crystallized_blood.added_charge",altar.getCharges(), altar.getMaxCharges()), true);
             }
         } else if (!level.isClientSide && ctx.getPlayer() != null) {
-            ctx.getPlayer().sendSystemMessage(
-                    Component.literal("El altar ya está al máximo de cargas."));
+            ctx.getPlayer().displayClientMessage(Component.translatable("item.companions.crystallized_blood.max_charges"), true);
         }
 
         return InteractionResult.sidedSuccess(level.isClientSide);

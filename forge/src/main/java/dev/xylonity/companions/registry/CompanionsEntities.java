@@ -64,6 +64,7 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<StakeProjectile>> STAKE_PROJECTILE;
     public static final RegistryObject<EntityType<HolinessNaginataProjectile>> HOLINESS_NAGINATA;
     public static final RegistryObject<EntityType<HolinessStartProjectile>> HOLINESS_STAR;
+    public static final RegistryObject<EntityType<PontiffFireRingProjectile>> PONTIFF_FIRE_RING;
     public static final RegistryObject<EntityType<ShadeAltarUpgradeHaloProjectile>> SHADE_ALTAR_UPGRADE_HALO;
     public static final RegistryObject<EntityType<ShadeSwordImpactProjectile>> SHADE_SWORD_IMPACT_PROJECTILE;
 
@@ -111,6 +112,7 @@ public class CompanionsEntities {
         STAKE_PROJECTILE = register("stake_projectile", StakeProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         HOLINESS_NAGINATA = register("holiness_naginata", HolinessNaginataProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         HOLINESS_STAR = register("holiness_star", HolinessStartProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        PONTIFF_FIRE_RING = register("pontiff_fire_ring", PontiffFireRingProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         SHADE_ALTAR_UPGRADE_HALO = register("shade_altar_upgrade_halo", ShadeAltarUpgradeHaloProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
         SHADE_SWORD_IMPACT_PROJECTILE = register("shade_sword_impact", ShadeSwordImpactProjectile::new, MobCategory.MISC, 1.2f, 1.2f, List.of(EntityType.Builder::noSummon, b -> b.clientTrackingRange(64), b -> b.updateInterval(1)));
 

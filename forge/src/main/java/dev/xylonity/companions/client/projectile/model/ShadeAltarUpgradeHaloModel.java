@@ -14,7 +14,11 @@ public class ShadeAltarUpgradeHaloModel extends GeoModel<ShadeAltarUpgradeHaloPr
 
     @Override
     public ResourceLocation getTextureResource(ShadeAltarUpgradeHaloProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/shade_altar_upgrade_halo.png");
+        int frames = 8;
+        int perTick = 2;
+
+        int frameIndex = (animatable.tickCount / perTick) % frames;
+        return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/shade_altar_upgrade_halo_%d.png", frameIndex));
     }
 
     @Override

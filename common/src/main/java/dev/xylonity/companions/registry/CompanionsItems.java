@@ -37,9 +37,9 @@ public class CompanionsItems {
     public static final Supplier<Item> BOOK_MAGIC_RAY = registerMagicBook("book_magic_ray", new Item.Properties().stacksTo(1), MagicType.MAGIC_RAY);
     public static final Supplier<Item> BOOK_BLACK_HOLE = registerMagicBook("book_black_hole", new Item.Properties().stacksTo(1), MagicType.BLACK_HOLE);
 
-    public static final Supplier<Item> ETERNAL_LIGHTER = registerItem("eternal_lighter", () -> new EternalLighter(new Item.Properties()));
+    public static final Supplier<Item> ETERNAL_LIGHTER = registerItem("eternal_lighter", () -> new EternalLighter(new Item.Properties().stacksTo(1)));
     public static final Supplier<Item> WRENCH = registerSpecificItem("wrench", new Item.Properties().durability(64), ItemType.WRENCH);
-    public static final Supplier<Item> HOURGLASS = registerSpecificItem("hourglass", new Item.Properties().durability(64), ItemType.HOURGLASS);
+    public static final Supplier<Item> HOURGLASS = registerSpecificItem("hourglass", new Item.Properties().stacksTo(1), ItemType.HOURGLASS);
     public static final Supplier<Item> SHADOW_BELL = registerSpecificItem("shadow_bell", new Item.Properties().stacksTo(1).fireResistant(), ItemType.SHADOW_BELL);
     public static final Supplier<Item> CRYSTALLIZED_BLOOD = registerSpecificItem("crystallized_blood", new Item.Properties(), ItemType.CRYSTALLIZED_BLOOD);
 
