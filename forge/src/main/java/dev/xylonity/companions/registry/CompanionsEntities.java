@@ -67,6 +67,8 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<PontiffFireRingProjectile>> PONTIFF_FIRE_RING;
     public static final RegistryObject<EntityType<ShadeAltarUpgradeHaloProjectile>> SHADE_ALTAR_UPGRADE_HALO;
     public static final RegistryObject<EntityType<ShadeSwordImpactProjectile>> SHADE_SWORD_IMPACT_PROJECTILE;
+    public static final RegistryObject<EntityType<NeedleProjectile>> NEEDLE_PROJECTILE;
+    public static final RegistryObject<EntityType<RespawnTotemRingProjectile>> RESPAWN_TOTEM_RING_PROJECTILE;
 
     public static final RegistryObject<EntityType<GenericTriggerProjectile>> GENERIC_TRIGGER_PROJECTILE;
     public static final RegistryObject<EntityType<CakeCreamTriggerProjectile>> CAKE_CREAM_TRIGGER_PROJECTILE;
@@ -74,7 +76,7 @@ public class CompanionsEntities {
 
     static {
         FROGGY = register("froggy", FroggyEntity::new, MobCategory.CREATURE, 1f, 1f, null);
-        TEDDY = register("teddy", TeddyEntity::new, MobCategory.CREATURE, 1f, 1f, null);
+        TEDDY = register("teddy", TeddyEntity::new, MobCategory.CREATURE, 0.9f, 0.9f, null);
         ANTLION = register("antlion", AntlionEntity::new, MobCategory.CREATURE, 1f, 1f, null);
         DINAMO = register("dinamo", DinamoEntity::new, MobCategory.CREATURE, 1f, 2f, null);
         BROKEN_DINAMO = register("broken_dinamo", BrokenDinamoEntity::new, MobCategory.CREATURE, 1f, 0.5f, null);
@@ -115,6 +117,8 @@ public class CompanionsEntities {
         PONTIFF_FIRE_RING = register("pontiff_fire_ring", PontiffFireRingProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         SHADE_ALTAR_UPGRADE_HALO = register("shade_altar_upgrade_halo", ShadeAltarUpgradeHaloProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
         SHADE_SWORD_IMPACT_PROJECTILE = register("shade_sword_impact", ShadeSwordImpactProjectile::new, MobCategory.MISC, 1.2f, 1.2f, List.of(EntityType.Builder::noSummon, b -> b.clientTrackingRange(64), b -> b.updateInterval(1)));
+        NEEDLE_PROJECTILE = register("needle_projectile", NeedleProjectile::new, MobCategory.MISC, 1.2f, 0.4f, List.of(EntityType.Builder::noSummon, b -> b.clientTrackingRange(128), b -> b.updateInterval(1)));
+        RESPAWN_TOTEM_RING_PROJECTILE = register("respawn_totem_rinmg_projectile", RespawnTotemRingProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon, b -> b.clientTrackingRange(128), b -> b.updateInterval(1)));
 
         GENERIC_TRIGGER_PROJECTILE = register("generic_trigger_projectile", GenericTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         CAKE_CREAM_TRIGGER_PROJECTILE = register("cake_cream_trigger_projectile", CakeCreamTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));

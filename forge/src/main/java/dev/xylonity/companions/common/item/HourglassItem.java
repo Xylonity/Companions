@@ -3,13 +3,12 @@ package dev.xylonity.companions.common.item;
 import dev.xylonity.companions.common.block.RespawnTotemBlock;
 import dev.xylonity.companions.common.blockentity.RespawnTotemBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -21,19 +20,29 @@ public class HourglassItem extends Item {
     }
 
     @Override
-    public @NotNull InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext ctx) {
+        Level level = ctx.getLevel();
+        BlockPos pos = ctx.getClickedPos();
+        BlockState state = level.getBlockState(pos);
+        Player player = ctx.getPlayer();
 
-        BlockPos pos = context.getClickedPos();
-        BlockEntity be = context.getLevel().getBlockEntity(pos);
-        BlockState state = context.getLevel().getBlockState(pos);
+        if (!(state.getBlock() instanceof RespawnTotemBlock respawnTotemBlock))
+            return InteractionResult.PASS;
 
-        if (be instanceof RespawnTotemBlockEntity totem) {
-            if (!state.getValue(RespawnTotemBlock.LIT)) {
-                context.getLevel().setBlockAndUpdate(pos, state.setValue(RespawnTotemBlock.LIT, true));
+        if (!(respawnTotemBlock.getMultiblockBlockEntity(level, pos, state) instanceof RespawnTotemBlockEntity totem))
+            return InteractionResult.PASS;
+
+        if (!level.isClientSide && player != null) {
+            if (totem.getCaptureCooldown() > 0) {
+                return InteractionResult.SUCCESS;
             }
+
+            totem.setCapturing(true);
+            respawnTotemBlock.updateLitState(level, pos, state, true);
+            level.scheduleTick(pos, respawnTotemBlock, 60);
         }
 
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
 }

@@ -3,7 +3,6 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.croissant.CroissantDragonAttackGoal;
-import dev.xylonity.companions.common.entity.ai.dinamo.DinamoSearchTargetsGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
@@ -49,6 +48,9 @@ public class CroissantDragonEntity extends CompanionEntity {
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation EATEN = RawAnimation.begin().thenPlay("eaten");
+    private final RawAnimation FLY = RawAnimation.begin().thenPlay("fly");
+    private final RawAnimation LAND = RawAnimation.begin().thenPlay("land");
+    private final RawAnimation TAKE_OFF = RawAnimation.begin().thenPlay("take_off");
 
     private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> ARMOR_NAME = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.STRING);
@@ -57,7 +59,15 @@ public class CroissantDragonEntity extends CompanionEntity {
     private static final EntityDataAccessor<Integer> MILK_AMOUNT = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.INT);
 
     private final int EATEN_DELAY = 10;
+    private final int ANIMATION_TAKE_OFF_TICKS = 14;
+    private final int ANIMATION_LAND_TICKS = 10;
     private int nextEatenRecover = 0;
+
+    // Animation purposes
+    private enum FlightState {
+        GROUND, TAKING_OFF, FLYING, LANDING
+    }
+    private FlightState flightState = FlightState.GROUND;
 
     public CroissantDragonEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -328,16 +338,41 @@ public class CroissantDragonEntity extends CompanionEntity {
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-        if (this.getMainAction() == 0) {
+
+        if (getMainAction() == 0) {
             event.getController().setAnimation(getSitVariation() == 0 ? SIT : SIT2);
-        } else if (event.isMoving()) {
-            event.setAnimation(WALK);
+            return PlayState.CONTINUE;
+        } else if (getEatenAmount() == 0) {
+            if (flightState == FlightState.GROUND) {
+                flightState = FlightState.TAKING_OFF;
+                event.getController().setAnimation(TAKE_OFF);
+                TickScheduler.scheduleClient(level(), () -> flightState = FlightState.FLYING, ANIMATION_TAKE_OFF_TICKS);
+                return PlayState.CONTINUE;
+            }
         } else {
-            event.setAnimation(IDLE);
+            if (flightState == FlightState.FLYING) {
+                flightState = FlightState.LANDING;
+                event.getController().setAnimation(LAND);
+                TickScheduler.scheduleClient(level(), () -> flightState = FlightState.GROUND, ANIMATION_LAND_TICKS);
+                return PlayState.CONTINUE;
+            }
+        }
+
+        switch (flightState) {
+            case FLYING -> event.getController().setAnimation(FLY);
+            case GROUND -> {
+                if (event.isMoving()) {
+                    event.getController().setAnimation(WALK);
+                } else {
+                    event.getController().setAnimation(IDLE);
+                }
+            }
+            default -> { ;; }
         }
 
         return PlayState.CONTINUE;
     }
+
 
     @Override
     public void aiStep() {

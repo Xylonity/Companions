@@ -26,8 +26,6 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private static final int PHASE_1_DURATION = 20;
-    private static final float ROTATION_LERP_FACTOR = 0.5f;
-    private static final double INITIAL_SPEED = 0.2;
     private static final double PHASE_1_FRICTION = 0.95;
     private static final double PHASE_2_FRICTION = 0.98;
     private static final double PHASE_2_ACCELERATION = 0.04;
@@ -44,7 +42,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
         super(type, level);
 
         Vec3 randomDir = new Vec3(random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1).normalize();
-        this.setDeltaMovement(randomDir.scale(INITIAL_SPEED));
+        this.setDeltaMovement(randomDir.scale(0.2));
 
         this.setNoGravity(true);
         this.pickup = Pickup.DISALLOWED;
@@ -126,7 +124,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
         if (tickCount < PHASE_1_DURATION) {
             currentRotation.set(targetRot);
         } else {
-            currentRotation.slerp(targetRot, ROTATION_LERP_FACTOR);
+            currentRotation.slerp(targetRot, 0.5f);
         }
     }
 

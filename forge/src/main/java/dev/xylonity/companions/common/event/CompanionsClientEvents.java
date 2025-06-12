@@ -70,6 +70,8 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.get(), ShadeAltarUpgradeHaloRenderer::new);
         EntityRenderers.register(CompanionsEntities.SHADE_SWORD_IMPACT_PROJECTILE.get(), ShadeSwordImpactRenderer::new);
         EntityRenderers.register(CompanionsEntities.PONTIFF_FIRE_RING.get(), PontiffFireRingRenderer::new);
+        EntityRenderers.register(CompanionsEntities.NEEDLE_PROJECTILE.get(), NeedleRenderer::new);
+        EntityRenderers.register(CompanionsEntities.RESPAWN_TOTEM_RING_PROJECTILE.get(), RespawnTotemRingRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
         EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);

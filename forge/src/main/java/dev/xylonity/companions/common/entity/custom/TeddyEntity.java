@@ -3,10 +3,13 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
-import dev.xylonity.companions.common.entity.ai.teddy.*;
-import dev.xylonity.companions.common.entity.ai.teddy.control.MutatedTeddyMoveControl;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.teddy.goal.*;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -21,14 +24,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
@@ -39,12 +43,13 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
 
 public class TeddyEntity extends CompanionEntity implements TraceableEntity {
-    private final RawAnimation SIT1 = RawAnimation.begin().thenPlay("lay");
-    private final RawAnimation SIT2 = RawAnimation.begin().thenPlay("sit");
-    private final RawAnimation SIT3 = RawAnimation.begin().thenPlay("sleep");
+    private final RawAnimation LAY = RawAnimation.begin().thenPlay("lay");
+    private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
+    private final RawAnimation SLEEP = RawAnimation.begin().thenPlay("sleep");
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
-    private final RawAnimation ATTACK = RawAnimation.begin().thenPlay("stab");
+    private final RawAnimation STAB = RawAnimation.begin().thenPlay("stab");
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
+    private final RawAnimation AUTO_STAB = RawAnimation.begin().thenPlay("auto_stab");
     private final RawAnimation TRANSFORM = RawAnimation.begin().thenPlay("transform");
 
     private final RawAnimation MUTATED_FLY = RawAnimation.begin().thenPlay("flying");
@@ -52,11 +57,15 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private final RawAnimation MUTATED_ATTACK2 = RawAnimation.begin().thenPlay("stab");
     private final RawAnimation MUTATED_SIT1 = RawAnimation.begin().thenPlay("sit");
     private final RawAnimation MUTATED_SIT2 = RawAnimation.begin().thenPlay("laying");
+    private final RawAnimation MUTATED_SIT3 = RawAnimation.begin().thenPlay("flying_sit");
     private final RawAnimation MUTATED_DEATH = RawAnimation.begin().thenPlay("death");
 
-    private static final EntityDataAccessor<Integer> SIT_VARIATION = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
+    // Phase 1: 1 stab, 2 auto-stab
+    // Phase 2: 1 attack
+    private static final EntityDataAccessor<Integer> ATTACK_TYPE = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SECOND_PHASE_COUNTER = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_ON_AIR = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final int ANIMATION_TRANSFORM_MAX_TICKS = 200;
     private static final int ANIMATION_DEAD_MAX_TICKS = 64;
@@ -72,38 +81,73 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     @Override
     protected void registerGoals() {
-        //this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new TeddySitWhenOrderedToGoal(this));
-        //this.goalSelector.addGoal(2, new TeddyAttackGoal(this, 1.0D, 2.5D, 20));
-        this.goalSelector.addGoal(2, new MutatedTeddyChargeAttackGoal(
-                this,
-                1.5,
-                1.0,
-                2,
-                10,
-                2.5,
-                4.0
-        ));
-        this.goalSelector.addGoal(3, new MutatedTeddyFollowOwnerGoal(this, 0.6D, 3.0F, 7.0F));
-        this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(4, new TeddyFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
 
-        //this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 0.6D, true));
-        //this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
-        //this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(6, new TeddyLookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this) {
+            @Override
+            public boolean canUse() {
+                if (!isTame()) return false;
+                if (isInWaterOrBubble()) return false;
+                if (!onGround() && getPhase() == 1) return false;
+                if (getOwner() == null) return true;
+                return (!(distanceToSqr(getOwner()) < 144.0) || getOwner().getLastHurtByMob() == null) && isOrderedToSit();
+            }
+
+            @Override
+            public void start() {
+                super.start();
+                if (getPhase() == 2) {
+                    double currentX = getX();
+                    double currentZ = getZ();
+
+                    BlockPos groundPos = findClosestGroundBelow(TeddyEntity.this);
+                    if (groundPos != null) {
+                        double y = groundPos.getY() + 1.0;
+                        teleportTo(currentX, y, currentZ);
+                    }
+                }
+            }
+        });
+
+        this.goalSelector.addGoal(2, new TeddyAttackGoal(this, 10, 30));
+        this.goalSelector.addGoal(2, new TeddyVoodooAttackGoal(this, 60, 200));
+
+        this.goalSelector.addGoal(2, new MutatedTeddyChargeAttackGoal(this, 1.5, 1.0, 2, 10, 2.5, 4.0));
+
+        this.goalSelector.addGoal(3, new TeddyApproachTargetGoal(this, 0.45, 0.4f, 1.25f));
+
+        this.goalSelector.addGoal(4, new MutatedTeddyFollowOwnerGoal(this, 0.6D, 3.0F, 7.0F, 0.18f));
+        this.goalSelector.addGoal(4, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && getPhase() == 1;
+            }
+        });
+        this.goalSelector.addGoal(4, new CompanionRandomStrollGoal(this, 0.43));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
     public static AttributeSupplier setAttributes() {
-        return Monster.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 10)
-                .add(Attributes.ATTACK_DAMAGE, 5f)
+        return CompanionEntity.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 60)
+                .add(Attributes.ATTACK_DAMAGE, 7f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
+    }
+
+    private BlockPos findClosestGroundBelow(TeddyEntity entity) {
+        double feetY = entity.getBoundingBox().minY + 0.01;
+        Vec3 start = new Vec3(entity.getX(), feetY, entity.getZ());
+        BlockHitResult trace = entity.level().clip(new ClipContext(start, start.subtract(0, 3.0, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
+
+        if (trace.getType() == HitResult.Type.BLOCK) {
+            return trace.getBlockPos();
+        } else {
+            return null;
+        }
     }
 
     public int getPhase() {
@@ -112,7 +156,6 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     public void setPhase(int phase) {
         this.entityData.set(PHASE, phase);
-        this.refreshDimensions();
     }
 
     public int getSecondPhaseCounter() {
@@ -123,6 +166,22 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         this.entityData.set(SECOND_PHASE_COUNTER, t);
     }
 
+    public int getAttackType() {
+        return this.entityData.get(ATTACK_TYPE);
+    }
+
+    public void setAttackType(int type) {
+        this.entityData.set(ATTACK_TYPE, type);
+    }
+
+    public boolean getIsOnAir() {
+        return this.entityData.get(IS_ON_AIR);
+    }
+
+    public void setIsOnAir(boolean isOnAir) {
+        this.entityData.set(IS_ON_AIR, isOnAir);
+    }
+
     @Override
     public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
         return getPhase() != 2 && super.causeFallDamage(pFallDistance, pMultiplier, pSource);
@@ -131,9 +190,10 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SIT_VARIATION, 0);
         this.entityData.define(PHASE, 1);
         this.entityData.define(SECOND_PHASE_COUNTER, 0);
+        this.entityData.define(ATTACK_TYPE, 0);
+        this.entityData.define(IS_ON_AIR, false);
     }
 
     @Override
@@ -142,6 +202,10 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
         if (getPhase() == 2) {
             this.setNoGravity(true);
+        }
+
+        if (getPhase() == 2 && !level().isClientSide && this.getMainAction() == 0) {
+            setIsOnAir(level().getBlockState(blockPosition().below()).isAir());
         }
 
         if (getSecondPhaseCounter() != 0 && getSecondPhaseCounter() <= ANIMATION_TRANSFORM_MAX_TICKS) {
@@ -164,12 +228,12 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                 }
 
                 setPhase(2);
+                this.refreshDimensions();
 
                 FlyingNavigator navigation = new FlyingNavigator(this, this.level());
                 navigation.setCanOpenDoors(true);
                 navigation.setCanPassDoors(true);
 
-                this.moveControl = new MutatedTeddyMoveControl(this);
                 this.navigation = navigation;
             }
 
@@ -201,6 +265,10 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         Item itemForTaming = Items.APPLE;
         Item item = itemstack.getItem();
 
+        if (getSecondPhaseCounter() != 0 && getPhase() == 1) {
+            return InteractionResult.PASS;
+        }
+
         if (item == itemForTaming && !isTame()) {
             if (this.level().isClientSide) {
                 return InteractionResult.CONSUME;
@@ -229,7 +297,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                     itemstack.shrink(1);
                 }
 
-            } else if (itemstack.getItem().equals(CompanionsItems.ETERNAL_LIGHTER.get()) && getPhase() == 1 && this.getSecondPhaseCounter() == 0) {
+            } else if (itemstack.getItem().equals(CompanionsItems.ETERNAL_LIGHTER.get()) && getPhase() == 1 && this.getSecondPhaseCounter() == 0 && getMainAction() != 0) {
                 this.setSecondPhaseCounter(this.getSecondPhaseCounter() + 1);
             } else {
                 defaultMainActionInteraction(player);
@@ -262,13 +330,28 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     }
 
     @Override
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> pKey) {
+        super.onSyncedDataUpdated(pKey);
+        if (pKey.equals(PHASE)) {
+            this.refreshDimensions();
+        }
+    }
+
+    @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+        if (pCompound.contains("Phase")) {
+            this.setPhase(pCompound.getInt("Phase"));
+        }
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
+        pCompound.putInt("Phase", getPhase());
+        if (this.getSecondPhaseCounter() != 0) {
+            pCompound.putInt("Phase", 2);
+        }
     }
 
     @Override
@@ -278,32 +361,24 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     @Override
     protected int sitAnimationsAmount() {
-        return 3;
+        return getPhase() == 1 ? 3 : 2;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
-        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
-    }
-
-    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
-
-        if (this.swinging && event.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
-            event.getController().forceAnimationReset();
-            event.getController().setAnimation(getPhase() == 2 ? MUTATED_ATTACK1 : ATTACK);
-            this.swinging = false;
-        }
-
-        return PlayState.CONTINUE;
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
 
         if (getPhase() == 1) {
             if (this.getMainAction() == 0) {
-                RawAnimation sitVariation = getSitVariation() == 0 ? SIT1 : getSitVariation() == 1 ? SIT2 : SIT3;
-                event.getController().setAnimation(sitVariation);
+                RawAnimation vari = getSitVariation() == 0 ? LAY : getSitVariation() == 1 ? SIT : SLEEP;
+                event.getController().setAnimation(vari);
+            } else if (getAttackType() == 1) {
+                event.setAnimation(STAB);
+            } else if (getAttackType() == 2) {
+                event.setAnimation(AUTO_STAB);
             } else if (this.getSecondPhaseCounter() != 0 && this.getSecondPhaseCounter() <= ANIMATION_TRANSFORM_MAX_TICKS) {
                 event.getController().setAnimation(TRANSFORM);
             } else if (event.isMoving()) {
@@ -315,8 +390,8 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             if (isDeadOrDying()) {
               event.getController().setAnimation(MUTATED_DEATH);
             } else if (this.getMainAction() == 0) {
-                RawAnimation sitVariation = getSitVariation() == 0 ? MUTATED_SIT1 : MUTATED_SIT2;
-                event.getController().setAnimation(sitVariation);
+                RawAnimation vari = getIsOnAir() ? MUTATED_SIT3 : getSitVariation() == 0 ? MUTATED_SIT1 : MUTATED_SIT2;
+                event.getController().setAnimation(vari);
             } else {
                 event.getController().setAnimation(MUTATED_FLY);
             }

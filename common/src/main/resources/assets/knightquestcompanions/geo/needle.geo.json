@@ -1,0 +1,56 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 48,
+				"texture_height": 8,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 1.5,
+				"visible_bounds_offset": [0, 0.25, 0]
+			},
+			"bones": [
+				{
+					"name": "pin",
+					"pivot": [0, 0, 14],
+					"cubes": [
+						{
+							"origin": [0, -1.5, 0],
+							"size": [0, 3, 23],
+							"uv": {
+								"north": {"uv": [24, 1], "uv_size": [0, 3]},
+								"east": {"uv": [10, 0], "uv_size": [7, 4]},
+								"south": {"uv": [47, 1], "uv_size": [0, 3]},
+								"west": {"uv": [24, 1], "uv_size": [23, 3]},
+								"up": {"uv": [24, -22], "uv_size": [0, 23]},
+								"down": {"uv": [24, 1], "uv_size": [0, -23]}
+							}
+						}
+					]
+				},
+				{
+					"name": "cloth",
+					"parent": "pin",
+					"pivot": [0, 0, 14],
+					"cubes": [
+						{
+							"origin": [-3, -6, 14],
+							"size": [6, 8, 0],
+							"pivot": [0, 0, 14],
+							"rotation": [35, 0, 0],
+							"uv": {
+								"north": {"uv": [1, 0], "uv_size": [6, 8]},
+								"east": {"uv": [5, 8], "uv_size": [0, 8]},
+								"south": {"uv": [11, 0], "uv_size": [4, 4]},
+								"west": {"uv": [11, 8], "uv_size": [0, 8]},
+								"up": {"uv": [5, 8], "uv_size": [6, 0]},
+								"down": {"uv": [11, 8], "uv_size": [6, 0]}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

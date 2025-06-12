@@ -32,6 +32,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.HOURGLASS.get());
                                 output.accept(CompanionsItems.SHADOW_BELL.get());
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD.get());
+                                output.accept(CompanionsItems.NEEDLE.get());
                                 output.accept(CompanionsItems.ANGEL_OF_GERTRUDE_DISC.get());
 
                                 output.accept(CompanionsItems.BOOK_ICE_SHARD.get());

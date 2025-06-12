@@ -92,6 +92,10 @@ public class BraceProjectile extends BaseProjectile implements GeoEntity {
 
         // We should stop the projectile before rethrowing it again
         setPos(hit.getLocation());
+
+        Vec3 bouncePos = new Vec3(target.getX(), target.getEyeY(), target.getZ());
+        setPos(bouncePos);
+
         setDeltaMovement(Vec3.ZERO);
 
         if (entityBounces >= MAX_BOUNCES) {
@@ -188,7 +192,7 @@ public class BraceProjectile extends BaseProjectile implements GeoEntity {
     }
 
     protected boolean canHitEntity(@NotNull Entity e) {
-        if (e == this.getOwner()) return false;
+        if (e == this.getOwner() || e == this) return false;
         if (hitEntities.contains(e.getId())) return false;
         return e instanceof LivingEntity;
     }
