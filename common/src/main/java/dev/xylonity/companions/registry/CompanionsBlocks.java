@@ -155,7 +155,6 @@ public class CompanionsBlocks {
         COIN_BLOCK,
         SHADE_SWORD_ALTAR,
         SHADE_MAW_ALTAR,
-        RESPAWN_TOTEM,
         RECALL_PLATFORM,
         VOLTAIC_RELAY
     }
