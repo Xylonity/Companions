@@ -47,15 +47,6 @@ public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEn
         this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull VoltaicPillarBlockEntity animatable) {
-        if (animatable.isActive()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
-        }
-
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
-    }
-
     private static class ElectricConnectionLayer extends GeoRenderLayer<VoltaicPillarBlockEntity> {
         private final ResourceLocation texture;
         private final int totalFrames;

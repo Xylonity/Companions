@@ -1,11 +1,11 @@
 package dev.xylonity.companions.common.blockentity;
 
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.block.AbstractTeslaBlock;
 import dev.xylonity.companions.common.tesla.behaviour.lamp.LampPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,7 +36,15 @@ public class PlasmaLampBlockEntity extends AbstractTeslaBlockEntity implements G
 
     @Override
     public @NotNull Vec3 electricalChargeEndOffset() {
-        return new Vec3(0, 1, 0);
+        Direction dir = this.getBlockState().getValue(AbstractTeslaBlock.FACING);
+        return switch (dir) {
+            case DOWN -> new Vec3(0, 0.2, 0);
+            case UP -> new Vec3(0, 0.75, 0);
+            case NORTH -> new Vec3(0, 0.5, -0.45);
+            case SOUTH -> new Vec3(0, 0.5, 0.45);
+            case WEST -> new Vec3(-0.45, 0.5, 0);
+            case EAST -> new Vec3(0.45, 0.5, 0);
+        };
     }
 
 }

@@ -2,11 +2,11 @@
   "credit": "Made with Blockbench",
   "parent": "builtin/entity",
   "texture_size": [
-    96,
-    96
+    64,
+    48
   ],
   "textures": {
-    "particle": "knightquestcompanions:block/illager_golem"
+    "particle": "knightquestcompanions:block/tesla_coil_block"
   },
   "display": {
     "thirdperson_righthand": {

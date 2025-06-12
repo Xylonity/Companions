@@ -2,6 +2,7 @@ package dev.xylonity.companions.client.blockentity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.blockentity.model.VoltaicRelayModel;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -48,12 +50,8 @@ public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEnti
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull VoltaicRelayBlockEntity animatable) {
-        if (animatable.isActive()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
-        }
+    protected void rotateBlock(Direction facing, PoseStack poseStack) {
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
     }
 
     private static class ElectricConnectionLayer extends GeoRenderLayer<VoltaicRelayBlockEntity> {

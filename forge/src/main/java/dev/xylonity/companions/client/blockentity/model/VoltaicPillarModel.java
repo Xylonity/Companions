@@ -16,10 +16,10 @@ public class VoltaicPillarModel extends GeoModel<VoltaicPillarBlockEntity> {
     @Override
     public ResourceLocation getTextureResource(VoltaicPillarBlockEntity animatable) {
         if (animatable.isActive()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
+            return new ResourceLocation(Companions.MOD_ID, "textures/block/voltaic_pillar_block_on.png");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
+        return new ResourceLocation(Companions.MOD_ID, "textures/block/voltaic_pillar_block.png");
     }
 
     @Override

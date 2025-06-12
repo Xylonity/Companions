@@ -1,9 +1,8 @@
 package dev.xylonity.companions.client.blockentity.model;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.common.block.AbstractTeslaBlock;
 import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
@@ -11,16 +10,17 @@ public class TeslaCoilModel extends GeoModel<TeslaCoilBlockEntity> {
 
     @Override
     public ResourceLocation getModelResource(TeslaCoilBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/tesla_coil_block.geo.json");
+        String dirName = animatable.getBlockState().getValue(AbstractTeslaBlock.FACING).getName();
+        return new ResourceLocation(Companions.MOD_ID, "geo/tesla_coil_block_" + dirName + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(TeslaCoilBlockEntity animatable) {
         if (animatable.isActive()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
+            return new ResourceLocation(Companions.MOD_ID, "textures/block/tesla_coil_block_on.png");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
+        return new ResourceLocation(Companions.MOD_ID, "textures/block/tesla_coil_block.png");
     }
 
     @Override

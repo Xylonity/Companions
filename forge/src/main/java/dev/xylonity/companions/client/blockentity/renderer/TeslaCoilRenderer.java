@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -39,21 +40,17 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> im
     }
 
     @Override
+    protected void rotateBlock(Direction facing, PoseStack poseStack) {
+        ;;
+    }
+
+    @Override
     public boolean shouldRenderOffScreen(@NotNull TeslaCoilBlockEntity pBlockEntity) {
         return true;
     }
 
     public TeslaCoilRenderer(BlockEntityRendererProvider.Context renderManager) {
         this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
-    }
-
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull TeslaCoilBlockEntity animatable) {
-        if (animatable.isActive()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
-        }
-
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
     }
 
     private static class ElectricConnectionLayer extends GeoRenderLayer<TeslaCoilBlockEntity> {
