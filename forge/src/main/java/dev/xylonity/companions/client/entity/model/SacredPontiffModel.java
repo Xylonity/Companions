@@ -1,9 +1,7 @@
 package dev.xylonity.companions.client.entity.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.common.entity.custom.AntlionEntity;
-import dev.xylonity.companions.common.entity.custom.BrokenDinamoEntity;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -30,6 +28,14 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
     @Override
     public ResourceLocation getTextureResource(SacredPontiffEntity animatable) {
         if (animatable.getPhase() == 2) {
+            if (animatable.isDeadOrDying()) {
+                int frames = 21;
+                int perTick = 10;
+
+                int frameIndex = (animatable.deathTime / perTick) % frames;
+                return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/his_holiness_petrification%d.png", frameIndex));
+            }
+
             return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/his_holiness.png");
         }
 

@@ -60,6 +60,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     private final RawAnimation DOUBLE_THROW = RawAnimation.begin().thenPlay("double_throw");
     private final RawAnimation IMPACT = RawAnimation.begin().thenPlay("impact");
     private final RawAnimation STAR_ATTACK = RawAnimation.begin().thenPlay("star_attack");
+    private final RawAnimation PHASE2_DIE = RawAnimation.begin().thenPlay("die");
 
     // 0 inactive, 1 activating, 2 active, 3 transformation
     private static final EntityDataAccessor<Integer> ACTIVATION_PHASE = SynchedEntityData.defineId(SacredPontiffEntity.class, EntityDataSerializers.INT);
@@ -74,6 +75,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
     // Caps
     private static final int ANIMATION_ACTIVATION_MAX_TICKS = 65;
+    private static final int ANIMATION_PHASE2_DEAD = 153;
     private static final int ANIMATION_TRANSFORMATION_MAX_TICKS = 138;
     private static final int ANIMATION_APPEAR_MAX_TICKS = 115; // Healing ticks too
     private static final int INVISIBLE_BETWEEN_PHASE_TICKS = 60;
@@ -331,6 +333,15 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     }
 
     @Override
+    protected void tickDeath() {
+        ++this.deathTime;
+        if (this.deathTime >= ANIMATION_PHASE2_DEAD && !this.level().isClientSide() && !this.isRemoved()) {
+            this.level().broadcastEntityEvent(this, (byte) 60);
+            this.remove(RemovalReason.KILLED);
+        }
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ACTIVATION_PHASE, 0);
@@ -365,7 +376,9 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
 
         if (getPhase() == 2) {
-            if (shouldPlayAppearAnimation()) {
+            if (isDeadOrDying()) {
+                event.setAnimation(PHASE2_DIE);
+            } else if (shouldPlayAppearAnimation()) {
                 event.setAnimation(APPEAR);
             } else if (getAttackType() == 1) {
                 event.setAnimation(STAB);
