@@ -16,11 +16,10 @@ public class DinamoModel extends GeoModel<DinamoEntity> {
 
     @Override
     public ResourceLocation getTextureResource(DinamoEntity animatable) {
-        TeslaConnectionManager connectionManager = TeslaConnectionManager.getInstance();
-        TeslaConnectionManager.ConnectionNode node = animatable.asConnectionNode();
-
-        if ((!connectionManager.getIncoming(node).isEmpty() || !connectionManager.getOutgoing(node).isEmpty()) && animatable.isActive()) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo_charge.png");
+        if (animatable.getMainAction() == 0 && animatable.isActive()) {
+            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
+        } else if (animatable.getMainAction() != 0 && animatable.isActiveForAttack() && !animatable.entitiesToAttack.isEmpty()) {
+            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
         }
 
         return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");

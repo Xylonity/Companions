@@ -25,6 +25,8 @@ public class CompanionsBlocks {
     public static final Supplier<Block> COPPER_COIN;
     public static final Supplier<Block> NETHER_COIN;
     public static final Supplier<Block> END_COIN;
+    public static final Supplier<Block> RECALL_PLATFORM;
+    public static final Supplier<Block> VOLTAIC_RELAY;
 
     static {
 
@@ -120,6 +122,22 @@ public class CompanionsBlocks {
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
                         .noOcclusion(), BlockType.RESPAWN_TOTEM);
+
+        RECALL_PLATFORM = registerBlock("recall_platform_block",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.RECALL_PLATFORM);
+
+        VOLTAIC_RELAY = registerBlock("voltaic_relay_block",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.VOLTAIC_RELAY);
     }
 
     private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType) {
@@ -136,7 +154,10 @@ public class CompanionsBlocks {
         RESPAWN_TOTEM,
         COIN_BLOCK,
         SHADE_SWORD_ALTAR,
-        SHADE_MAW_ALTAR
+        SHADE_MAW_ALTAR,
+        RESPAWN_TOTEM,
+        RECALL_PLATFORM,
+        VOLTAIC_RELAY
     }
 
 }

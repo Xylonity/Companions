@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
-import dev.xylonity.companions.common.entity.ai.dinamo.DinamoSearchTargetsGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
@@ -11,15 +10,18 @@ import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoAttackBehavio
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
 import dev.xylonity.companions.registry.CompanionsItems;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -30,9 +32,9 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -46,23 +48,26 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.*;
 
 public class DinamoEntity extends CompanionEntity implements GeoEntity {
-    public List<Monster> visibleEntities = new ArrayList<>();
     private final TeslaConnectionManager connectionManager;
+    public List<LivingEntity> entitiesToAttack = new ArrayList<>();
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("roll");
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
 
     private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> ATTACK_ACTIVE = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<String> CONNECTED_ENTITIES = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<Integer> TEST_TIMER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> CYCLE_COUNTER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> ANIMATION_START_TICK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
+
+    private static final EntityDataAccessor<Boolean> ATTACK_ACTIVE = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> ATTACK_CYCLE_COUNTER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
+
     private static final EntityDataAccessor<Boolean> SHOULD_ATTACK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
 
     private final ITeslaGeneratorBehaviour pulseBehavior;
     private final ITeslaGeneratorBehaviour attackBehavior;
+
+    private ChunkPos lastChunkPos;
 
     public DinamoEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -87,7 +92,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
-        this.goalSelector.addGoal(3, new DinamoSearchTargetsGoal(this, 10));
     }
 
     public TeslaConnectionManager.ConnectionNode asConnectionNode() {
@@ -121,18 +125,19 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
 
-        TeslaConnectionManager.getInstance().getOutgoing(asConnectionNode()).clear();
-        TeslaConnectionManager.getInstance().getIncoming(asConnectionNode()).clear();
+        TeslaConnectionManager.ConnectionNode me = asConnectionNode();
+        connectionManager.getOutgoing(me).clear();
+        connectionManager.getIncoming(me).clear();
 
         if (tag.contains("OutgoingConnections")) {
             ListTag outgoingList = tag.getList("OutgoingConnections", 10);
-
             for (Tag t : outgoingList) {
                 TeslaConnectionManager.ConnectionNode node = TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t);
-                TeslaConnectionManager.getInstance().addConnection(asConnectionNode(), node);
+                connectionManager.addConnection(me, node, true);
             }
         }
 
+        connectionManager.recalculateDistances();
     }
 
     @Override
@@ -163,31 +168,23 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
 
-    //@Override
-    //public void setSitting(boolean sitting) {
-    //    super.setSitting(sitting);
-        //if (!isSitting()) {
-        //    Set<TeslaConnectionManager.ConnectionNode> outNodes = new HashSet<>(connectionManager.getOutgoing(asConnectionNode()));
-        //    for (TeslaConnectionManager.ConnectionNode target : outNodes) {
-        //        connectionManager.removeConnection(asConnectionNode(), target);
-        //    }
-
-        //    Set<TeslaConnectionManager.ConnectionNode> inNodes = new HashSet<>(connectionManager.getIncoming(asConnectionNode()));
-        //    for (TeslaConnectionManager.ConnectionNode source : inNodes) {
-        //        connectionManager.removeConnection(source, asConnectionNode());
-        //    }
-
-        //    connectionManager.removeConnectionNode(asConnectionNode());
-        //    connectionManager.recalculateDistances();
-        //}
-    //}
-
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND
                 && getOwner() == player && player.getMainHandItem().getItem() != CompanionsItems.WRENCH.get()) {
 
-            defaultMainActionInteraction(player);
+            if (player.isShiftKeyDown() && getMainAction() != 0) {
+                setShouldAttack(!shouldAttack());
+
+                if (shouldAttack()) {
+                    player.displayClientMessage(Component.translatable("dinamo.companions.client_message.attack").withStyle(ChatFormatting.GREEN), true);
+                } else {
+                    player.displayClientMessage(Component.translatable("dinamo.companions.client_message.no_attack").withStyle(ChatFormatting.GREEN), true);
+                }
+
+            } else {
+                defaultMainActionInteraction(player);
+            }
 
             return InteractionResult.SUCCESS;
         }
@@ -203,12 +200,38 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
             setActive(false);
         }
 
+        if (level() instanceof ServerLevel level) {
+            ChunkPos currentChunkPos = new ChunkPos(blockPosition());
+            if (!currentChunkPos.equals(lastChunkPos)) {
+                if (lastChunkPos != null) {
+                    level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);
+                }
+
+                level.setChunkForced(currentChunkPos.x, currentChunkPos.z, true);
+                lastChunkPos = currentChunkPos;
+            }
+        }
+
         if (getMainAction() == 0) {
             pulseBehavior.tick(this);
         } else {
             attackBehavior.tick(this);
         }
 
+    }
+
+    @Override
+    public boolean isPersistenceRequired() {
+        return true;
+    }
+
+    @Override
+    public void remove(@NotNull RemovalReason pReason) {
+        if (level() instanceof ServerLevel level && lastChunkPos != null) {
+            level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);
+        }
+
+        super.remove(pReason);
     }
 
     public void setActive(boolean active) {
@@ -229,11 +252,11 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     }
 
     public int getAnimationStartTick() {
-        return this.entityData.get(TEST_TIMER);
+        return this.entityData.get(ANIMATION_START_TICK);
     }
 
     public void setAnimationStartTick(int tick) {
-        this.entityData.set(TEST_TIMER, tick);
+        this.entityData.set(ANIMATION_START_TICK, tick);
     }
 
     public int getCycleCounter() {
@@ -264,16 +287,19 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         this.entityData.set(SHOULD_ATTACK, shouldAttack);
     }
 
+    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect) {
+        connectionManager.addConnection(thisNode, nodeToConnect);
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ACTIVE, false);
-        this.entityData.define(ATTACK_ACTIVE, true);
-        this.entityData.define(CONNECTED_ENTITIES, "");
-        this.entityData.define(TEST_TIMER, 0);
-        this.entityData.define(SHOULD_ATTACK, true);
         this.entityData.define(CYCLE_COUNTER, 0);
+        this.entityData.define(ANIMATION_START_TICK, 0);
+        this.entityData.define(ATTACK_ACTIVE, true);
         this.entityData.define(ATTACK_CYCLE_COUNTER, 0);
+        this.entityData.define(SHOULD_ATTACK, true);
     }
 
     @Override

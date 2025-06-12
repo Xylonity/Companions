@@ -10,7 +10,9 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -39,9 +41,9 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     public int tickCount;
     public int activationTick;
     public int cycleCounter;
-    protected boolean pendingRemoval = false;
-    protected boolean receivesGenerator = false;
 
+    protected boolean pendingRemoval;
+    protected boolean receivesGenerator;
     protected int distance;
     protected boolean isActive;
 
@@ -55,6 +57,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.tickCount = 0;
         this.activationTick = 0;
         this.cycleCounter = -1;
+        this.pendingRemoval = false;
+        this.receivesGenerator = false;
         this.defaultAttackBehaviour = new DefaultAttackBehaviour();
     }
 
@@ -86,30 +90,36 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     @Override
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
-        tag.getList("OutgoingConnections", 10).forEach(t ->
-                TeslaConnectionManager.getInstance().addConnection(asConnectionNode(), TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t), true)
-        );
+        tag.getList("OutgoingConnections", 10).forEach(t -> {
+            TeslaConnectionManager.getInstance().addConnection(asConnectionNode(), TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t), true);
+        });
         this.tickCount = tag.getInt("TickCount");
         this.isActive = tag.getBoolean("IsActive");
         this.activationTick = tag.contains("ActivationTick") ? tag.getInt("ActivationTick") : 0;
-        this.cycleCounter = tag.getInt("cycleCounter");
+        if (this.cycleCounter >= 0) {
+            tag.putInt("CycleCounter", this.cycleCounter);
+        }
         this.receivesGenerator = tag.getBoolean("ReceivesGenerator");
         this.setDistance(tag.getInt("Distance"));
+        this.setAnimationStartTick(tag.getInt("AnimationTick"));
     }
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         ListTag outgoing = new ListTag();
-        connectionManager.getOutgoing(asConnectionNode()).forEach(node -> outgoing.add(node.serialize()));
+        connectionManager.getOutgoing(asConnectionNode()).forEach(node -> {
+            outgoing.add(node.serialize());
+        });
         tag.put("OutgoingConnections", outgoing);
 
         tag.putInt("TickCount", this.tickCount);
         tag.putBoolean("IsActive", this.isActive);
         tag.putInt("ActivationTick", this.activationTick);
-        tag.putInt("cycleCounter", this.cycleCounter);
+        tag.putInt("CycleCounter", this.cycleCounter);
         tag.putBoolean("ReceivesGenerator", this.receivesGenerator);
         tag.putInt("Distance", this.distance);
+        tag.putInt("AnimationTick", this.getAnimationStartTick());
     }
 
     @Override
@@ -137,6 +147,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.tickCount = tag.getInt("TickCount");
         this.isActive = tag.getBoolean("IsActive");
         this.distance = tag.getInt("Distance");
+        this.setAnimationStartTick(tag.getInt("AnimationTick"));
+        this.cycleCounter = tag.getInt("CycleCounter");
     }
 
     @Override
@@ -145,7 +157,18 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         tag.putInt("TickCount", this.tickCount);
         tag.putBoolean("IsActive", this.isActive);
         tag.putInt("Distance", this.distance);
+        tag.putInt("AnimationTick", this.getAnimationStartTick());
+        tag.putInt("CycleCounter", this.cycleCounter);
         return tag;
+    }
+
+    public void sync() {
+        if (!(level instanceof ServerLevel serverLevel)) return;
+
+        Packet<ClientGamePacketListener> pkt = ClientboundBlockEntityDataPacket.create(this);
+        ChunkPos chunkPos = new ChunkPos(worldPosition);
+
+        serverLevel.getChunkSource().chunkMap.getPlayers(chunkPos, false).forEach(p -> p.connection.send(pkt));
     }
 
     public boolean isPendingRemoval() {
@@ -166,6 +189,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     public void startCycle() {
         this.cycleCounter = 0;
+        this.setChanged();
     }
 
     public int getAnimationStartTick() {
@@ -180,6 +204,11 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.isActive = isActive;
     }
 
+    // Can the module connect to other modules
+    public boolean canConnectToOtherModules() {
+        return true;
+    }
+
     // Position offset where the electrical charge is emitted (from x + 0.5, y, z + 0.5)
     public @NotNull abstract Vec3 electricalChargeOriginOffset();
 
@@ -190,7 +219,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
      * Defers the call from the wrench item when this node is getting connected to another one
      * Don't override if the connection is simple (one node to another node)
      */
-    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, UseOnContext ctx) {
+    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @NotNull UseOnContext ctx) {
         connectionManager.addConnection(thisNode, nodeToConnect);
     }
 
@@ -198,7 +227,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
      * Defers the call from the wrench item when this node is getting removed from the tesla network
      * Don't override if the connection is simple (one node to another node)
      */
-    public void handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, UseOnContext ctx) {
+    public void handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @NotNull UseOnContext ctx) {
         connectionManager.removeConnection(thisNode, nodeToConnect);
     }
 

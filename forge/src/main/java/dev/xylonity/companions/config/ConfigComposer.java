@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 // Abstraction of the config api to use ForgeConfigSpec, so any mod that adds a general config GUI,
-// such as Configured, detects this mod. This should also enable hot-reloading
+// such as Configured, detects this config. This should also enable hot-reloading
 @Deprecated
 public final class ConfigComposer {
     private static final Map<Field, ForgeConfigSpec.ConfigValue<?>> VALUES = new ConcurrentHashMap<>();

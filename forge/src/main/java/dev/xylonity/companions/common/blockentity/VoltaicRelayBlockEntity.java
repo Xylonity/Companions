@@ -11,12 +11,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-public class TeslaCoilBlockEntity extends AbstractTeslaBlockEntity {
+public class VoltaicRelayBlockEntity extends AbstractTeslaBlockEntity {
 
     private final ITeslaNodeBehaviour pulseBehaviour;
 
-    public TeslaCoilBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.TESLA_COIL.get(), pos, state);
+    public VoltaicRelayBlockEntity(BlockPos pos, BlockState state) {
+        super(CompanionsBlockEntities.VOLTAIC_RELAY.get(), pos, state);
         this.pulseBehaviour = new CoilPulseBehaviour();
     }
 
@@ -27,18 +27,12 @@ public class TeslaCoilBlockEntity extends AbstractTeslaBlockEntity {
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
         if (level.isClientSide) return;
-        if (!(t instanceof TeslaCoilBlockEntity coil)) return;
+        if (!(t instanceof VoltaicRelayBlockEntity relay)) return;
 
-        coil.pulseBehaviour.process(coil, level, blockPos, blockState);
-        coil.defaultAttackBehaviour.process(coil, level, blockPos, blockState);
+        relay.pulseBehaviour.process(relay, level, blockPos, blockState);
+        relay.defaultAttackBehaviour.process(relay, level, blockPos, blockState);
 
-        // We handle the animation counters in the server and send the data to the client. This is done because
-        // if the dinamo's simulation distance is exceeded, the dinamo won't send client sided pulses to the outgoing
-        // nodes, causing them to remain inactive on the client (even tho they are actually connected on the server). So
-        // I just do the pulse things up there and sync the data to the client. The dinamo's chunk remains loaded
-        // while it is sitting, as otherwise there is no pulsing behaviour when the entity is unloaded due to the chunk
-        // not being loaded per se
-        coil.sync();
+        relay.sync();
     }
 
     //@Override
