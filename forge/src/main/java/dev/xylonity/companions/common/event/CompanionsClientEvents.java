@@ -112,6 +112,7 @@ public class CompanionsClientEvents {
         event.registerSpriteSet(CompanionsParticles.FIREWORK_TOAD.get(), FireworkToadParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.SHADE_TRAIL.get(), ShadeTrailParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.SHADE_SUMMON.get(), ShadeSummonParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.HOLINESS_STAR_TRAIL.get(), GoldenAllayTrailParticle.Provider::new);
     }
 
 }

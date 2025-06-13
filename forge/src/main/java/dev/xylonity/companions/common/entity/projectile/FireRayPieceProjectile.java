@@ -107,14 +107,6 @@ public class FireRayPieceProjectile extends BaseProjectile {
 
     }
 
-    @Override protected void readAdditionalSaveData(@NotNull CompoundTag tag) {
-        ;;
-    }
-
-    @Override protected void addAdditionalSaveData(@NotNull CompoundTag tag)  {
-        ;;
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", this::predicate));

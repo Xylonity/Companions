@@ -28,7 +28,7 @@ import software.bernie.geckolib.util.RenderUtils;
 /**
  * Extend this class to create new components that belong to the Tesla network.
  *
- * Each instance is registered as a node in the Tesla connection graph (in TeslaConnectionManager)
+ * Each instance is registered as a node in the tesla network graph (see TeslaConnectionManager)
  * and holds common fields such as the active state and a network distance measure, along with the
  * cycle scheduled lifetime.
  */
@@ -219,7 +219,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
      * Defers the call from the wrench item when this node is getting connected to another one
      * Don't override if the connection is simple (one node to another node)
      */
-    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @NotNull UseOnContext ctx) {
+    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx) {
         connectionManager.addConnection(thisNode, nodeToConnect);
     }
 
@@ -227,7 +227,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
      * Defers the call from the wrench item when this node is getting removed from the tesla network
      * Don't override if the connection is simple (one node to another node)
      */
-    public void handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @NotNull UseOnContext ctx) {
+    public void handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx) {
         connectionManager.removeConnection(thisNode, nodeToConnect);
     }
 

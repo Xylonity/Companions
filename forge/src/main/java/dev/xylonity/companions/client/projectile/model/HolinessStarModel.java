@@ -10,17 +10,21 @@ public class HolinessStarModel extends GeoModel<HolinessStartProjectile> {
 
     @Override
     public ResourceLocation getModelResource(HolinessStartProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/black_hole.geo.json");
+        return new ResourceLocation(Companions.MOD_ID, "geo/star.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(HolinessStartProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/black_hole.png");
+        if (animatable.isFire()) {
+            return new ResourceLocation(Companions.MOD_ID, "textures/entity/red_star.png");
+        }
+
+        return new ResourceLocation(Companions.MOD_ID, "textures/entity/blue_star.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(HolinessStartProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/black_hole.animation.json");
+        return new ResourceLocation(Companions.MOD_ID, "animations/star.animation.json");
     }
 
 }

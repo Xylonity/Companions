@@ -165,10 +165,10 @@ public class NeedleProjectile extends ThrownTrident implements GeoEntity {
     }
 
     private void orientToward(Vec3 dir) {
-        float yawRad   = (float) Math.atan2(dir.x, dir.z);
+        float yawRad = (float) Math.atan2(dir.x, dir.z);
         float pitchRad = (float) Math.atan2(dir.y, Math.hypot(dir.x, dir.z));
 
-        float yawDeg   = yawRad * Mth.RAD_TO_DEG;
+        float yawDeg = yawRad * Mth.RAD_TO_DEG;
         float pitchDeg = pitchRad * Mth.RAD_TO_DEG;
 
         setYRot(yawDeg);

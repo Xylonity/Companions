@@ -9,12 +9,13 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 
-import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implements GeoBlockEntity {
@@ -32,6 +33,12 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implement
         pillar.pulseBehaviour.process(pillar, level, blockPos, blockState);
         pillar.defaultAttackBehaviour.process(pillar, level, blockPos, blockState);
 
+        pillar.sync();
+    }
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return INFINITE_EXTENT_AABB;
     }
 
     @Override
@@ -44,95 +51,62 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implement
         return new Vec3(0, 0.5, 0);
     }
 
-    //@Override
-    //public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, UseOnContext ctx) {
-//
-    //    // We defer the call to the coil node removal method if a pillar -> coil interaction is being made
-    //    if (nodeToConnect.isBlock()
-    //            && ctx.getLevel().getBlockEntity(nodeToConnect.blockPos()) instanceof TeslaCoilBlockEntity dest) {
-//
-    //        List<VoltaicPillarBlockEntity> pillars = new LinkedList<>();
-//
-    //        pillarsBelowAndAbove(pillars, thisNode.blockPos());
-    //        pillars.sort(Comparator.comparing(e -> e.getBlockPos().getY()));
-//
-    //        AbstractTeslaBlockEntity be = pillars.stream().reduce((f, s) -> s).orElse(null);
-//
-    //        if (be != null) {
-    //            if (ctx.getLevel().getBlockEntity(be.getBlockPos().above()) instanceof TeslaCoilBlockEntity coil) {
-    //                dest.handleNodeRemoval(nodeToConnect, coil.asConnectionNode(), ctx);
-    //            }
-    //        }
-//
-    //        return;
-    //    }
-//
-    //    // Connects every single pillar and the coil on top to the nodeToConnect's column if a correct connection between
-    //    // voltaic pillars if made
-    //    if (nodeToConnect.isBlock()
-    //            && ctx.getLevel().getBlockEntity(nodeToConnect.blockPos()) instanceof VoltaicPillarBlockEntity) {
-//
-    //        List<VoltaicPillarBlockEntity> pillars = new LinkedList<>();
-    //        List<VoltaicPillarBlockEntity> pillarsDestiny = new LinkedList<>();
-//
-    //        // We filter and sort both column1 (from thisNode) and column2 (from nodeToConnect)
-    //        pillarsBelowAndAbove(pillars, thisNode.blockPos());
-    //        pillarsBelowAndAbove(pillarsDestiny, nodeToConnect.blockPos());
-    //        pillars.sort(Comparator.comparing(e -> e.getBlockPos().getY()));
-    //        pillarsDestiny.sort(Comparator.comparing(e -> e.getBlockPos().getY()));
-//
-    //        AbstractTeslaBlockEntity be = pillars.stream().reduce((f, s) -> s).orElse(null);
-    //        AbstractTeslaBlockEntity beDestiny = pillarsDestiny.stream().reduce((f, s) -> s).orElse(null);
-//
-    //        if (be != null && beDestiny != null) {
-//
-    //            // We check if both columns have a coil on top
-    //            if (ctx.getLevel().getBlockEntity(be.getBlockPos().above()) instanceof TeslaCoilBlockEntity coil1
-    //                    && ctx.getLevel().getBlockEntity(beDestiny.getBlockPos().above()) instanceof TeslaCoilBlockEntity coil2) {
-//
-    //                if (pillars.size() == pillarsDestiny.size()) {
-//
-    //                    // Let's add the connection between coils
-    //                    connectionManager.addConnection(coil1.asConnectionNode(), coil2.asConnectionNode());
-//
-    //                    // And here we connect every pillar in order, that's why we sorted the lists before tho
-    //                    for (int i = 0; i < pillars.size(); i++) {
-    //                        connectionManager.addConnection(pillars.get(i).asConnectionNode(), pillarsDestiny.get(i).asConnectionNode(), false);
-    //                    }
-//
-    //                } else {
-    //                    System.out.println("diff pillar sizes");
-    //                }
-//
-    //            } else {
-    //                System.out.println("one of both pillars doesn't have the coil on top");
-    //            }
-//
-    //        }
-//
-    //    }
-//
-    //}
-//
-    //private void pillarsBelowAndAbove(List<VoltaicPillarBlockEntity> pillars, BlockPos pos) {
-    //    scanPillars(pillars, pos.getX(), pos.getY() - 1, -1, pos.getZ());
-    //    scanPillars(pillars, pos.getX(), pos.getY(), 1, pos.getZ());
-    //}
-//
-    //private void scanPillars(List<VoltaicPillarBlockEntity> pillars, int x, int startY, int step, int z) {
-    //    if (this.level == null) return;
-//
-    //    for (int currentY = startY; ; currentY += step) {
-    //        BlockPos currentPos = new BlockPos(x, currentY, z);
-    //        BlockEntity entity = level.getBlockEntity(currentPos);
-    //        if (entity instanceof VoltaicPillarBlockEntity pillarEntity) {
-    //            pillars.add(pillarEntity);
-    //        } else {
-    //            break;
-    //        }
-//
-    //    }
-//
-    //}
+    public void connectToNearestPillar() {
+        if (level == null || level.isClientSide) return;
+
+        if (level.getBlockEntity(this.getBlockPos().below()) instanceof VoltaicPillarBlockEntity be) {
+            connectionManager.addConnection(this.asConnectionNode(), be.asConnectionNode());
+        }
+
+        if (level.getBlockEntity(this.getBlockPos().above()) instanceof VoltaicPillarBlockEntity be) {
+            be.connectToNearestPillar();
+        }
+
+    }
+
+    @Override
+    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx) {
+        if (ctx != null) {
+            if (ctx.getLevel().getBlockEntity(nodeToConnect.blockPos()) instanceof VoltaicPillarBlockEntity be) {
+                List<VoltaicPillarBlockEntity> thisList = new ArrayList<>();
+                List<VoltaicPillarBlockEntity> otherList = new ArrayList<>();
+                pillarsBelow(thisList, thisNode.blockPos());
+                pillarsBelow(otherList, nodeToConnect.blockPos());
+                if (thisList.size() == otherList.size()) {
+                    for (int i = 0; i < thisList.size(); i++) {
+                        connectionManager.addConnection(thisList.get(i).asConnectionNode(), otherList.get(i).asConnectionNode());
+                    }
+                } else {
+                    return;
+                }
+            }
+        }
+
+        super.handleNodeSelection(thisNode, nodeToConnect, ctx);
+    }
+
+    private void pillarsBelow(List<VoltaicPillarBlockEntity> pillars, BlockPos pos) {
+        scanPillars(pillars, pos.getX(), pos.getY() - 1, -1, pos.getZ());
+    }
+
+    private void scanPillars(List<VoltaicPillarBlockEntity> pillars, int x, int startY, int step, int z) {
+        if (this.level == null) return;
+
+        for (int currentY = startY; ; currentY += step) {
+            BlockPos currentPos = new BlockPos(x, currentY, z);
+            BlockEntity entity = level.getBlockEntity(currentPos);
+            if (entity instanceof VoltaicPillarBlockEntity pillarEntity) {
+                pillars.add(pillarEntity);
+            } else {
+                break;
+            }
+
+        }
+    }
+
+    @Override
+    public void handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx) {
+        super.handleNodeRemoval(thisNode, nodeToConnect, ctx);
+    }
 
 }

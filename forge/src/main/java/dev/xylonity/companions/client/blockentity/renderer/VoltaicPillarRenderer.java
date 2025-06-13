@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -32,10 +33,15 @@ public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEn
     public VoltaicPillarRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new VoltaicPillarModel());
         addRenderLayer(new ElectricConnectionLayer(this,
-                new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"),
+                new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch_wall.png"),
                 totalFrames,
                 ticksPerFrame
         ));
+    }
+
+    @Override
+    protected void rotateBlock(Direction facing, PoseStack poseStack) {
+
     }
 
     @Override
@@ -44,7 +50,7 @@ public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEn
     }
 
     public VoltaicPillarRenderer(BlockEntityRendererProvider.Context renderManager) {
-        this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
+        this(renderManager, 4, ELECTRICAL_CHARGE_DURATION / 4);
     }
 
     private static class ElectricConnectionLayer extends GeoRenderLayer<VoltaicPillarBlockEntity> {
@@ -64,7 +70,7 @@ public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEn
 
             if (!animatable.isActive()) return;
 
-            int frame = 4;
+            int frame = calculateCurrentFrame(animatable);
 
             for (TeslaConnectionManager.ConnectionNode node : TeslaConnectionManager.getInstance().getOutgoing(animatable.asConnectionNode())) {
                 if (node.isEntity()) {
@@ -92,12 +98,14 @@ public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEn
 
         }
 
+
         private int calculateCurrentFrame(VoltaicPillarBlockEntity animatable) {
-            int frame = animatable.getAnimationStartTick() / ticksPerFrame;
+            if (animatable.getLevel() != null) {
+                long elapsed = animatable.getLevel().getGameTime() - animatable.getAnimationStartTick();
+                return (int) (elapsed / ticksPerFrame) % totalFrames + 1;
+            }
 
-            if (frame >= totalFrames) return -1;
-
-            return frame;
+            return 0;
         }
 
         /**

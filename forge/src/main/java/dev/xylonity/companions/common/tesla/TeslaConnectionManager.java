@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.tesla;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.blockentity.RecallPlatformBlockEntity;
+import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.blockentity.VoltaicRelayBlockEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.BlockPos;
@@ -285,6 +286,8 @@ public class TeslaConnectionManager {
                     final int newDistance;
                     if (currentBe instanceof VoltaicRelayBlockEntity) {
                         newDistance = 1;
+                    } else if (currentBe instanceof VoltaicPillarBlockEntity be && be.getLevel() != null && be.getLevel().getBlockEntity(be.getBlockPos().above()) instanceof VoltaicPillarBlockEntity) {
+                        newDistance = currentDistance;
                     } else {
                         newDistance = currentDistance + 1;
                     }
