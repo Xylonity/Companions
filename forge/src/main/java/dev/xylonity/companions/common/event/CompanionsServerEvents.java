@@ -4,7 +4,7 @@ import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.entity.custom.*;
 import dev.xylonity.companions.common.entity.hostile.HostilePuppetGloveEntity;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
-import dev.xylonity.companions.common.entity.summon.FireworkToadEntity;
+import dev.xylonity.companions.common.entity.summon.*;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,6 +32,10 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.SHADE_MAW.get(), ShadeMawEntity.setAttributes());
 
         event.put(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadEntity.setAttributes());
+        event.put(CompanionsEntities.NETHER_BULLFROG.get(), NetherBullfrogEntity.setAttributes());
+        event.put(CompanionsEntities.ENDER_FROG.get(), EnderFrogEntity.setAttributes());
+        event.put(CompanionsEntities.BUBBLE_FROG.get(), BubbleFrogEntity.setAttributes());
+        event.put(CompanionsEntities.EMBER_POLE.get(), EmberPoleEntity.setAttributes());
 
         event.put(CompanionsEntities.ILLAGER_GOLEM.get(), IllagerGolemEntity.setAttributes());
         event.put(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGloveEntity.setAttributes());

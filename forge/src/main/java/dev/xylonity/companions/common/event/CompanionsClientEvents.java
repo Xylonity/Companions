@@ -44,6 +44,10 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.SHADE_MAW.get(), ShadeMawRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadRenderer::new);
+        EntityRenderers.register(CompanionsEntities.NETHER_BULLFROG.get(), NetherBullfrogRenderer::new);
+        EntityRenderers.register(CompanionsEntities.ENDER_FROG.get(), EnderFrogRenderer::new);
+        EntityRenderers.register(CompanionsEntities.EMBER_POLE.get(), EmberPoleRenderer::new);
+        EntityRenderers.register(CompanionsEntities.BUBBLE_FROG.get(), BubbleFrogRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.ILLAGER_GOLEM.get(), IllagerGolemRenderer::new);
         EntityRenderers.register(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGloveRenderer::new);

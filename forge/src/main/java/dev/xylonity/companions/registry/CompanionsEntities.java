@@ -8,7 +8,7 @@ import dev.xylonity.companions.common.entity.projectile.*;
 import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
 import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.GenericTriggerProjectile;
-import dev.xylonity.companions.common.entity.summon.FireworkToadEntity;
+import dev.xylonity.companions.common.entity.summon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -42,6 +42,10 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<ShadeMawEntity>> SHADE_MAW;
 
     public static final RegistryObject<EntityType<FireworkToadEntity>> FIREWORK_TOAD;
+    public static final RegistryObject<EntityType<BubbleFrogEntity>> BUBBLE_FROG;
+    public static final RegistryObject<EntityType<EmberPoleEntity>> EMBER_POLE;
+    public static final RegistryObject<EntityType<NetherBullfrogEntity>> NETHER_BULLFROG;
+    public static final RegistryObject<EntityType<EnderFrogEntity>> ENDER_FROG;
 
     public static final RegistryObject<EntityType<IllagerGolemEntity>> ILLAGER_GOLEM;
     public static final RegistryObject<EntityType<HostilePuppetGloveEntity>> HOSTILE_PUPPET_GLOVE;
@@ -84,14 +88,18 @@ public class CompanionsEntities {
         MINION = register("minion", MinionEntity::new, MobCategory.CREATURE, 0.85f, 1.5f, null);
         GOLDEN_ALLAY = register("golden_allay", GoldenAllayEntity::new, MobCategory.CREATURE, 0.5f, 0.5f, null);
         SOUL_MAGE = register("soul_mage", SoulMageEntity::new, MobCategory.CREATURE, 0.85f, 1.2f, null);
-        LIVING_CANDLE = register("living_candle", LivingCandleEntity::new, MobCategory.CREATURE, 0.5f, 0.75f, null);
         CROISSANT_DRAGON = register("croissant_dragon", CroissantDragonEntity::new, MobCategory.CREATURE, 1.4f, 1.4f, null);
         PUPPET_GLOVE = register("puppet_glove", PuppetGloveEntity::new, MobCategory.CREATURE, 0.8f, 0.8f, null);
         PUPPET = register("puppet", PuppetEntity::new, MobCategory.CREATURE, 1f, 2.8f, null);
         SHADE_SWORD = register("shade_sword", ShadeSwordEntity::new, MobCategory.CREATURE, 1.25f, 4f, List.of(EntityType.Builder::fireImmune));
         SHADE_MAW = register("shade_maw", ShadeMawEntity::new, MobCategory.CREATURE, 3f, 2.5f, List.of(EntityType.Builder::fireImmune));
 
-        FIREWORK_TOAD = register("firework_toad", FireworkToadEntity::new, MobCategory.CREATURE, 1f, 1f, null);
+        LIVING_CANDLE = register("living_candle", LivingCandleEntity::new, MobCategory.CREATURE, 0.5f, 0.75f, null);
+        FIREWORK_TOAD = register("firework_toad", FireworkToadEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::noSummon));
+        BUBBLE_FROG = register("bubble_frog", BubbleFrogEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::noSummon));
+        EMBER_POLE = register("ember_pole", EmberPoleEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::noSummon));
+        NETHER_BULLFROG = register("nether_bullfrog", NetherBullfrogEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::noSummon));
+        ENDER_FROG = register("ender_frog", EnderFrogEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::noSummon));
 
         ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f, null);
         HOSTILE_PUPPET_GLOVE = register("hostile_puppet_glove", HostilePuppetGloveEntity::new, MobCategory.CREATURE, 0.8f, 2f, null);
@@ -113,7 +121,7 @@ public class CompanionsEntities {
         FLOOR_CAKE_CREAM = register("floor_cake_cream_projectile", FloorCakeCreamProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         STAKE_PROJECTILE = register("stake_projectile", StakeProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         HOLINESS_NAGINATA = register("holiness_naginata", HolinessNaginataProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
-        HOLINESS_STAR = register("holiness_star", HolinessStartProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+        HOLINESS_STAR = register("holiness_star", HolinessStartProjectile::new, MobCategory.MISC, 0.15f, 0.15f, List.of(EntityType.Builder::noSummon));
         PONTIFF_FIRE_RING = register("pontiff_fire_ring", PontiffFireRingProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         SHADE_ALTAR_UPGRADE_HALO = register("shade_altar_upgrade_halo", ShadeAltarUpgradeHaloProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
         SHADE_SWORD_IMPACT_PROJECTILE = register("shade_sword_impact", ShadeSwordImpactProjectile::new, MobCategory.MISC, 1.2f, 1.2f, List.of(EntityType.Builder::noSummon, b -> b.clientTrackingRange(64), b -> b.updateInterval(1)));

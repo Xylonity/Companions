@@ -94,8 +94,6 @@
 					},
 					"scale": {
 						"vector": [
-							"1 + math.clamp(0, math.cos(query.anim_time*360+180)*0.05)",
-							"1 - math.clamp(0, math.cos(query.anim_time*360+180)*0.05)",
 							"1 + math.clamp(0, math.cos(query.anim_time*360+180)*0.05)"
 						]
 					}
