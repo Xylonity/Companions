@@ -109,7 +109,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
         this.goalSelector.addGoal(1, new PontiffRotatingFireRayGoal(this, 200, 500));
-        this.goalSelector.addGoal(1, new PontiffMeleeAttackGoal(this, 40, 100));
+        this.goalSelector.addGoal(1, new PontiffMeleeAttackGoal(this, 10, 60));
         this.goalSelector.addGoal(1, new PontiffStaffKnockAttackGoal(this, 160, 360));
         this.goalSelector.addGoal(1, new PontiffDashAttackGoal(this, 60, 200));
 
@@ -177,6 +177,9 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         if (getPhase() == 2 && shouldPlayAppearAnimation()) {
             this.heal(this.getMaxHealth() / ANIMATION_APPEAR_MAX_TICKS);
         }
+
+        if (getTicksFrozen() > 0) setTicksFrozen(0);
+        if (isOnFire()) extinguishFire();
 
         super.tick();
     }
@@ -361,11 +364,36 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+        if (pCompound.contains("ActivationPhase")) {
+            this.setActivationPhase(pCompound.getInt("ActivationPhase"));
+            if (getActivationPhase() == 3 && !this.isDeadOrDying()) {
+                this.setInvisible(false);
+                this.setInvulnerable(false);
+                this.setShouldSearchTarget(true);
+                this.setShouldLookAtTarget(true);
+                this.setNoMovement(false);
+                if (pCompound.contains("HasAppeared") && pCompound.getBoolean("HasAppeared")) {
+                    this.setHealth(this.getMaxHealth());
+                    this.setActivationPhase(2);
+                }
+                this.bossInfo.setName(getName());
+            }
+
+        }
+
+        if (pCompound.contains("Phase")) {
+            this.setPhase(pCompound.getInt("Phase"));
+        }
+
+        if (getPhase() == 2) this.hasAppeared = true;
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
+        pCompound.putInt("ActivationPhase", getActivationPhase());
+        pCompound.putInt("Phase", getPhase());
+        pCompound.putBoolean("HasAppeared", this.hasAppeared);
     }
 
     @Override

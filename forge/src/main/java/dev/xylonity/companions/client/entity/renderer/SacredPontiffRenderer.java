@@ -25,7 +25,11 @@ public class SacredPontiffRenderer extends GeoEntityRenderer<SacredPontiffEntity
 
     @Override
     public int getPackedOverlay(SacredPontiffEntity animatable, float u) {
-        return OverlayTexture.NO_OVERLAY;
+        if (animatable.getPhase() == 2 && animatable.isDeadOrDying()) {
+            return OverlayTexture.NO_OVERLAY;
+        }
+
+        return super.getPackedOverlay(animatable, u);
     }
 
 }

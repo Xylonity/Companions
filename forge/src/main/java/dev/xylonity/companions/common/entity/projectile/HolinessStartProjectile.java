@@ -225,4 +225,9 @@ public class HolinessStartProjectile extends BaseProjectile {
         return PlayState.CONTINUE;
     }
 
+    @Override
+    public boolean shouldRender(double pX, double pY, double pZ) {
+        return true;
+    }
+
 }
