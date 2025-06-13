@@ -8,13 +8,22 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -23,13 +32,16 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import javax.annotation.Nullable;
+import java.util.Random;
+
 public class HolinessStartProjectile extends BaseProjectile {
 
     private static final EntityDataAccessor<Boolean> IS_FIRE = SynchedEntityData.defineId(HolinessStartProjectile.class, EntityDataSerializers.BOOLEAN);
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
 
-    public static final float SPEED = 0.4f;
+    public static final float SPEED = 0.425f;
     private LivingEntity target;
 
     public HolinessStartProjectile(EntityType<? extends BaseProjectile> type, Level level) {
@@ -38,6 +50,11 @@ public class HolinessStartProjectile extends BaseProjectile {
 
     public void setTarget(LivingEntity target) {
         this.target = target;
+    }
+
+    @Nullable
+    protected EntityHitResult findHitEntity(Vec3 pStartVec, Vec3 pEndVec) {
+        return ProjectileUtil.getEntityHitResult(this.level(), this, pStartVec, pEndVec, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), this::canHitEntity);
     }
 
     @Override
@@ -62,7 +79,42 @@ public class HolinessStartProjectile extends BaseProjectile {
             level().addParticle(CompanionsParticles.HOLINESS_STAR_TRAIL.get(), getX(), getY() - getBbHeight() * 0.5, getZ(), 0, 0, 0);
         }
 
-        if (this.onGround()) this.discard();
+        if (!this.onGround()) {
+            Vec3 pos = this.position();
+            Vec3 vec33 = pos.add(this.getDeltaMovement());
+            HitResult hitresult = this.level().clip(new ClipContext(pos, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+
+            if (hitresult.getType() != HitResult.Type.MISS) vec33 = hitresult.getLocation();
+
+            while (!this.isRemoved()) {
+                EntityHitResult entityhitresult = this.findHitEntity(pos, vec33);
+                if (entityhitresult != null) {
+                    hitresult = entityhitresult;
+                }
+
+                if (hitresult != null && hitresult.getType() == HitResult.Type.ENTITY) {
+                    Entity entity = ((EntityHitResult) hitresult).getEntity();
+                    Entity entity1 = this.getOwner();
+                    if (entity instanceof Player && entity1 instanceof Player && !((Player)entity1).canHarmPlayer((Player)entity)) {
+                        hitresult = null;
+                        entityhitresult = null;
+                    }
+                }
+
+                if (hitresult != null && hitresult.getType() != HitResult.Type.MISS) {
+                    this.onHit(hitresult);
+                    this.hasImpulse = true;
+                }
+
+                if (entityhitresult == null) break;
+
+                hitresult = null;
+            }
+
+            this.checkInsideBlocks();
+        }
+
+        if (this.onGround()) discard();
 
     }
 
@@ -84,6 +136,16 @@ public class HolinessStartProjectile extends BaseProjectile {
         this.entityData.set(IS_FIRE, isFire);
     }
 
+    @Override
+    protected void onHitEntity(EntityHitResult pResult) {
+        Entity entity = pResult.getEntity();
+        Entity owner = this.getOwner();
+        DamageSource damageSource = this.damageSources().trident(this, (owner == null ? this : owner));
+        entity.hurt(damageSource, 8.0F);
+        this.playSound(SoundEvents.DRAGON_FIREBALL_EXPLODE, 5.0f, 1.0F);
+        this.discard();
+    }
+
     private void fireParticles() {
         for (int i = 0; i < 20; i++) {
             double vx = (level().random.nextDouble() - 0.5) * this.getBbWidth();
@@ -99,6 +161,10 @@ public class HolinessStartProjectile extends BaseProjectile {
                     level.sendParticles(ParticleTypes.LAVA, getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
             }
         }
+
+        for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, new AABB(blockPosition()).inflate(3))) {
+            e.setSecondsOnFire(new Random().nextInt(4, 15));
+        }
     }
 
     private void iceParticles() {
@@ -108,12 +174,16 @@ public class HolinessStartProjectile extends BaseProjectile {
             double vz = (level().random.nextDouble() - 0.5) * this.getBbWidth();
             if (level() instanceof ServerLevel level) {
                 if (level.random.nextFloat() < 0.35)
-                    level.sendParticles(ParticleTypes.POOF, getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
+                    level.sendParticles(ParticleTypes.POOF, getX(), getY(), getZ(), 1, vx, vy, vz, 0.2);
                 if (level.random.nextFloat() < 0.8)
                     level.sendParticles(ParticleTypes.ITEM_SNOWBALL, getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
-                level.sendParticles(ParticleTypes.CLOUD, getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
-                level.sendParticles(ParticleTypes.SNOWFLAKE, getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
+                level.sendParticles(ParticleTypes.CLOUD, getX(), getY(), getZ(), 1, vx, vy, vz, 0.2);
+                level.sendParticles(ParticleTypes.SNOWFLAKE, getX(), getY(), getZ(), 1, vx, vy, vz, 0.25);
             }
+        }
+
+        for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, new AABB(blockPosition()).inflate(3))) {
+            e.setTicksFrozen(e.getTicksFrozen() + 400);
         }
     }
 

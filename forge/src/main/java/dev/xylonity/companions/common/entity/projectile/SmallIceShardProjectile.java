@@ -27,7 +27,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
 
     private static final int PHASE_1_DURATION = 20;
     private static final double PHASE_1_FRICTION = 0.95;
-    private static final double PHASE_2_FRICTION = 0.98;
+    private static final double PHASE_2_FRICTION = 0.88;
     private static final double PHASE_2_ACCELERATION = 0.04;
     private static final int LIFETIME = 200;
 

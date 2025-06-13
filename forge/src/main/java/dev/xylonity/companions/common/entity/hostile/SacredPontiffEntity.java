@@ -108,17 +108,16 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
-        //this.goalSelector.addGoal(1, new PontiffRotatingFireRayGoal(this, 200, 600));
-        //this.goalSelector.addGoal(1, new PontiffMeleeAttackGoal(this, 40, 100));
-        //this.goalSelector.addGoal(1, new PontiffStaffKnockAttackGoal(this, 160, 360));
-        //this.goalSelector.addGoal(1, new PontiffDashAttackGoal(this, 60, 200));
+        this.goalSelector.addGoal(1, new PontiffRotatingFireRayGoal(this, 200, 500));
+        this.goalSelector.addGoal(1, new PontiffMeleeAttackGoal(this, 40, 100));
+        this.goalSelector.addGoal(1, new PontiffStaffKnockAttackGoal(this, 160, 360));
+        this.goalSelector.addGoal(1, new PontiffDashAttackGoal(this, 60, 200));
 
-        //this.goalSelector.addGoal(1, new HolinessMeleeAttackGoal(this, 40, 100));
-        //this.goalSelector.addGoal(1, new HolinessStakeAttackGoal(this, 60, 140));
-        //this.goalSelector.addGoal(1, new HolinessDoubleThrowAttackGoal(this, 200, 400));
-        //this.goalSelector.addGoal(1, new HolinessImpactAttackGoal(this, 80, 300));
-        //this.goalSelector.addGoal(1, new HolinessStarAttackGoal(this, 200, 500));
-        this.goalSelector.addGoal(1, new HolinessStarAttackGoal(this, 40, 100));
+        this.goalSelector.addGoal(1, new HolinessMeleeAttackGoal(this, 40, 100));
+        this.goalSelector.addGoal(1, new HolinessStakeAttackGoal(this, 60, 140));
+        this.goalSelector.addGoal(1, new HolinessDoubleThrowAttackGoal(this, 200, 700));
+        this.goalSelector.addGoal(1, new HolinessImpactAttackGoal(this, 160, 800));
+        this.goalSelector.addGoal(1, new HolinessStarAttackGoal(this, 200, 500));
 
         this.goalSelector.addGoal(2, new PontiffStrafeAroundTargetGoal(this, 0.5, 10));
 

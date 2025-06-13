@@ -40,7 +40,6 @@ public class IceShardBook extends AbstractMagicBook {
             }
 
             Vec3 right = forward.cross(up).normalize();
-
             double spawnX = player.getX() + right.x * 0.5 + up.x * 0.5;
             double spawnY = player.getY() + player.getBbHeight() + right.y * 0.5 + up.y * 0.5;
             double spawnZ = player.getZ() + right.z * 0.5 + up.z * 0.5;
@@ -49,27 +48,20 @@ public class IceShardBook extends AbstractMagicBook {
 
             double maxAngle = Math.toRadians(30);
             Random random = new Random();
-
-            double u = random.nextDouble();
-            double cosTheta = u * (1 - Math.cos(maxAngle)) + Math.cos(maxAngle);
+            double cosTheta = random.nextDouble() * (1 - Math.cos(maxAngle)) + Math.cos(maxAngle);
             double sinTheta = Math.sqrt(1 - cosTheta * cosTheta);
             double phi = random.nextDouble() * 2 * Math.PI;
 
-            Vec3 randomDir = forward.scale(cosTheta)
-                    .add(right.scale(sinTheta * Math.cos(phi)))
-                    .add(up.scale(sinTheta * Math.sin(phi)))
-                    .normalize();
-
-            double initialSpeed = 0.2;
-            projectile.setDeltaMovement(randomDir.scale(initialSpeed));
+            Vec3 randomDir = forward.scale(cosTheta).add(right.scale(sinTheta * Math.cos(phi))).add(up.scale(sinTheta * Math.sin(phi))).normalize();
+            projectile.setDeltaMovement(randomDir.scale(0.2));
 
             LivingEntity tByMob = player.getLastHurtByMob();
-            LivingEntity tMob = player.getLastHurtMob();
-            projectile.setTarget(tByMob == null ? tMob : tByMob);
+            projectile.setTarget(tByMob == null ? player.getLastHurtMob() : tByMob);
 
             pLevel.addFreshEntity(projectile);
         }
 
         return super.use(pLevel, player, pUsedHand);
     }
+
 }
