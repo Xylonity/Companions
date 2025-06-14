@@ -113,6 +113,7 @@ public final class ConfigComposer {
                 return b.define(name, field.getDouble(null), inDoubleRange);
             }
 
+            // float types may not work correctly on some gui config mods
             if (type == float.class) {
                 return b.define(name, field.getFloat(null), inFloatRange);
             }

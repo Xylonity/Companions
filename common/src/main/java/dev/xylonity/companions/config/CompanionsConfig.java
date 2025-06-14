@@ -2,7 +2,7 @@ package dev.xylonity.companions.config;
 
 import dev.xylonity.companions.config.api.*;
 
-@AutoConfig(file = "companions-common", style = DecorationType.STARSET, categoryBanner = false)
+@AutoConfig(file = "companions", style = DecorationType.STARSET, categoryBanner = false)
 public final class CompanionsConfig {
 
     @ConfigEntry(category = "Dinamo Companion",
@@ -26,7 +26,7 @@ public final class CompanionsConfig {
     @ConfigEntry(category = "Magic Books",
             comment = "The amount of HP the heal ring heals",
             min = 0.0F, max = 100.0F)
-    public static float HEAL_RING_HEALING = 6.0F;
+    public static double HEAL_RING_HEALING = 6.0F;
 
     @ConfigEntry(comment = "The amount of charges a single altar can cap", min = 0, max = 1000)
     public static int SHADOW_ALTAR_MAX_CHARGES = 20;

@@ -2,23 +2,23 @@ package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
-import net.minecraft.client.gui.font.providers.UnihexProvider;
-import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.minion.imp.BraceAttackGoal;
+import dev.xylonity.companions.common.entity.ai.minion.minion.MinionAttackGoal;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -28,21 +28,23 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class MinionEntity extends CompanionEntity implements GeoEntity {
+public class MinionEntity extends CompanionEntity {
 
+    // General anims
+    // Minion's idle is fly
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
-    private final RawAnimation FLY = RawAnimation.begin().thenPlay("fly");
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
+
+    // Imp doesn't fly
+    private final RawAnimation FLY = RawAnimation.begin().thenPlay("fly");
+
+    // Attack anims
     private final RawAnimation SPELL = RawAnimation.begin().thenPlay("spell");
     private final RawAnimation ATTACK = RawAnimation.begin().thenPlay("attack");
     private final RawAnimation THROW = RawAnimation.begin().thenPlay("throw");
@@ -50,6 +52,7 @@ public class MinionEntity extends CompanionEntity implements GeoEntity {
     private static final EntityDataAccessor<String> VARIANT = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> IS_LOCKED = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_FLYING = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.BOOLEAN);
 
     private ResourceKey<Level> lastDimension = null;
 
@@ -73,8 +76,16 @@ public class MinionEntity extends CompanionEntity implements GeoEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.4D, 6.0F, 2.0F, false));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 10.0F));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+
+        this.goalSelector.addGoal(1, new MinionAttackGoal(this, 20, 80));
+        this.goalSelector.addGoal(1, new BraceAttackGoal(this, 20, 80));
+
+        this.goalSelector.addGoal(3, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(3, new CompanionRandomStrollGoal(this, 0.43));
+
+        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
     @Override
@@ -175,6 +186,7 @@ public class MinionEntity extends CompanionEntity implements GeoEntity {
         this.entityData.define(VARIANT, Variant.NETHER.getName());
         this.entityData.define(IS_LOCKED, false);
         this.entityData.define(IS_FLYING, false);
+        this.entityData.define(IS_ATTACKING, false);
     }
 
     @Override
@@ -211,9 +223,19 @@ public class MinionEntity extends CompanionEntity implements GeoEntity {
         this.entityData.set(VARIANT, variant);
     }
 
+    public boolean isAttacking() {
+        return this.entityData.get(IS_ATTACKING);
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.entityData.set(IS_ATTACKING, attacking);
+    }
+
     @Override
     public @NotNull Component getName() {
-        if (this.level().dimension().equals(Level.NETHER)) {
+        if (this.hasCustomName()) {
+            return super.getName();
+        } else if (this.level().dimension().equals(Level.NETHER)) {
             return Component.literal("Imp");
         } else if (this.level().dimension().equals(Level.END)) {
             return Component.literal("Gargoyle");
@@ -225,28 +247,42 @@ public class MinionEntity extends CompanionEntity implements GeoEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
-        //controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
     }
-
-    //private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
-
-    //    if (this.swinging && event.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
-    //        event.getController().forceAnimationReset();
-    //        event.getController().setAnimation(RawAnimation.begin().then("attack", Animation.LoopType.PLAY_ONCE));
-    //        this.swinging = false;
-    //    }
-
-    //    return PlayState.CONTINUE;
-    //}
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
 
         if (getVariant().equals(Variant.OVERWORLD.getName())) {
-            event.getController().setAnimation(FLY);
+            if (this.getMainAction() == 0) {
+                event.getController().setAnimation(SIT);
+            } else if (this.isAttacking()) {
+                event.getController().setAnimation(ATTACK);
+            } else {
+                event.getController().setAnimation(FLY);
+            }
+
         } else if (getVariant().equals(Variant.END.getName())) {
+            if (this.getMainAction() == 0) {
+                event.getController().setAnimation(SIT);
+            } else if (this.isAttacking()) {
+                event.getController().setAnimation(SPELL);
+            } else if (isFlying()) {
+                event.getController().setAnimation(FLY);
+            } else if (event.isMoving()) {
+                event.getController().setAnimation(WALK);
+            } else {
+                event.getController().setAnimation(IDLE);
+            }
 
         } else {
-
+            if (this.getMainAction() == 0) {
+                event.getController().setAnimation(SIT);
+            } else if (this.isAttacking()) {
+                event.getController().setAnimation(THROW);
+            } else if (event.isMoving()) {
+                event.getController().setAnimation(WALK);
+            } else {
+                event.getController().setAnimation(IDLE);
+            }
         }
 
         return PlayState.CONTINUE;
