@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.event;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.blockentity.RespawnTotemBlockEntity;
-import dev.xylonity.companions.common.tick.TickScheduler;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;

@@ -1,6 +1,8 @@
 package dev.xylonity.companions.config;
 
-import dev.xylonity.companions.config.api.*;
+import dev.xylonity.knightlib.config.api.AutoConfig;
+import dev.xylonity.knightlib.config.api.ConfigEntry;
+import dev.xylonity.knightlib.config.api.DecorationType;
 
 @AutoConfig(file = "companions", style = DecorationType.STARSET, categoryBanner = false)
 public final class CompanionsConfig {

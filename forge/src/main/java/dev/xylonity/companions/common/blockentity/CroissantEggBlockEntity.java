@@ -1,11 +1,11 @@
 package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.entity.custom.CroissantDragonEntity;
-import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;

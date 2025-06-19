@@ -3,7 +3,7 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.ai.antlion.AntlionMeleeAttackGoal;
 import dev.xylonity.companions.common.entity.ai.antlion.AntlionLongAttackGoal;
-import dev.xylonity.companions.common.tick.TickScheduler;
+import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;

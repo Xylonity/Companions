@@ -27,7 +27,7 @@ public class CompanionsClientEvents {
 
     @SubscribeEvent
     public static void registerEntityRenderers(FMLClientSetupEvent event) {
-        EntityRenderers.register(CompanionsEntities.FROGGY.get(), FroggyRenderer::new);
+        EntityRenderers.register(CompanionsEntities.CORNELIUS.get(), CorneliusRenderer::new);
         EntityRenderers.register(CompanionsEntities.TEDDY.get(), TeddyRenderer::new);
         EntityRenderers.register(CompanionsEntities.ANTLION.get(), AntlionRenderer::new);
         EntityRenderers.register(CompanionsEntities.DINAMO.get(), DinamoRenderer::new);

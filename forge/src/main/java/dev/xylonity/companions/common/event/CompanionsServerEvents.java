@@ -15,7 +15,7 @@ public class CompanionsServerEvents {
 
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(CompanionsEntities.FROGGY.get(), FroggyEntity.setAttributes());
+        event.put(CompanionsEntities.FROGGY.get(), CorneliusEntity.setAttributes());
         event.put(CompanionsEntities.TEDDY.get(), TeddyEntity.setAttributes());
         event.put(CompanionsEntities.ANTLION.get(), AntlionEntity.setAttributes());
         event.put(CompanionsEntities.DINAMO.get(), DinamoEntity.setAttributes());

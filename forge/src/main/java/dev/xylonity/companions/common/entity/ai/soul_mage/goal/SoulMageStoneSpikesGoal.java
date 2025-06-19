@@ -2,9 +2,9 @@ package dev.xylonity.companions.common.entity.ai.soul_mage.goal;
 
 import dev.xylonity.companions.common.entity.ai.soul_mage.AbstractSoulMageAttackGoal;
 import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
-import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;

@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.container;
 
-import dev.xylonity.companions.common.entity.custom.FroggyEntity;
+import dev.xylonity.companions.common.entity.custom.CorneliusEntity;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.registry.CompanionsMenuTypes;
 import net.minecraft.world.Container;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CorneliusContainerMenu extends AbstractContainerMenu {
 
-    private final FroggyEntity cornelius;
+    private final CorneliusEntity cornelius;
     private final Container entityInventory;
     private boolean gameActive = false;
 
@@ -26,7 +26,7 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
     public static final int ACTION_WIN = 4;
     public static final int ACTION_JACK = 5;
 
-    public CorneliusContainerMenu(int windowId, Inventory playerInv, FroggyEntity cornelius) {
+    public CorneliusContainerMenu(int windowId, Inventory playerInv, CorneliusEntity cornelius) {
         super(CompanionsMenuTypes.CORNELIUS_CONTAINER.get(), windowId);
         this.cornelius = cornelius;
         this.entityInventory = cornelius.inventory;

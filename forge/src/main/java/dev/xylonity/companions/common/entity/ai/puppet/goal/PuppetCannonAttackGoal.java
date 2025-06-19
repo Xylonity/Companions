@@ -3,7 +3,6 @@ package dev.xylonity.companions.common.entity.ai.puppet.goal;
 import dev.xylonity.companions.common.entity.ai.puppet.AbstractPuppetAttackGoal;
 import dev.xylonity.companions.common.entity.custom.PuppetEntity;
 import dev.xylonity.companions.common.entity.projectile.StakeProjectile;
-import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Arrow;

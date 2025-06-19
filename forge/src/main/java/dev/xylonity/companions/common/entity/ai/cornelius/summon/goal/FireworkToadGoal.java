@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.entity.ai.froggy.summon.goal;
+package dev.xylonity.companions.common.entity.ai.cornelius.summon.goal;
 
 import dev.xylonity.companions.common.entity.summon.FireworkToadEntity;
 import net.minecraft.core.particles.ParticleTypes;

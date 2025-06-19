@@ -1,8 +1,8 @@
 package dev.xylonity.companions.common.entity.hostile;
 
 import dev.xylonity.companions.common.entity.custom.PuppetGloveEntity;
-import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;

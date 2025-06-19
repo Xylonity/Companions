@@ -25,7 +25,7 @@ public class CompanionsEntities {
 
     public static final DeferredRegister<EntityType<?>> ENTITY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Companions.MOD_ID);
 
-    public static final RegistryObject<EntityType<FroggyEntity>> FROGGY;
+    public static final RegistryObject<EntityType<CorneliusEntity>> CORNELIUS;
     public static final RegistryObject<EntityType<TeddyEntity>> TEDDY;
     public static final RegistryObject<EntityType<AntlionEntity>> ANTLION;
     public static final RegistryObject<EntityType<DinamoEntity>> DINAMO;
@@ -79,7 +79,7 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<FireRayBeamEntity>> FIRE_RAY_BEAM_ENTITY;
 
     static {
-        FROGGY = register("froggy", FroggyEntity::new, MobCategory.CREATURE, 1f, 1f, null);
+        CORNELIUS = register("cornelius", CorneliusEntity::new, MobCategory.CREATURE, 1f, 1f, null);
         TEDDY = register("teddy", TeddyEntity::new, MobCategory.CREATURE, 0.9f, 0.9f, null);
         ANTLION = register("antlion", AntlionEntity::new, MobCategory.CREATURE, 1f, 1f, null);
         DINAMO = register("dinamo", DinamoEntity::new, MobCategory.CREATURE, 1f, 2f, null);

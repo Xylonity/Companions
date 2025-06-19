@@ -1,10 +1,10 @@
 package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.entity.ShadeEntity;
-import dev.xylonity.companions.common.tick.TickScheduler;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -108,9 +108,9 @@ public class ShadeMawAltarBlockEntity extends AbstractShadeAltarBlockEntity {
                         double vx = (pLevel.random.nextDouble() - 0.5) * entity.getBbWidth();
                         double vy = (pLevel.random.nextDouble() - 0.5) * entity.getBbHeight();
                         double vz = (pLevel.random.nextDouble() - 0.5) * entity.getBbWidth();
-                        if (pLevel instanceof ServerLevel level) {
-                            level.sendParticles(CompanionsParticles.SHADE_TRAIL.get(), px, py, pz, 1, vx, vy, vz, 0.15);
-                            if (i % 3 == 0) level.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), px, py, pz, 1, vx, vy, vz, 0.35);
+                        if (pLevel instanceof ServerLevel sv) {
+                            sv.sendParticles(CompanionsParticles.SHADE_TRAIL.get(), px, py, pz, 1, vx, vy, vz, 0.15);
+                            if (i % 3 == 0) sv.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), px, py, pz, 1, vx, vy, vz, 0.35);
                         }
                     }
                 }, 104

@@ -759,8 +759,7 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         public boolean tick(float s){
             if (flipping) {
                 flipTick++;
-                float half = FLIP_TOTAL / 2f;
-                if (flipTick == half) {
+                if (flipTick == FLIP_TOTAL / 2f) {
                     faceUp = true;
                 }
 
@@ -770,8 +769,7 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
             }
 
-            if (arrived)
-                return true;
+            if (arrived) return true;
 
             prevX = x;
             prevY = y;
