@@ -81,7 +81,7 @@ dependencies {
     implementation fg.deobf("curse.maven:puzzles-lib-495476:5904750")
     implementation fg.deobf("curse.maven:overflowing-bars-852662:5763974")
 
-    implementation fg.deobf("curse.maven:knight-lib-1105855:6020359")
+    implementation fg.deobf("curse.maven:knight-lib-1105855:6662850")
 
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
