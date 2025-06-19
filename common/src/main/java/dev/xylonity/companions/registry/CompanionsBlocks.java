@@ -35,21 +35,21 @@ public class CompanionsBlocks {
                         .mapColor(MapColor.COLOR_ORANGE)
                         .strength(0.1F)
                         .sound(SoundType.CHAIN)
-                        .noOcclusion(), BlockType.COIN_BLOCK);
+                        .noOcclusion(), BlockType.COIN_BLOCK, BlockItem.COIN);
 
         NETHER_COIN = registerBlock("nether_coin",
                 BlockBehaviour.Properties.of()
                         .mapColor(MapColor.COLOR_BLACK)
                         .strength(0.1F)
                         .sound(SoundType.CHAIN)
-                        .noOcclusion(), BlockType.COIN_BLOCK);
+                        .noOcclusion(), BlockType.COIN_BLOCK, BlockItem.COIN);
 
         END_COIN = registerBlock("end_coin",
                 BlockBehaviour.Properties.of()
                         .mapColor(MapColor.COLOR_PURPLE)
                         .strength(0.1F)
                         .sound(SoundType.CHAIN)
-                        .noOcclusion(), BlockType.COIN_BLOCK);
+                        .noOcclusion(), BlockType.COIN_BLOCK, BlockItem.COIN);
 
         SHADE_SWORD_ALTAR = registerBlock("shade_sword_altar",
                 BlockBehaviour.Properties.of()
@@ -57,7 +57,7 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.SHADE_SWORD_ALTAR);
+                        .noOcclusion(), BlockType.SHADE_SWORD_ALTAR, BlockItem.GENERIC);
 
         SHADE_MAW_ALTAR = registerBlock("shade_maw_altar",
                 BlockBehaviour.Properties.of()
@@ -65,7 +65,7 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.SHADE_MAW_ALTAR);
+                        .noOcclusion(), BlockType.SHADE_MAW_ALTAR, BlockItem.GENERIC);
 
         TESLA_COIL = registerBlock("tesla_coil_block",
                 BlockBehaviour.Properties.of()
@@ -73,7 +73,7 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.TESLA_COIL);
+                        .noOcclusion(), BlockType.TESLA_COIL, BlockItem.GENERIC);
 
         PLASMA_LAMP = registerBlock("plasma_lamp_block",
                 BlockBehaviour.Properties.of()
@@ -81,7 +81,7 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.PLASMA_LAMP);
+                        .noOcclusion(), BlockType.PLASMA_LAMP, BlockItem.GENERIC);
 
         VOLTAIC_PILLAR = registerBlock("voltaic_pillar_block",
                 BlockBehaviour.Properties.of()
@@ -89,7 +89,7 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.VOLTAIC_PILLAR);
+                        .noOcclusion(), BlockType.VOLTAIC_PILLAR, BlockItem.GENERIC);
 
         SOUL_FURNACE = registerBlock("soul_furnace_block",
                 BlockBehaviour.Properties.of()
@@ -97,7 +97,7 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.SOUL_FURNACE);
+                        .noOcclusion(), BlockType.SOUL_FURNACE, BlockItem.GENERIC);
 
         CROISSANT_EGG = registerBlock("croissant_egg_block",
                 BlockBehaviour.Properties.of()
@@ -105,7 +105,7 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.CROISSANT_EGG);
+                        .noOcclusion(), BlockType.CROISSANT_EGG, BlockItem.GENERIC);
 
         EMPTY_PUPPET = registerBlock("empty_puppet_block",
                 BlockBehaviour.Properties.of()
@@ -113,7 +113,7 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.EMPTY_PUPPET);
+                        .noOcclusion(), BlockType.EMPTY_PUPPET, BlockItem.GENERIC);
 
         RESPAWN_TOTEM = registerBlock("respawn_totem_block",
                 BlockBehaviour.Properties.of()
@@ -121,7 +121,7 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.RESPAWN_TOTEM);
+                        .noOcclusion(), BlockType.RESPAWN_TOTEM, BlockItem.GENERIC);
 
         RECALL_PLATFORM = registerBlock("recall_platform_block",
                 BlockBehaviour.Properties.of()
@@ -129,7 +129,7 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.RECALL_PLATFORM);
+                        .noOcclusion(), BlockType.RECALL_PLATFORM, BlockItem.GENERIC);
 
         VOLTAIC_RELAY = registerBlock("voltaic_relay_block",
                 BlockBehaviour.Properties.of()
@@ -137,11 +137,11 @@ public class CompanionsBlocks {
                         .requiresCorrectToolForDrops()
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.METAL)
-                        .noOcclusion(), BlockType.VOLTAIC_RELAY);
+                        .noOcclusion(), BlockType.VOLTAIC_RELAY, BlockItem.GENERIC);
     }
 
-    private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType) {
-        return CompanionsCommon.COMMON_PLATFORM.registerBlock(id, properties, blockType);
+    private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType, BlockItem blockItem) {
+        return CompanionsCommon.COMMON_PLATFORM.registerBlock(id, properties, blockType, blockItem);
     }
 
     public enum BlockType {
@@ -157,6 +157,11 @@ public class CompanionsBlocks {
         SHADE_MAW_ALTAR,
         RECALL_PLATFORM,
         VOLTAIC_RELAY
+    }
+
+    public enum BlockItem {
+        COIN,
+        GENERIC
     }
 
 }

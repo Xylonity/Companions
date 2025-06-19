@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.item.CrystallizedBloodItem;
 import dev.xylonity.companions.common.item.HourglassItem;
 import dev.xylonity.companions.common.item.ShadowBellItem;
 import dev.xylonity.companions.common.item.armor.GenericArmorItem;
+import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.companions.common.item.book.books.*;
 import dev.xylonity.companions.common.item.WrenchItem;
@@ -54,7 +55,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     }
 
     @Override
-    public <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, CompanionsBlocks.BlockType blockType) {
+    public <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, CompanionsBlocks.BlockType blockType, CompanionsBlocks.BlockItem blockItem) {
         RegistryObject<T> tr = switch (blockType) {
             case COIN_BLOCK -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new CoinBlock(properties));
             case SOUL_FURNACE -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new SoulFurnaceBlock(properties.lightLevel((v) -> v.getValue(SoulFurnaceBlock.LIT) ? 13 : 0)));
@@ -71,7 +72,14 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
                     (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new TeslaCoilBlock(properties));
         };
 
-        registerItem(id, () -> new GenericBlockItem(tr.get(), new Item.Properties(), id));
+        Supplier<Item> item = switch (blockItem) {
+            case COIN -> () -> new CoinItem(tr.get(), new Item.Properties(), id);
+            default -> // GENERIC
+                    () -> new GenericBlockItem(tr.get(), new Item.Properties(), id);
+        };
+
+        registerItem(id, item);
+
         return tr;
     }
 

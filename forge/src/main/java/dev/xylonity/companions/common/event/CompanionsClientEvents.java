@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.event;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.blockentity.renderer.*;
 import dev.xylonity.companions.client.entity.renderer.*;
+import dev.xylonity.companions.client.gui.screen.CorneliusScreen;
 import dev.xylonity.companions.client.gui.screen.PuppetScreen;
 import dev.xylonity.companions.client.gui.screen.SoulFurnaceScreen;
 import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
@@ -96,6 +97,7 @@ public class CompanionsClientEvents {
         MenuScreens.register(CompanionsMenuTypes.SOUL_FURNACE.get(), SoulFurnaceScreen::new);
         MenuScreens.register(CompanionsMenuTypes.SOUL_MAGE_CONTAINER.get(), SoulMageScreen::new);
         MenuScreens.register(CompanionsMenuTypes.PUPPET_CONTAINER.get(), PuppetScreen::new);
+        MenuScreens.register(CompanionsMenuTypes.CORNELIUS_CONTAINER.get(), CorneliusScreen::new);
     }
 
     @SubscribeEvent

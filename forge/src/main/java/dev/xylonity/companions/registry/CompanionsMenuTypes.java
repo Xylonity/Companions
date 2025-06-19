@@ -2,9 +2,11 @@ package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
+import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import dev.xylonity.companions.common.container.SoulFurnaceContainerMenu;
 import dev.xylonity.companions.common.container.SoulMageContainerMenu;
+import dev.xylonity.companions.common.entity.custom.FroggyEntity;
 import dev.xylonity.companions.common.entity.custom.PuppetEntity;
 import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
 import net.minecraft.core.BlockPos;
@@ -61,6 +63,16 @@ public class CompanionsMenuTypes {
                 Entity entity = inv.player.level().getEntity(entityId);
                 if (entity instanceof PuppetEntity puppet) {
                     return new PuppetContainerMenu(id, inv, puppet);
+                }
+                throw new IllegalStateException("" + entityId);
+            });
+
+    public static final RegistryObject<MenuType<CorneliusContainerMenu>> CORNELIUS_CONTAINER =
+            registerMenu("cornelius_container_menu", (id, inv, buf) -> {
+                int entityId = buf.readInt();
+                Entity entity = inv.player.level().getEntity(entityId);
+                if (entity instanceof FroggyEntity puppet) {
+                    return new CorneliusContainerMenu(id, inv, puppet);
                 }
                 throw new IllegalStateException("" + entityId);
             });

@@ -6,5 +6,18 @@
         "stream": true
       }
     ]
+  },
+  "flip_card": {
+    "sounds": [
+      {
+        "name": "knightquestcompanions:card1"
+      },
+      {
+        "name": "knightquestcompanions:card2"
+      },
+      {
+        "name": "knightquestcompanions:card3"
+      }
+    ]
   }
 }
