@@ -6,9 +6,9 @@
 				"identifier": "geometry.unknown",
 				"texture_width": 80,
 				"texture_height": 64,
-				"visible_bounds_width": 5,
-				"visible_bounds_height": 4.5,
-				"visible_bounds_offset": [0, 1.75, 0]
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
 			},
 			"bones": [
 				{
@@ -43,8 +43,9 @@
 					"name": "feet2",
 					"parent": "leg2",
 					"pivot": [-7.5, 0.2, -3.5],
+					"mirror": true,
 					"cubes": [
-						{"origin": [-12, 0.2, -12.5], "size": [9, 0, 9], "uv": [-7, 43], "mirror": true}
+						{"origin": [-12, 0.2, -12.5], "size": [9, 0, 9], "uv": [-7, 43]}
 					]
 				},
 				{
@@ -103,9 +104,9 @@
 					"parent": "staff",
 					"pivot": [-21.48087, 7.15002, -24.01489],
 					"cubes": [
-						{"origin": [-21.11014, 2.15002, -28.34349], "size": [7, 10, 0], "pivot": [-13.11014, 7.15002, -18.34349], "rotation": [0, 45, 0], "uv": [54, 22]},
-						{"origin": [-25.11014, 3.15002, -28.34349], "size": [4, 8, 0], "pivot": [-13.11014, 7.15002, -18.34349], "rotation": [0, 45, 0], "uv": [70, 7]},
-						{"origin": [-28.11014, 4.65002, -28.34349], "size": [3, 5, 0], "pivot": [-13.11014, 7.15002, -18.34349], "rotation": [0, 45, 0], "uv": [2, 34]}
+						{"origin": [-21.11014, 2.15002, -28.34349], "size": [7, 10, 0], "inflate": 0.01, "pivot": [-13.11014, 7.15002, -18.34349], "rotation": [0, 45, 0], "uv": [54, 22]},
+						{"origin": [-25.11014, 3.15002, -28.34349], "size": [4, 8, 0], "inflate": 0.01, "pivot": [-13.11014, 7.15002, -18.34349], "rotation": [0, 45, 0], "uv": [70, 7]},
+						{"origin": [-28.11014, 4.65002, -28.34349], "size": [3, 5, 0], "inflate": 0.01, "pivot": [-13.11014, 7.15002, -18.34349], "rotation": [0, 45, 0], "uv": [2, 34]}
 					]
 				},
 				{

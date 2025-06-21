@@ -9,12 +9,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.projectile.Projectile;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FireMarkEffect extends MobEffect {
-    private static final Map<UUID, Projectile> FIRE_MARK_PROJECTILES = new HashMap<>();
+    private static final Map<UUID, Projectile> FIRE_MARK_PROJECTILES = new ConcurrentHashMap<>();
 
     public FireMarkEffect() {
         super(MobEffectCategory.HARMFUL, 0x303030);
