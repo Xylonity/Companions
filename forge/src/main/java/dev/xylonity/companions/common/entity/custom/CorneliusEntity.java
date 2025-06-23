@@ -3,13 +3,12 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.cornelius.goal.HopToOwnerGoal;
+import dev.xylonity.companions.common.entity.ai.cornelius.goal.CorneliusFireworkToadGoal;
+import dev.xylonity.companions.common.entity.ai.cornelius.goal.NetherBullfrogToadGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
-import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
-import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
-import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
-import dev.xylonity.companions.registry.CompanionsEntities;
-import dev.xylonity.companions.registry.CompanionsItems;
-import net.minecraft.core.BlockPos;
+import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -18,28 +17,23 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
@@ -51,9 +45,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.Optional;
-
-public class CorneliusEntity extends CompanionEntity implements ContainerListener {
+public class CorneliusEntity extends CompanionEntity implements ContainerListener, IFrogJumpUtil {
 
     public SimpleContainer inventory;
 
@@ -68,13 +60,13 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.BYTE);
     // 0 none, 1
     private static final EntityDataAccessor<Integer> ATTACK_TYPE = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.INT);
+    // Prevent attacking while the moving cycle is active
+    private static final EntityDataAccessor<Boolean> CAN_ATTACK = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.BOOLEAN);
 
     public CorneliusEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.createInventory();
     }
-
-    private static final EntityDataAccessor<String> CURRENT_ATTACK_TYPE = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.STRING);
 
     @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
@@ -96,6 +88,11 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         this.inventory.addListener(this);
     }
 
+    @Override
+    public boolean isPersistenceRequired() {
+        return true;
+    }
+
     protected int getInventorySize() {
         return 6;
     }
@@ -105,18 +102,21 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(1, new CorneliusFireworkToadGoal(this, 40, 120));
+        this.goalSelector.addGoal(1, new NetherBullfrogToadGoal(this, 40, 120));
+
+        this.goalSelector.addGoal(4, new HopToOwnerGoal<>(this, 0.725D, 6.0F, 2.0F, false));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
-    public String getCurrentAttackType() {
-        return this.entityData.get(CURRENT_ATTACK_TYPE);
+    public boolean canAttack() {
+        return this.entityData.get(CAN_ATTACK);
     }
 
-    public void setCurrentAttackType(String attackType) {
-        this.entityData.set(CURRENT_ATTACK_TYPE, attackType);
+    public void setCanAttack(boolean canAttack) {
+        this.entityData.set(CAN_ATTACK, canAttack);
     }
 
     public static AttributeSupplier setAttributes() {
@@ -131,8 +131,8 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_ID_FLAGS, (byte)0);
-        this.entityData.define(CURRENT_ATTACK_TYPE, "NONE");
+        this.entityData.define(DATA_ID_FLAGS, (byte) 0);
+        this.entityData.define(CAN_ATTACK, true);
         this.entityData.define(ATTACK_TYPE, 0);
     }
 
@@ -223,15 +223,13 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
 
     @Override
     protected int sitAnimationsAmount() {
-        return 1;
+        return 2;
     }
 
     @Override
-    public void aiStep() {
-        setNoMovement(isAttacking() == 1 || isAttacking() == 2);
-        super.aiStep();
+    protected boolean shouldKeepChunkLoaded() {
+        return CompanionsConfig.CORNELIUS_KEEP_CHUNK_LOADED;
     }
-
 
     protected void dropEquipment() {
         super.dropEquipment();
@@ -253,22 +251,18 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
-        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
-    }
-
-    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
-        if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttacking() != 0) {
-            event.getController().forceAnimationReset();
-            event.setAnimation(isAttacking() == 1 ? ATTACK_L : ATTACK_R);
-        }
-
-        return PlayState.CONTINUE;
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
         if (this.getMainAction() == 0) {
-            event.setAnimation(SIT);
+            event.setAnimation(getSitVariation() == 0 ? SIT : SIT2);
+        } else if (getAttackType() == 1) {
+            event.setAnimation(SUMMON);
+        } else if (getAttackType() == 2) {
+            event.setAnimation(SUMMON2);
+        } else if (getAttackType() == 3) {
+            event.setAnimation(SUMMON3);
         } else if (event.isMoving()) {
             event.setAnimation(WALK);
         } else {

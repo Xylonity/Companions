@@ -20,7 +20,7 @@ public class NetherBullfrogModel extends GeoModel<NetherBullfrogEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(NetherBullfrogEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/generic.animation.json");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/nether_bullfrog.animation.json");
     }
 
 }

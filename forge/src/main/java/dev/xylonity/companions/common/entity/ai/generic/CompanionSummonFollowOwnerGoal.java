@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.generic;
 
-import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,9 +13,9 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 import java.util.EnumSet;
 
-public class CompanionFollowOwnerGoal extends Goal {
+public class CompanionSummonFollowOwnerGoal extends Goal {
     public static final int TELEPORT_WHEN_DISTANCE_IS = CompanionsConfig.COMPANIONS_FOLLOW_OWNER_TELEPORT_DISTANCE;
-    protected final CompanionEntity tamable;
+    protected final CompanionSummonEntity tamable;
     protected LivingEntity owner;
     protected final LevelReader level;
     protected final double speedModifier;
@@ -26,7 +26,7 @@ public class CompanionFollowOwnerGoal extends Goal {
     protected float oldWaterCost;
     protected final boolean canFly;
 
-    public CompanionFollowOwnerGoal(CompanionEntity pTamable, double pSpeedModifier, float pStartDistance, float pStopDistance, boolean pCanFly) {
+    public CompanionSummonFollowOwnerGoal(CompanionSummonEntity pTamable, double pSpeedModifier, float pStartDistance, float pStopDistance, boolean pCanFly) {
         this.tamable = pTamable;
         this.level = pTamable.level();
         this.speedModifier = pSpeedModifier;
@@ -39,7 +39,7 @@ public class CompanionFollowOwnerGoal extends Goal {
 
     public boolean canUse() {
         LivingEntity owner = this.tamable.getOwner();
-        if (this.tamable.getMainAction() != 1) return false;
+        //if (this.tamable.getMainAction() != 1) return false;
         if (owner == null) return false;
         if (owner.isSpectator()) return false;
         if (this.unableToMove()) return false;

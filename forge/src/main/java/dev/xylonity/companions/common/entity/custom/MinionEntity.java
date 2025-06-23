@@ -5,8 +5,13 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
-import dev.xylonity.companions.common.entity.ai.minion.imp.BraceAttackGoal;
-import dev.xylonity.companions.common.entity.ai.minion.minion.MinionAttackGoal;
+import dev.xylonity.companions.common.entity.ai.minion.gargoyle.GargoyleHealAttackGoal;
+import dev.xylonity.companions.common.entity.ai.minion.gargoyle.GargoyleSpellAttackGoal;
+import dev.xylonity.companions.common.entity.ai.minion.imp.ImpBraceAttackGoal;
+import dev.xylonity.companions.common.entity.ai.minion.imp.ImpFireMarkAttackGoal;
+import dev.xylonity.companions.common.entity.ai.minion.minion.MinionTornadoAttackGoal;
+import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -48,11 +53,17 @@ public class MinionEntity extends CompanionEntity {
     private final RawAnimation SPELL = RawAnimation.begin().thenPlay("spell");
     private final RawAnimation ATTACK = RawAnimation.begin().thenPlay("attack");
     private final RawAnimation THROW = RawAnimation.begin().thenPlay("throw");
+    private final RawAnimation RING = RawAnimation.begin().thenPlay("ring");
+    private final RawAnimation HEAL = RawAnimation.begin().thenPlay("idle2");
 
     private static final EntityDataAccessor<String> VARIANT = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> IS_LOCKED = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_FLYING = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.BOOLEAN);
+    // 0 no attack
+    // minion: 1 default
+    // imp: 1 default, 2 ring
+    // gargoyle: 1 default, 2 heal
+    private static final EntityDataAccessor<Integer> ATTACK_TYPE = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.INT);
 
     private ResourceKey<Level> lastDimension = null;
 
@@ -78,8 +89,13 @@ public class MinionEntity extends CompanionEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
-        this.goalSelector.addGoal(1, new MinionAttackGoal(this, 20, 80));
-        this.goalSelector.addGoal(1, new BraceAttackGoal(this, 20, 80));
+        this.goalSelector.addGoal(1, new MinionTornadoAttackGoal(this, 20, 80));
+
+        this.goalSelector.addGoal(1, new ImpBraceAttackGoal(this, 20, 80));
+        this.goalSelector.addGoal(1, new ImpFireMarkAttackGoal(this, 20, 80));
+
+        this.goalSelector.addGoal(1, new GargoyleSpellAttackGoal(this, 20, 80));
+        this.goalSelector.addGoal(1, new GargoyleHealAttackGoal(this, 20, 80));
 
         this.goalSelector.addGoal(3, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(3, new CompanionRandomStrollGoal(this, 0.43));
@@ -134,6 +150,11 @@ public class MinionEntity extends CompanionEntity {
         Item itemForTaming = Items.APPLE;
         Item item = itemstack.getItem();
 
+        if (isTame() && item == CompanionsItems.NETHERITE_CHAINS.get()) {
+            setIsPhaseLocked(true);
+            return InteractionResult.SUCCESS;
+        }
+
         if (item == itemForTaming && !isTame()) {
             if (this.level().isClientSide) {
                 return InteractionResult.CONSUME;
@@ -186,7 +207,7 @@ public class MinionEntity extends CompanionEntity {
         this.entityData.define(VARIANT, Variant.NETHER.getName());
         this.entityData.define(IS_LOCKED, false);
         this.entityData.define(IS_FLYING, false);
-        this.entityData.define(IS_ATTACKING, false);
+        this.entityData.define(ATTACK_TYPE, 0);
     }
 
     @Override
@@ -197,6 +218,11 @@ public class MinionEntity extends CompanionEntity {
     @Override
     protected int sitAnimationsAmount() {
         return 1;
+    }
+
+    @Override
+    protected boolean shouldKeepChunkLoaded() {
+        return CompanionsConfig.MINION_KEEP_CHUNK_LOADED;
     }
 
     public boolean isPhaseLocked() {
@@ -223,12 +249,12 @@ public class MinionEntity extends CompanionEntity {
         this.entityData.set(VARIANT, variant);
     }
 
-    public boolean isAttacking() {
-        return this.entityData.get(IS_ATTACKING);
+    public int getAttackType() {
+        return this.entityData.get(ATTACK_TYPE);
     }
 
-    public void setAttacking(boolean attacking) {
-        this.entityData.set(IS_ATTACKING, attacking);
+    public void setAttackType(int attacking) {
+        this.entityData.set(ATTACK_TYPE, attacking);
     }
 
     @Override
@@ -246,7 +272,7 @@ public class MinionEntity extends CompanionEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
@@ -254,7 +280,7 @@ public class MinionEntity extends CompanionEntity {
         if (getVariant().equals(Variant.OVERWORLD.getName())) {
             if (this.getMainAction() == 0) {
                 event.getController().setAnimation(SIT);
-            } else if (this.isAttacking()) {
+            } else if (this.getAttackType() == 1) {
                 event.getController().setAnimation(ATTACK);
             } else {
                 event.getController().setAnimation(FLY);
@@ -263,10 +289,10 @@ public class MinionEntity extends CompanionEntity {
         } else if (getVariant().equals(Variant.END.getName())) {
             if (this.getMainAction() == 0) {
                 event.getController().setAnimation(SIT);
-            } else if (this.isAttacking()) {
+            } else if (this.getAttackType() == 1) {
                 event.getController().setAnimation(SPELL);
-            } else if (isFlying()) {
-                event.getController().setAnimation(FLY);
+            } else if (this.getAttackType() == 2) {
+                event.getController().setAnimation(HEAL);
             } else if (event.isMoving()) {
                 event.getController().setAnimation(WALK);
             } else {
@@ -276,8 +302,10 @@ public class MinionEntity extends CompanionEntity {
         } else {
             if (this.getMainAction() == 0) {
                 event.getController().setAnimation(SIT);
-            } else if (this.isAttacking()) {
+            } else if (this.getAttackType() == 1) {
                 event.getController().setAnimation(THROW);
+            } else if (this.getAttackType() == 2) {
+                event.getController().setAnimation(RING);
             } else if (event.isMoving()) {
                 event.getController().setAnimation(WALK);
             } else {

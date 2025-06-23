@@ -12,6 +12,7 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,8 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     private static final EntityDataAccessor<Integer> SIT_VARIATION = SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> NO_MOVEMENT = SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.BOOLEAN);
 
+    private ChunkPos lastChunkPos;
+
     protected CompanionEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -45,6 +48,27 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
             this.setDeltaMovement(Vec3.ZERO);
         }
 
+        if (shouldKeepChunkLoaded() && level() instanceof ServerLevel level) {
+            ChunkPos currentChunkPos = new ChunkPos(blockPosition());
+            if (!currentChunkPos.equals(lastChunkPos)) {
+                if (lastChunkPos != null) {
+                    level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);
+                }
+
+                level.setChunkForced(currentChunkPos.x, currentChunkPos.z, true);
+                lastChunkPos = currentChunkPos;
+            }
+        }
+
+    }
+
+    @Override
+    public void remove(@NotNull RemovalReason pReason) {
+        if (level() instanceof ServerLevel level && lastChunkPos != null) {
+            level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);
+        }
+
+        super.remove(pReason);
     }
 
     @Override
@@ -87,19 +111,19 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
             switch (newAction) {
                 case 0:
                     player.displayClientMessage(Component
-                            .translatable("main_action.companions.client_message.is_sitting"), true);
+                            .translatable("main_action.knightquestcompanions.client_message.is_sitting"), true);
                     break;
                 case 1:
                     player.displayClientMessage(Component
-                            .translatable("main_action.companions.client_message.is_following"), true);
+                            .translatable("main_action.knightquestcompanions.client_message.is_following"), true);
                     break;
                 case 2:
                     player.displayClientMessage(Component
-                            .translatable("main_action.companions.client_message.is_wandering"), true);
+                            .translatable("main_action.knightquestcompanions.client_message.is_wandering"), true);
                     break;
                 default:
                     player.displayClientMessage(Component
-                            .translatable("main_action.companions.client_message.is_working"), true);
+                            .translatable("main_action.knightquestcompanions.client_message.is_working"), true);
                     break;
             }
         }
@@ -187,5 +211,6 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
 
     protected abstract boolean canThisCompanionWork();
     protected abstract int sitAnimationsAmount();
+    protected abstract boolean shouldKeepChunkLoaded();
 
 }

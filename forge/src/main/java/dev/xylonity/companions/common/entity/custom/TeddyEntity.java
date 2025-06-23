@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.custom;
 
+import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
@@ -7,6 +8,7 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.teddy.goal.*;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;
@@ -362,6 +364,11 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     @Override
     protected int sitAnimationsAmount() {
         return getPhase() == 1 ? 3 : 2;
+    }
+
+    @Override
+    protected boolean shouldKeepChunkLoaded() {
+        return CompanionsConfig.TEDDY_KEEP_CHUNK_LOADED;
     }
 
     @Override

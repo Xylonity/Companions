@@ -112,6 +112,11 @@ public class ShadeSwordEntity extends ShadeEntity {
         return 2;
     }
 
+    @Override
+    protected boolean shouldKeepChunkLoaded() {
+        return false;
+    }
+
     @Nullable
     @Override
     public LivingEntity getOwner() {

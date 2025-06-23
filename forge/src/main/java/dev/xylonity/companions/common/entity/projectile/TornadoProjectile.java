@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -19,13 +20,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Objects;
 import java.util.Random;
@@ -121,15 +120,10 @@ public class TornadoProjectile extends BaseProjectile implements GeoEntity {
 
         double cosA = Math.cos(this.getAlpha());
         double sinA = Math.sin(this.getAlpha());
-        double rotX = xLocal * cosA - zLocal * sinA;
-        double rotZ = xLocal * sinA + zLocal * cosA;
-
-        double finalX = this.getStartX() + rotX;
-        double finalZ = this.getStartZ() + rotZ;
 
         // Synched data should fix the problem where the tornado starts tweaking if there are multiple
         // instances moving in the world towards different directions
-        this.setPos(finalX, this.getGroundY(), finalZ);
+        this.setPos(this.getStartX() + (xLocal * cosA - zLocal * sinA), this.getGroundY(), this.getStartZ() + (xLocal * sinA + zLocal * cosA));
 
         // This will push entities away if they are within the hitbox
         this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1),
@@ -160,6 +154,22 @@ public class TornadoProjectile extends BaseProjectile implements GeoEntity {
                         getY() + (getBbHeight() * 2) * Math.random(),
                         getZ() + (getBbWidth() * 2) * Math.random(),
                         1, 0, 0, 0, 0.05);
+            }
+        }
+
+        if (level().isClientSide) {
+            if ((this.tickCount % 15 == 0 || this.tickCount == 1)) {
+                for (int i = 0; i < 3; i++) {
+                    float r = (190 + level().random.nextInt(30)) / 255f;
+                    float g = (240 + level().random.nextInt(10)) / 255f;
+                    float b = (247 + level().random.nextInt(5)) / 255f;
+                    Util.spawnBaseProjectileTrail(
+                            this,
+                            this.getBbWidth() + level().random.nextFloat() * 0.6f,
+                            getBbHeight() + level().random.nextFloat() * 0.5f,
+                            r, g, b);
+                }
+
             }
         }
 

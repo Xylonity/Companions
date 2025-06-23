@@ -50,26 +50,26 @@ public class Companions {
         ConfigComposer.registerConfig(CompanionsConfig.class, modEventBus);
         CompanionsCommon.init();
 
-        MinecraftForge.EVENT_BUS.register(new Testing());
+        //MinecraftForge.EVENT_BUS.register(new Testing());
     }
 
-    static class Testing {
-        @SubscribeEvent
-        public void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
-            Entity cameraEntity = event.getCamera().getEntity();
-
-            if (cameraEntity instanceof Player player) {
-                if (player.hasEffect(CompanionsEffects.ELECTROSHOCK.get())) {
-                    float intensity = 0.2F;
-
-                    double offsetX = (Math.random() - 0.5) * intensity;
-                    double offsetY = (Math.random() - 0.5) * intensity;
-                    double offsetZ = (Math.random() - 0.5) * intensity;
-
-                    event.getCamera().move(offsetX, offsetY, offsetZ);
-                }
-            }
-        }
-    }
+    //static class Testing {
+    //    @SubscribeEvent
+    //    public void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
+    //        Entity cameraEntity = event.getCamera().getEntity();
+//
+    //        if (cameraEntity instanceof Player player) {
+    //            if (player.hasEffect(CompanionsEffects.ELECTROSHOCK.get())) {
+    //                float intensity = 0.2F;
+//
+    //                double offsetX = (Math.random() - 0.5) * intensity;
+    //                double offsetY = (Math.random() - 0.5) * intensity;
+    //                double offsetZ = (Math.random() - 0.5) * intensity;
+//
+    //                event.getCamera().move(offsetX, offsetY, offsetZ);
+    //            }
+    //        }
+    //    }
+    //}
 
 }

@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.glove.goal.PuppetGloveAttackGoal;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -50,6 +51,11 @@ public class PuppetGloveEntity extends CompanionEntity {
     @Override
     protected int sitAnimationsAmount() {
         return 1;
+    }
+
+    @Override
+    protected boolean shouldKeepChunkLoaded() {
+        return CompanionsConfig.PUPPET_GLOVE_KEEP_CHUNK_LOADED;
     }
 
     @Override

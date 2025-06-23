@@ -13,6 +13,7 @@ import dev.xylonity.companions.common.item.WrenchItem;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
@@ -68,6 +69,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
             case SHADE_MAW_ALTAR -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new ShadeMawAltarBlock(properties));
             case RECALL_PLATFORM -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new RecallPlatformBlock(properties));
             case VOLTAIC_RELAY -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new VoltaicRelayBlock(properties));
+            case FROG_BONANZA -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new FrogBonanzaBlock(properties));
             default -> // TESLA_RECEIVER
                     (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new TeslaCoilBlock(properties));
         };

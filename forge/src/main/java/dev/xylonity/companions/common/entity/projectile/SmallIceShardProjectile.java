@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -99,6 +100,15 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
             remove(RemovalReason.DISCARDED);
         }
 
+        if (level().isClientSide) {
+            if ((this.tickCount % 40 == 0 || this.tickCount == 1)) {
+                float r = (190 + level().random.nextInt(30)) / 255f;
+                float g = (240 + level().random.nextInt(10)) / 255f;
+                float b = (247 + level().random.nextInt(5)) / 255f;
+                Util.spawnBaseProjectileTrail(this, 0, getBbHeight() * 0.5f, r, g, b);
+            }
+        }
+
     }
 
     // Animation purposes too, lerping rotation
@@ -109,16 +119,16 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
         prevRotation.set(currentRotation);
 
         Vector3f velVec = new Vector3f((float) vel.x, (float) vel.y, (float) vel.z).normalize();
-        Vector3f defaultForward = new Vector3f(0, 0, 1);
+        Vector3f forward = new Vector3f(0, 0, 1);
 
-        Vector3f axis = defaultForward.cross(velVec);
+        Vector3f axis = forward.cross(velVec);
         if (axis.length() < 1e-4f) {
             axis.set(0, 1, 0);
         } else {
             axis.normalize();
         }
 
-        float dot = Math.max(-1, Math.min(1, defaultForward.dot(velVec)));
+        float dot = Math.max(-1, Math.min(1, forward.dot(velVec)));
         Quaternionf targetRot = new Quaternionf().fromAxisAngleRad(axis, (float) Math.acos(dot));
 
         if (tickCount < PHASE_1_DURATION) {

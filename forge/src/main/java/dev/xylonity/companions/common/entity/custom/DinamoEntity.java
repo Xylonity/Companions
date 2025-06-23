@@ -9,6 +9,7 @@ import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoAttackBehaviour;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -67,8 +68,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     private final ITeslaGeneratorBehaviour pulseBehavior;
     private final ITeslaGeneratorBehaviour attackBehavior;
 
-    private ChunkPos lastChunkPos;
-
     public DinamoEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.noCulling = true;
@@ -119,6 +118,11 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     @Override
     protected int sitAnimationsAmount() {
         return 1;
+    }
+
+    @Override
+    protected boolean shouldKeepChunkLoaded() {
+        return CompanionsConfig.DINAMO_KEEP_CHUNK_LOADED;
     }
 
     @Override
@@ -200,18 +204,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
             setActive(false);
         }
 
-        if (level() instanceof ServerLevel level) {
-            ChunkPos currentChunkPos = new ChunkPos(blockPosition());
-            if (!currentChunkPos.equals(lastChunkPos)) {
-                if (lastChunkPos != null) {
-                    level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);
-                }
-
-                level.setChunkForced(currentChunkPos.x, currentChunkPos.z, true);
-                lastChunkPos = currentChunkPos;
-            }
-        }
-
         if (getMainAction() == 0) {
             pulseBehavior.tick(this);
         } else {
@@ -223,15 +215,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     @Override
     public boolean isPersistenceRequired() {
         return true;
-    }
-
-    @Override
-    public void remove(@NotNull RemovalReason pReason) {
-        if (level() instanceof ServerLevel level && lastChunkPos != null) {
-            level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);
-        }
-
-        super.remove(pReason);
     }
 
     public void setActive(boolean active) {

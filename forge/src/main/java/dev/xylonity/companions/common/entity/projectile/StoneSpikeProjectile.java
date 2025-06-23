@@ -7,10 +7,12 @@ import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,12 +35,10 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
+import java.util.Random;
 
 public class StoneSpikeProjectile extends BaseProjectile {
     private final RawAnimation APPEAR = RawAnimation.begin().thenPlay("appear");
-
-    private final float DAMAGE = 4.0F;
-    private final double COLLISION_RADIUS = 0.3;
 
     public StoneSpikeProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -57,35 +57,33 @@ public class StoneSpikeProjectile extends BaseProjectile {
 
         if (this.tickCount == 5) {
             if (!this.level().isClientSide)
-                this.level().broadcastEntityEvent(this, (byte) 3);
+                spawnParticles();
 
             this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.STONE_HIT, this.getSoundSource(), 1.0F, 1.0F);
         }
 
-        AABB aabb = this.getBoundingBox().inflate(COLLISION_RADIUS);
-        List<Entity> entities = this.level().getEntities(this, aabb, e -> !e.equals(getOwner()));
-        for (Entity e : entities) {
-            e.hurt(damageSources().magic(), DAMAGE);
+        List<LivingEntity> entities = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.3), e -> !e.equals(getOwner()));
+        for (LivingEntity e : entities) {
+            e.hurt(damageSources().magic(),4.0f);
+            if (new Random().nextFloat() < 0.25f) {
+                if (!e.hasEffect(MobEffects.POISON)) {
+                    e.addEffect(new MobEffectInstance(MobEffects.POISON, new Random().nextInt(20, 100), 0, true, true, true));
+                }
+            }
         }
+
     }
 
-    @Override
-    public void handleEntityEvent(byte pId) {
-        if (pId == 3) {
-            spawnHitParticles();
-        } else {
-            super.handleEntityEvent(pId);
+    private void spawnParticles() {
+        if (this.level() instanceof ServerLevel sv) {
+            for (int i = 0; i < 5; i++) {
+                double dx = (sv.getRandom().nextDouble() - 0.5) * 0.1;
+                double dy = (sv.getRandom().nextDouble() - 0.5) * 0.1;
+                double dz = (sv.getRandom().nextDouble() - 0.5) * 0.1;
+                sv.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.STONE.defaultBlockState()), this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.0);
+            }
         }
-    }
 
-    private void spawnHitParticles() {
-        for (int i = 0; i < 5; i++) {
-            double dx = (this.level().getRandom().nextDouble() - 0.5) * 0.1;
-            double dy = (this.level().getRandom().nextDouble() - 0.5) * 0.1;
-            double dz = (this.level().getRandom().nextDouble() - 0.5) * 0.1;
-            this.level().addParticle(ParticleTypes.SNOWFLAKE, this.getX(), this.getY(), this.getZ(), dx, dy, dz);
-            if (i % 2 == 0) this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.STONE.defaultBlockState()), this.getX(), this.getY() + 1, this.getZ(), dx, dy, dz);
-        }
     }
 
     @Override

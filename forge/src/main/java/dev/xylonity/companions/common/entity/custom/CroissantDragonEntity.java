@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.ai.croissant.CroissantDragonAttackG
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.nbt.CompoundTag;
@@ -203,6 +204,11 @@ public class CroissantDragonEntity extends CompanionEntity {
         return 2;
     }
 
+    @Override
+    protected boolean shouldKeepChunkLoaded() {
+        return CompanionsConfig.CROISSANT_DRAGON_KEEP_CHUNK_LOADED;
+    }
+
     @Nullable
     @Override
     public LivingEntity getOwner() {
@@ -346,14 +352,14 @@ public class CroissantDragonEntity extends CompanionEntity {
             if (flightState == FlightState.GROUND) {
                 flightState = FlightState.TAKING_OFF;
                 event.getController().setAnimation(TAKE_OFF);
-                TickScheduler.scheduleClient(level(), () -> flightState = FlightState.FLYING, ANIMATION_TAKE_OFF_TICKS);
+                //TickScheduler.scheduleClient(level(), () -> flightState = FlightState.FLYING, ANIMATION_TAKE_OFF_TICKS);
                 return PlayState.CONTINUE;
             }
         } else {
             if (flightState == FlightState.FLYING) {
                 flightState = FlightState.LANDING;
                 event.getController().setAnimation(LAND);
-                TickScheduler.scheduleClient(level(), () -> flightState = FlightState.GROUND, ANIMATION_LAND_TICKS);
+                //TickScheduler.scheduleClient(level(), () -> flightState = FlightState.GROUND, ANIMATION_LAND_TICKS);
                 return PlayState.CONTINUE;
             }
         }

@@ -19,6 +19,7 @@ public class CompanionsBlocks {
     public static final Supplier<Block> CROISSANT_EGG;
     public static final Supplier<Block> EMPTY_PUPPET;
     public static final Supplier<Block> RESPAWN_TOTEM;
+    public static final Supplier<Block> FROG_BONANZA;
     public static final Supplier<Block> SHADE_SWORD_ALTAR;
     public static final Supplier<Block> SHADE_MAW_ALTAR;
 
@@ -123,6 +124,14 @@ public class CompanionsBlocks {
                         .sound(SoundType.METAL)
                         .noOcclusion(), BlockType.RESPAWN_TOTEM, BlockItem.GENERIC);
 
+        FROG_BONANZA = registerBlock("frog_bonanza_block",
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.FIRE)
+                        .requiresCorrectToolForDrops()
+                        .strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL)
+                        .noOcclusion(), BlockType.FROG_BONANZA, BlockItem.GENERIC);
+
         RECALL_PLATFORM = registerBlock("recall_platform_block",
                 BlockBehaviour.Properties.of()
                         .mapColor(MapColor.FIRE)
@@ -156,6 +165,7 @@ public class CompanionsBlocks {
         SHADE_SWORD_ALTAR,
         SHADE_MAW_ALTAR,
         RECALL_PLATFORM,
+        FROG_BONANZA,
         VOLTAIC_RELAY
     }
 

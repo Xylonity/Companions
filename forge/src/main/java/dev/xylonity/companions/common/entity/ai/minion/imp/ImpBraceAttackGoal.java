@@ -7,9 +7,9 @@ import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
-public class BraceAttackGoal extends AbstractMinionAttackGoal {
+public class ImpBraceAttackGoal extends AbstractMinionAttackGoal {
 
-    public BraceAttackGoal(MinionEntity minion, int minCd, int maxCd) {
+    public ImpBraceAttackGoal(MinionEntity minion, int minCd, int maxCd) {
         super(minion, 12, minCd, maxCd);
     }
 
@@ -77,6 +77,11 @@ public class BraceAttackGoal extends AbstractMinionAttackGoal {
     @Override
     protected String variant() {
         return MinionEntity.Variant.NETHER.getName();
+    }
+
+    @Override
+    protected int attackType() {
+        return 1;
     }
 
 }

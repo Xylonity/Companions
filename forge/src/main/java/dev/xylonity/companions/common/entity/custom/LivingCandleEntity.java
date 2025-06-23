@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.custom;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
@@ -27,7 +28,7 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 
-public class LivingCandleEntity extends CompanionEntity {
+public class LivingCandleEntity extends CompanionSummonEntity {
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
 
@@ -68,22 +69,11 @@ public class LivingCandleEntity extends CompanionEntity {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            // TODO: This searches for a player not a generic entity
             if (!this.isTame() || this.getOwner() == null) {
                 ServerLevel serverLevel = (ServerLevel) this.level();
                 findNearestSoulMage(serverLevel);
             }
         }
-    }
-
-    @Override
-    protected boolean canThisCompanionWork() {
-        return false;
-    }
-
-    @Override
-    protected int sitAnimationsAmount() {
-        return 1;
     }
 
     @Override

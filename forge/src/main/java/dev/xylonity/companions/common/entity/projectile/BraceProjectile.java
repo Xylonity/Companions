@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
@@ -74,6 +75,15 @@ public class BraceProjectile extends BaseProjectile implements GeoEntity {
         // Trail
         if (tickCount % 3 == 0) {
             level().addParticle(CompanionsParticles.EMBER.get(), getX(), getY() - getBbHeight() * 0.5, getZ(), 0, 0, 0);
+        }
+
+        if (level().isClientSide) {
+            if ((this.tickCount % 50 == 0 || this.tickCount == 1)) {
+                float r = 250f / 255f;
+                float g = (203 + level().random.nextInt(10)) / 255f;
+                float b = (138 + level().random.nextInt(10)) / 255f;
+                Util.spawnBaseProjectileTrail(this, 0, getBbHeight() * 0.5f, r, g, b, 0.45f);
+            }
         }
 
     }

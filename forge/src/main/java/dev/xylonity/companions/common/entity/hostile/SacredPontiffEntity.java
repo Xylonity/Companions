@@ -182,6 +182,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         if (isOnFire()) extinguishFire();
 
         super.tick();
+
     }
 
     public static AttributeSupplier setAttributes() {

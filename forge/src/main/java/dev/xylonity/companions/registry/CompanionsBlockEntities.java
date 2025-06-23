@@ -22,6 +22,7 @@ public class CompanionsBlockEntities {
     public static final RegistryObject<BlockEntityType<CroissantEggBlockEntity>> CROISSANT_EGG;
     public static final RegistryObject<BlockEntityType<EmptyPuppetBlockEntity>> EMPTY_PUPPET;
     public static final RegistryObject<BlockEntityType<RespawnTotemBlockEntity>> RESPAWN_TOTEM;
+    public static final RegistryObject<BlockEntityType<FrogBonanzaBlockEntity>> FROG_BONANZA;
     public static final RegistryObject<BlockEntityType<ShadeSwordAltarBlockEntity>> SHADE_SWORD_ALTAR;
     public static final RegistryObject<BlockEntityType<ShadeMawAltarBlockEntity>> SHADE_MAW_ALTAR;
     public static final RegistryObject<BlockEntityType<RecallPlatformBlockEntity>> RECALL_PLATFORM;
@@ -35,6 +36,7 @@ public class CompanionsBlockEntities {
         CROISSANT_EGG = register("croissant_egg", CroissantEggBlockEntity::new, CompanionsBlocks.CROISSANT_EGG);
         EMPTY_PUPPET = register("empty_puppet", EmptyPuppetBlockEntity::new, CompanionsBlocks.EMPTY_PUPPET);
         RESPAWN_TOTEM = register("respawn_totem", RespawnTotemBlockEntity::new, CompanionsBlocks.RESPAWN_TOTEM);
+        FROG_BONANZA = register("frog_bonanza", FrogBonanzaBlockEntity::new, CompanionsBlocks.FROG_BONANZA);
         SHADE_SWORD_ALTAR = register("shade_sword_altar", ShadeSwordAltarBlockEntity::new, CompanionsBlocks.SHADE_SWORD_ALTAR);
         SHADE_MAW_ALTAR = register("shade_maw_altar", ShadeMawAltarBlockEntity::new, CompanionsBlocks.SHADE_MAW_ALTAR);
         RECALL_PLATFORM = register("recall_platform", RecallPlatformBlockEntity::new, CompanionsBlocks.RECALL_PLATFORM);

@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -23,7 +24,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -115,6 +115,21 @@ public class HolinessStartProjectile extends BaseProjectile {
         }
 
         if (this.onGround()) discard();
+
+        if (level().isClientSide) {
+            if ((this.tickCount % 15 == 0 || this.tickCount == 1)) {
+                for (int i = 0; i < 3; i++) {
+                    float r = (190 + level().random.nextInt(30)) / 255f;
+                    float g = (240 + level().random.nextInt(10)) / 255f;
+                    float b = (247 + level().random.nextInt(5)) / 255f;
+                    Util.spawnBaseProjectileTrail(
+                            this,
+                            this.getBbWidth() + level().random.nextFloat() * 0.4f,
+                            (float) ((this.getY() + this.getBbHeight() * Math.random()) * 0.15f), r, g, b);
+                }
+
+            }
+        }
 
     }
 

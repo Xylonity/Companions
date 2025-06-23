@@ -8,8 +8,8 @@ import java.util.EnumSet;
 
 public abstract class AbstractMinionAttackGoal extends Goal {
     protected final MinionEntity minion;
-    private final int attackDuration;
-    private final int minCooldown, maxCooldown;
+    protected final int attackDuration;
+    protected final int minCooldown, maxCooldown;
     protected int attackTicks;
     protected int nextUseTick;
     protected boolean started;
@@ -26,7 +26,7 @@ public abstract class AbstractMinionAttackGoal extends Goal {
     @Override
     public boolean canUse() {
         if (!minion.getVariant().equals(variant())) return false;
-        if (minion.isAttacking()) return false;
+        if (minion.getAttackType() != 0) return false;
         if (minion.getTarget() == null) return false;
         if (minion.getMainAction() != 1) return false;
 
@@ -47,13 +47,13 @@ public abstract class AbstractMinionAttackGoal extends Goal {
     public void start() {
         attackTicks = 0;
         started = true;
-        minion.setAttacking(true);
+        minion.setAttackType(attackType());
     }
 
     @Override
     public void stop() {
         started = false;
-        minion.setAttacking(false);
+        minion.setAttackType(0);
         int cd = minCooldown + minion.getRandom().nextInt(maxCooldown - minCooldown + 1);
         nextUseTick = minion.tickCount + cd;
     }
@@ -80,5 +80,6 @@ public abstract class AbstractMinionAttackGoal extends Goal {
     protected abstract void performAttack(LivingEntity target);
     protected abstract int attackDelay();
     protected abstract String variant();
+    protected abstract int attackType();
 
 }

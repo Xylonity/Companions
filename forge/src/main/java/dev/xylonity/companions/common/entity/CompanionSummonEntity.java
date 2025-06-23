@@ -5,9 +5,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.UUID;
 
 public abstract class CompanionSummonEntity extends TamableAnimal implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -43,6 +43,18 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
         }
 
         return super.hurt(pSource, pAmount);
+    }
+
+    @Nullable
+    @Override
+    public LivingEntity getOwner() {
+        UUID ownerUUID = this.getOwnerUUID();
+
+        if (ownerUUID == null) return null;
+        if (!(this.level() instanceof ServerLevel serverLevel)) return null;
+
+        Entity owner = serverLevel.getEntity(ownerUUID);
+        return owner instanceof LivingEntity ? (LivingEntity) owner : null;
     }
 
     @Override

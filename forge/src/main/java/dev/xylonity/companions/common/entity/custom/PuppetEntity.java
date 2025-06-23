@@ -6,8 +6,10 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetBladeAttackGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetCannonAttackGoal;
+import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetFarmGoal;
 import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
 import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.BlockPos;
@@ -111,6 +113,8 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
         this.goalSelector.addGoal(2, new PuppetCannonAttackGoal(this, 30, 50));
         this.goalSelector.addGoal(2, new PuppetBladeAttackGoal(this, 30, 50));
+
+        this.goalSelector.addGoal(3, new PuppetFarmGoal(this));
 
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
 
@@ -265,6 +269,7 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.inventory.fromTag(pCompound.getList("Inventory", 10));
+        this.updateContainerEquipment();
     }
 
     @Override
@@ -281,6 +286,11 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     @Override
     protected int sitAnimationsAmount() {
         return 1;
+    }
+
+    @Override
+    protected boolean shouldKeepChunkLoaded() {
+        return CompanionsConfig.PUPPET_KEEP_CHUNK_LOADED;
     }
 
     @Override

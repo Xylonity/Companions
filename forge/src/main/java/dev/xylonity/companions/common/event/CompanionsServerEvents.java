@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.hostile.HostilePuppetGloveEntity;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.entity.summon.*;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,7 +16,7 @@ public class CompanionsServerEvents {
 
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(CompanionsEntities.FROGGY.get(), CorneliusEntity.setAttributes());
+        event.put(CompanionsEntities.CORNELIUS.get(), CorneliusEntity.setAttributes());
         event.put(CompanionsEntities.TEDDY.get(), TeddyEntity.setAttributes());
         event.put(CompanionsEntities.ANTLION.get(), AntlionEntity.setAttributes());
         event.put(CompanionsEntities.DINAMO.get(), DinamoEntity.setAttributes());
@@ -29,7 +30,7 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.PUPPET.get(), PuppetEntity.setAttributes());
         event.put(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGloveEntity.setAttributes());
         event.put(CompanionsEntities.SHADE_SWORD.get(), ShadeSwordEntity.setAttributes());
-        event.put(CompanionsEntities.SHADE_MAW.get(), ShadeMawEntity.setAttributes());
+        event.put(CompanionsEntities.SHADE_MAW.get(), Skeleton.createAttributes().build());
 
         event.put(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadEntity.setAttributes());
         event.put(CompanionsEntities.NETHER_BULLFROG.get(), NetherBullfrogEntity.setAttributes());

@@ -133,6 +133,7 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
                 default // LOSE
                         -> multipl = 0.0;
             }
+
             pay(multipl, player);
             this.gameActive = false;
             this.broadcastChanges();
@@ -144,7 +145,6 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
 
     private void pay(double multiplier, Player player) {
         for (int i = 3; i <= 5; i++) {
-
             ItemStack bet = this.entityInventory.getItem(i);
 
             if (bet.isEmpty()) continue;
