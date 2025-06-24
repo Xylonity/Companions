@@ -21,9 +21,9 @@ import org.joml.Matrix4f;
 import java.util.Arrays;
 
 public abstract class AbstractRibbonTrailParticle extends Particle {
-    private static final int MAX_TRAIL_POINTS = 64;
-    private final Vec3[] positionBuffer = new Vec3[MAX_TRAIL_POINTS];
-    private int bufferIdx = -1;
+    protected static final int MAX_TRAIL_POINTS = 64;
+    protected final Vec3[] positionBuffer = new Vec3[MAX_TRAIL_POINTS];
+    protected int bufferIdx = -1;
     public float r;
     public float g;
     public float b;
@@ -145,6 +145,8 @@ public abstract class AbstractRibbonTrailParticle extends Particle {
         buff.endBatch(); // flush to prevent acid
     }
 
+    // Saves the position each tick and 'interpolates' a vector offset so the sqr diff between each saved pos
+    // isn't visually leaping
     protected Vec3 sampleTrailPoint(int idx, float tick) {
         Vec3 position = positionBuffer[(bufferIdx - idx - 1) & (MAX_TRAIL_POINTS - 1)];
         Vec3 subtract = positionBuffer[(bufferIdx - idx) & (MAX_TRAIL_POINTS - 1)].subtract(position);
