@@ -19,5 +19,19 @@
         "name": "knightquestcompanions:card3"
       }
     ]
+  },
+  "bonanza": {
+    "sounds": [
+      {
+        "name": "knightquestcompanions:bonanza"
+      }
+    ]
+  },
+  "coin_clatter": {
+    "sounds": [
+      {
+        "name": "knightquestcompanions:coin_clatter"
+      }
+    ]
   }
 }

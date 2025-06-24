@@ -13,6 +13,8 @@ public class CompanionsSounds {
 
     public static final Supplier<SoundEvent> ANGEL_OF_GERTRUDE = registerSound("teddy_transformation", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "angel_of_gertrude")));
     public static final Supplier<SoundEvent> FLIP_CARD = registerSound("flip_card", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "flip_card")));
+    public static final Supplier<SoundEvent> BONANZA = registerSound("bonanza", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "bonanza")));
+    public static final Supplier<SoundEvent> COIN_CLATTER = registerSound("coin_clatter", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "coin_clatter")));
 
     private static <T extends SoundEvent> Supplier<T> registerSound(String id, Supplier<T> sound) {
         return CompanionsCommon.COMMON_PLATFORM.registerSound(id, sound);
