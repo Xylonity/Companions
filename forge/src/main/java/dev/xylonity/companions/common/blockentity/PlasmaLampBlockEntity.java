@@ -28,7 +28,7 @@ public class PlasmaLampBlockEntity extends AbstractTeslaBlockEntity implements G
     public PlasmaLampBlockEntity(BlockPos pos, BlockState state) {
         super(CompanionsBlockEntities.PLASMA_LAMP.get(), pos, state);
         this.pulseBehaviour = new LampPulseBehaviour();
-        this.whenToSpawnParticles = new Random().nextInt(100, 600);
+        this.whenToSpawnParticles = new Random().nextInt(100, 360);
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
@@ -36,22 +36,22 @@ public class PlasmaLampBlockEntity extends AbstractTeslaBlockEntity implements G
 
         lamp.pulseBehaviour.process(lamp, level, blockPos, blockState);
 
-        if (lamp.isActive()) {
+        if (lamp.isActive() && lamp.whenToSpawnParticles == 0) {
             lamp.spawnParticles(level, blockPos);
         }
 
         if (lamp.whenToSpawnParticles == 0) {
-            lamp.whenToSpawnParticles = new Random().nextInt(100, 600);
+            lamp.whenToSpawnParticles = new Random().nextInt(100, 360);
         }
 
         lamp.whenToSpawnParticles--;
     }
 
     private void spawnParticles(Level level, BlockPos blockPos) {
-        if (level.isClientSide() && this.whenToSpawnParticles == 0) {
+        if (level.isClientSide()) {
             double radius1 = 0.42;
             double y = this.getBlockPos().getY() + 0.5;
-            for (int i = 0; i < 360; i += 36) {
+            for (int i = 0; i < 360; i += 40) {
                 double angleRadians = Math.toRadians(i);
                 double x = this.getBlockPos().getCenter().add(electricalChargeOriginOffset()).x + radius1 * Math.cos(angleRadians);
                 double z = this.getBlockPos().getCenter().add(electricalChargeOriginOffset()).z + radius1 * Math.sin(angleRadians);
