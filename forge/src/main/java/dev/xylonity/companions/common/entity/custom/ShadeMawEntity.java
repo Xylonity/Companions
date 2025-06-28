@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.custom;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ShadeEntity;
@@ -8,8 +9,6 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.knightlib.common.api.TickScheduler;
-import net.minecraft.client.CameraType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -115,10 +114,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
         super.tick();
 
         if (this.level().isClientSide) {
-            Player clientPlayer = Minecraft.getInstance().player;
-            if (clientPlayer != null && clientPlayer.getVehicle() == this && Minecraft.getInstance().options.getCameraType() != CameraType.THIRD_PERSON_BACK) {
-                Minecraft.getInstance().options.setCameraType(CameraType.THIRD_PERSON_BACK);
-            }
+            Companions.PROXY.tickShadeMaw(this);
         }
 
         if (!hasSpawned && isSpawning()) {
@@ -401,6 +397,11 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
     @Override
     protected int sitAnimationsAmount() {
         return 1;
+    }
+
+    @Override
+    protected boolean shouldKeepChunkLoaded() {
+        return false;
     }
 
     @Override

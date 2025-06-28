@@ -50,8 +50,8 @@ public class MagicRayPieceRenderer extends GeoEntityRenderer<MagicRayPieceProjec
     @Override
     protected void applyRotations(MagicRayPieceProjectile entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
         super.applyRotations(entity, poseStack, ageInTicks, rotationYaw, partialTick);
-        float yaw   = Mth.rotLerp(partialTick, entity.getYaw(),   entity.getYaw());
-        float pitch = Mth.lerp(partialTick,    entity.getPitch(), entity.getPitch());
+        float yaw = Mth.rotLerp(partialTick, entity.getYaw(), entity.getYaw());
+        float pitch = Mth.lerp(partialTick, entity.getPitch(), entity.getPitch());
 
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
         poseStack.mulPose(Axis.XP.rotationDegrees(pitch));

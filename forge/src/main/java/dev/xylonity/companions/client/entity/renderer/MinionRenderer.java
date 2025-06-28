@@ -1,9 +1,7 @@
 package dev.xylonity.companions.client.entity.renderer;
 
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.client.entity.model.HostileImpModel;
 import dev.xylonity.companions.client.entity.model.MinionModel;
-import dev.xylonity.companions.common.entity.custom.HostileImpEntity;
 import dev.xylonity.companions.common.entity.custom.MinionEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;

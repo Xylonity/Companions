@@ -2,12 +2,12 @@ package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.custom.*;
-import dev.xylonity.companions.common.entity.hostile.HostilePuppetGloveEntity;
-import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
+import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.projectile.*;
 import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
 import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.GenericTriggerProjectile;
+import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
 import dev.xylonity.companions.common.entity.summon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -40,6 +40,8 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<PuppetEntity>> PUPPET;
     public static final RegistryObject<EntityType<ShadeSwordEntity>> SHADE_SWORD;
     public static final RegistryObject<EntityType<ShadeMawEntity>> SHADE_MAW;
+    public static final RegistryObject<EntityType<MankhEntity>> MANKH;
+    public static final RegistryObject<EntityType<CloakEntity>> CLOAK;
 
     public static final RegistryObject<EntityType<FireworkToadEntity>> FIREWORK_TOAD;
     public static final RegistryObject<EntityType<BubbleFrogEntity>> BUBBLE_FROG;
@@ -73,6 +75,8 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<ShadeSwordImpactProjectile>> SHADE_SWORD_IMPACT_PROJECTILE;
     public static final RegistryObject<EntityType<NeedleProjectile>> NEEDLE_PROJECTILE;
     public static final RegistryObject<EntityType<RespawnTotemRingProjectile>> RESPAWN_TOTEM_RING_PROJECTILE;
+    public static final RegistryObject<EntityType<LaserTriggerProjectile>> LASER_PROJECTILE;
+    public static final RegistryObject<EntityType<LaserRingProjectile>> LASER_RING;
 
     public static final RegistryObject<EntityType<GenericTriggerProjectile>> GENERIC_TRIGGER_PROJECTILE;
     public static final RegistryObject<EntityType<CakeCreamTriggerProjectile>> CAKE_CREAM_TRIGGER_PROJECTILE;
@@ -93,6 +97,8 @@ public class CompanionsEntities {
         PUPPET = register("puppet", PuppetEntity::new, MobCategory.CREATURE, 1f, 2.8f, null);
         SHADE_SWORD = register("shade_sword", ShadeSwordEntity::new, MobCategory.CREATURE, 1.25f, 4f, List.of(EntityType.Builder::fireImmune));
         SHADE_MAW = register("shade_maw", ShadeMawEntity::new, MobCategory.CREATURE, 3f, 2.5f, List.of(EntityType.Builder::fireImmune));
+        MANKH = register("mankh", MankhEntity::new, MobCategory.CREATURE, 1f, 2f, List.of(EntityType.Builder::fireImmune));
+        CLOAK = register("cloak", CloakEntity::new, MobCategory.CREATURE, 1f, 2f, List.of(EntityType.Builder::fireImmune));
 
         LIVING_CANDLE = register("living_candle", LivingCandleEntity::new, MobCategory.CREATURE, 0.5f, 0.75f, null);
         FIREWORK_TOAD = register("firework_toad", FireworkToadEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::noSummon));
@@ -127,6 +133,8 @@ public class CompanionsEntities {
         SHADE_SWORD_IMPACT_PROJECTILE = register("shade_sword_impact", ShadeSwordImpactProjectile::new, MobCategory.MISC, 1.2f, 1.2f, List.of(EntityType.Builder::noSummon));
         NEEDLE_PROJECTILE = register("needle_projectile", NeedleProjectile::new, MobCategory.MISC, 1.2f, 0.4f, List.of(EntityType.Builder::noSummon));
         RESPAWN_TOTEM_RING_PROJECTILE = register("respawn_totem_ring_projectile", RespawnTotemRingProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
+        LASER_PROJECTILE = register("laser", LaserTriggerProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
+        LASER_RING = register("laser_ring", LaserRingProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
 
         GENERIC_TRIGGER_PROJECTILE = register("generic_trigger_projectile", GenericTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         CAKE_CREAM_TRIGGER_PROJECTILE = register("cake_cream_trigger_projectile", CakeCreamTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));

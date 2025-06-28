@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.entity.model.IllagerGolemModel;
-import dev.xylonity.companions.common.entity.custom.IllagerGolemEntity;
+import dev.xylonity.companions.common.entity.hostile.IllagerGolemEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

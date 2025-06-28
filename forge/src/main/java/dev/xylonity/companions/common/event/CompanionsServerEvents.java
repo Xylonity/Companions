@@ -2,8 +2,7 @@ package dev.xylonity.companions.common.event;
 
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.entity.custom.*;
-import dev.xylonity.companions.common.entity.hostile.HostilePuppetGloveEntity;
-import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
+import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.summon.*;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.entity.monster.Skeleton;
@@ -31,6 +30,8 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGloveEntity.setAttributes());
         event.put(CompanionsEntities.SHADE_SWORD.get(), ShadeSwordEntity.setAttributes());
         event.put(CompanionsEntities.SHADE_MAW.get(), Skeleton.createAttributes().build());
+        event.put(CompanionsEntities.MANKH.get(), MankhEntity.setAttributes());
+        event.put(CompanionsEntities.CLOAK.get(), CloakEntity.setAttributes());
 
         event.put(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadEntity.setAttributes());
         event.put(CompanionsEntities.NETHER_BULLFROG.get(), NetherBullfrogEntity.setAttributes());

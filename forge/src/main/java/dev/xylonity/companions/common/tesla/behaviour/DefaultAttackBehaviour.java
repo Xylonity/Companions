@@ -56,7 +56,7 @@ public class DefaultAttackBehaviour implements ITeslaNodeBehaviour {
     private void hurtNearLine(List<LivingEntity> entitiesToHurt, Vec3 origin, Vec3 end) {
         for (LivingEntity victim : entitiesToHurt) {
             if (ITeslaUtil.isEntityNearLine(origin, end, victim, 0.75D)) {
-                victim.hurt(victim.level().damageSources().lightningBolt(), 5f);
+                victim.hurt(victim.level().damageSources().lightningBolt(), 7f);
                 victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0));
             }
         }

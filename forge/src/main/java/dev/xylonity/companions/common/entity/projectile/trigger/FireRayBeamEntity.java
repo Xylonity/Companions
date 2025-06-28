@@ -31,10 +31,10 @@ public class FireRayBeamEntity extends Entity implements GeoAnimatable {
     private static final EntityDataAccessor<Float> ORIGIN_X = SynchedEntityData.defineId(FireRayBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> ORIGIN_Y = SynchedEntityData.defineId(FireRayBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> ORIGIN_Z = SynchedEntityData.defineId(FireRayBeamEntity.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float>  START_YAW = SynchedEntityData.defineId(FireRayBeamEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> START_YAW = SynchedEntityData.defineId(FireRayBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> ROT_TICKS = SynchedEntityData.defineId(FireRayBeamEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> MAX_PIECES = SynchedEntityData.defineId(FireRayBeamEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Float>  SEPARATION = SynchedEntityData.defineId(FireRayBeamEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> SEPARATION = SynchedEntityData.defineId(FireRayBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> START_PITCH = SynchedEntityData.defineId(FireRayBeamEntity.class, EntityDataSerializers.FLOAT);
 
     private int age;
@@ -75,11 +75,13 @@ public class FireRayBeamEntity extends Entity implements GeoAnimatable {
         this.entityData.define(START_PITCH, 0f);
     }
 
-    @Override protected void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    @Override
+    protected void readAdditionalSaveData(@NotNull CompoundTag tag) {
         ;;
     }
 
-    @Override protected void addAdditionalSaveData(@NotNull CompoundTag tag)  {
+    @Override
+    protected void addAdditionalSaveData(@NotNull CompoundTag tag)  {
         ;;
     }
 

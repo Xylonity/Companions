@@ -12,13 +12,13 @@ public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(CompanionsCommon.MOD_ID, "textures/particle/trail.png");
 
-    private final float radius;
-    private final float height;
-    private final int targetId;
-    private final float startYaw;
-    private final float yawSpeed;
+    protected final float radius;
+    protected final float height;
+    protected final int targetId;
+    protected final float startYaw;
+    protected final float yawSpeed;
 
-    private float ribbonHeight;
+    protected float ribbonHeight;
 
     public BaseRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId) {
         super(level, x, y, z, 0, 0, 0, r, g, b);
@@ -64,7 +64,7 @@ public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
         return targetPos().add(off);
     }
 
-    private Vec3 targetPos() {
+    protected Vec3 targetPos() {
         return getTarget() != null ? getTarget().position().add(0, getTarget().getBbHeight() * 0.5, 0) : new Vec3(x, y, z);
     }
 

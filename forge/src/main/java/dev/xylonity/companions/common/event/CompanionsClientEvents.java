@@ -38,11 +38,12 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.SOUL_MAGE.get(), SoulMageRenderer::new);
         EntityRenderers.register(CompanionsEntities.LIVING_CANDLE.get(), LivingCandleRenderer::new);
         EntityRenderers.register(CompanionsEntities.CROISSANT_DRAGON.get(), CroissantDragonRenderer::new);
-
         EntityRenderers.register(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGloveRenderer::new);
         EntityRenderers.register(CompanionsEntities.PUPPET.get(), PuppetRenderer::new);
         EntityRenderers.register(CompanionsEntities.SHADE_SWORD.get(), ShadeSwordRenderer::new);
         EntityRenderers.register(CompanionsEntities.SHADE_MAW.get(), ShadeMawRenderer::new);
+        EntityRenderers.register(CompanionsEntities.MANKH.get(), MankhRenderer::new);
+        EntityRenderers.register(CompanionsEntities.CLOAK.get(), CloakRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.FIREWORK_TOAD.get(), FireworkToadRenderer::new);
         EntityRenderers.register(CompanionsEntities.NETHER_BULLFROG.get(), NetherBullfrogRenderer::new);
@@ -77,6 +78,8 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.PONTIFF_FIRE_RING.get(), PontiffFireRingRenderer::new);
         EntityRenderers.register(CompanionsEntities.NEEDLE_PROJECTILE.get(), NeedleRenderer::new);
         EntityRenderers.register(CompanionsEntities.RESPAWN_TOTEM_RING_PROJECTILE.get(), RespawnTotemRingRenderer::new);
+        EntityRenderers.register(CompanionsEntities.LASER_PROJECTILE.get(), LaserRenderer::new);
+        EntityRenderers.register(CompanionsEntities.LASER_RING.get(), LaserRingRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
         EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
@@ -120,6 +123,8 @@ public class CompanionsClientEvents {
         event.registerSpriteSet(CompanionsParticles.SHADE_TRAIL.get(), ShadeTrailParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.SHADE_SUMMON.get(), ShadeSummonParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.HOLINESS_STAR_TRAIL.get(), GoldenAllayTrailParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.BLINK.get(), BlinkParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.LASER_SPARK.get(), IllagerGolemSparkParticle.Provider::new);
     }
 
 }

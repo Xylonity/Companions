@@ -1,8 +1,8 @@
-package dev.xylonity.companions.common.entity.custom;
+package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
-import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
+import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;

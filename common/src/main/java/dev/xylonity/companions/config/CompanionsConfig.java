@@ -165,23 +165,23 @@ public final class CompanionsConfig {
 
 
     /**
-     * MANKH AUTOMATON
+     * MANKH
      */
 
     @ConfigEntry(
-            category = "Mankh Automaton",
+            category = "Mankh",
             comment = "Determines whether this entity keeps its current chunk loaded. "
                     + "If false, the entity will not teleport to its owner from unloaded chunks. "
     )
-    public static boolean MANKH_AUTOMATON_KEEP_CHUNK_LOADED = true;
+    public static boolean MANKH_KEEP_CHUNK_LOADED = true;
 
 
     /**
-     * MANKH VICAR
+     * CLOAK
      */
 
     @ConfigEntry(
-            category = "Mankh Vicar",
+            category = "Cloak",
             comment = "Determines whether this entity keeps its current chunk loaded. "
                     + "If false, the entity will not teleport to its owner from unloaded chunks. "
     )

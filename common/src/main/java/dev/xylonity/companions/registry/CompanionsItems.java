@@ -48,6 +48,11 @@ public class CompanionsItems {
     public static final Supplier<Item> MAGE_HAT = registerArmorItem("mage_hat", ArmorMaterials.MAGE, ArmorItem.Type.HELMET, true);
     public static final Supplier<Item> MAGE_STAFF = registerItem("mage_staff", () -> new Item(new Item.Properties().stacksTo(1)));
 
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_HELMET = registerArmorItem("crystallized_blood_helmet", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.HELMET, true);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_CHESTPLATE = registerArmorItem("crystallized_blood_chestplate", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.CHESTPLATE, false);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_LEGGINGS = registerArmorItem("crystallized_blood_leggings", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.LEGGINGS, false);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_BOOTS = registerArmorItem("crystallized_blood_boots", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.BOOTS, false);
+
     private static <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item) {
         return CompanionsCommon.COMMON_PLATFORM.registerItem(id, item);
     }

@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.blockentity;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
@@ -68,6 +69,10 @@ public class ShadeMawAltarBlockEntity extends AbstractShadeAltarBlockEntity {
                 }
 
                 altar.shouldSpawnParticleExplosion = false;
+            }
+
+            if (altar.getCharges() > 0 && altar.tickCount % 2 == 0 && level.random.nextFloat() < 0.01 * altar.getCharges() && altar.level != null  && altar.level.isClientSide) {
+                Companions.PROXY.spawnShadeAltarParticles(altar, level, 0, 0, 0, 5);
             }
 
             altar.tickCount++;

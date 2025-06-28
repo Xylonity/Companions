@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal
 import dev.xylonity.companions.common.entity.ai.soul_mage.goal.*;
 import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.projectile.*;
+import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.core.BlockPos;

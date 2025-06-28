@@ -16,6 +16,8 @@ import java.util.function.Supplier;
 public enum ArmorMaterials implements ArmorMaterial {
 
     MAGE("mage", 35, convertProtectionArrayToEnumMap(new int[]{ 3, 8, 6, 3 }), 20,
+        SoundEvents.ARMOR_EQUIP_DIAMOND, 2.5f, 0.05F, () -> Ingredient.of(Items.DIAMOND)),
+    CRYSTALLIZED_BLOOD("crystallized_blood", 35, convertProtectionArrayToEnumMap(new int[]{ 3, 8, 6, 3 }), 20,
         SoundEvents.ARMOR_EQUIP_DIAMOND, 2.5f, 0.05F, () -> Ingredient.of(Items.DIAMOND));
 
     private final String name;

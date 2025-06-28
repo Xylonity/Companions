@@ -1,8 +1,7 @@
 package dev.xylonity.companions.client.entity.model;
 
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.common.entity.custom.BrokenDinamoEntity;
-import dev.xylonity.companions.common.entity.custom.IllagerGolemEntity;
+import dev.xylonity.companions.common.entity.hostile.BrokenDinamoEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;

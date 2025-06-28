@@ -64,6 +64,11 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsBlocks.VOLTAIC_RELAY.get());
                                 output.accept(CompanionsBlocks.FROG_BONANZA.get());
 
+                                output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_HELMET.get());
+                                output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_CHESTPLATE.get());
+                                output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_LEGGINGS.get());
+                                output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_BOOTS.get());
+
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get());
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get());
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get());

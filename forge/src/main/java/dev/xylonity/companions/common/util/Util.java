@@ -5,6 +5,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -36,9 +39,24 @@ public class Util {
         Minecraft.getInstance().particleEngine.add(new BaseRibbonTrailParticle(level, x, y, z, r, g, b, radius, height, entity.getId(), trailHeight));
     }
 
-    public static void spawnBaseProjectileTrail(Entity entity, double x, double y, double z, float radius, float height, float r, float g, float b) {
+    public static void spawnBaseProjectileTrail(Entity entity, double x, double y, double z, float radius, float height, float r, float g, float b, float trailHeight) {
         if (!(entity.level() instanceof ClientLevel level)) return;
-        Minecraft.getInstance().particleEngine.add(new BaseRibbonTrailParticle(level, x, y, z, r, g, b, radius, height, entity.getId()));
+        Minecraft.getInstance().particleEngine.add(new BaseRibbonTrailParticle(level, x, y, z, r, g, b, radius, height, entity.getId(), trailHeight));
+    }
+
+    /**
+     * Normalize degrees within a 360 degree cap
+     */
+    public static float normalizeDeg(float deg) {
+        deg %= 360f;
+        return deg < 0 ? deg + 360f : deg;
+    }
+
+    /**
+     * Degrees to radians fast parser
+     */
+    public static float degToRad(float deg) {
+        return (float) Math.toRadians(deg);
     }
 
     /**
@@ -89,6 +107,50 @@ public class Util {
 
     private static boolean isValidSpawnPos(BlockPos pos, Level level) {
         return level.isInWorldBounds(pos) && level.getBlockState(pos).isAir() && level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP);
+    }
+
+    /**
+     * NBT float array to listTag parser
+     */
+    public static ListTag floatsToList(float[] arr) {
+        ListTag list = new ListTag();
+        for (float v : arr) {
+            list.add(FloatTag.valueOf(v));
+        }
+
+        return list;
+    }
+
+    /**
+     * NBT int array to listTag parser
+     */
+    public static ListTag intsToList(int[] arr) {
+        ListTag list = new ListTag();
+        for (int v : arr) {
+            list.add(IntTag.valueOf(v));
+        }
+
+        return list;
+    }
+
+    /**
+     * NBT listTag floatTag to float array parser
+     */
+    public static void listToFloats(ListTag list, float[] o) {
+        for (int i = 0; i < o.length && i < list.size(); i++) {
+            o[i] = ((FloatTag) list.get(i)).getAsFloat();
+        }
+
+    }
+
+    /**
+     * NBT listTag intTag to int array parser
+     */
+    public static void listToInts(ListTag list, int[] o) {
+        for (int i = 0; i < o.length && i < list.size(); i++) {
+            o[i] = ((IntTag) list.get(i)).getAsInt();
+        }
+
     }
 
 }

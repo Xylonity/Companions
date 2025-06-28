@@ -26,6 +26,8 @@ public class CompanionsParticles {
     public static final Supplier<SimpleParticleType> SHADE_TRAIL = registerParticle("shade_trail", true);
     public static final Supplier<SimpleParticleType> SHADE_SUMMON = registerParticle("shade_summon", true);
     public static final Supplier<SimpleParticleType> HOLINESS_STAR_TRAIL = registerParticle("holiness_star_trail", true);
+    public static final Supplier<SimpleParticleType> BLINK = registerParticle("blink", true);
+    public static final Supplier<SimpleParticleType> LASER_SPARK = registerParticle("laser_spark", true);
 
     private static <T extends SimpleParticleType> Supplier<T> registerParticle(String id, boolean overrideLimiter) {
         return CompanionsCommon.COMMON_PLATFORM.registerParticle(id, overrideLimiter);
