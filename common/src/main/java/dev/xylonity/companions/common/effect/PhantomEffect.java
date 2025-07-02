@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class PhantomEffect extends MobEffect {
 
     public PhantomEffect() {
-        super(MobEffectCategory.HARMFUL, 0x303030);
+        super(MobEffectCategory.BENEFICIAL, 0x303030);
     }
 
     public void addAttributeModifiers(@NotNull LivingEntity pLivingEntity, @NotNull AttributeMap pAttributeMap, int pAmplifier) {
