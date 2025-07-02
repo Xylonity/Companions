@@ -70,7 +70,7 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
                 altar.shouldSpawnParticleExplosion = false;
             }
 
-            if (altar.getCharges() > 0 && altar.tickCount % 2 == 0 && level.random.nextFloat() < 0.01 * altar.getCharges() && altar.level != null  && altar.level.isClientSide) {
+            if (altar.getCharges() > 0 && altar.tickCount % 2 == 0 && level.random.nextFloat() < 0.01 * altar.getCharges() && altar.level != null && altar.level.isClientSide) {
                 Companions.PROXY.spawnShadeAltarParticles(altar, level, 0, 0, 0, 5);
             }
 

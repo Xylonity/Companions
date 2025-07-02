@@ -83,24 +83,24 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
     }
 
     @Unique
-    private PhantomVisibility companions$getPhantomVisibility(LivingEntity entity, Player clientPlayer) {
+    private PhantomVisibility companions$getPhantomVisibility(LivingEntity entity, Player player) {
         if (!(entity instanceof IPhantomEffectEntity phantomEntity) || !phantomEntity.isPhantomEffectActive()) {
             return PhantomVisibility.NORMAL;
         }
 
-        if (!(clientPlayer instanceof IPhantomEffectEntity clientPhantom) || !clientPhantom.isPhantomEffectActive()) {
+        if (!(player instanceof IPhantomEffectEntity clientPhantom) || !clientPhantom.isPhantomEffectActive()) {
             return PhantomVisibility.INVISIBLE;
         }
 
-        if (entity == clientPlayer) {
+        if (entity == player) {
             return PhantomVisibility.TRANSLUCENT;
         }
 
-        if (clientPlayer.getTeam() != null && clientPlayer.isAlliedTo(entity)) {
+        if (player.getTeam() != null && player.isAlliedTo(entity)) {
             return PhantomVisibility.TRANSLUCENT;
         }
 
-        if (entity instanceof CompanionEntity companion && companion.getOwner() == clientPlayer) {
+        if (entity instanceof CompanionEntity companion && companion.getOwner() == player) {
             return PhantomVisibility.TRANSLUCENT;
         }
 

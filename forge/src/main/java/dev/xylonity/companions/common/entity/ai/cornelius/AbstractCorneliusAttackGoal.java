@@ -36,7 +36,12 @@ public abstract class AbstractCorneliusAttackGoal extends Goal {
         if (!cornelius.canAttack()) return false;
         if (cornelius.getAttackType() != 0) return false;
         if (cornelius.getTarget() == null) return false;
-        if (!hasSufficientCoins()) return false;
+        if (cornelius.getSummonedCount() > 5) return false;
+
+        if (!hasSufficientCoins()) {
+            nextUseTick = -1;
+            return false;
+        }
 
         if (nextUseTick < 0) {
             int cd = minCooldown + cornelius.getRandom().nextInt(maxCooldown - minCooldown + 1);
@@ -73,6 +78,7 @@ public abstract class AbstractCorneliusAttackGoal extends Goal {
         attackTicks = 0;
         started = true;
         cornelius.setAttackType(currentAttackType);
+        cornelius.setSummonedCount(cornelius.getSummonedCount() + 1);
         consumeCoins();
     }
 
@@ -80,8 +86,7 @@ public abstract class AbstractCorneliusAttackGoal extends Goal {
     public void stop() {
         started = false;
         cornelius.setAttackType(0);
-        int cd = minCooldown + cornelius.getRandom().nextInt(maxCooldown - minCooldown + 1);
-        nextUseTick = cornelius.tickCount + cd;
+        nextUseTick = -1;
     }
 
     @Override

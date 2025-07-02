@@ -1,6 +1,8 @@
 package dev.xylonity.companions.common.util;
 
+import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.particle.BaseRibbonTrailParticle;
+import dev.xylonity.companions.mixin.CompanionsLevelAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -9,8 +11,15 @@ import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class Util {
 
@@ -107,6 +116,59 @@ public class Util {
 
     private static boolean isValidSpawnPos(BlockPos pos, Level level) {
         return level.isInWorldBounds(pos) && level.getBlockState(pos).isAir() && level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP);
+    }
+
+    /**
+     * Check if two entities belong to the same owner chain (cluster)
+     */
+    public static boolean areEntitiesLinked(Entity e1, Entity e2) {
+        if (e1 == null || e2 == null) return false;
+        if (e1 == e2) return true;
+
+        Set<UUID> ownersA = collectOwners(e1, new HashSet<>(), new HashSet<>());
+        Set<UUID> ownersB = collectOwners(e2, new HashSet<>(), new HashSet<>());
+
+        ownersA.retainAll(ownersB);
+        return !ownersA.isEmpty();
+    }
+
+    private static Set<UUID> collectOwners(Entity current, Set<UUID> result, Set<UUID> visited) {
+        if (current == null) return result;
+
+        if (!visited.add(current.getUUID())) return result;
+
+        result.add(current.getUUID());
+
+        if (current instanceof TamableAnimal tamable) {
+            UUID ownerUuid = tamable.getOwnerUUID();
+            if (ownerUuid != null) result.add(ownerUuid);
+
+            if (current instanceof CompanionSummonEntity summon) {
+                UUID secondUuid = summon.getSecondOwnerUUID();
+                if (secondUuid != null) result.add(secondUuid);
+            }
+
+            collectOwners(tamable.getOwner(), result, visited);
+        }
+
+        if (current instanceof Projectile projectile) {
+            collectOwners(projectile.getOwner(), result, visited);
+        }
+
+        if (current instanceof OwnableEntity ow) {
+            UUID ownerUuid = ow.getOwnerUUID();
+            if (ownerUuid != null) {
+                result.add(ownerUuid);
+
+                Entity owner = current.level().getPlayerByUUID(ownerUuid);
+                if (owner == null && current.level() instanceof CompanionsLevelAccessor acc) {
+                    owner = acc.companions$getEntities().get(ownerUuid);
+                }
+                collectOwners(owner, result, visited);
+            }
+        }
+
+        return result;
     }
 
     /**

@@ -1,11 +1,11 @@
 package dev.xylonity.companions.client.armor.model;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.common.item.armor.GenericArmorItem;
+import dev.xylonity.companions.common.item.armor.GenericGeckoArmorItem;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-public class GenericArmorItemModel  extends GeoModel<GenericArmorItem> {
+public class GenericArmorItemModel  extends GeoModel<GenericGeckoArmorItem> {
 
     private final String resourceKey;
 
@@ -14,17 +14,17 @@ public class GenericArmorItemModel  extends GeoModel<GenericArmorItem> {
     }
 
     @Override
-    public ResourceLocation getModelResource(GenericArmorItem animatable) {
+    public ResourceLocation getModelResource(GenericGeckoArmorItem animatable) {
         return new ResourceLocation(Companions.MOD_ID, "geo/" + resourceKey + ".geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(GenericArmorItem animatable) {
+    public ResourceLocation getTextureResource(GenericGeckoArmorItem animatable) {
         return new ResourceLocation(Companions.MOD_ID, "textures/armor/" + resourceKey + ".png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(GenericArmorItem animatable) {
+    public ResourceLocation getAnimationResource(GenericGeckoArmorItem animatable) {
         return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
     }
 

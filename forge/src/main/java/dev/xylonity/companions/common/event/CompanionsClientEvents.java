@@ -80,6 +80,10 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.RESPAWN_TOTEM_RING_PROJECTILE.get(), RespawnTotemRingRenderer::new);
         EntityRenderers.register(CompanionsEntities.LASER_PROJECTILE.get(), LaserRenderer::new);
         EntityRenderers.register(CompanionsEntities.LASER_RING.get(), LaserRingRenderer::new);
+        EntityRenderers.register(CompanionsEntities.SCROLL.get(), ScrollRenderer::new);
+        EntityRenderers.register(CompanionsEntities.FROG_HEAL_PROJECTILE.get(), FrogHealRenderer::new);
+        EntityRenderers.register(CompanionsEntities.RED_STAR_EXPLOSION.get(), RedStarExplosionRenderer::new);
+        EntityRenderers.register(CompanionsEntities.FROG_LEVITATE_PROJECTILE.get(), FrogLevitateRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
         EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);

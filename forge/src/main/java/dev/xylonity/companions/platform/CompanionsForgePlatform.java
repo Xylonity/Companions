@@ -2,18 +2,14 @@ package dev.xylonity.companions.platform;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.block.*;
-import dev.xylonity.companions.common.item.CrystallizedBloodItem;
-import dev.xylonity.companions.common.item.HourglassItem;
-import dev.xylonity.companions.common.item.ShadowBellItem;
-import dev.xylonity.companions.common.item.armor.GenericArmorItem;
+import dev.xylonity.companions.common.item.*;
+import dev.xylonity.companions.common.item.armor.GenericGeckoArmorItem;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.companions.common.item.book.books.*;
-import dev.xylonity.companions.common.item.WrenchItem;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
@@ -47,6 +43,9 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
             }
             case CRYSTALLIZED_BLOOD -> {
                 return (Supplier<T>) registerItem(id, () -> new CrystallizedBloodItem(properties));
+            }
+            case GENERIC -> {
+                return (Supplier<T>) registerItem(id, () -> new GenericGeckoItem(properties, id));
             }
             default -> // SHADOW_BELL
             {
@@ -88,7 +87,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     @Override
     public <T extends Item> Supplier<T> registerArmorItem(String id, ArmorMaterial armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
         if (isGeckoArmor) {
-            return (Supplier<T>) registerItem(id, () -> new GenericArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+            return (Supplier<T>) registerItem(id, () -> new GenericGeckoArmorItem(armorMaterial, armorType, new Item.Properties(), id));
         } else {
             return (Supplier<T>) registerItem(id, () -> new ArmorItem(armorMaterial, armorType, new Item.Properties()));
         }

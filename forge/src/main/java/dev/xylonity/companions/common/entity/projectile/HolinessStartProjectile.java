@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -63,7 +64,7 @@ public class HolinessStartProjectile extends BaseProjectile {
 
         if (!level().isClientSide && target != null && target.isAlive()) {
             Vec3 v = target.getEyePosition().subtract(position()).normalize().scale(SPEED);
-            setDeltaMovement(getDeltaMovement().lerp(v, 0.035).normalize().scale(SPEED));
+            setDeltaMovement(getDeltaMovement().lerp(v, 0.04).normalize().scale(SPEED));
             hasImpulse = true;
         }
 
@@ -135,11 +136,14 @@ public class HolinessStartProjectile extends BaseProjectile {
 
     @Override
     public void remove(@NotNull RemovalReason pReason) {
-        if (isFire()) {
-            fireParticles();
-        } else {
-            iceParticles();
+        if (!level().isClientSide) {
+            RedStarExplosion explosion = CompanionsEntities.RED_STAR_EXPLOSION.get().create(level());
+            if (explosion != null) {
+                explosion.moveTo(position());
+                level().addFreshEntity(explosion);
+            }
         }
+
         super.remove(pReason);
     }
 

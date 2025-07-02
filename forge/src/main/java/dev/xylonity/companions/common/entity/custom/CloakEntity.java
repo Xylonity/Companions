@@ -88,7 +88,7 @@ public class CloakEntity extends CompanionEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
-        this.goalSelector.addGoal(1, new CloakInvisibilityGoal(this, 10, 30));
+        this.goalSelector.addGoal(1, new CloakInvisibilityGoal(this, 200, 1200));
         this.goalSelector.addGoal(1, new CloakBlueStarAttackGoal(this, 10, 30));
         this.goalSelector.addGoal(1, new CloakRedStarAttackGoal(this, 10, 30));
 

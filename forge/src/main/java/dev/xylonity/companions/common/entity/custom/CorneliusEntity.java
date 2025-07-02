@@ -3,9 +3,7 @@ package dev.xylonity.companions.common.entity.custom;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
-import dev.xylonity.companions.common.entity.ai.cornelius.goal.HopToOwnerGoal;
-import dev.xylonity.companions.common.entity.ai.cornelius.goal.CorneliusFireworkToadGoal;
-import dev.xylonity.companions.common.entity.ai.cornelius.goal.NetherBullfrogToadGoal;
+import dev.xylonity.companions.common.entity.ai.cornelius.goal.*;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -45,6 +43,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import java.util.Random;
+
 public class CorneliusEntity extends CompanionEntity implements ContainerListener, IFrogJumpUtil {
 
     public SimpleContainer inventory;
@@ -58,14 +58,36 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     private final RawAnimation SUMMON3 = RawAnimation.begin().thenPlay("summon3");
 
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.BYTE);
-    // 0 none, 1
+    // 0 none, 1,2,3: summon
     private static final EntityDataAccessor<Integer> ATTACK_TYPE = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.INT);
     // Prevent attacking while the moving cycle is active
     private static final EntityDataAccessor<Boolean> CAN_ATTACK = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> SUMMONED_COUNT = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.INT);
+
+    private int summonedCounter = -1;
 
     public CorneliusEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.createInventory();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (getSummonedCount() > 0) {
+
+            if (summonedCounter == 0) {
+                setSummonedCount(getSummonedCount() - 1);
+            }
+
+            if (summonedCounter < 0) {
+                summonedCounter = new Random().nextInt(400, 800);
+            }
+
+            summonedCounter--;
+        }
+
     }
 
     @Override
@@ -103,7 +125,10 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
         this.goalSelector.addGoal(1, new CorneliusFireworkToadGoal(this, 40, 120));
-        this.goalSelector.addGoal(1, new NetherBullfrogToadGoal(this, 40, 120));
+        this.goalSelector.addGoal(1, new CorneliusNetherBullfrogGoal(this, 40, 120));
+        this.goalSelector.addGoal(1, new CorneliusBubbleFrogGoal(this, 40, 120));
+        this.goalSelector.addGoal(1, new CorneliusEnderFrogGoal(this, 40, 120));
+        this.goalSelector.addGoal(1, new CorneliusEmberPoleGoal(this, 40, 120));
 
         this.goalSelector.addGoal(4, new HopToOwnerGoal<>(this, 0.725D, 6.0F, 2.0F, false));
 
@@ -134,6 +159,7 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         this.entityData.define(DATA_ID_FLAGS, (byte) 0);
         this.entityData.define(CAN_ATTACK, true);
         this.entityData.define(ATTACK_TYPE, 0);
+        this.entityData.define(SUMMONED_COUNT, 0);
     }
 
     public int getAttackType() {
@@ -142,6 +168,14 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
 
     public void setAttackType(int type) {
         this.entityData.set(ATTACK_TYPE, type);
+    }
+
+    public int getSummonedCount() {
+        return this.entityData.get(SUMMONED_COUNT);
+    }
+
+    public void setSummonedCount(int c) {
+        this.entityData.set(SUMMONED_COUNT, c);
     }
 
     @Nullable
@@ -208,12 +242,16 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.inventory.fromTag(pCompound.getList("Inventory", 10));
+        if (pCompound.contains("SummonedCount")) {
+            this.setSummonedCount(pCompound.getInt("SummonedCount"));
+        }
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.put("Inventory", this.inventory.createTag());
+        pCompound.putInt("SummonedCount", this.getSummonedCount());
     }
 
     @Override

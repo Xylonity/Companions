@@ -1,6 +1,5 @@
 package dev.xylonity.companions.common.entity.custom;
 
-import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
@@ -141,8 +140,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     }
 
     private BlockPos findClosestGroundBelow(TeddyEntity entity) {
-        double feetY = entity.getBoundingBox().minY + 0.01;
-        Vec3 start = new Vec3(entity.getX(), feetY, entity.getZ());
+        Vec3 start = new Vec3(entity.getX(), entity.getBoundingBox().minY + 0.01, entity.getZ());
         BlockHitResult trace = entity.level().clip(new ClipContext(start, start.subtract(0, 3.0, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
 
         if (trace.getType() == HitResult.Type.BLOCK) {

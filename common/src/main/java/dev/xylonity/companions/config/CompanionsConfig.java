@@ -49,7 +49,7 @@ public final class CompanionsConfig {
     public static boolean DINAMO_KEEP_CHUNK_LOADED = true;
 
     @ConfigEntry(
-            category = "Dinamo Companion",
+            category = "Dinamo",
             comment = "The maximum number of tesla modules that can be connected in a chain without using a voltaic repeater, starting from a Dinamo. "
                     + "For example, if set to 3, the Dinamo can connect to coil 1, which connects to coil 2, which connects to coil 3.",
             note = "Any additional tesla modules beyond this limit will not be powered.",
@@ -80,6 +80,13 @@ public final class CompanionsConfig {
                     + "If false, the entity will not teleport to its owner from unloaded chunks. "
     )
     public static boolean CORNELIUS_KEEP_CHUNK_LOADED = true;
+
+    @ConfigEntry(
+            category = "Cornelius",
+            comment = "Ender Frog Heal Projectile heal amount",
+            min = 0d, max = 100d
+    )
+    public static double ENDER_FROG_HEAL_PROJECTILE_HEAL_AMOUNT = 2.5d;
 
 
     /**

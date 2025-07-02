@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "knightquestcompanions:item/crystallized_blood_helmet"
+  }
+}

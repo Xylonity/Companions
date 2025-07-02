@@ -6,13 +6,15 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "BossHealthOverlayMixin",
-    "LivingEntityRendererMixin",
-    "EntityRendererAccessor"
+    "EntityRendererAccessor",
+    "LivingEntityRendererMixin"
   ],
   "mixins": [
     "ArrowMixin",
-    "MobMixin",
-    "LivingEntityMixin"
+    "CompanionsLevelAccessor",
+    "CompanionsProjectileAccessor",
+    "LivingEntityMixin",
+    "MobMixin"
   ],
   "server": [
   ],

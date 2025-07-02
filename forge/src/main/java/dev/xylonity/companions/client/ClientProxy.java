@@ -4,10 +4,7 @@ import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.entity.custom.ShadeMawEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
-import dev.xylonity.companions.common.particle.ElectricArcParticle;
-import dev.xylonity.companions.common.particle.FuturisticLaserParticle;
-import dev.xylonity.companions.common.particle.ShadeAltarRibbonParticle;
-import dev.xylonity.companions.common.particle.RedElectricArcParticle;
+import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.client.CameraType;
@@ -33,8 +30,7 @@ public class ClientProxy implements IProxy {
             float distance = 1.0f + level.random.nextFloat() * d;
             float angle = (level.random.nextFloat() - 0.5f) * 60.0f;
 
-            float yaw = e.getYRot();
-            float finalAngle = yaw + angle;
+            float finalAngle = e.getYRot() + angle;
 
             double radians = Math.toRadians(finalAngle);
             double offsetX = -Math.sin(radians) * distance;
@@ -45,6 +41,11 @@ public class ClientProxy implements IProxy {
 
             Minecraft.getInstance().particleEngine.add(new RedElectricArcParticle((ClientLevel) level, start, end, 0.6, 0.35, true, 8));
         }
+    }
+
+    @Override
+    public void spawnGenericRibbonTrail(Entity e, Level level, double x, double y, double z, float r, float g, float b, float radius, float height) {
+        Minecraft.getInstance().particleEngine.add(new GenericRibbonTrailParticle((ClientLevel) level, x, y, z, r, g, b, radius, height, e.getId()));
     }
 
     @Override

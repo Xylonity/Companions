@@ -2,7 +2,8 @@ package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
-import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.SummonHopToOwnerGoal;
+import dev.xylonity.companions.common.entity.ai.cornelius.goal.SummonHopToTargetGoal;
+import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.*;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsSummonHurtTargetGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import net.minecraft.world.entity.EntityType;
@@ -31,6 +32,8 @@ public class NetherBullfrogEntity extends CompanionSummonEntity implements IFrog
     private final RawAnimation SPIN_SLASH = RawAnimation.begin().thenPlay("spin_slash");
     private final RawAnimation AIR_SLASH = RawAnimation.begin().thenPlay("air_slash");
 
+    // attacktype: 0 none, 1 slash, 2 slash_2, 3 spin slash, 4 air slash
+
     public NetherBullfrogEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -55,11 +58,6 @@ public class NetherBullfrogEntity extends CompanionSummonEntity implements IFrog
     }
 
     @Override
-    public int getAttackType() {
-        return 0;
-    }
-
-    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
     }
@@ -74,6 +72,12 @@ public class NetherBullfrogEntity extends CompanionSummonEntity implements IFrog
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
+        this.goalSelector.addGoal(1, new NetherBullfrogAirSlashGoal(this, 40, 120));
+        this.goalSelector.addGoal(1, new NetherBullfrogSpinSlashGoal(this, 40, 120));
+        this.goalSelector.addGoal(1, new NetherBullfrogSlashRightGoal(this, 40, 120));
+        this.goalSelector.addGoal(1, new NetherBullfrogSlashLeftGoal(this, 40, 120));
+
+        this.goalSelector.addGoal(3, new SummonHopToTargetGoal<>(this, 0.65f));
         this.goalSelector.addGoal(4, new SummonHopToOwnerGoal<>(this, 0.725D, 6.0F, 2.0F, false));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
@@ -86,14 +90,13 @@ public class NetherBullfrogEntity extends CompanionSummonEntity implements IFrog
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-        //if (this.getMainAction() == 0) {
-        //    event.setAnimation(getSitVariation() == 0 ? SIT : SIT2);
-        //} else
         if (getAttackType() == 1) {
             event.setAnimation(SLASH);
         } else if (getAttackType() == 2) {
-            event.setAnimation(SPIN_SLASH);
+            event.setAnimation(SLASH2);
         } else if (getAttackType() == 3) {
+            event.setAnimation(SPIN_SLASH);
+        } else if (getAttackType() == 4) {
             event.setAnimation(AIR_SLASH);
         } else if (event.isMoving()) {
             event.setAnimation(WALK);
