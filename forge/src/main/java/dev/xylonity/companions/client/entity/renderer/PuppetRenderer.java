@@ -3,9 +3,7 @@ package dev.xylonity.companions.client.entity.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.client.entity.model.AntlionModel;
 import dev.xylonity.companions.client.entity.model.PuppetModel;
-import dev.xylonity.companions.common.entity.custom.AntlionEntity;
 import dev.xylonity.companions.common.entity.custom.PuppetEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -14,8 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-
-import java.util.Arrays;
 
 public class PuppetRenderer extends GeoEntityRenderer<PuppetEntity> {
 

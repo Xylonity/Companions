@@ -7,7 +7,9 @@ import dev.xylonity.companions.client.gui.screen.CorneliusScreen;
 import dev.xylonity.companions.client.gui.screen.PuppetScreen;
 import dev.xylonity.companions.client.gui.screen.SoulFurnaceScreen;
 import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
+import dev.xylonity.companions.client.projectile.model.BlueStarExplosionCenterModel;
 import dev.xylonity.companions.client.projectile.renderer.*;
+import dev.xylonity.companions.common.entity.projectile.BlueStarExplosionCenter;
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
@@ -83,7 +85,11 @@ public class CompanionsClientEvents {
         EntityRenderers.register(CompanionsEntities.SCROLL.get(), ScrollRenderer::new);
         EntityRenderers.register(CompanionsEntities.FROG_HEAL_PROJECTILE.get(), FrogHealRenderer::new);
         EntityRenderers.register(CompanionsEntities.RED_STAR_EXPLOSION.get(), RedStarExplosionRenderer::new);
+        EntityRenderers.register(CompanionsEntities.RED_STAR_EXPLOSION_CENTER.get(), RedStarExplosionCenterRenderer::new);
+        EntityRenderers.register(CompanionsEntities.BLUE_STAR_EXPLOSION.get(), BlueStarExplosionRenderer::new);
+        EntityRenderers.register(CompanionsEntities.BLUE_STAR_EXPLOSION_CENTER.get(), BlueStarExplosionCenterRenderer::new);
         EntityRenderers.register(CompanionsEntities.FROG_LEVITATE_PROJECTILE.get(), FrogLevitateRenderer::new);
+        EntityRenderers.register(CompanionsEntities.FROG_EGG_PROJECTILE.get(), FrogEggRenderer::new);
 
         EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
         EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
@@ -129,6 +135,7 @@ public class CompanionsClientEvents {
         event.registerSpriteSet(CompanionsParticles.HOLINESS_STAR_TRAIL.get(), GoldenAllayTrailParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.BLINK.get(), BlinkParticle.Provider::new);
         event.registerSpriteSet(CompanionsParticles.LASER_SPARK.get(), IllagerGolemSparkParticle.Provider::new);
+        event.registerSpriteSet(CompanionsParticles.EMBER_POLE_EXPLOSION.get(), TeddyTransformationParticle.Provider::new);
     }
 
 }

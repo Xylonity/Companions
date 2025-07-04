@@ -1,15 +1,15 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.mixin.CompanionsProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -38,11 +38,12 @@ import java.util.Random;
 
 public class HolinessStartProjectile extends BaseProjectile {
 
-    private static final EntityDataAccessor<Boolean> IS_FIRE = SynchedEntityData.defineId(HolinessStartProjectile.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> RED = SynchedEntityData.defineId(HolinessStartProjectile.class, EntityDataSerializers.BOOLEAN);
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
 
-    public static final float SPEED = 0.425f;
+    public static float SPEED = 0.6f;
+
     private LivingEntity target;
 
     public HolinessStartProjectile(EntityType<? extends BaseProjectile> type, Level level) {
@@ -55,7 +56,21 @@ public class HolinessStartProjectile extends BaseProjectile {
 
     @Nullable
     protected EntityHitResult findHitEntity(Vec3 pStartVec, Vec3 pEndVec) {
-        return ProjectileUtil.getEntityHitResult(this.level(), this, pStartVec, pEndVec, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), this::canHitEntity);
+        return ProjectileUtil.getEntityHitResult(this.level(), this, pStartVec, pEndVec, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1), this::canHitEntity);
+    }
+
+    @Override
+    protected boolean canHitEntity(@NotNull Entity pTarget) {
+        if (Util.areEntitiesLinked(this, pTarget)) {
+            return false;
+        }
+
+        if (!pTarget.canBeHitByProjectile()) {
+            return false;
+        } else {
+            Entity entity = this.getOwner();
+            return entity == null || ((CompanionsProjectileAccessor) this).getLeftOwner() || !entity.isPassengerOfSameVehicle(pTarget);
+        }
     }
 
     @Override
@@ -64,7 +79,7 @@ public class HolinessStartProjectile extends BaseProjectile {
 
         if (!level().isClientSide && target != null && target.isAlive()) {
             Vec3 v = target.getEyePosition().subtract(position()).normalize().scale(SPEED);
-            setDeltaMovement(getDeltaMovement().lerp(v, 0.04).normalize().scale(SPEED));
+            setDeltaMovement(getDeltaMovement().lerp(v, 0.095).normalize().scale(SPEED));
             hasImpulse = true;
         }
 
@@ -117,19 +132,8 @@ public class HolinessStartProjectile extends BaseProjectile {
 
         if (this.onGround()) discard();
 
-        if (level().isClientSide) {
-            if ((this.tickCount % 15 == 0 || this.tickCount == 1)) {
-                for (int i = 0; i < 3; i++) {
-                    float r = (190 + level().random.nextInt(30)) / 255f;
-                    float g = (240 + level().random.nextInt(10)) / 255f;
-                    float b = (247 + level().random.nextInt(5)) / 255f;
-                    Util.spawnBaseProjectileTrail(
-                            this,
-                            this.getBbWidth() + level().random.nextFloat() * 0.4f,
-                            (float) ((this.getY() + this.getBbHeight() * Math.random()) * 0.15f), r, g, b);
-                }
-
-            }
+        if (level().isClientSide && (tickCount % 20 == 0 || tickCount == 1)) {
+            Companions.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), isRed() ? 204/255f : 25/255f, isRed() ? 50/255f : 139/255f, isRed() ? 50/255f : 86/255f, 0, 0.35f);
         }
 
     }
@@ -137,22 +141,65 @@ public class HolinessStartProjectile extends BaseProjectile {
     @Override
     public void remove(@NotNull RemovalReason pReason) {
         if (!level().isClientSide) {
-            RedStarExplosion explosion = CompanionsEntities.RED_STAR_EXPLOSION.get().create(level());
-            if (explosion != null) {
-                explosion.moveTo(position());
-                level().addFreshEntity(explosion);
+            if (isRed()) {
+                redExplosion();
+            } else {
+                blueExplosion();
             }
         }
 
         super.remove(pReason);
     }
 
-    public boolean isFire() {
-        return this.entityData.get(IS_FIRE);
+    private void redExplosion() {
+        RedStarExplosion explosion = CompanionsEntities.RED_STAR_EXPLOSION.get().create(level());
+        if (explosion != null) {
+            explosion.moveTo(position());
+            level().addFreshEntity(explosion);
+        }
+        RedStarExplosionCenter explosion2 = CompanionsEntities.RED_STAR_EXPLOSION_CENTER.get().create(level());
+        if (explosion2 != null) {
+            explosion2.moveTo(position());
+            level().addFreshEntity(explosion2);
+        }
+
+        hurtNearby();
     }
 
-    public void setIsFire(boolean isFire) {
-        this.entityData.set(IS_FIRE, isFire);
+    private void blueExplosion() {
+        BlueStarExplosion explosion = CompanionsEntities.BLUE_STAR_EXPLOSION.get().create(level());
+        if (explosion != null) {
+            explosion.moveTo(position());
+            level().addFreshEntity(explosion);
+        }
+        BlueStarExplosionCenter explosion2 = CompanionsEntities.BLUE_STAR_EXPLOSION_CENTER.get().create(level());
+        if (explosion2 != null) {
+            explosion2.moveTo(position());
+            level().addFreshEntity(explosion2);
+        }
+
+        hurtNearby();
+    }
+
+    private void hurtNearby() {
+        for (LivingEntity e : this.level().getEntitiesOfClass(LivingEntity.class, new AABB(this.blockPosition()).inflate(3))) {
+            if (!Util.areEntitiesLinked(e, this)) {
+                e.hurt(this.damageSources().magic(), 7f);
+                if (isRed()) {
+                    e.setSecondsOnFire(new Random().nextInt(2, 10));
+                } else {
+                    e.setTicksFrozen(e.getTicksFrozen() + new Random().nextInt(60, 200));
+                }
+            }
+        }
+    }
+
+    public boolean isRed() {
+        return this.entityData.get(RED);
+    }
+
+    public void setRed(boolean isRed) {
+        this.entityData.set(RED, isRed);
     }
 
     @Override
@@ -162,68 +209,27 @@ public class HolinessStartProjectile extends BaseProjectile {
         DamageSource damageSource = this.damageSources().trident(this, (owner == null ? this : owner));
         entity.hurt(damageSource, 8.0F);
         this.playSound(SoundEvents.DRAGON_FIREBALL_EXPLODE, 5.0f, 1.0F);
-        this.discard();
-    }
-
-    private void fireParticles() {
-        for (int i = 0; i < 20; i++) {
-            double vx = (level().random.nextDouble() - 0.5) * this.getBbWidth();
-            double vy = (level().random.nextDouble() - 0.5) * this.getBbHeight();
-            double vz = (level().random.nextDouble() - 0.5) * this.getBbWidth();
-            if (level() instanceof ServerLevel level) {
-                if (level.random.nextFloat() < 0.35)
-                    level.sendParticles(ParticleTypes.POOF, getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
-                if (level.random.nextFloat() < 0.8)
-                    level.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
-                level.sendParticles(ParticleTypes.LARGE_SMOKE, getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
-                if (level.random.nextFloat() < 0.5)
-                    level.sendParticles(ParticleTypes.LAVA, getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
-            }
-        }
-
-        for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, new AABB(blockPosition()).inflate(3))) {
-            e.setSecondsOnFire(new Random().nextInt(4, 15));
-        }
-    }
-
-    private void iceParticles() {
-        for (int i = 0; i < 20; i++) {
-            double vx = (level().random.nextDouble() - 0.5) * this.getBbWidth();
-            double vy = (level().random.nextDouble() - 0.5) * this.getBbHeight();
-            double vz = (level().random.nextDouble() - 0.5) * this.getBbWidth();
-            if (level() instanceof ServerLevel level) {
-                if (level.random.nextFloat() < 0.35)
-                    level.sendParticles(ParticleTypes.POOF, getX(), getY(), getZ(), 1, vx, vy, vz, 0.2);
-                if (level.random.nextFloat() < 0.8)
-                    level.sendParticles(ParticleTypes.ITEM_SNOWBALL, getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
-                level.sendParticles(ParticleTypes.CLOUD, getX(), getY(), getZ(), 1, vx, vy, vz, 0.2);
-                level.sendParticles(ParticleTypes.SNOWFLAKE, getX(), getY(), getZ(), 1, vx, vy, vz, 0.25);
-            }
-        }
-
-        for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, new AABB(blockPosition()).inflate(3))) {
-            e.setTicksFrozen(e.getTicksFrozen() + 400);
-        }
+        this.remove(RemovalReason.KILLED);
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(IS_FIRE, level().random.nextBoolean());
+        this.entityData.define(RED, false);
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        if (pCompound.contains("IsFire")) {
-            this.setIsFire(pCompound.getBoolean("IsFire"));
+        if (pCompound.contains("Red")) {
+            this.setRed(pCompound.getBoolean("Red"));
         }
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putBoolean("IsFire", this.isFire());
+        pCompound.putBoolean("Red", this.isRed());
     }
 
     @Override

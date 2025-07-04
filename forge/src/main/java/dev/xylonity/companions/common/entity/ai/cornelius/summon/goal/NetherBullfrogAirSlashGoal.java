@@ -3,13 +3,14 @@ package dev.xylonity.companions.common.entity.ai.cornelius.summon.goal;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.AbstractCorneliusSummonAttackGoal;
 import dev.xylonity.companions.common.entity.summon.NetherBullfrogEntity;
-import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Random;
 
 public class NetherBullfrogAirSlashGoal extends AbstractCorneliusSummonAttackGoal {
 
@@ -46,7 +47,7 @@ public class NetherBullfrogAirSlashGoal extends AbstractCorneliusSummonAttackGoa
         }
 
         if (attackTicks == attackDelay()) {
-            performAttack2();
+            spawnParticles();
         }
 
         attackTicks++;
@@ -59,41 +60,24 @@ public class NetherBullfrogAirSlashGoal extends AbstractCorneliusSummonAttackGoa
 
     @Override
     protected void performAttack(LivingEntity target) {
-
+        for (LivingEntity e : summon.level().getEntitiesOfClass(LivingEntity.class, new AABB(summon.blockPosition()).inflate(1))) {
+            if (!Util.areEntitiesLinked(e, summon) && isEntityInFront(summon, e, 120)) {
+                e.hurt(summon.damageSources().mobAttack(summon), 8f);
+            }
+        }
     }
 
-    protected void performAttack2() {
-        // Solo en servidor
+    protected void spawnParticles() {
         if (!(summon.level() instanceof ServerLevel level)) return;
 
-        // Vector de visión normalizado
         Vec3 look = summon.getLookAngle();
 
-        // Punto A: a la altura de los ojos de la entidad
-        double ax = summon.getX();
-        double ay = summon.getY();
-        double az = summon.getZ();
+        double bx = summon.getX() + look.x * 1.5;
+        double by = summon.getY() + 0.15;
+        double bz = summon.getZ() + look.z * 1.5;
 
-        // Punto B: un bloque delante
-        double bx = ax + look.x;
-        double by = ay + 0.15;
-        double bz = az + look.z;
-
-        // Número de partículas por llamada
-        int count = 10;
-        // Offset pequeño para esparcirlas mínimamente
         double spread = 0.03;
-        // Velocidad a lo largo del look vector
-        double speed = 0.0125;
-
-        // Llamada en B
-        level.sendParticles(
-                ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                bx, by, bz,
-                count,
-                look.x * spread, spread, look.z * spread,
-                speed
-        );
+        level.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, bx, by, bz, 10, look.x * spread, spread, look.z * spread, 0.0125);
     }
 
     @Override

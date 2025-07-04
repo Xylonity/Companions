@@ -77,9 +77,13 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<LaserRingProjectile>> LASER_RING;
     public static final RegistryObject<EntityType<FrogHealProjectile>> FROG_HEAL_PROJECTILE;
     public static final RegistryObject<EntityType<FrogLevitateProjectile>> FROG_LEVITATE_PROJECTILE;
+    public static final RegistryObject<EntityType<FrogEggProjectile>> FROG_EGG_PROJECTILE;
 
     public static final RegistryObject<EntityType<ScrollProjectile>> SCROLL;
     public static final RegistryObject<EntityType<RedStarExplosion>> RED_STAR_EXPLOSION;
+    public static final RegistryObject<EntityType<RedStarExplosionCenter>> RED_STAR_EXPLOSION_CENTER;
+    public static final RegistryObject<EntityType<BlueStarExplosion>> BLUE_STAR_EXPLOSION;
+    public static final RegistryObject<EntityType<BlueStarExplosionCenter>> BLUE_STAR_EXPLOSION_CENTER;
     public static final RegistryObject<EntityType<ShadeAltarUpgradeHaloProjectile>> SHADE_ALTAR_UPGRADE_HALO;
     public static final RegistryObject<EntityType<RespawnTotemRingProjectile>> RESPAWN_TOTEM_RING_PROJECTILE;
 
@@ -140,11 +144,15 @@ public class CompanionsEntities {
         LASER_RING = register("laser_ring", LaserRingProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
         FROG_HEAL_PROJECTILE = register("frog_heal_projectile", FrogHealProjectile::new, MobCategory.MISC, 0.4f, 0.4f, List.of(EntityType.Builder::noSummon, e -> e.clientTrackingRange(8)));
         FROG_LEVITATE_PROJECTILE = register("frog_levitate_projectile", FrogLevitateProjectile::new, MobCategory.MISC, 0.4f, 0.4f, List.of(EntityType.Builder::noSummon, e -> e.clientTrackingRange(8)));
+        FROG_EGG_PROJECTILE = register("frog_egg_projectile", FrogEggProjectile::new, MobCategory.MISC, 0.4f, 0.4f, List.of(EntityType.Builder::noSummon, e -> e.clientTrackingRange(8)));
 
         SCROLL = register("scroll", ScrollProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
         RESPAWN_TOTEM_RING_PROJECTILE = register("respawn_totem_ring_projectile", RespawnTotemRingProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
         SHADE_ALTAR_UPGRADE_HALO = register("shade_altar_upgrade_halo", ShadeAltarUpgradeHaloProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
         RED_STAR_EXPLOSION = register("red_star_explosion", RedStarExplosion::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
+        RED_STAR_EXPLOSION_CENTER = register("red_star_explosion_center", RedStarExplosionCenter::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
+        BLUE_STAR_EXPLOSION = register("blue_star_explosion", BlueStarExplosion::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
+        BLUE_STAR_EXPLOSION_CENTER = register("blue_star_explosion_center", BlueStarExplosionCenter::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
 
         GENERIC_TRIGGER_PROJECTILE = register("generic_trigger_projectile", GenericTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         CAKE_CREAM_TRIGGER_PROJECTILE = register("cake_cream_trigger_projectile", CakeCreamTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));

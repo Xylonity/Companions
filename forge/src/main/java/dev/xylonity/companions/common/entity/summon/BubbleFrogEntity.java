@@ -2,20 +2,16 @@ package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
-import dev.xylonity.companions.registry.CompanionsParticles;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.BubbleFrogAttackGoal;
+import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.SummonHopToOwnerGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsSummonHurtTargetGoal;
+import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -23,11 +19,16 @@ import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class BubbleFrogEntity extends CompanionSummonEntity {
+public class BubbleFrogEntity extends CompanionSummonEntity implements IFrogJumpUtil {
 
-    private static final EntityDataAccessor<Boolean> CAN_EXPLODE = SynchedEntityData.defineId(BubbleFrogEntity.class, EntityDataSerializers.BOOLEAN);
+    private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
+    private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
+    private final RawAnimation SHOOT = RawAnimation.begin().thenPlay("shoot");
+
+    // attacktype: 0 none, 1 shoot
 
     public BubbleFrogEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -47,64 +48,21 @@ public class BubbleFrogEntity extends CompanionSummonEntity {
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
 
-    public void setCanExplode(boolean canExplode) {
-        this.entityData.set(CAN_EXPLODE, canExplode);
-    }
-
-    public boolean canExplode() {
-        return this.entityData.get(CAN_EXPLODE);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CAN_EXPLODE, false);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        //if (level() instanceof ClientLevel sv)
-        //    for (int i = 0; i < 5; i++) {
-        //        sv.addParticle(ParticleTypes.SMOKE, getX(), getY() + getBbHeight(), getZ(),
-        //                0.05 * Math.random() - 0.025, -0.2, 0.05 * Math.random() - 0.025);
-        //    }
-
-        if (this.horizontalCollision || this.verticalCollision && canExplode()) {
-            explode();
-            this.discard();
-        }
-
-    }
-
-    private void explode() {
-        if (!(level() instanceof ServerLevel sv)) return;
-
-        double x = getX();
-        double y = getY() + getBbHeight() / 2;
-        double z = getZ();
-
-        sv.sendParticles(CompanionsParticles.FIREWORK_TOAD.get(), x, y, z, 1, 0,0,0, 0.1);
-        sv.sendParticles(ParticleTypes.FIREWORK, x, y, z, 20, 0,0,0, 0.05);
-        sv.sendParticles(ParticleTypes.SMOKE, x, y, z, 40, 0,0,0, 0.12);
-        for (int i = 0; i < 40; i++) {
-            sv.sendParticles(ParticleTypes.CLOUD, x, y, z,
-                    1,
-                    0.2 * (Math.random() - 0.5),
-                    0.2 * (Math.random() - 0.5),
-                    0.2 * (Math.random() - 0.5),
-                    0.1
-            );
-        }
-
-        sv.playSound(null, x, y, z, SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.AMBIENT, 4.0F, 1.0F);
-    }
-
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
+
+        this.goalSelector.addGoal(1, new BubbleFrogAttackGoal(this, 20, 100));
+
+        this.goalSelector.addGoal(4, new SummonHopToOwnerGoal<>(this, 0.725D, 6.0F, 2.0F, false));
+
+        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new CompanionsSummonHurtTargetGoal(this));
+    }
+
+    @Override
+    public void setCanAttack(boolean canAttack) {
+
     }
 
     @Override
@@ -113,6 +71,14 @@ public class BubbleFrogEntity extends CompanionSummonEntity {
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
+        if (getAttackType() == 1) {
+            event.setAnimation(SHOOT);
+        } else if (event.isMoving()) {
+            event.setAnimation(WALK);
+        } else {
+            event.setAnimation(IDLE);
+        }
+
         return PlayState.CONTINUE;
     }
 

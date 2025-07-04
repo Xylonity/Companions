@@ -20,7 +20,7 @@ public class BubbleFrogModel extends GeoModel<BubbleFrogEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(BubbleFrogEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/generic.animation.json");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/bubble_frog.animation.json");
     }
 
 }

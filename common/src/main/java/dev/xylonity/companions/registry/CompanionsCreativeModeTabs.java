@@ -34,6 +34,8 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD.get());
                                 output.accept(CompanionsItems.NEEDLE.get());
                                 output.accept(CompanionsItems.ANGEL_OF_GERTRUDE_DISC.get());
+                                output.accept(CompanionsItems.DEMON_FLESH.get());
+                                output.accept(CompanionsItems.MUTANT_FLESH.get());
 
                                 output.accept(CompanionsItems.BOOK_ICE_SHARD.get());
                                 output.accept(CompanionsItems.BOOK_ICE_TORNADO.get());
@@ -69,6 +71,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_LEGGINGS.get());
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_BOOTS.get());
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_SWORD.get());
+                                output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_SCYTHE.get());
 
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get());
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get());

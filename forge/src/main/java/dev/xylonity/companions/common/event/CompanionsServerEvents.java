@@ -17,7 +17,7 @@ public class CompanionsServerEvents {
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(CompanionsEntities.CORNELIUS.get(), CorneliusEntity.setAttributes());
         event.put(CompanionsEntities.TEDDY.get(), TeddyEntity.setAttributes());
-        event.put(CompanionsEntities.ANTLION.get(), AntlionEntity.setAttributes());
+        event.put(CompanionsEntities.ANTLION.get(), WildAntlionEntity.setAttributes());
         event.put(CompanionsEntities.DINAMO.get(), DinamoEntity.setAttributes());
         event.put(CompanionsEntities.BROKEN_DINAMO.get(), BrokenDinamoEntity.setAttributes());
         event.put(CompanionsEntities.HOSTILE_IMP.get(), HostileImpEntity.setAttributes());

@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public abstract class CompanionSummonEntity extends TamableAnimal implements GeoEntity {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     // 0 follow companion, 1 follow player
@@ -49,9 +50,6 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
             checkOwnersStatus();
         }
 
-        System.out.println("1: " + getOwner());
-        System.out.println("2" + getSecondOwner());
-
     }
 
     private void checkOwnersStatus() {
@@ -70,7 +68,9 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
 
             if (owner2 == null || !owner2.isAlive()) {
                 if (getSecondOwnerUUID() != null) {
-                    setSecondOwnerUUID(null);
+                    if (!(getOwner() instanceof CompanionEntity)) {
+                        setSecondOwnerUUID(null);
+                    }
                 }
             }
         }
@@ -78,9 +78,9 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
     }
 
     private void promoteSecondOwnerToPrimary() {
-        UUID secondOwnerUUID = getSecondOwnerUUID();
-        if (secondOwnerUUID != null) {
-            this.setOwnerUUID(secondOwnerUUID);
+        UUID cache = getSecondOwnerUUID();
+        if (cache != null) {
+            this.setOwnerUUID(cache);
             this.setSecondOwnerUUID(null);
             this.entityData.set(MAIN_ACTION, 0);
             this.setTame(true);
@@ -121,11 +121,11 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
             if (getMainAction() == 0) {
                 cycleOwners();
                 player.displayClientMessage(Component
-                        .translatable("main_action_summon.knightquestcompanions.client_message.following_companion"), true);
+                        .translatable("main_action_summon.companions.client_message.following_companion"), true);
             } else {
                 cycleOwners();
                 player.displayClientMessage(Component
-                        .translatable("main_action_summon.knightquestcompanions.client_message.following_player"), true);
+                        .translatable("main_action_summon.companions.client_message.following_player"), true);
             }
 
         }

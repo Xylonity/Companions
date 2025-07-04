@@ -3,9 +3,11 @@ package dev.xylonity.companions.common.entity.ai.cornelius.summon.goal;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.AbstractCorneliusSummonAttackGoal;
 import dev.xylonity.companions.common.entity.summon.NetherBullfrogEntity;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class NetherBullfrogSpinSlashGoal extends AbstractCorneliusSummonAttackGoal {
@@ -38,7 +40,11 @@ public class NetherBullfrogSpinSlashGoal extends AbstractCorneliusSummonAttackGo
     @Override
     public void tick() {
         LivingEntity target = summon.getTarget();
-        if (attackTicks == attackDelay() && target != null && target.isAlive()) {
+        if (target != null) {
+            summon.getLookControl().setLookAt(target, 30F, 30F);
+        }
+
+        if (attackTicks > 10 && attackTicks % 10 == 0 && attackTicks < 33 && target != null && target.isAlive()) {
             performAttack(target);
         }
 
@@ -52,7 +58,11 @@ public class NetherBullfrogSpinSlashGoal extends AbstractCorneliusSummonAttackGo
 
     @Override
     protected void performAttack(LivingEntity target) {
-
+        for (LivingEntity e : summon.level().getEntitiesOfClass(LivingEntity.class, new AABB(summon.blockPosition()).inflate(1))) {
+            if (!Util.areEntitiesLinked(e, summon) && isEntityInFront(summon, e, 120)) {
+                e.hurt(summon.damageSources().mobAttack(summon), 3f);
+            }
+        }
     }
 
     @Override

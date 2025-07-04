@@ -7,6 +7,8 @@ import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Random;
+
 public class HolinessStarAttackGoal extends AbstractSacredPontiffAttackGoal {
 
     public HolinessStarAttackGoal(SacredPontiffEntity boss, int minCd, int maxCd) {
@@ -46,16 +48,17 @@ public class HolinessStarAttackGoal extends AbstractSacredPontiffAttackGoal {
 
         for (float side : new float[]{-1.5f, 1.5f}) {
             Vec3 spawnPos = basePos.add(perpen.scale(side));
-            Vec3 firstVel = targetPos.subtract(spawnPos).normalize().scale(HolinessStartProjectile.SPEED);
+            Vec3 vel = targetPos.subtract(spawnPos).normalize().add(perpen.scale(side * 0.3)).normalize().scale(HolinessStartProjectile.SPEED);
 
-            HolinessStartProjectile startProjectile = CompanionsEntities.HOLINESS_STAR.get().create(pontiff.level());
-            if (startProjectile != null) {
-                startProjectile.setOwner(pontiff);
-                startProjectile.setTarget(target);
-                startProjectile.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
-                startProjectile.setDeltaMovement(firstVel);
-                startProjectile.setNoGravity(true);
-                pontiff.level().addFreshEntity(startProjectile);
+            HolinessStartProjectile star = CompanionsEntities.HOLINESS_STAR.get().create(pontiff.level());
+            if (star != null) {
+                star.setOwner(pontiff);
+                star.setTarget(target);
+                star.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
+                star.setDeltaMovement(vel);
+                star.setNoGravity(true);
+                star.setRed(new Random().nextBoolean());
+                pontiff.level().addFreshEntity(star);
             }
         }
 

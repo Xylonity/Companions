@@ -12,5 +12,4 @@ public class LaserRenderer extends GeoEntityRenderer<LaserTriggerProjectile> {
         super(context, new LaserModel());
     }
 
-
 }

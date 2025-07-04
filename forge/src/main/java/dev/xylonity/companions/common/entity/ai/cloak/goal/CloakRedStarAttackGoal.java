@@ -3,15 +3,18 @@ package dev.xylonity.companions.common.entity.ai.cloak.goal;
 import dev.xylonity.companions.common.entity.ai.cloak.AbstractCloakAttackGoal;
 import dev.xylonity.companions.common.entity.custom.CloakEntity;
 import dev.xylonity.companions.common.entity.custom.MankhEntity;
+import dev.xylonity.companions.common.entity.projectile.HolinessStartProjectile;
 import dev.xylonity.companions.common.entity.projectile.LaserRingProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Random;
+
 public class CloakRedStarAttackGoal extends AbstractCloakAttackGoal {
 
     public CloakRedStarAttackGoal(CloakEntity cloak, int minCd, int maxCd) {
-        super(cloak, 21, minCd, maxCd);
+        super(cloak, 20, minCd, maxCd);
     }
 
     @Override
@@ -56,17 +59,25 @@ public class CloakRedStarAttackGoal extends AbstractCloakAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        LaserRingProjectile ring = CompanionsEntities.LASER_RING.get().create(cloak.level());
-        if (ring != null) {
-            ring.setPos(cloak.position().x, cloak.position().y + 0.15, cloak.position().z);
-            ring.setOwner(cloak);
-            cloak.level().addFreshEntity(ring);
+        Vec3 targetPos = target.position().add(0, target.getEyeHeight(), 0);
+        Vec3 spawnPos = cloak.position().add(0, cloak.getBbHeight() * 0.5, 0);
+        Vec3 vel = targetPos.subtract(spawnPos).normalize().normalize().scale(HolinessStartProjectile.SPEED);
+
+        HolinessStartProjectile star = CompanionsEntities.HOLINESS_STAR.get().create(cloak.level());
+        if (star != null) {
+            star.setOwner(cloak);
+            star.setTarget(target);
+            star.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
+            star.setDeltaMovement(vel);
+            star.setNoGravity(true);
+            star.setRed(true);
+            cloak.level().addFreshEntity(star);
         }
     }
 
     @Override
     protected int attackDelay() {
-        return 14;
+        return 12;
     }
 
     @Override

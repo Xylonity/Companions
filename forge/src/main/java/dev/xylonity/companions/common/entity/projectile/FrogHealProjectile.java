@@ -71,7 +71,9 @@ public class FrogHealProjectile extends BaseProjectile {
     }
 
     public void spawnParticles() {
-        level().addParticle(KnightLibParticles.STARSET.get(), getX(), getY() + getBbHeight() * 0.5, getZ(), 0, 0, 0);
+        if (tickCount % 8 == 0) {
+            level().addParticle(KnightLibParticles.STARSET.get(), getX(), getY() + getBbHeight() * 0.5, getZ(), 0, 0, 0);
+        }
     }
 
     @Override
@@ -92,9 +94,7 @@ public class FrogHealProjectile extends BaseProjectile {
             setXRot((float) (Mth.atan2(v.y, v.horizontalDistance()) * Mth.RAD_TO_DEG));
         }
 
-        if (tickCount % 8 == 0) {
-            spawnParticles();
-        }
+        spawnParticles();
 
         if (!this.onGround()) {
             Vec3 pos = this.position();

@@ -76,10 +76,8 @@ public class LaserTriggerProjectile extends BaseProjectile {
                 mankh.setYRot(yaw);
                 mankh.setXRot(pitch);
 
-                Vec3 base = mankh.position().add(0, mankh.getBbHeight() * 0.5, 0);
-                Vec3 anchored = base.add(directionToTarget.scale(0.05));
-
-                this.moveTo(anchored.x, anchored.y, anchored.z);
+                Vec3 alpha = mankh.position().add(0, mankh.getBbHeight() * 0.5, 0).add(directionToTarget.scale(0.05));
+                this.moveTo(alpha.x, alpha.y, alpha.z);
                 this.setYRot(yaw);
                 this.setXRot(pitch);
             }
@@ -88,12 +86,12 @@ public class LaserTriggerProjectile extends BaseProjectile {
         if (!level().isClientSide && target != null) {
             Vec3 start = this.position();
             Vec3 targetPos = target.getEyePosition();
-            ClipContext ctx = new ClipContext(start, targetPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this);
-            BlockHitResult hit = level().clip(ctx);
+
+            BlockHitResult hit = level().clip(new ClipContext(start, targetPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
             Vec3 end = (hit.getType() == BlockHitResult.Type.BLOCK && !level().getBlockState(hit.getBlockPos()).getCollisionShape(level(), hit.getBlockPos()).isEmpty()) ? hit.getLocation() : targetPos;
 
-            AABB beamBB = new AABB(start, end).inflate(0.25);
-            List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, beamBB, e -> e != getOwner());
+            AABB bb = new AABB(start, end).inflate(0.25);
+            List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, bb, e -> e != getOwner());
 
             for (LivingEntity e : entities) {
                 if (getOwner() instanceof LivingEntity le) {

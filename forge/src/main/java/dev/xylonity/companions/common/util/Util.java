@@ -155,8 +155,8 @@ public class Util {
             collectOwners(projectile.getOwner(), result, visited);
         }
 
-        if (current instanceof OwnableEntity ow) {
-            UUID ownerUuid = ow.getOwnerUUID();
+        if (current instanceof OwnableEntity owE) {
+            UUID ownerUuid = owE.getOwnerUUID();
             if (ownerUuid != null) {
                 result.add(ownerUuid);
 

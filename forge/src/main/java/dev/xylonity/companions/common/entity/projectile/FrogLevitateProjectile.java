@@ -50,7 +50,9 @@ public class FrogLevitateProjectile extends FrogHealProjectile {
 
     @Override
     public void spawnParticles() {
-        level().addParticle(ParticleTypes.END_ROD, getX(), getY() + getBbHeight() * 0.5, getZ(), 0, 0, 0);
+        if (tickCount % 8 == 0) {
+            level().addParticle(ParticleTypes.END_ROD, getX(), getY() + getBbHeight() * 0.5, getZ(), 0, 0, 0);
+        }
     }
 
     @Override

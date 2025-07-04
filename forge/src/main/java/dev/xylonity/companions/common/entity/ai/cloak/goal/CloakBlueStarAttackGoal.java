@@ -3,15 +3,18 @@ package dev.xylonity.companions.common.entity.ai.cloak.goal;
 import dev.xylonity.companions.common.entity.ai.cloak.AbstractCloakAttackGoal;
 import dev.xylonity.companions.common.entity.custom.CloakEntity;
 import dev.xylonity.companions.common.entity.custom.MankhEntity;
+import dev.xylonity.companions.common.entity.projectile.HolinessStartProjectile;
 import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Random;
+
 public class CloakBlueStarAttackGoal extends AbstractCloakAttackGoal {
 
     public CloakBlueStarAttackGoal(CloakEntity cloak, int minCd, int maxCd) {
-        super(cloak, 80, minCd, maxCd);
+        super(cloak, 20, minCd, maxCd);
     }
 
     @Override
@@ -51,23 +54,25 @@ public class CloakBlueStarAttackGoal extends AbstractCloakAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        Vec3 dir = target.getEyePosition().subtract(cloak.getEyePosition()).normalize();
+        Vec3 targetPos = target.position().add(0, target.getEyeHeight(), 0);
+        Vec3 spawnPos = cloak.position().add(0, cloak.getBbHeight() * 0.5, 0);
+        Vec3 vel = targetPos.subtract(spawnPos).normalize().normalize().scale(HolinessStartProjectile.SPEED);
 
-        LaserTriggerProjectile laser = CompanionsEntities.LASER_PROJECTILE.get().create(cloak.level());
-        if (laser != null) {
-            Vec3 base = cloak.position().add(0, cloak.getBbHeight() * 0.5, 0);
-            Vec3 spawn = base.add(dir.scale(0.05));
-
-            laser.setPos(spawn.x, spawn.y, spawn.z);
-            laser.setOwner(cloak);
-            laser.setTarget(target);
-            cloak.level().addFreshEntity(laser);
+        HolinessStartProjectile star = CompanionsEntities.HOLINESS_STAR.get().create(cloak.level());
+        if (star != null) {
+            star.setOwner(cloak);
+            star.setTarget(target);
+            star.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
+            star.setDeltaMovement(vel);
+            star.setNoGravity(true);
+            star.setRed(false);
+            cloak.level().addFreshEntity(star);
         }
     }
 
     @Override
     protected int attackDelay() {
-        return 14;
+        return 12;
     }
 
     @Override

@@ -45,10 +45,10 @@ public class CloakEntity extends CompanionEntity {
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
     private final RawAnimation RED_STAR = RawAnimation.begin().thenPlay("red_star");
-    private final RawAnimation BLUE_STAR = RawAnimation.begin().thenPlay("blue_star");
+    private final RawAnimation BLUE_STAR = RawAnimation.begin().thenPlay("blue_star2");
     private final RawAnimation INVISIBILITY = RawAnimation.begin().thenPlay("invisibility");
 
-    // 0 none, 1 red, 2 blue, 3 invisibility
+    // 0 none, 1 blue, 2 red, 3 invisibility
     private static final EntityDataAccessor<Integer> ATTACK_TYPE = SynchedEntityData.defineId(CloakEntity.class, EntityDataSerializers.INT);
 
     public CloakEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
@@ -89,8 +89,8 @@ public class CloakEntity extends CompanionEntity {
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
         this.goalSelector.addGoal(1, new CloakInvisibilityGoal(this, 200, 1200));
-        this.goalSelector.addGoal(1, new CloakBlueStarAttackGoal(this, 10, 30));
-        this.goalSelector.addGoal(1, new CloakRedStarAttackGoal(this, 10, 30));
+        this.goalSelector.addGoal(1, new CloakBlueStarAttackGoal(this, 20, 160));
+        this.goalSelector.addGoal(1, new CloakRedStarAttackGoal(this, 20, 160));
 
         this.goalSelector.addGoal(3, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(3, new CompanionRandomStrollGoal(this, 0.43));

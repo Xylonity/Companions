@@ -63,6 +63,23 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     }
 
     @Override
+    public void checkDespawn() {
+        if (isTame() && shouldKeepChunkLoaded()) return;
+
+        super.checkDespawn();
+    }
+
+    @Override
+    public boolean isPersistenceRequired() {
+        return isTame() && shouldKeepChunkLoaded();
+    }
+
+    @Override
+    public boolean requiresCustomPersistence() {
+        return isTame() && shouldKeepChunkLoaded();
+    }
+
+    @Override
     public void remove(@NotNull RemovalReason pReason) {
         if (level() instanceof ServerLevel level && lastChunkPos != null) {
             level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);

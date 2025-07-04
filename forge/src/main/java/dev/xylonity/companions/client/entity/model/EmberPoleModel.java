@@ -20,7 +20,7 @@ public class EmberPoleModel extends GeoModel<EmberPoleEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(EmberPoleEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/generic.animation.json");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/ember_pole.animation.json");
     }
 
 }

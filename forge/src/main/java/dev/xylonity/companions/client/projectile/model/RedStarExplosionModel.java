@@ -18,7 +18,7 @@ public class RedStarExplosionModel extends GeoModel<RedStarExplosion> {
         int perTick = 1;
 
         int frameIndex = (animatable.tickCount / perTick) % frames;
-        return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/red_star_explosion_%d.png", frameIndex));
+        return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/red_star_explosion_center_%d.png", frameIndex));
     }
 
     @Override
