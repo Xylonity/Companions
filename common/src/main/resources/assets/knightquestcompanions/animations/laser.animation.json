@@ -6,7 +6,7 @@
 			"bones": {
 				"asda": {
 					"rotation": {
-						"vector": [0, 0, "(-(query.anim_time + 0.25)*150)"]
+						"vector": [0, 0, 0]
 					},
 					"scale": {
 						"vector": ["(math.cos(query.anim_time*320)+1)/20 + 1", "(math.cos(query.anim_time*320)+1)/20 + 1", "(math.cos(query.anim_time*320)+1)/20 + 1"]
