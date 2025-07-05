@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.entity.custom.ShadeMawEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
+import dev.xylonity.companions.common.event.CameraShakeManager;
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -41,6 +42,11 @@ public class ClientProxy implements IProxy {
 
             Minecraft.getInstance().particleEngine.add(new RedElectricArcParticle((ClientLevel) level, start, end, 0.6, 0.35, true, 8));
         }
+    }
+
+    @Override
+    public void shakePlayerCamera(Player player, int durationTicks, float intensityX, float intensityY, float intensityZ, int fadeStartTick) {
+        CameraShakeManager.shakePlayer(player, durationTicks, intensityX, intensityY, intensityZ, fadeStartTick);
     }
 
     @Override

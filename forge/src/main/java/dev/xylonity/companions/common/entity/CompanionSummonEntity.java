@@ -118,14 +118,14 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
         this.entityData.set(MAIN_ACTION, (getMainAction() + 1) % 2);
 
         if (player != null) {
-            if (getMainAction() == 0) {
-                cycleOwners();
+            cycleOwners();
+            if (getOwner() instanceof Player) {
                 player.displayClientMessage(Component
-                        .translatable("main_action_summon.companions.client_message.following_companion"), true);
+                        .translatable("main_action_summon.companions.client_message.following_player"), true);
             } else {
                 cycleOwners();
                 player.displayClientMessage(Component
-                        .translatable("main_action_summon.companions.client_message.following_player"), true);
+                        .translatable("main_action_summon.companions.client_message.following_companion"), true);
             }
 
         }

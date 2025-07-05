@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.hostile;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -38,6 +40,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 import javax.annotation.Nullable;
+import java.util.Set;
 
 public class SacredPontiffEntity extends HostileEntity implements IBossMusicProvider {
 
@@ -76,8 +79,8 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     // Caps
     private static final int ANIMATION_ACTIVATION_MAX_TICKS = 65;
     private static final int ANIMATION_PHASE2_DEAD = 153;
-    private static final int ANIMATION_TRANSFORMATION_MAX_TICKS = 138;
-    private static final int ANIMATION_APPEAR_MAX_TICKS = 115; // Healing ticks too
+    private static final int ANIMATION_TRANSFORMATION_MAX_TICKS = 166;
+    private static final int ANIMATION_APPEAR_MAX_TICKS = 158; // Healing ticks too
     private static final int INVISIBLE_BETWEEN_PHASE_TICKS = 60;
     private static final int PHASE_2_MAX_HEALTH = 350;
 
@@ -86,7 +89,11 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     private boolean hasAppeared;
     private boolean isTransforming;
 
+    private int secondPhaseAppearCounter;
+
     private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
+
+    private static final Set<Integer> SHAKE_TICKS = Set.of(70, 80, 93, 104, 117, 128, 159);
 
     public SacredPontiffEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -97,6 +104,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.setNoMovement(true);
         this.setMaxUpStep(1f);
         this.bossInfo.setCreateWorldFog(true);
+        this.secondPhaseAppearCounter = 0;
     }
 
     @Override
@@ -180,6 +188,16 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
         if (getTicksFrozen() > 0) setTicksFrozen(0);
         if (isOnFire()) extinguishFire();
+
+        if (shouldPlayAppearAnimation() && level().isClientSide) {
+            if (SHAKE_TICKS.contains(secondPhaseAppearCounter)) {
+                for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                    Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+                }
+            }
+
+            secondPhaseAppearCounter++;
+        }
 
         super.tick();
 

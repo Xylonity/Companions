@@ -42,7 +42,7 @@ public class BubbleFrogEntity extends CompanionSummonEntity implements IFrogJump
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 10)
-                .add(Attributes.ATTACK_DAMAGE, 5f)
+                .add(Attributes.ATTACK_DAMAGE, 1f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
@@ -52,7 +52,7 @@ public class BubbleFrogEntity extends CompanionSummonEntity implements IFrogJump
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
-        this.goalSelector.addGoal(1, new BubbleFrogAttackGoal(this, 20, 100));
+        this.goalSelector.addGoal(1, new BubbleFrogAttackGoal(this, 20, 140));
 
         this.goalSelector.addGoal(4, new SummonHopToOwnerGoal<>(this, 0.725D, 6.0F, 2.0F, false));
 

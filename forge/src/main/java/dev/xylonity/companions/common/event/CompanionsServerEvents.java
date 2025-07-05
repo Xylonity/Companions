@@ -5,7 +5,6 @@ import dev.xylonity.companions.common.entity.custom.*;
 import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.summon.*;
 import dev.xylonity.companions.registry.CompanionsEntities;
-import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,7 +16,7 @@ public class CompanionsServerEvents {
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(CompanionsEntities.CORNELIUS.get(), CorneliusEntity.setAttributes());
         event.put(CompanionsEntities.TEDDY.get(), TeddyEntity.setAttributes());
-        event.put(CompanionsEntities.ANTLION.get(), WildAntlionEntity.setAttributes());
+        event.put(CompanionsEntities.ANTLION.get(), AntlionEntity.setAttributes());
         event.put(CompanionsEntities.DINAMO.get(), DinamoEntity.setAttributes());
         event.put(CompanionsEntities.BROKEN_DINAMO.get(), BrokenDinamoEntity.setAttributes());
         event.put(CompanionsEntities.HOSTILE_IMP.get(), HostileImpEntity.setAttributes());
@@ -29,7 +28,7 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.PUPPET.get(), PuppetEntity.setAttributes());
         event.put(CompanionsEntities.PUPPET_GLOVE.get(), PuppetGloveEntity.setAttributes());
         event.put(CompanionsEntities.SHADE_SWORD.get(), ShadeSwordEntity.setAttributes());
-        event.put(CompanionsEntities.SHADE_MAW.get(), Skeleton.createAttributes().build());
+        event.put(CompanionsEntities.SHADE_MAW.get(), ShadeMawEntity.setAttributes());
         event.put(CompanionsEntities.MANKH.get(), MankhEntity.setAttributes());
         event.put(CompanionsEntities.CLOAK.get(), CloakEntity.setAttributes());
 

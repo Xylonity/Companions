@@ -4,10 +4,10 @@ import dev.xylonity.companions.common.entity.ai.antlion.tamable.AbstractAntlionA
 import dev.xylonity.companions.common.entity.custom.AntlionEntity;
 import net.minecraft.world.entity.LivingEntity;
 
-public class AntlionPupaAttackGoal extends AbstractAntlionAttackGoal {
+public class AntlionSoldierAttackGoal extends AbstractAntlionAttackGoal {
 
-    public AntlionPupaAttackGoal(AntlionEntity antlion, int minCd, int maxCd) {
-        super(antlion, 15, minCd, maxCd);
+    public AntlionSoldierAttackGoal(AntlionEntity antlion, int minCd, int maxCd) {
+        super(antlion, 20, minCd, maxCd);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AntlionPupaAttackGoal extends AbstractAntlionAttackGoal {
 
     @Override
     protected int attackDelay() {
-        return 6;
+        return 7;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class AntlionPupaAttackGoal extends AbstractAntlionAttackGoal {
 
     @Override
     protected int variant() {
-        return 1;
+        return 3;
     }
 
 }

@@ -77,7 +77,7 @@ public class FrogLevitateProjectile extends FrogHealProjectile {
             }
         }
 
-        this.discard();
+        this.remove(RemovalReason.KILLED);
     }
 
     @Nullable

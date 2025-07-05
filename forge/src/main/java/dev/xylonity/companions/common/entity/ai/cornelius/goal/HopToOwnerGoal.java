@@ -62,9 +62,9 @@ public class HopToOwnerGoal<T extends CompanionEntity & IFrogJumpUtil> extends C
 
         }
 
-        if (cycleCounter == 20) cycleCounter = 0;
-
         cycleCounter++;
+
+        if (cycleCounter >= 20) cycleCounter = 0;
     }
 
 }

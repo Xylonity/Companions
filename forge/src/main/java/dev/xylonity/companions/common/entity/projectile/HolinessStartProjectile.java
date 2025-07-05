@@ -192,6 +192,7 @@ public class HolinessStartProjectile extends BaseProjectile {
                 }
             }
         }
+
     }
 
     public boolean isRed() {

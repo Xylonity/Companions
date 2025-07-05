@@ -17,7 +17,6 @@ public class SummonHopToOwnerGoal<T extends CompanionSummonEntity & IFrogJumpUti
 
     public boolean canUse() {
         LivingEntity owner = this.tamable.getOwner();
-        //if (this.tamable.getMainAction() != 1) return false;
         if (((IFrogJumpUtil) tamable).getAttackType() != 0) return false;
         if (owner == null) return false;
         if (owner.isSpectator()) return false;
@@ -62,9 +61,9 @@ public class SummonHopToOwnerGoal<T extends CompanionSummonEntity & IFrogJumpUti
 
         }
 
-        if (cycleCounter == 20) cycleCounter = 0;
-
         cycleCounter++;
+
+        if (cycleCounter >= 20) cycleCounter = 0;
     }
 
 }

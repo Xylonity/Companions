@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.custom.ShadeMawEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public interface IProxy {
@@ -17,5 +18,6 @@ public interface IProxy {
     default void spawnShadeAltarParticles(AbstractShadeAltarBlockEntity e, Level level, float r, float g, float b, double radius) { ;; }
     default void tickLaserTriggerProjectile(LaserTriggerProjectile e) { ;; }
     default void tickShadeMaw(ShadeMawEntity e) { ;; }
+    default void shakePlayerCamera(Player player, int durationTicks, float intensityX, float intensityY, float intensityZ, int fadeStartTick) { ;; }
 
 }
