@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.container;
 
-import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
+import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
 import dev.xylonity.companions.registry.CompanionsMenuTypes;
 import net.minecraft.world.Container;

@@ -1,15 +1,8 @@
 package dev.xylonity.companions.common.entity.ai.antlion.tamable.goal;
 
 import dev.xylonity.companions.common.entity.ai.antlion.tamable.AbstractAntlionAttackGoal;
-import dev.xylonity.companions.common.entity.ai.cloak.AbstractCloakAttackGoal;
-import dev.xylonity.companions.common.entity.custom.AntlionEntity;
-import dev.xylonity.companions.common.entity.custom.CloakEntity;
-import dev.xylonity.companions.registry.CompanionsEffects;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffectInstance;
+import dev.xylonity.companions.common.entity.companion.AntlionEntity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 
 public class AntlionBaseAttackGoal extends AbstractAntlionAttackGoal {
 

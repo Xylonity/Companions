@@ -1,15 +1,11 @@
 package dev.xylonity.companions.common.entity.ai.cloak.goal;
 
 import dev.xylonity.companions.common.entity.ai.cloak.AbstractCloakAttackGoal;
-import dev.xylonity.companions.common.entity.custom.CloakEntity;
-import dev.xylonity.companions.common.entity.custom.MankhEntity;
+import dev.xylonity.companions.common.entity.companion.CloakEntity;
 import dev.xylonity.companions.common.entity.projectile.HolinessStartProjectile;
-import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.Random;
 
 public class CloakBlueStarAttackGoal extends AbstractCloakAttackGoal {
 

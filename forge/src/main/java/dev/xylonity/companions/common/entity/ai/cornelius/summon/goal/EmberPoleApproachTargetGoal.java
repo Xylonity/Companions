@@ -1,6 +1,5 @@
 package dev.xylonity.companions.common.entity.ai.cornelius.summon.goal;
 
-import dev.xylonity.companions.common.entity.custom.TeddyEntity;
 import dev.xylonity.companions.common.entity.summon.EmberPoleEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;

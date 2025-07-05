@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.mankh;
 
-import dev.xylonity.companions.common.entity.custom.MankhEntity;
+import dev.xylonity.companions.common.entity.companion.MankhEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 

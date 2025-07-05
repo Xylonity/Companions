@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.entity.hostile;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
-import dev.xylonity.companions.common.entity.custom.DinamoEntity;
+import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.registry.KnightLibItems;
 import net.minecraft.ChatFormatting;

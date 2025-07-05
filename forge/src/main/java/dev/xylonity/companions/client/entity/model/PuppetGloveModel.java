@@ -1,7 +1,7 @@
 package dev.xylonity.companions.client.entity.model;
 
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.common.entity.custom.PuppetGloveEntity;
+import dev.xylonity.companions.common.entity.companion.PuppetGloveEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

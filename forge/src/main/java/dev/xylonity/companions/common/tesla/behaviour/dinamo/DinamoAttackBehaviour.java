@@ -1,16 +1,14 @@
 package dev.xylonity.companions.common.tesla.behaviour.dinamo;
 
-import dev.xylonity.companions.common.entity.custom.DinamoEntity;
+import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
 import dev.xylonity.companions.registry.CompanionsParticles;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {

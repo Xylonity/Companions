@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.croissant;
 
-import dev.xylonity.companions.common.entity.custom.CroissantDragonEntity;
+import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
 import dev.xylonity.companions.common.particle.CakeCreamParticle;
 import dev.xylonity.companions.registry.CompanionsEntities;

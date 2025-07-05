@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.minion;
 
-import dev.xylonity.companions.common.entity.custom.MinionEntity;
+import dev.xylonity.companions.common.entity.companion.MinionEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 

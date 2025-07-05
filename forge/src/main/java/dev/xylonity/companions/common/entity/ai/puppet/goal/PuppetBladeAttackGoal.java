@@ -1,12 +1,10 @@
 package dev.xylonity.companions.common.entity.ai.puppet.goal;
 
 import dev.xylonity.companions.common.entity.ai.puppet.AbstractPuppetAttackGoal;
-import dev.xylonity.companions.common.entity.custom.PuppetEntity;
+import dev.xylonity.companions.common.entity.companion.PuppetEntity;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 
 public class PuppetBladeAttackGoal extends AbstractPuppetAttackGoal {
 

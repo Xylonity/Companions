@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.soul_mage;
 
-import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
+import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;

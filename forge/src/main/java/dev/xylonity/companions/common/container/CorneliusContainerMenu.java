@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.container;
 
-import dev.xylonity.companions.common.entity.custom.CorneliusEntity;
+import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.registry.CompanionsMenuTypes;
 import net.minecraft.world.Container;

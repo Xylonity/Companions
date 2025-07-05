@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.puppet.glove;
 
-import dev.xylonity.companions.common.entity.custom.PuppetGloveEntity;
+import dev.xylonity.companions.common.entity.companion.PuppetGloveEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 

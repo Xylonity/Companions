@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
-import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
+import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;

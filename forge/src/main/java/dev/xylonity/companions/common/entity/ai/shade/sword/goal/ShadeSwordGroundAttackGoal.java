@@ -2,17 +2,13 @@ package dev.xylonity.companions.common.entity.ai.shade.sword.goal;
 
 import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.common.entity.ai.shade.AbstractShadeAttackGoal;
-import dev.xylonity.companions.common.entity.custom.ShadeSwordEntity;
+import dev.xylonity.companions.common.entity.companion.ShadeSwordEntity;
 import dev.xylonity.companions.common.entity.projectile.ShadeSwordImpactProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class ShadeSwordGroundAttackGoal extends AbstractShadeAttackGoal {

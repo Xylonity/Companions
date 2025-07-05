@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.shade.sword;
 
-import dev.xylonity.companions.common.entity.custom.GoldenAllayEntity;
-import dev.xylonity.companions.common.entity.custom.ShadeSwordEntity;
+import dev.xylonity.companions.common.entity.companion.ShadeSwordEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.phys.Vec3;

@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.entity.ai.puppet.glove.goal;
 
 import dev.xylonity.companions.common.entity.ai.puppet.glove.AbstractPuppetGloveAttackGoal;
-import dev.xylonity.companions.common.entity.custom.PuppetGloveEntity;
+import dev.xylonity.companions.common.entity.companion.PuppetGloveEntity;
 import net.minecraft.world.entity.LivingEntity;
 
 public class PuppetGloveAttackGoal extends AbstractPuppetGloveAttackGoal {

@@ -1,9 +1,7 @@
 package dev.xylonity.companions.client.entity.renderer;
 
 import dev.xylonity.companions.client.entity.model.ShadeMawModel;
-import dev.xylonity.companions.client.entity.model.ShadeSwordModel;
-import dev.xylonity.companions.common.entity.custom.ShadeMawEntity;
-import dev.xylonity.companions.common.entity.custom.ShadeSwordEntity;
+import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 

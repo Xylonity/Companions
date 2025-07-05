@@ -1,12 +1,10 @@
 package dev.xylonity.companions.common.entity.ai.minion.imp;
 
 import dev.xylonity.companions.common.entity.ai.minion.AbstractMinionAttackGoal;
-import dev.xylonity.companions.common.entity.custom.MinionEntity;
-import dev.xylonity.companions.common.entity.projectile.BraceProjectile;
+import dev.xylonity.companions.common.entity.companion.MinionEntity;
 import dev.xylonity.companions.common.entity.projectile.FireMarkRingProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 
 public class ImpFireMarkAttackGoal extends AbstractMinionAttackGoal {
 

@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity;
 
-import dev.xylonity.companions.common.entity.custom.CorneliusEntity;
+import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import dev.xylonity.companions.common.util.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

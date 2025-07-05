@@ -3,7 +3,7 @@ package dev.xylonity.companions.common.item;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
-import dev.xylonity.companions.common.entity.custom.DinamoEntity;
+import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

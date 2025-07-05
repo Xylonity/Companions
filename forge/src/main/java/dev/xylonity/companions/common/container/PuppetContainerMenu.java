@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.container;
 
-import dev.xylonity.companions.common.entity.custom.PuppetEntity;
+import dev.xylonity.companions.common.entity.companion.PuppetEntity;
 import dev.xylonity.companions.common.item.PuppetArm;
 import dev.xylonity.companions.registry.CompanionsMenuTypes;
 import net.minecraft.world.Container;

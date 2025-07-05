@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.tesla.behaviour.dinamo;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
-import dev.xylonity.companions.common.entity.custom.DinamoEntity;
+import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
 import net.minecraft.world.level.block.entity.BlockEntity;

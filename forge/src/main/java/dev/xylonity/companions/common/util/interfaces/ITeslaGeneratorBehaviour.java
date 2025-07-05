@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.util.interfaces;
 
-import dev.xylonity.companions.common.entity.custom.DinamoEntity;
+import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 
 /**
  * Strategy interface for current–generation behavior.

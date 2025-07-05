@@ -2,7 +2,7 @@ package dev.xylonity.companions.proxy;
 
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
-import dev.xylonity.companions.common.entity.custom.ShadeMawEntity;
+import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;

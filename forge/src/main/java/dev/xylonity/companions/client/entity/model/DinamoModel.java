@@ -2,8 +2,7 @@ package dev.xylonity.companions.client.entity.model;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
-import dev.xylonity.companions.common.entity.custom.DinamoEntity;
+import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

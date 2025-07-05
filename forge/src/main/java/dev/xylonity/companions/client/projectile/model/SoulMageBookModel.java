@@ -1,7 +1,7 @@
 package dev.xylonity.companions.client.projectile.model;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
+import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.companions.common.entity.projectile.SoulMageBookEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;

@@ -1,7 +1,7 @@
 package dev.xylonity.companions.client.entity.renderer;
 
 import dev.xylonity.companions.client.entity.model.CorneliusModel;
-import dev.xylonity.companions.common.entity.custom.CorneliusEntity;
+import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 

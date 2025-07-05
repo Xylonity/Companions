@@ -3,7 +3,7 @@ package dev.xylonity.companions.client.entity.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.client.entity.model.CloakModel;
-import dev.xylonity.companions.common.entity.custom.CloakEntity;
+import dev.xylonity.companions.common.entity.companion.CloakEntity;
 import dev.xylonity.companions.common.util.interfaces.IPhantomEffectEntity;
 import dev.xylonity.companions.common.util.PhantomVisibility;
 import net.minecraft.client.Minecraft;

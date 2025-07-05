@@ -1,9 +1,8 @@
 package dev.xylonity.companions.common.entity.ai.antlion.tamable.goal;
 
 import dev.xylonity.companions.common.entity.ai.antlion.tamable.AbstractAntlionAttackGoal;
-import dev.xylonity.companions.common.entity.custom.AntlionEntity;
+import dev.xylonity.companions.common.entity.companion.AntlionEntity;
 import dev.xylonity.companions.common.entity.projectile.AntlionSandProjectile;
-import dev.xylonity.companions.common.entity.projectile.FrogEggProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;

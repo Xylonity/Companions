@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.teddy.goal;
 
-import dev.xylonity.companions.common.entity.custom.TeddyEntity;
+import dev.xylonity.companions.common.entity.companion.TeddyEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;

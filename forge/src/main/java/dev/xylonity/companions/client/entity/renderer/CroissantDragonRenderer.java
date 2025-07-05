@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.entity.model.CroissantDragonModel;
-import dev.xylonity.companions.common.entity.custom.CroissantDragonEntity;
+import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

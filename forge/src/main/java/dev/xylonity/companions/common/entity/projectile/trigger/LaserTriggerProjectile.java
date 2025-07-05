@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.entity.projectile.trigger;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
-import dev.xylonity.companions.common.entity.custom.MankhEntity;
+import dev.xylonity.companions.common.entity.companion.MankhEntity;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

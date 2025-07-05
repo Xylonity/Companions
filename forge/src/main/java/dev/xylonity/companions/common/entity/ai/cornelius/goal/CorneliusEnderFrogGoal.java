@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.entity.ai.cornelius.goal;
 
 import dev.xylonity.companions.common.entity.ai.cornelius.AbstractCorneliusAttackGoal;
-import dev.xylonity.companions.common.entity.custom.CorneliusEntity;
+import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import dev.xylonity.companions.common.entity.projectile.ScrollProjectile;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;

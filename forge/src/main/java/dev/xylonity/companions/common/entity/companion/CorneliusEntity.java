@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.entity.custom;
+package dev.xylonity.companions.common.entity.companion;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.container.CorneliusContainerMenu;

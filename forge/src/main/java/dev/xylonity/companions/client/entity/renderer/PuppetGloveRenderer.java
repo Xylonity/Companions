@@ -2,7 +2,7 @@ package dev.xylonity.companions.client.entity.renderer;
 
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.entity.model.PuppetGloveModel;
-import dev.xylonity.companions.common.entity.custom.PuppetGloveEntity;
+import dev.xylonity.companions.common.entity.companion.PuppetGloveEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;

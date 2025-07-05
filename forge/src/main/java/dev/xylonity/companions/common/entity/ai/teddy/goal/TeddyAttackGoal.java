@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.entity.ai.teddy.goal;
 
 import dev.xylonity.companions.common.entity.ai.teddy.AbstractTeddyAttackGoal;
-import dev.xylonity.companions.common.entity.custom.TeddyEntity;
+import dev.xylonity.companions.common.entity.companion.TeddyEntity;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;

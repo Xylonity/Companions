@@ -2,7 +2,7 @@ package dev.xylonity.companions.client;
 
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
-import dev.xylonity.companions.common.entity.custom.ShadeMawEntity;
+import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
 import dev.xylonity.companions.common.event.CameraShakeManager;
 import dev.xylonity.companions.common.particle.*;

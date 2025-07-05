@@ -1,10 +1,7 @@
-package dev.xylonity.companions.common.entity.custom;
+package dev.xylonity.companions.common.entity.companion;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
-import dev.xylonity.companions.common.entity.ai.cloak.goal.CloakBlueStarAttackGoal;
-import dev.xylonity.companions.common.entity.ai.cloak.goal.CloakInvisibilityGoal;
-import dev.xylonity.companions.common.entity.ai.cloak.goal.CloakRedStarAttackGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
@@ -17,7 +14,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -31,7 +27,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -39,20 +34,21 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class CloakEntity extends CompanionEntity {
+public class MankhEntity extends CompanionEntity {
 
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
-    private final RawAnimation RED_STAR = RawAnimation.begin().thenPlay("red_star");
-    private final RawAnimation BLUE_STAR = RawAnimation.begin().thenPlay("blue_star2");
-    private final RawAnimation INVISIBILITY = RawAnimation.begin().thenPlay("invisibility");
+    private final RawAnimation SIT2 = RawAnimation.begin().thenPlay("sit2");
+    private final RawAnimation CHEST_SHOT = RawAnimation.begin().thenPlay("chest_shot");
+    private final RawAnimation RING_ATTACK = RawAnimation.begin().thenPlay("ring_attack");
 
-    // 0 none, 1 blue, 2 red, 3 invisibility
-    private static final EntityDataAccessor<Integer> ATTACK_TYPE = SynchedEntityData.defineId(CloakEntity.class, EntityDataSerializers.INT);
+    // 0 none, 1 chest shot, 2 ring attack
+    private static final EntityDataAccessor<Integer> ATTACK_TYPE = SynchedEntityData.defineId(MankhEntity.class, EntityDataSerializers.INT);
 
-    public CloakEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+    public MankhEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        this.noCulling = true;
     }
 
     @Override
@@ -62,7 +58,7 @@ public class CloakEntity extends CompanionEntity {
 
     @Override
     protected int sitAnimationsAmount() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -88,9 +84,8 @@ public class CloakEntity extends CompanionEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
-        this.goalSelector.addGoal(1, new CloakInvisibilityGoal(this, 200, 1200));
-        this.goalSelector.addGoal(1, new CloakBlueStarAttackGoal(this, 20, 160));
-        this.goalSelector.addGoal(1, new CloakRedStarAttackGoal(this, 20, 160));
+        this.goalSelector.addGoal(1, new MankhChestShotAttackGoal(this, 10, 30));
+        this.goalSelector.addGoal(1, new MankhRingAttackGoal(this, 10, 30));
 
         this.goalSelector.addGoal(3, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(3, new CompanionRandomStrollGoal(this, 0.43));
@@ -173,13 +168,11 @@ public class CloakEntity extends CompanionEntity {
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
 
         if (this.getMainAction() == 0) {
-            event.getController().setAnimation(SIT);
+            event.getController().setAnimation(getSitVariation() == 0 ? SIT : SIT2);
         } else if (getAttackType() == 1) {
-            event.getController().setAnimation(BLUE_STAR);
+            event.getController().setAnimation(CHEST_SHOT);
         } else if (getAttackType() == 2) {
-            event.getController().setAnimation(RED_STAR);
-        } else if (getAttackType() == 3) {
-            event.getController().setAnimation(INVISIBILITY);
+            event.getController().setAnimation(RING_ATTACK);
         } else if (event.isMoving()) {
             event.getController().setAnimation(WALK);
         } else {

@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.common.entity.custom.SoulMageEntity;
+import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

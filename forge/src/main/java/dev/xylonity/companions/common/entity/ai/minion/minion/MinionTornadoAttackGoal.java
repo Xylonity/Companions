@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.entity.ai.minion.minion;
 
 import dev.xylonity.companions.common.entity.ai.minion.AbstractMinionAttackGoal;
-import dev.xylonity.companions.common.entity.custom.MinionEntity;
+import dev.xylonity.companions.common.entity.companion.MinionEntity;
 import dev.xylonity.companions.common.entity.projectile.TornadoProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.entity.LivingEntity;

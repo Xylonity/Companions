@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.teddy.control;
 
-import dev.xylonity.companions.common.entity.custom.TeddyEntity;
+import dev.xylonity.companions.common.entity.companion.TeddyEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.phys.Vec3;

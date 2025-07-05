@@ -6,7 +6,7 @@ import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.entity.model.DinamoModel;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
-import dev.xylonity.companions.common.entity.custom.DinamoEntity;
+import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.MultiBufferSource;

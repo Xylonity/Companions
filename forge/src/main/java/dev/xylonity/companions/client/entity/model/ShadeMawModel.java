@@ -1,7 +1,7 @@
 package dev.xylonity.companions.client.entity.model;
 
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.common.entity.custom.ShadeMawEntity;
+import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

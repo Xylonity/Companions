@@ -1,10 +1,8 @@
 package dev.xylonity.companions.common.entity.ai.cloak.goal;
 
 import dev.xylonity.companions.common.entity.ai.cloak.AbstractCloakAttackGoal;
-import dev.xylonity.companions.common.entity.custom.CloakEntity;
-import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
+import dev.xylonity.companions.common.entity.companion.CloakEntity;
 import dev.xylonity.companions.registry.CompanionsEffects;
-import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;

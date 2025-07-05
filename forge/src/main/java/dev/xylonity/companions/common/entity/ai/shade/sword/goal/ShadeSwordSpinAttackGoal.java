@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.entity.ai.shade.sword.goal;
 
 import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.common.entity.ai.shade.AbstractShadeAttackGoal;
-import dev.xylonity.companions.common.entity.custom.ShadeSwordEntity;
+import dev.xylonity.companions.common.entity.companion.ShadeSwordEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;

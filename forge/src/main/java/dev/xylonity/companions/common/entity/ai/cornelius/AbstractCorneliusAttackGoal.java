@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.cornelius;
 
-import dev.xylonity.companions.common.entity.custom.CorneliusEntity;
+import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;

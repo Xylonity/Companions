@@ -1,17 +1,14 @@
-package dev.xylonity.companions.common.entity.custom;
+package dev.xylonity.companions.common.entity.companion;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
-import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
-import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetBladeAttackGoal;
-import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetCannonAttackGoal;
-import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetFarmGoal;
-import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
-import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
+import dev.xylonity.companions.common.entity.ai.soul_mage.goal.*;
+import dev.xylonity.companions.common.container.SoulMageContainerMenu;
+import dev.xylonity.companions.common.entity.projectile.*;
+import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
-import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,9 +19,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -37,7 +32,6 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -54,32 +48,45 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.Optional;
+import java.util.*;
 
-public class PuppetEntity extends CompanionEntity implements RangedAttackMob, ContainerListener {
+public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, ContainerListener {
     public SimpleContainer inventory;
 
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
-    private final RawAnimation ATTACK_L = RawAnimation.begin().thenPlay("attack_l");
-    private final RawAnimation ATTACK_R = RawAnimation.begin().thenPlay("attack_r");
 
-    private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.BYTE);
-    private static final EntityDataAccessor<String> ATTACK_ANIMATION_NAME = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
-    // 0 no, 1 left, 2 right (meant for animation sync)
-    private static final EntityDataAccessor<Integer> IS_ATTACKING = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
-    // 0 none, 1 left, 2 right, 3 both
-    private static final EntityDataAccessor<Integer> ACTIVE_ARMS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
-    // none,none -> left/right
-    private static final EntityDataAccessor<String> ARM_NAMES = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> SIT_VARIATION = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<String> ATTACK_ANIMATION_NAME = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> CANDLE_COUNT = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.INT);
 
-    public PuppetEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+    public static final int MAX_CANDLES_COUNT = 6;
+    public List<LivingCandleEntity> candles = new LinkedList<>();
+
+    public SoulMageEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.createInventory();
     }
 
-    private static final EntityDataAccessor<String> CURRENT_ATTACK_TYPE = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
+    private SoulMageBookEntity book;
+
+    private static final EntityDataAccessor<Integer> BOOK_ID = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.INT);
+
+    public static final Map<String, int[]> ATTACK_COLORS = Map.of(
+            "MAGIC_RAY", new int[]{173, 216, 230},
+            "BLACK_HOLE", new int[]{128, 0, 128},
+            "STONE_SPIKES", new int[]{139, 69, 19},
+            "HEAL_RING", new int[]{110, 252, 85},
+            "ICE_SHARD", new int[]{134, 236, 255},
+            "FIRE_MARK", new int[]{225, 45, 45},
+            "TORNADO", new int[]{242, 242, 242},
+            "NONE", new int[]{169, 134, 60}
+    );
+
+    private static final EntityDataAccessor<String> CURRENT_ATTACK_TYPE = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.STRING);
 
     @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
@@ -103,7 +110,7 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     }
 
     protected int getInventorySize() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -111,15 +118,55 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
-        this.goalSelector.addGoal(2, new PuppetCannonAttackGoal(this, 30, 50));
-        this.goalSelector.addGoal(2, new PuppetBladeAttackGoal(this, 30, 50));
-
-        this.goalSelector.addGoal(3, new PuppetFarmGoal(this));
+        this.goalSelector.addGoal(3, new SoulMageMagicRayGoal(this, 80, 120));
+        this.goalSelector.addGoal(3, new SoulMageBlackHoleGoal(this, 100, 200));
+        this.goalSelector.addGoal(3, new SoulMageStoneSpikesGoal(this, 120, 240));
+        this.goalSelector.addGoal(3, new SoulMageHealRingGoal(this, 100, 160));
+        this.goalSelector.addGoal(3, new SoulMageIceShardGoal(this, 100, 160));
+        this.goalSelector.addGoal(3, new SoulMageFireMarkGoal(this, 100, 160));
+        this.goalSelector.addGoal(3, new SoulMageTornadoGoal(this, 100, 160));
+        this.goalSelector.addGoal(3, new SoulMageBraceGoal(this, 100, 160));
 
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pAmount > this.getHealth()) {
+            if (!candles.isEmpty()) {
+                LivingCandleEntity candle = candles.remove(0);
+                setCandleCount(getCandleCount() - 1);
+                candle.doKill();
+                return false;
+            }
+        }
+
+        return super.hurt(pSource, pAmount);
+    }
+
+    private @Nullable SoulMageBookEntity getBook() {
+        if ((book == null || book.isRemoved())) {
+            if (getBookId() != -1) {
+                Entity e = this.level().getEntity(getBookId());
+                if (e instanceof SoulMageBookEntity be) {
+                    book = be;
+                }
+            }
+        }
+
+        return book;
+    }
+
+    public void setBook(SoulMageBookEntity book) {
+        this.book = book;
+        if (book != null) {
+            setBookId(book.getId());
+        } else {
+            setBookId(-1);
+        }
     }
 
     public String getCurrentAttackType() {
@@ -128,6 +175,22 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     public void setCurrentAttackType(String attackType) {
         this.entityData.set(CURRENT_ATTACK_TYPE, attackType);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (tickCount == 2 && getBookId() == -1) {
+            SoulMageBookEntity book = CompanionsEntities.SOUL_MAGE_BOOK.get().create(this.level());
+            if (book instanceof SoulMageBookEntity) {
+                book.setOwner(this);
+                book.moveTo(this.getX(), this.getY(), this.getZ());
+                this.level().addFreshEntity(book);
+                setBook(book);
+            }
+        }
+
     }
 
     public static AttributeSupplier setAttributes() {
@@ -139,12 +202,12 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
 
-    public void setActiveArms(int candleCount) {
-        this.entityData.set(ACTIVE_ARMS, candleCount);
+    public void setCandleCount(int candleCount) {
+        this.entityData.set(CANDLE_COUNT, candleCount);
     }
 
-    public int getActiveArms() {
-        return this.entityData.get(ACTIVE_ARMS);
+    public int getCandleCount() {
+        return this.entityData.get(CANDLE_COUNT);
     }
 
     public String getAttackAnimationName() {
@@ -155,54 +218,32 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
         this.entityData.set(ATTACK_ANIMATION_NAME, s);
     }
 
-    public int isAttacking() {
+    public boolean isAttacking() {
         return this.entityData.get(IS_ATTACKING);
     }
 
-    public void setAttacking(int attacking) {
+    public void setAttacking(boolean attacking) {
         this.entityData.set(IS_ATTACKING, attacking);
     }
 
-    public void setArmNames(String armNames) {
-        this.entityData.set(ARM_NAMES, armNames);
+    public int getBookId() {
+        return this.entityData.get(BOOK_ID);
     }
 
-    public String getArmNames() {
-        return this.entityData.get(ARM_NAMES);
+    public void setBookId(int id) {
+        this.entityData.set(BOOK_ID, id);
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(IS_ATTACKING, 0);
+        this.entityData.define(SIT_VARIATION, 0);
+        this.entityData.define(IS_ATTACKING, false);
         this.entityData.define(DATA_ID_FLAGS, (byte)0);
         this.entityData.define(ATTACK_ANIMATION_NAME, "");
-        this.entityData.define(ACTIVE_ARMS, 0);
+        this.entityData.define(CANDLE_COUNT, 0);
+        this.entityData.define(BOOK_ID, -1);
         this.entityData.define(CURRENT_ATTACK_TYPE, "NONE");
-        this.entityData.define(ARM_NAMES, "none,none");
-    }
-
-    //@Override
-    //public @NotNull InteractionResult interactAt(Player pPlayer, Vec3 pVec, InteractionHand pHand) {
-    //    if (pVec.y - this.getBoundingBox().minY < 2) {
-    //        return InteractionResult.FAIL;
-    //    }
-
-    //    return super.interactAt(pPlayer, pVec, pHand);
-    //}
-
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        if (pSource.getEntity() instanceof Player player) {
-            Optional<Vec3> h = getBoundingBox().clip(player.getEyePosition(), player.getEyePosition(1f).add(player.getLookAngle().scale(5)));
-            if (h.isPresent()) {
-                if (h.get().y - this.getBoundingBox().minY < 2) {
-                    return false;
-                }
-            }
-        }
-
-        return super.hurt(pSource, pAmount);
     }
 
     @Nullable
@@ -220,12 +261,12 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
                     (ServerPlayer) player, new MenuProvider() {
                         @Override
                         public @NotNull Component getDisplayName() {
-                            return PuppetEntity.this.getName();
+                            return SoulMageEntity.this.getName();
                         }
 
                         @Override
                         public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
-                            return new PuppetContainerMenu(id, playerInv, PuppetEntity.this);
+                            return new SoulMageContainerMenu(id, playerInv, SoulMageEntity.this);
                         }
                     },
                     buf -> buf.writeInt(this.getId())
@@ -269,18 +310,22 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.inventory.fromTag(pCompound.getList("Inventory", 10));
-        this.updateContainerEquipment();
+        if (pCompound.contains("BookEntityId")) {
+            this.entityData.set(BOOK_ID, pCompound.getInt("BookEntityId"));
+        }
+        this.setBookId(pCompound.getInt("BookId"));
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.put("Inventory", this.inventory.createTag());
+        pCompound.putInt("BookId", getBookId());
     }
 
     @Override
     protected boolean canThisCompanionWork() {
-        return true;
+        return false;
     }
 
     @Override
@@ -290,7 +335,7 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     @Override
     protected boolean shouldKeepChunkLoaded() {
-        return CompanionsConfig.PUPPET_KEEP_CHUNK_LOADED;
+        return CompanionsConfig.SOUL_MAGE_KEEP_CHUNK_LOADED;
     }
 
     @Override
@@ -300,9 +345,9 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     }
 
     private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
-        if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttacking() != 0) {
+        if (isAttacking() && event.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
             event.getController().forceAnimationReset();
-            event.setAnimation(isAttacking() == 1 ? ATTACK_L : ATTACK_R);
+            event.setAnimation(RawAnimation.begin().thenPlay(getAttackAnimationName()));
         }
 
         return PlayState.CONTINUE;
@@ -322,7 +367,7 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     @Override
     public void aiStep() {
-        setNoMovement(isAttacking() == 1 || isAttacking() == 2);
+        setNoMovement(isAttacking());
         super.aiStep();
     }
 
@@ -395,41 +440,6 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     protected void updateContainerEquipment() {
         if (!this.level().isClientSide) {
             this.setFlag(4, !this.inventory.getItem(0).isEmpty());
-
-            int arms = 0;
-            String leftArm = "none";
-            String rightArm = "none";
-
-            if (!inventory.getItem(0).isEmpty()) {
-                arms |= 2;
-                Item item = inventory.getItem(0).getItem();
-                if (item == CompanionsItems.CANNON_ARM.get()) {
-                    rightArm = "cannon";
-                } else if (item == CompanionsItems.MUTANT_ARM.get()) {
-                    rightArm = "mutant";
-                } else if (item == CompanionsItems.WHIP_ARM.get()) {
-                    rightArm = "whip";
-                } else if (item == CompanionsItems.BLADE_ARM.get()) {
-                    rightArm = "blade";
-                }
-            }
-
-            if (!inventory.getItem(1).isEmpty()) {
-                arms |= 1;
-                Item item = inventory.getItem(1).getItem();
-                if (item == CompanionsItems.CANNON_ARM.get()) {
-                    leftArm = "cannon";
-                } else if (item == CompanionsItems.MUTANT_ARM.get()) {
-                    leftArm = "mutant";
-                } else if (item == CompanionsItems.WHIP_ARM.get()) {
-                    leftArm = "whip";
-                } else if (item == CompanionsItems.BLADE_ARM.get()) {
-                    leftArm = "blade";
-                }
-            }
-
-            this.setActiveArms(arms);
-            this.setArmNames(leftArm + "," + rightArm);
         }
     }
 

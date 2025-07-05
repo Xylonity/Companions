@@ -1,7 +1,7 @@
 package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.common.entity.custom.*;
+import dev.xylonity.companions.common.entity.companion.*;
 import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.projectile.*;
 import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;

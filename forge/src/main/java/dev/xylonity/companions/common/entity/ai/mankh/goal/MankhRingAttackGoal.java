@@ -1,9 +1,8 @@
 package dev.xylonity.companions.common.entity.ai.mankh.goal;
 
 import dev.xylonity.companions.common.entity.ai.mankh.AbstractMankhAttackGoal;
-import dev.xylonity.companions.common.entity.custom.MankhEntity;
+import dev.xylonity.companions.common.entity.companion.MankhEntity;
 import dev.xylonity.companions.common.entity.projectile.LaserRingProjectile;
-import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
