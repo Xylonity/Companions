@@ -97,7 +97,7 @@ public class ClientProxy implements IProxy {
             ClientLevel cl = (ClientLevel) laser.level();
 
             if (laser.tickCount % 2 == 0) Minecraft.getInstance().particleEngine.add(new RedElectricArcParticle(cl, start, end, 0.15f, 0.4f, false, 16));
-            if (laser.tickCount % 4 == 0 || laser.tickCount % 5 == 0) Minecraft.getInstance().particleEngine.add(new FuturisticLaserParticle(cl, start, end, 0.3f, 0.75f));
+            if (laser.tickCount % 4 == 0 || laser.tickCount % 5 == 0) Minecraft.getInstance().particleEngine.add(new SpiralLaserParticle(cl, start, end, 0.3f, 0.75f));
             if (new Random().nextFloat() < 0.2f) spawnElectricArc(laser, laser.target, laser.level(), (float) start.distanceTo(end));
             if (new Random().nextFloat() < 0.4f) laser.spawnSparks(laser.level());
         }

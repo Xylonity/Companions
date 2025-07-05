@@ -1,8 +1,9 @@
-package dev.xylonity.companions.common.item;
+package dev.xylonity.companions.common.item.generic;
 
-import dev.xylonity.companions.client.item.renderer.GenericItemRenderer;
+import dev.xylonity.companions.client.item.renderer.GenericAxeItemRenderer;
+import dev.xylonity.companions.common.material.ItemMaterials;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.AxeItem;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -13,13 +14,13 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.function.Consumer;
 
-public class GenericGeckoItem extends Item implements GeoItem {
+public class GeckoAxeItem extends AxeItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private final String resourceKey;
 
-    public GenericGeckoItem(Properties properties, String resourceKey) {
-        super(properties);
+    public GeckoAxeItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
+        super(material, extraDamage, extraSpeed, properties);
         this.resourceKey = resourceKey;
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
@@ -27,11 +28,11 @@ public class GenericGeckoItem extends Item implements GeoItem {
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
-            private GenericItemRenderer renderer;
+            private GenericAxeItemRenderer renderer;
 
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null) {
-                    this.renderer = new GenericItemRenderer(resourceKey);
+                    this.renderer = new GenericAxeItemRenderer(resourceKey);
                 }
 
                 return this.renderer;

@@ -1,7 +1,7 @@
 package dev.xylonity.companions.client.armor.model;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.common.item.armor.GenericGeckoArmorItem;
+import dev.xylonity.companions.common.item.generic.GenericGeckoArmorItem;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

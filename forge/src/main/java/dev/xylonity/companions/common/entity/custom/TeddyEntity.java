@@ -20,6 +20,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -238,6 +240,14 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             }
 
             setSecondPhaseCounter(getSecondPhaseCounter() + 1);
+        }
+
+        if (getPhase() == 2) {
+            if (getOwner() != null && !getOwner().hasEffect(MobEffects.REGENERATION)) {
+                if (this.distanceToSqr(getOwner()) < 16 * 16)  {
+                    getOwner().addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0, true, true, true));
+                }
+            }
         }
 
     }

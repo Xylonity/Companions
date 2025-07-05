@@ -9,7 +9,8 @@ import java.util.function.Supplier;
 
 public enum ItemMaterials implements Tier {
 
-    NETHERITE_DAGGER(4, 1785, 3.0F, 3.2F, 15, () -> Ingredient.of(Items.NETHERITE_SCRAP));
+    NETHERITE_DAGGER(4, 1785, 3.0F, 3.2F, 15, () -> Ingredient.of(Items.NETHERITE_SCRAP)),
+    CRYSTALLIZED_BLOOD(4, 2031, 9.0F, 4.0F, 15, () -> Ingredient.of(Items.NETHERITE_INGOT));
 
     private final int miningLevel;
     private final int itemDurability;

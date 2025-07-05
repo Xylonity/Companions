@@ -72,6 +72,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_BOOTS.get());
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_SWORD.get());
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_SCYTHE.get());
+                                output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_AXE.get());
 
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get());
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get());

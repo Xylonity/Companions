@@ -3,10 +3,14 @@ package dev.xylonity.companions.platform;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.block.*;
 import dev.xylonity.companions.common.item.*;
-import dev.xylonity.companions.common.item.armor.GenericGeckoArmorItem;
+import dev.xylonity.companions.common.item.generic.*;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.companions.common.item.book.books.*;
+import dev.xylonity.companions.common.item.weapon.BloodAxeItem;
+import dev.xylonity.companions.common.item.weapon.BloodScytheItem;
+import dev.xylonity.companions.common.item.weapon.BloodSwordItem;
+import dev.xylonity.companions.common.material.ItemMaterials;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
@@ -52,6 +56,23 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
                 return (Supplier<T>) registerItem(id, () -> new ShadowBellItem(properties));
             }
         }
+    }
+
+    @Override
+    public <T extends Item> Supplier<T> registerSpecificItem(String id, Item.Properties properties, CompanionsItems.ItemType itemType, ItemMaterials material, float extraDamage, float extraSpeed) {
+        switch (itemType) {
+            case BLOOD_SWORD -> {
+                return (Supplier<T>) registerItem(id, () -> new BloodSwordItem(properties, id, material, extraDamage, extraSpeed));
+            }
+            case BLOOD_AXE -> {
+                return (Supplier<T>) registerItem(id, () -> new BloodAxeItem(properties, id, material, extraDamage, extraSpeed));
+            }
+            case BLOOD_PICKAXE -> {
+                return (Supplier<T>) registerItem(id, () -> new BloodScytheItem(properties, id, material, extraDamage, extraSpeed));
+            }
+        }
+
+        return registerSpecificItem(id, properties, itemType);
     }
 
     @Override
