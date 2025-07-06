@@ -2,11 +2,10 @@ package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
-import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.FireworkToadBomberGoal;
+import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.FireworkToadGoal;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.SummonHopToOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsSummonHurtTargetGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
-import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -30,13 +29,12 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.Optional;
-
 public class FireworkToadEntity extends CompanionSummonEntity implements IFrogJumpUtil {
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
     private final RawAnimation FLY = RawAnimation.begin().thenPlay("fly");
+    private final RawAnimation ROT = RawAnimation.begin().thenPlayAndHold("rot");
 
     private static final EntityDataAccessor<Vector3f> PARABOLA_CENTER = SynchedEntityData.defineId(FireworkToadEntity.class, EntityDataSerializers.VECTOR3);
     private static final EntityDataAccessor<Boolean> FLY_ENABLED = SynchedEntityData.defineId(FireworkToadEntity.class, EntityDataSerializers.BOOLEAN);
@@ -77,7 +75,7 @@ public class FireworkToadEntity extends CompanionSummonEntity implements IFrogJu
     public void tick() {
         super.tick();
 
-        // Trail
+        // trail
         if (isFlying()) {
             if (tickCount % 3 == 0) {
                 level().addParticle(ParticleTypes.POOF, getX(), getY() + getBbHeight() * 0.15, getZ(), 0, -0.05, 0);
@@ -109,7 +107,8 @@ public class FireworkToadEntity extends CompanionSummonEntity implements IFrogJu
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
-        this.goalSelector.addGoal(2, new FireworkToadBomberGoal(this));
+        //this.goalSelector.addGoal(2, new FireworkToadBomberGoal(this));
+        this.goalSelector.addGoal(2, new FireworkToadGoal(this, 20, 80));
 
         this.goalSelector.addGoal(4, new SummonHopToOwnerGoal<>(this, 0.725D, 6.0F, 2.0F, false));
 
@@ -120,6 +119,7 @@ public class FireworkToadEntity extends CompanionSummonEntity implements IFrogJu
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
+        controllerRegistrar.add(new AnimationController<GeoAnimatable>(this, "rot_controller", state -> PlayState.STOP).triggerableAnim("rot", ROT));
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {

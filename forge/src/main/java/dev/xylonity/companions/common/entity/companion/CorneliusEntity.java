@@ -43,8 +43,6 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.Random;
-
 public class CorneliusEntity extends CompanionEntity implements ContainerListener, IFrogJumpUtil {
 
     public SimpleContainer inventory;
@@ -64,30 +62,9 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     private static final EntityDataAccessor<Boolean> CAN_ATTACK = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> SUMMONED_COUNT = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.INT);
 
-    private int summonedCounter = -1;
-
     public CorneliusEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.createInventory();
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (getSummonedCount() > 0) {
-
-            if (summonedCounter == 0) {
-                setSummonedCount(getSummonedCount() - 1);
-            }
-
-            if (summonedCounter < 0) {
-                summonedCounter = new Random().nextInt(400, 800);
-            }
-
-            summonedCounter--;
-        }
-
     }
 
     @Override
@@ -124,11 +101,11 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
-        this.goalSelector.addGoal(1, new CorneliusFireworkToadGoal(this, 40, 120));
-        this.goalSelector.addGoal(1, new CorneliusNetherBullfrogGoal(this, 40, 120));
-        this.goalSelector.addGoal(1, new CorneliusBubbleFrogGoal(this, 40, 120));
-        this.goalSelector.addGoal(1, new CorneliusEnderFrogGoal(this, 40, 120));
-        this.goalSelector.addGoal(1, new CorneliusEmberPoleGoal(this, 40, 120));
+        this.goalSelector.addGoal(1, new CorneliusFireworkToadGoal(this, 60, 260));
+        this.goalSelector.addGoal(1, new CorneliusNetherBullfrogGoal(this, 60, 260));
+        this.goalSelector.addGoal(1, new CorneliusBubbleFrogGoal(this, 60, 260));
+        this.goalSelector.addGoal(1, new CorneliusEnderFrogGoal(this, 60, 260));
+        this.goalSelector.addGoal(1, new CorneliusEmberPoleGoal(this, 60, 260));
 
         this.goalSelector.addGoal(4, new HopToOwnerGoal<>(this, 0.725D, 6.0F, 2.0F, false));
 

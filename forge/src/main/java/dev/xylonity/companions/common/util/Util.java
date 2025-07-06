@@ -86,6 +86,22 @@ public class Util {
     }
 
     /**
+     * Estimate length between a pair of nodes under a bezier parabola
+     */
+    public static double estimateLengthBezier(Vec3 a, Vec3 b, Vec3 c) {
+        double len = 0;
+        Vec3 prev = a;
+        for (int i = 1; i <= 24; i++) {
+            double t = i / (double) 24;
+            Vec3 cur = Util.bezier(a, b, c, t);
+            len += cur.distanceTo(prev);
+            prev = cur;
+        }
+
+        return len;
+    }
+
+    /**
      * Horizontal direction rotator within a specific direction
      */
     public static Vec3 rotateHorizontalDirection(Vec3 direction, double degrees) {

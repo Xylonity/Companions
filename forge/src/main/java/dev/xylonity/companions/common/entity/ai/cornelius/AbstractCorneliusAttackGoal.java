@@ -36,7 +36,6 @@ public abstract class AbstractCorneliusAttackGoal extends Goal {
         if (!cornelius.canAttack()) return false;
         if (cornelius.getAttackType() != 0) return false;
         if (cornelius.getTarget() == null) return false;
-        if (cornelius.getSummonedCount() > 5) return false;
 
         if (!hasSufficientCoins()) {
             nextUseTick = -1;

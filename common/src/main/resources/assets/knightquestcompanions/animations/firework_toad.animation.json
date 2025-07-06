@@ -3,6 +3,7 @@
 	"animations": {
 		"fly": {
 			"loop": true,
+			"animation_length": 2.5417,
 			"bones": {
 				"head": {
 					"rotation": {
@@ -21,7 +22,12 @@
 				},
 				"rocket_pivot": {
 					"rotation": {
-						"vector": [-12.5, "query.anim_time*250", 0]
+						"0.0": {
+							"vector": [-12.5, "query.anim_time*250", 0]
+						},
+						"2.5417": {
+							"vector": [-12.39927, "0.5408+query.anim_time*250", 2.45131]
+						}
 					},
 					"position": {
 						"vector": [0, "math.cos(query.anim_time*360) * 0.5", -0.8]
@@ -118,6 +124,21 @@
 				"right_feet": {
 					"rotation": {
 						"vector": ["math.max(0, math.sin(query.anim_time*360 - 5)*90)", 0, 0]
+					}
+				}
+			}
+		},
+		"rot": {
+			"animation_length": 1,
+			"bones": {
+				"entity": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.6667": {
+							"vector": [167.5, 0, 0]
+						}
 					}
 				}
 			}

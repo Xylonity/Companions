@@ -45,7 +45,7 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
 
         if (isNoMovement()) {
             this.getNavigation().stop();
-            this.setDeltaMovement(Vec3.ZERO);
+            this.setDeltaMovement(0, getDeltaMovement().y, 0);
         }
 
         if (shouldKeepChunkLoaded() && level() instanceof ServerLevel level) {
