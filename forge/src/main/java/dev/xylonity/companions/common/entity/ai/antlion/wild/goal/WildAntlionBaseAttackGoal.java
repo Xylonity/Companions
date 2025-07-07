@@ -59,9 +59,4 @@ public class WildAntlionBaseAttackGoal extends AbstractWildAntlionAttackGoal {
         return 1;
     }
 
-    @Override
-    protected int variant() {
-        return 0;
-    }
-
 }

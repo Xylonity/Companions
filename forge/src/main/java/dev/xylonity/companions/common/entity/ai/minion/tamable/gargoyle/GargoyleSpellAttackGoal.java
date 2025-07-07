@@ -1,6 +1,6 @@
-package dev.xylonity.companions.common.entity.ai.minion.gargoyle;
+package dev.xylonity.companions.common.entity.ai.minion.tamable.gargoyle;
 
-import dev.xylonity.companions.common.entity.ai.minion.AbstractMinionAttackGoal;
+import dev.xylonity.companions.common.entity.ai.minion.tamable.AbstractMinionAttackGoal;
 import dev.xylonity.companions.common.entity.companion.MinionEntity;
 import dev.xylonity.companions.common.entity.projectile.StoneSpikeProjectile;
 import dev.xylonity.companions.common.util.Util;

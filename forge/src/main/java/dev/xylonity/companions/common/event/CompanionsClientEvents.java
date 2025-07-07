@@ -34,7 +34,6 @@ public class CompanionsClientEvents {
             EntityRenderers.register(CompanionsEntities.ANTLION.get(), AntlionRenderer::new);
             EntityRenderers.register(CompanionsEntities.DINAMO.get(), DinamoRenderer::new);
             EntityRenderers.register(CompanionsEntities.BROKEN_DINAMO.get(), BrokenDinamoRenderer::new);
-            EntityRenderers.register(CompanionsEntities.HOSTILE_IMP.get(), HostileImpRenderer::new);
             EntityRenderers.register(CompanionsEntities.MINION.get(), MinionRenderer::new);
             EntityRenderers.register(CompanionsEntities.GOLDEN_ALLAY.get(), GoldenAllayRenderer::new);
             EntityRenderers.register(CompanionsEntities.SOUL_MAGE.get(), SoulMageRenderer::new);
@@ -55,6 +54,7 @@ public class CompanionsClientEvents {
 
             EntityRenderers.register(CompanionsEntities.ILLAGER_GOLEM.get(), IllagerGolemRenderer::new);
             EntityRenderers.register(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGloveRenderer::new);
+            EntityRenderers.register(CompanionsEntities.HOSTILE_IMP.get(), HostileImpRenderer::new);
             EntityRenderers.register(CompanionsEntities.SACRED_PONTIFF.get(), SacredPontiffRenderer::new);
             EntityRenderers.register(CompanionsEntities.WILD_ANTLION.get(), WildAntlionRenderer::new);
 

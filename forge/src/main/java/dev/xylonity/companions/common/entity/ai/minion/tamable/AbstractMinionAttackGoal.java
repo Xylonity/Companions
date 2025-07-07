@@ -1,21 +1,21 @@
-package dev.xylonity.companions.common.entity.ai.antlion.wild;
+package dev.xylonity.companions.common.entity.ai.minion.tamable;
 
-import dev.xylonity.companions.common.entity.hostile.WildAntlionEntity;
+import dev.xylonity.companions.common.entity.companion.MinionEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-public abstract class AbstractWildAntlionAttackGoal extends Goal {
-    protected final WildAntlionEntity antlion;
+public abstract class AbstractMinionAttackGoal extends Goal {
+    protected final MinionEntity minion;
     protected final int attackDuration;
     protected final int minCooldown, maxCooldown;
     protected int attackTicks;
     protected int nextUseTick;
     protected boolean started;
 
-    public AbstractWildAntlionAttackGoal(WildAntlionEntity antlion, int attackDuration, int minCd, int maxCd) {
-        this.antlion = antlion;
+    public AbstractMinionAttackGoal(MinionEntity pontiff, int attackDuration, int minCd, int maxCd) {
+        this.minion = pontiff;
         this.attackDuration = attackDuration;
         this.minCooldown = minCd;
         this.maxCooldown = maxCd;
@@ -25,15 +25,17 @@ public abstract class AbstractWildAntlionAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (antlion.getAttackType() != 0) return false;
-        if (antlion.getTarget() == null) return false;
+        if (!minion.getVariant().equals(variant())) return false;
+        if (minion.getAttackType() != 0) return false;
+        if (minion.getTarget() == null) return false;
+        if (minion.getMainAction() != 1) return false;
 
         if (nextUseTick < 0) {
-            nextUseTick = antlion.tickCount + minCooldown + antlion.getRandom().nextInt(maxCooldown - minCooldown + 1);
+            nextUseTick = minion.tickCount + minCooldown + minion.getRandom().nextInt(maxCooldown - minCooldown + 1);
             return false;
         }
 
-        return antlion.tickCount >= nextUseTick;
+        return minion.tickCount >= nextUseTick;
     }
 
     @Override
@@ -45,23 +47,22 @@ public abstract class AbstractWildAntlionAttackGoal extends Goal {
     public void start() {
         attackTicks = 0;
         started = true;
-        antlion.setAttackType(attackType());
+        minion.setAttackType(attackType());
     }
 
     @Override
     public void stop() {
         started = false;
-        antlion.setAttackType(0);
-        int cd = minCooldown + antlion.getRandom().nextInt(maxCooldown - minCooldown + 1);
-        nextUseTick = antlion.tickCount + cd;
+        minion.setAttackType(0);
+        int cd = minCooldown + minion.getRandom().nextInt(maxCooldown - minCooldown + 1);
+        nextUseTick = minion.tickCount + cd;
     }
 
     @Override
     public void tick() {
-        LivingEntity target = antlion.getTarget();
+        LivingEntity target = minion.getTarget();
         if (target != null) {
-            antlion.getLookControl().setLookAt(target, 30F, 30F);
-            antlion.lookAt(target, 30F, 30F);
+            minion.getLookControl().setLookAt(target, 30F, 30F);
         }
 
         if (attackTicks == attackDelay() && target != null && target.isAlive()) {
@@ -78,6 +79,7 @@ public abstract class AbstractWildAntlionAttackGoal extends Goal {
 
     protected abstract void performAttack(LivingEntity target);
     protected abstract int attackDelay();
+    protected abstract String variant();
     protected abstract int attackType();
 
 }

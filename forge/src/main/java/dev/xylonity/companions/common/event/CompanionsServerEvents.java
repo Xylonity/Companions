@@ -19,7 +19,6 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.ANTLION.get(), AntlionEntity.setAttributes());
         event.put(CompanionsEntities.DINAMO.get(), DinamoEntity.setAttributes());
         event.put(CompanionsEntities.BROKEN_DINAMO.get(), BrokenDinamoEntity.setAttributes());
-        event.put(CompanionsEntities.HOSTILE_IMP.get(), HostileImpEntity.setAttributes());
         event.put(CompanionsEntities.MINION.get(), MinionEntity.setAttributes());
         event.put(CompanionsEntities.GOLDEN_ALLAY.get(), GoldenAllayEntity.setAttributes());
         event.put(CompanionsEntities.SOUL_MAGE.get(), SoulMageEntity.setAttributes());
@@ -42,6 +41,7 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGloveEntity.setAttributes());
         event.put(CompanionsEntities.SACRED_PONTIFF.get(), SacredPontiffEntity.setAttributes());
         event.put(CompanionsEntities.WILD_ANTLION.get(), WildAntlionEntity.setAttributes());
+        event.put(CompanionsEntities.HOSTILE_IMP.get(), HostileImpEntity.setAttributes());
     }
 
 }

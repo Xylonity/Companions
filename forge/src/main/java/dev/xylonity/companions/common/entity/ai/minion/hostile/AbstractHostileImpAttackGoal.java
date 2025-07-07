@@ -1,21 +1,22 @@
-package dev.xylonity.companions.common.entity.ai.minion;
+package dev.xylonity.companions.common.entity.ai.minion.hostile;
 
-import dev.xylonity.companions.common.entity.companion.MinionEntity;
+import dev.xylonity.companions.common.entity.hostile.HostileImpEntity;
+import dev.xylonity.companions.common.entity.hostile.WildAntlionEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-public abstract class AbstractMinionAttackGoal extends Goal {
-    protected final MinionEntity minion;
+public abstract class AbstractHostileImpAttackGoal extends Goal {
+    protected final HostileImpEntity imp;
     protected final int attackDuration;
     protected final int minCooldown, maxCooldown;
     protected int attackTicks;
     protected int nextUseTick;
     protected boolean started;
 
-    public AbstractMinionAttackGoal(MinionEntity pontiff, int attackDuration, int minCd, int maxCd) {
-        this.minion = pontiff;
+    public AbstractHostileImpAttackGoal(HostileImpEntity imp, int attackDuration, int minCd, int maxCd) {
+        this.imp = imp;
         this.attackDuration = attackDuration;
         this.minCooldown = minCd;
         this.maxCooldown = maxCd;
@@ -25,17 +26,15 @@ public abstract class AbstractMinionAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (!minion.getVariant().equals(variant())) return false;
-        if (minion.getAttackType() != 0) return false;
-        if (minion.getTarget() == null) return false;
-        if (minion.getMainAction() != 1) return false;
+        if (imp.getAttackType() != 0) return false;
+        if (imp.getTarget() == null) return false;
 
         if (nextUseTick < 0) {
-            nextUseTick = minion.tickCount + minCooldown + minion.getRandom().nextInt(maxCooldown - minCooldown + 1);
+            nextUseTick = imp.tickCount + minCooldown + imp.getRandom().nextInt(maxCooldown - minCooldown + 1);
             return false;
         }
 
-        return minion.tickCount >= nextUseTick;
+        return imp.tickCount >= nextUseTick;
     }
 
     @Override
@@ -47,22 +46,23 @@ public abstract class AbstractMinionAttackGoal extends Goal {
     public void start() {
         attackTicks = 0;
         started = true;
-        minion.setAttackType(attackType());
+        imp.setAttackType(attackType());
     }
 
     @Override
     public void stop() {
         started = false;
-        minion.setAttackType(0);
-        int cd = minCooldown + minion.getRandom().nextInt(maxCooldown - minCooldown + 1);
-        nextUseTick = minion.tickCount + cd;
+        imp.setAttackType(0);
+        int cd = minCooldown + imp.getRandom().nextInt(maxCooldown - minCooldown + 1);
+        nextUseTick = imp.tickCount + cd;
     }
 
     @Override
     public void tick() {
-        LivingEntity target = minion.getTarget();
+        LivingEntity target = imp.getTarget();
         if (target != null) {
-            minion.getLookControl().setLookAt(target, 30F, 30F);
+            imp.getLookControl().setLookAt(target, 30F, 30F);
+            imp.lookAt(target, 30F, 30F);
         }
 
         if (attackTicks == attackDelay() && target != null && target.isAlive()) {
@@ -79,7 +79,6 @@ public abstract class AbstractMinionAttackGoal extends Goal {
 
     protected abstract void performAttack(LivingEntity target);
     protected abstract int attackDelay();
-    protected abstract String variant();
     protected abstract int attackType();
 
 }

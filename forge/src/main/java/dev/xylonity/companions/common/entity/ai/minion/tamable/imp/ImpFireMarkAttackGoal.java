@@ -1,6 +1,6 @@
-package dev.xylonity.companions.common.entity.ai.minion.imp;
+package dev.xylonity.companions.common.entity.ai.minion.tamable.imp;
 
-import dev.xylonity.companions.common.entity.ai.minion.AbstractMinionAttackGoal;
+import dev.xylonity.companions.common.entity.ai.minion.tamable.AbstractMinionAttackGoal;
 import dev.xylonity.companions.common.entity.companion.MinionEntity;
 import dev.xylonity.companions.common.entity.projectile.FireMarkRingProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;

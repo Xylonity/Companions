@@ -71,11 +71,6 @@ public class WildAntlionBaseLongAttackGoal extends AbstractWildAntlionAttackGoal
         return 2;
     }
 
-    @Override
-    protected int variant() {
-        return 0;
-    }
-
     private void spawnParabolicParticles(LivingEntity target) {
         ServerLevel serverLevel = (ServerLevel) antlion.level();
         BlockState blockState = serverLevel.getBlockState(antlion.blockPosition().below());
@@ -128,4 +123,5 @@ public class WildAntlionBaseLongAttackGoal extends AbstractWildAntlionAttackGoal
     }
 
     private record TrajectoryData(double startX, double startY, double startZ, double endX, double endY, double endZ, double distance) { ;; }
+
 }

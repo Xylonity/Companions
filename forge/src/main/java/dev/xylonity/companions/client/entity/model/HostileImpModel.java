@@ -9,11 +9,15 @@ public class HostileImpModel extends GeoModel<HostileImpEntity> {
 
     @Override
     public ResourceLocation getModelResource(HostileImpEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/imp.geo.json");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/hostile_imp.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(HostileImpEntity animatable) {
+        if (animatable.isAngry()) {
+            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/imp.png");
+        }
+
         return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/imp_hostile1.png");
     }
 
