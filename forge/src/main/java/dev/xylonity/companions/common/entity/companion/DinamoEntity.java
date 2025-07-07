@@ -171,9 +171,7 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND
-                && getOwner() == player && player.getMainHandItem().getItem() != CompanionsItems.WRENCH.get()) {
-
+        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player && player.getMainHandItem().getItem() != CompanionsItems.WRENCH.get()) {
             if (player.isShiftKeyDown() && getMainAction() != 0) {
                 setShouldAttack(!shouldAttack());
 
@@ -184,7 +182,9 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
                 }
 
             } else {
-                defaultMainActionInteraction(player);
+                if (level().isClientSide) return InteractionResult.SUCCESS;
+
+                handleDefaultMainActionAndHeal(player, hand);
             }
 
             return InteractionResult.SUCCESS;

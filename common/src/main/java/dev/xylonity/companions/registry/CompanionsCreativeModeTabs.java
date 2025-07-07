@@ -1,6 +1,8 @@
 package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.knightlib.registry.KnightLibBlocks;
+import dev.xylonity.knightlib.registry.KnightLibItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +19,13 @@ public class CompanionsCreativeModeTabs {
                             .icon(() -> new ItemStack(Items.ACACIA_BOAT))
                             .title(Component.translatable("creativetab.companions.title"))
                             .displayItems((itemDisplayParameters, output) -> {
+
+                                output.accept(KnightLibBlocks.GREAT_CHALICE.get());
+                                output.accept(KnightLibItems.SMALL_ESSENCE.get());
+                                output.accept(KnightLibItems.GREAT_ESSENCE.get());
+                                output.accept(KnightLibItems.EMPTY_GRAIL.get());
+                                output.accept(KnightLibItems.FILLED_GRAIL.get());
+                                output.accept(KnightLibItems.HOMUNCULUS.get());
 
                                 output.accept(CompanionsBlocks.COPPER_COIN.get());
                                 output.accept(CompanionsBlocks.NETHER_COIN.get());

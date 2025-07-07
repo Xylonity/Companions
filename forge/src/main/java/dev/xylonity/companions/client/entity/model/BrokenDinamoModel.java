@@ -20,7 +20,7 @@ public class BrokenDinamoModel extends GeoModel<BrokenDinamoEntity> {
 
     @Override
     public ResourceLocation getTextureResource(BrokenDinamoEntity animatable) {
-        if (animatable.getPhase() != 0 && animatable.getPhase() != 1) {
+        if (animatable.getState() >= 4) {
             return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo.png");
         }
 
@@ -41,7 +41,7 @@ public class BrokenDinamoModel extends GeoModel<BrokenDinamoEntity> {
         Vec3 diff = new Vec3(cameraPos.x - entityPos.x, 0.0, cameraPos.z - entityPos.z).normalize();
         Vec3 view;
 
-        if (animatable.getPhase() == 0) {
+        if (animatable.getState() == 0) {
             view = animatable.getViewVector(partialTick).yRot((float) Math.toRadians(32.5)).normalize();
         } else {
             view = animatable.getViewVector(partialTick).normalize();

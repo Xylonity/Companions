@@ -1,19 +1,17 @@
 {
-  "broken_dinamo.companions.client_message.requires_oak": "You need %1$d oak planks to repair.",
-  "broken_dinamo.companions.client_message.not_enough_oak": "You need at least %1$d oak planks to repair.",
-  "broken_dinamo.companions.client_message.oak_will_get_consumed": "%1$d oak planks will be consumed. Interact again to confirm.",
-  "broken_dinamo.companions.client_message.oak_consumed": "You have supplied %1$d oak planks. A Great Essence is now required.",
+  "broken_dinamo.companions.client_message.requires_wood": "You need %1$d oak planks to repair.",
+  "broken_dinamo.companions.client_message.wood_will_get_consumed": "%1$d oak planks will be consumed. Interact again to confirm.",
+  "broken_dinamo.companions.client_message.wood_consumed": "You have supplied %1$d oak planks. A Homunculus is now required.",
 
-  "broken_dinamo.companions.client_message.requires_great_essence": "You need a Great Essence to repair",
-  "broken_dinamo.companions.client_message.great_essence_consumed": "You have contributed a Great Essence. Interact with a wrench to proceed.",
+  "broken_dinamo.companions.client_message.requires_homunculus": "You need a Homunculus to repair",
+  "broken_dinamo.companions.client_message.homunculus_consumed": "You have contributed a Homunculus. Interact with a wrench to proceed.",
 
   "broken_dinamo.companions.client_message.requires_iron": "You need %1$d iron ingots to continue the repair.",
-  "broken_dinamo.companions.client_message.not_enough_iron": "You need at least %1$d iron ingots to repair.",
   "broken_dinamo.companions.client_message.iron_will_get_consumed": "%1$d iron ingots will be consumed. Interact again to confirm.",
   "broken_dinamo.companions.client_message.iron_consumed": "You have provided %1$d iron ingots. A Tesla Receiver is now required.",
 
-  "broken_dinamo.companions.client_message.requires_tesla_receiver": "You need a Tesla Receiver to complete the repair.",
-  "broken_dinamo.companions.client_message.tesla_receiver_consumed": "You have supplied a Tesla Receiver. Interact with a wrench to proceed.",
+  "broken_dinamo.companions.client_message.requires_tesla_coil": "You need a Tesla Receiver to complete the repair.",
+  "broken_dinamo.companions.client_message.tesla_coil_consumed": "You have supplied a Tesla Receiver. Interact with a wrench to proceed.",
 
   "broken_dinamo.companions.client_message.requires_wrench": "You need a Wrench repair the entity.",
 
