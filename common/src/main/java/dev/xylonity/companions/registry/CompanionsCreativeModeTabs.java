@@ -36,6 +36,8 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.ANGEL_OF_GERTRUDE_DISC.get());
                                 output.accept(CompanionsItems.DEMON_FLESH.get());
                                 output.accept(CompanionsItems.MUTANT_FLESH.get());
+                                output.accept(CompanionsItems.OLD_CLOTH.get());
+                                output.accept(CompanionsItems.RELIC_GOLD.get());
 
                                 output.accept(CompanionsItems.BOOK_ICE_SHARD.get());
                                 output.accept(CompanionsItems.BOOK_ICE_TORNADO.get());

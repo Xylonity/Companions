@@ -26,6 +26,8 @@ public class CompanionsItems {
     public static final Supplier<Item> ANGEL_OF_GERTRUDE_DISC = registerItem("angel_of_gertrude_disc", () -> new RecordItem(7, CompanionsSounds.ANGEL_OF_GERTRUDE.get(), new Item.Properties().stacksTo(1), 5280));
     public static final Supplier<Item> MUTANT_FLESH = registerItem("mutant_flesh", () -> new Item(new Item.Properties().stacksTo(1).food((new FoodProperties.Builder()).nutrition(10).saturationMod(0.6F).meat().build())));
     public static final Supplier<Item> DEMON_FLESH = registerItem("demon_flesh", () -> new Item(new Item.Properties().stacksTo(1).food((new FoodProperties.Builder()).nutrition(10).saturationMod(0.6F).meat().build())));
+    public static final Supplier<Item> OLD_CLOTH = registerItem("old_cloth", () -> new Item(new Item.Properties().fireResistant()));
+    public static final Supplier<Item> RELIC_GOLD = registerItem("relic_gold", () -> new Item(new Item.Properties().fireResistant()));
 
     public static final Supplier<Item> CROISSANT_DRAGON_ARMOR_STRAWBERRY = registerItem("croissant_dragon_strawberry_armor", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> CROISSANT_DRAGON_ARMOR_VANILLA = registerItem("croissant_dragon_vanilla_armor", () -> new Item(new Item.Properties()));

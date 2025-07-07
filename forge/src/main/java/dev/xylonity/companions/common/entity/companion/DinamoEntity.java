@@ -68,7 +68,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
     public DinamoEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.noCulling = true;
         this.connectionManager = TeslaConnectionManager.getInstance();
         this.pulseBehavior = new DinamoPulseBehaviour();
         this.attackBehavior = new DinamoAttackBehaviour();

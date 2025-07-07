@@ -1,12 +1,24 @@
 package dev.xylonity.companions.common.block;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.blockentity.RespawnTotemBlockEntity;
+import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
+import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -23,6 +35,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -90,7 +103,6 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
         level.setBlock(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER), 3);
     }
 
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
@@ -111,6 +123,67 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
             BlockState belowState = pLevel.getBlockState(pPos.below());
             return belowState.is(this) && belowState.getValue(HALF) == DoubleBlockHalf.LOWER;
         }
+    }
+
+    @Override
+    public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
+
+        if (pLevel.isClientSide) return InteractionResult.SUCCESS;
+
+        ItemStack held = pPlayer.getItemInHand(pHand);
+
+        if (!held.is(CompanionsItems.RELIC_GOLD.get()) && !held.is(CompanionsItems.OLD_CLOTH.get())) {
+            return InteractionResult.PASS;
+        }
+
+        if (!pPlayer.getAbilities().instabuild) held.shrink(1);
+
+        BlockPos lowerPos = pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos : pPos.below();
+
+        pLevel.destroyBlock(lowerPos, false);
+        pLevel.destroyBlock(lowerPos.above(), false);
+
+        CompanionEntity entity;
+
+        if (held.is(CompanionsItems.RELIC_GOLD.get())) {
+            entity = CompanionsEntities.MANKH.get().create(pLevel);
+        } else {
+            entity = CompanionsEntities.CLOAK.get().create(pLevel);
+        }
+
+        if (entity != null) {
+            entity.moveTo(lowerPos.getX() + 0.5, lowerPos.getY(), lowerPos.getZ() + 0.5, pLevel.random.nextFloat() * 360F, 0);
+            entity.tame(pPlayer);
+
+            double dx = pPlayer.getX() - pPos.getX();
+            double dy = (pPlayer.getY() + pPlayer.getEyeHeight()) - (pPos.getY() + entity.getEyeHeight());
+            double dz = pPlayer.getZ() - pPos.getZ();
+            float yaw = (float) (Math.atan2(dz, dx) * (180F / Math.PI)) - 90F;
+            float pitch = (float) (-(Math.atan2(dy,  Math.sqrt(dx * dx + dz * dz)) * (180F / Math.PI)));
+            entity.setYRot(yaw);
+            entity.yBodyRot = yaw;
+            entity.yBodyRotO = yaw;
+            entity.yHeadRot = yaw;
+            entity.yHeadRotO = yaw;
+            entity.setXRot(pitch);
+            entity.xRotO = pitch;
+
+            pLevel.addFreshEntity(entity);
+        }
+
+        for (int i = 0; i < 20; i++) {
+            double dx = (pLevel.random.nextDouble() - 0.5) * 0.8;
+            double dy = (pLevel.random.nextDouble() - 0.5) * 0.8;
+            double dz = (pLevel.random.nextDouble() - 0.5) * 0.8;
+            if (pLevel instanceof ServerLevel level) {
+                if (pLevel.random.nextFloat() < 0.65f) level.sendParticles(ParticleTypes.POOF, pPos.getX() + 0.5, pPos.getY() + Math.random() * 2, pPos.getZ() + 0.5, 1, dx, dy, dz, 0.1);
+            }
+        }
+
+        pLevel.playSound(null, lowerPos, SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.BLOCKS, 1F, 1F);
+
+        return InteractionResult.SUCCESS;
+
     }
 
     @Override

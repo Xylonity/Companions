@@ -96,52 +96,12 @@ public class CloakEntity extends CompanionEntity {
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        Item itemForTaming = Items.APPLE;
-        Item item = itemstack.getItem();
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
 
-        if (item == itemForTaming && !isTame()) {
-            if (this.level().isClientSide) {
-                return InteractionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
+        if (level().isClientSide) return InteractionResult.SUCCESS;
 
-                if (!ForgeEventFactory.onAnimalTame(this, player)) {
-                    if (!this.level().isClientSide) {
-                        tameInteraction(player);
-                    }
-                }
-
-                return InteractionResult.SUCCESS;
-            }
-        }
-
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if ((itemstack.getItem().equals(Items.APPLE) || itemstack.getItem().equals(Items.APPLE))
-                    && this.getHealth() < this.getMaxHealth()) {
-
-                if (itemstack.getItem().equals(Items.APPLE)) {
-                    this.heal(16.0F);
-                } else if (itemstack.getItem().equals(Items.APPLE)) {
-                    this.heal(4.0F);
-                }
-
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-
-            } else {
-                defaultMainActionInteraction(player);
-            }
-
+        if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
-        }
-
-        if (itemstack.getItem() == itemForTaming) {
-            return InteractionResult.PASS;
         }
 
         return super.mobInteract(player, hand);
