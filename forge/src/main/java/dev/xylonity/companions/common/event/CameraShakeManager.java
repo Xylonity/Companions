@@ -20,8 +20,7 @@ public class CameraShakeManager {
     private static final Map<UUID, ShakeData> shakes = new ConcurrentHashMap<>();
 
     public static void shakePlayer(Player player, int durationTicks, float intensityX, float intensityY, float intensityZ, int fadeStartTick) {
-        ShakeData data = new ShakeData(player.getUUID(), player.level(), Util.getMillis(), durationTicks, intensityX, intensityY, intensityZ, fadeStartTick);
-        shakes.put(player.getUUID(), data);
+        shakes.put(player.getUUID(), new ShakeData(player.level(), Util.getMillis(), durationTicks, intensityX, intensityY, intensityZ, fadeStartTick));
     }
 
     public static ShakeData getShake(Player player) {
@@ -36,19 +35,18 @@ public class CameraShakeManager {
     @SubscribeEvent
     public static void onLevelTick(TickEvent.LevelTickEvent event) {
         if (event.phase != TickEvent.Phase.END || event.level.isClientSide()) return;
+
         shakes.values().removeIf(ShakeData::isExpired);
     }
 
     public static class ShakeData {
-        private final UUID playerId;
         private final Level world;
         private final long startTimeMs;
         private final int durationTicks;
         private final float ix, iy, iz;
         private final int fadeStart;
 
-        public ShakeData(UUID playerId, Level world, long startTimeMs, int durationTicks, float ix, float iy, float iz, int fadeStart) {
-            this.playerId = playerId;
+        public ShakeData(Level world, long startTimeMs, int durationTicks, float ix, float iy, float iz, int fadeStart) {
             this.world = world;
             this.startTimeMs = startTimeMs;
             this.durationTicks = durationTicks;
@@ -59,7 +57,7 @@ public class CameraShakeManager {
         }
 
         public void applyToCamera(Camera camera) {
-            int elapsed = getElapsedTicks();
+            int elapsed = tickcount();
             float fade = 1.0f;
 
             if (fadeStart >= 0 && elapsed >= fadeStart) {
@@ -73,12 +71,12 @@ public class CameraShakeManager {
             camera.move(ox, oy, oz);
         }
 
-        private int getElapsedTicks() {
+        private int tickcount() {
             return (int) ((Util.getMillis() - startTimeMs) / 50);
         }
 
         public boolean isExpired() {
-            return getElapsedTicks() >= durationTicks;
+            return tickcount() >= durationTicks;
         }
 
     }

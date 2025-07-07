@@ -52,6 +52,7 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<IllagerGolemEntity>> ILLAGER_GOLEM;
     public static final RegistryObject<EntityType<HostilePuppetGloveEntity>> HOSTILE_PUPPET_GLOVE;
     public static final RegistryObject<EntityType<SacredPontiffEntity>> SACRED_PONTIFF;
+    public static final RegistryObject<EntityType<WildAntlionEntity>> WILD_ANTLION;
 
     public static final RegistryObject<EntityType<SmallIceShardProjectile>> SMALL_ICE_SHARD_PROJECTILE;
     public static final RegistryObject<EntityType<BigIceShardProjectile>> BIG_ICE_SHARD_PROJECTILE;
@@ -120,6 +121,7 @@ public class CompanionsEntities {
         ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f, null);
         HOSTILE_PUPPET_GLOVE = register("hostile_puppet_glove", HostilePuppetGloveEntity::new, MobCategory.CREATURE, 0.8f, 2f, null);
         SACRED_PONTIFF = register("sacred_pontiff", SacredPontiffEntity::new, MobCategory.CREATURE, 2f, 4f, null);
+        WILD_ANTLION = register("wild_antlion", WildAntlionEntity::new, MobCategory.CREATURE, 1f, 1f, null);
 
         SMALL_ICE_SHARD_PROJECTILE = register("small_ice_shard_projectile", SmallIceShardProjectile::new, MobCategory.MISC, 0.4f, 0.5f, List.of(EntityType.Builder::noSummon));
         BIG_ICE_SHARD_PROJECTILE = register("big_ice_shard_projectile", BigIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, List.of(EntityType.Builder::noSummon));

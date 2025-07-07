@@ -41,6 +41,7 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.ILLAGER_GOLEM.get(), IllagerGolemEntity.setAttributes());
         event.put(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGloveEntity.setAttributes());
         event.put(CompanionsEntities.SACRED_PONTIFF.get(), SacredPontiffEntity.setAttributes());
+        event.put(CompanionsEntities.WILD_ANTLION.get(), WildAntlionEntity.setAttributes());
     }
 
 }

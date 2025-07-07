@@ -57,10 +57,7 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
             LivingEntity owner1 = getOwner();
             LivingEntity owner2 = getSecondOwner();
 
-            boolean primaryOwnerDead = owner1 == null || !owner1.isAlive();
-            boolean primaryOwnerIsPlayer = owner1 instanceof Player;
-
-            if (primaryOwnerDead && !primaryOwnerIsPlayer) {
+            if (owner1 == null || !owner1.isAlive() && !(owner1 instanceof Player)) {
                 if (owner2 != null && owner2.isAlive()) {
                     promoteSecondOwnerToPrimary();
                 }

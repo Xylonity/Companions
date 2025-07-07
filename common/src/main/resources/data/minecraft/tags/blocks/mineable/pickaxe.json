@@ -8,6 +8,9 @@
     "knightquestcompanions:plasma_lamp_block",
     "knightquestcompanions:tesla_coil_block",
     "knightquestcompanions:frog_bonanza_block",
-    "knightquestcompanions:soul_furnace_block"
+    "knightquestcompanions:soul_furnace_block",
+    "knightquestcompanions:end_coin",
+    "knightquestcompanions:copper_coin",
+    "knightquestcompanions:nether_coin"
   ]
 }

@@ -56,6 +56,7 @@ public class CompanionsClientEvents {
             EntityRenderers.register(CompanionsEntities.ILLAGER_GOLEM.get(), IllagerGolemRenderer::new);
             EntityRenderers.register(CompanionsEntities.HOSTILE_PUPPET_GLOVE.get(), HostilePuppetGloveRenderer::new);
             EntityRenderers.register(CompanionsEntities.SACRED_PONTIFF.get(), SacredPontiffRenderer::new);
+            EntityRenderers.register(CompanionsEntities.WILD_ANTLION.get(), WildAntlionRenderer::new);
 
             EntityRenderers.register(CompanionsEntities.SMALL_ICE_SHARD_PROJECTILE.get(), IceShardSmallRenderer::new);
             EntityRenderers.register(CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.get(), IceShardBigRenderer::new);

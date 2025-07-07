@@ -91,6 +91,10 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     private static final int ANIMATION_ADULT_TURN_TICKS = 10;
     private static final int MAX_FALL_TICKS = 7;
     private static final int NO_TARGET_MAX_TICKS = 20;
+    private static final float MIN_SPEED_FOR_DESCENT = 0.4f;
+    private static final float MAX_SPEED_FOR_DESCENT = 1.01f;
+
+    private Vec3 vel = Vec3.ZERO;
 
     private int diginCounter;
     private int digoutCounter;
@@ -396,7 +400,6 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        Item itemForTaming = Items.APPLE;
         Item item = itemstack.getItem();
 
         if (item == CompanionsItems.HOURGLASS.get() && isTame() && getOwner() != null && getOwner() == player) {
@@ -407,54 +410,10 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
             return InteractionResult.SUCCESS;
         }
 
-        if (item == itemForTaming && !isTame()) {
-            if (this.level().isClientSide) {
-                return InteractionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().instabuild) itemstack.shrink(1);
+        if (level().isClientSide) return InteractionResult.SUCCESS;
 
-                if (!ForgeEventFactory.onAnimalTame(this, player)) {
-                    if (!this.level().isClientSide) {
-                        tameInteraction(player);
-                    }
-                }
-
-                return InteractionResult.SUCCESS;
-            }
-        }
-
-        if (!this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-
-            if ((itemstack.getItem().equals(Items.APPLE) || itemstack.getItem().equals(Items.APPLE)) && this.getHealth() < this.getMaxHealth()) {
-                if (itemstack.getItem().equals(Items.APPLE)) {
-                    this.heal(16.0F);
-                } else if (itemstack.getItem().equals(Items.APPLE)) {
-                    this.heal(4.0F);
-                }
-
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-
-            } else {
-                if (getVariant() == 2 && player.isShiftKeyDown()) {
-                    defaultMainActionInteraction(player);
-                } else if (getVariant() == 2 && !player.isShiftKeyDown() && getMainAction() == 1) {
-                    if (!this.level().isClientSide) {
-                        player.startRiding(this, true);
-                    }
-
-                    return InteractionResult.sidedSuccess(this.level().isClientSide);
-                } else {
-                    defaultMainActionInteraction(player);
-                }
-            }
-
+        if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
-        }
-
-        if (itemstack.getItem() == itemForTaming) {
-            return InteractionResult.PASS;
         }
 
         return super.mobInteract(player, hand);
@@ -497,11 +456,6 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
         return null;
     }
-
-    private static final float  MIN_SPEED_FOR_DESCENT  = 0.4f;
-    private static final float  MAX_SPEED_FOR_DESCENT  = 1.00f;
-
-    private Vec3 vel = Vec3.ZERO;
 
     @Override
     public void travel(@NotNull Vec3 travelVec) {
