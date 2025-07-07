@@ -1,0 +1,9 @@
+{
+  "values": [
+    "knightquestcompanions:respawn_totem_block",
+    "knightquestcompanions:voltaic_relay_block",
+    "knightquestcompanions:recall_platform_block",
+    "knightquestcompanions:plasma_lamp_block",
+    "knightquestcompanions:tesla_coil_block"
+  ]
+}

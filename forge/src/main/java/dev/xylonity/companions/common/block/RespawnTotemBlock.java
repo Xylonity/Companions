@@ -77,16 +77,12 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
 
     public RespawnTotemBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH)
-                .setValue(LIT, false)
-                .setValue(HALF, DoubleBlockHalf.LOWER));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LIT, false).setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
     public long getSeed(@NotNull BlockState pState, @NotNull BlockPos pPos) {
-        return pState.getValue(HALF) == DoubleBlockHalf.LOWER ?
-                pPos.asLong() : pPos.below().asLong();
+        return pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos.asLong() : pPos.below().asLong();
     }
 
     @Override
@@ -206,7 +202,13 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
             if (pPlayer.isCreative()) {
                 preventCreativeTabDestroy(pLevel, pPos, pState, pPlayer);
             } else {
-                dropResources(pState, pLevel, pPos, null, pPlayer, pPlayer.getMainHandItem());
+                BlockPos otherPos = pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos.above() : pPos.below();
+                BlockState otherState = pLevel.getBlockState(otherPos);
+
+                if (otherState.is(this)) {
+                    pLevel.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
+                    pLevel.levelEvent(pPlayer, 2001, otherPos, Block.getId(otherState));
+                }
             }
         }
 
