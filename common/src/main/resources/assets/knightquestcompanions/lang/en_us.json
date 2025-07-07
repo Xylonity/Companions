@@ -46,5 +46,10 @@
   "item.companions.shadow_bell.linked_to": "\uEA0E Linked to %1$s",
   "item.companions.shadow_bell.lifetime": "\uEA10 Until Death: %1$ds",
   "item.companions.shadow_bell.charges_remaining": "\uEA0F %1$d charges remaining",
-  "item.companions.shadow_bell.default": "Interact with an altar to link"
+  "item.companions.shadow_bell.default": "Interact with an altar to link",
+
+  "main_action.companions.client_message.is_sitting": "%1$s is now sitting down",
+  "main_action.companions.client_message.is_following": "%1$s is now following you",
+  "main_action.companions.client_message.is_wandering": "%1$s is now wandering around",
+  "main_action.companions.client_message.is_working": "%1$s is now getting to work"
 }

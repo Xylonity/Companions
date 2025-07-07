@@ -128,24 +128,23 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
 
         this.entityData.set(MAIN_ACTION, newAction);
 
-        // TODO: the name of the companion
         if (player != null) {
             switch (newAction) {
                 case 0:
                     player.displayClientMessage(Component
-                            .translatable("main_action.knightquestcompanions.client_message.is_sitting"), true);
+                            .translatable("main_action.companions.client_message.is_sitting", getName()), true);
                     break;
                 case 1:
                     player.displayClientMessage(Component
-                            .translatable("main_action.knightquestcompanions.client_message.is_following"), true);
+                            .translatable("main_action.companions.client_message.is_following", getName()), true);
                     break;
                 case 2:
                     player.displayClientMessage(Component
-                            .translatable("main_action.knightquestcompanions.client_message.is_wandering"), true);
+                            .translatable("main_action.companions.client_message.is_wandering", getName()), true);
                     break;
                 default:
                     player.displayClientMessage(Component
-                            .translatable("main_action.knightquestcompanions.client_message.is_working"), true);
+                            .translatable("main_action.companions.client_message.is_working", getName()), true);
                     break;
             }
         }
