@@ -12,6 +12,7 @@ import dev.xylonity.companions.common.entity.ai.minion.imp.ImpFireMarkAttackGoal
 import dev.xylonity.companions.common.entity.ai.minion.minion.MinionTornadoAttackGoal;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -27,11 +28,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.*;
@@ -145,60 +142,36 @@ public class MinionEntity extends CompanionEntity {
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        Item itemForTaming = Items.APPLE;
-        Item item = itemstack.getItem();
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
 
-        if (isTame() && item == CompanionsItems.NETHERITE_CHAINS.get()) {
+        if (level().isClientSide) return InteractionResult.SUCCESS;
+
+        if (isTame() && player == getOwner() && player.getItemInHand(hand).getItem() == CompanionsItems.NETHERITE_CHAINS.get()) {
+            if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
+
             setIsPhaseLocked(true);
             return InteractionResult.SUCCESS;
         }
 
-        if (item == itemForTaming && !isTame()) {
-            if (this.level().isClientSide) {
-                return InteractionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-
-                if (!ForgeEventFactory.onAnimalTame(this, player)) {
-                    if (!this.level().isClientSide) {
-                        tameInteraction(player);
-                    }
-                }
-
-                return InteractionResult.SUCCESS;
-            }
-        }
-
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if ((itemstack.getItem().equals(Items.APPLE) || itemstack.getItem().equals(Items.APPLE))
-                    && this.getHealth() < this.getMaxHealth()) {
-
-                if (itemstack.getItem().equals(Items.APPLE)) {
-                    this.heal(16.0F);
-                } else if (itemstack.getItem().equals(Items.APPLE)) {
-                    this.heal(4.0F);
-                }
-
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-
-            } else {
-                defaultMainActionInteraction(player);
-            }
-
+        if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == itemForTaming) {
-            return InteractionResult.PASS;
-        }
-
         return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        if (pCompound.contains("IsVariantLocked")) {
+            setIsPhaseLocked(pCompound.getBoolean("IsVariantLocked"));
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("IsVariantLocked", isPhaseLocked());
     }
 
     @Override
