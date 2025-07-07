@@ -1,12 +1,11 @@
 package dev.xylonity.companions.common.block;
 
-import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.blockentity.RespawnTotemBlockEntity;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
-import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.knightlib.registry.KnightLibParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,7 +17,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -77,16 +75,12 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
 
     public RespawnTotemBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH)
-                .setValue(LIT, false)
-                .setValue(HALF, DoubleBlockHalf.LOWER));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LIT, false).setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
     public long getSeed(@NotNull BlockState pState, @NotNull BlockPos pPos) {
-        return pState.getValue(HALF) == DoubleBlockHalf.LOWER ?
-                pPos.asLong() : pPos.below().asLong();
+        return pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos.asLong() : pPos.below().asLong();
     }
 
     @Override
@@ -132,20 +126,18 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
 
         ItemStack held = pPlayer.getItemInHand(pHand);
 
-        if (!held.is(CompanionsItems.RELIC_GOLD.get()) && !held.is(CompanionsItems.OLD_CLOTH.get())) {
+        if (!held.is(CompanionsItems.ETERNAL_LIGHTER.get())) {
             return InteractionResult.PASS;
         }
 
-        if (!pPlayer.getAbilities().instabuild) held.shrink(1);
-
         BlockPos lowerPos = pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos : pPos.below();
 
-        pLevel.destroyBlock(lowerPos, false);
-        pLevel.destroyBlock(lowerPos.above(), false);
+        pLevel.setBlock(lowerPos, Blocks.AIR.defaultBlockState(), 35);
+        pLevel.setBlock(lowerPos.above(), Blocks.AIR.defaultBlockState(), 35);
 
         CompanionEntity entity;
 
-        if (held.is(CompanionsItems.RELIC_GOLD.get())) {
+        if (pLevel.random.nextBoolean()) {
             entity = CompanionsEntities.MANKH.get().create(pLevel);
         } else {
             entity = CompanionsEntities.CLOAK.get().create(pLevel);
@@ -153,7 +145,8 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
 
         if (entity != null) {
             entity.moveTo(lowerPos.getX() + 0.5, lowerPos.getY(), lowerPos.getZ() + 0.5, pLevel.random.nextFloat() * 360F, 0);
-            entity.tame(pPlayer);
+
+            entity.tameInteraction(pPlayer);
 
             double dx = pPlayer.getX() - pPos.getX();
             double dy = (pPlayer.getY() + pPlayer.getEyeHeight()) - (pPos.getY() + entity.getEyeHeight());
@@ -172,11 +165,12 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
         }
 
         for (int i = 0; i < 20; i++) {
-            double dx = (pLevel.random.nextDouble() - 0.5) * 0.8;
-            double dy = (pLevel.random.nextDouble() - 0.5) * 0.8;
-            double dz = (pLevel.random.nextDouble() - 0.5) * 0.8;
+            double dx = (pLevel.random.nextDouble() - 0.5) * 1.25;
+            double dy = (pLevel.random.nextDouble() - 0.5) * 1.25;
+            double dz = (pLevel.random.nextDouble() - 0.5) * 1.25;
             if (pLevel instanceof ServerLevel level) {
-                if (pLevel.random.nextFloat() < 0.65f) level.sendParticles(ParticleTypes.POOF, pPos.getX() + 0.5, pPos.getY() + Math.random() * 2, pPos.getZ() + 0.5, 1, dx, dy, dz, 0.1);
+                if (level.random.nextFloat() < 0.35f) level.sendParticles(ParticleTypes.POOF, pPos.getX() + 0.5, pPos.getY() + Math.random() * 2, pPos.getZ() + 0.5, 1, dx, dy, dz, 0.1);
+                if (level.random.nextFloat() < 0.65f) level.sendParticles(KnightLibParticles.STARSET.get(), pPos.getX() + 0.5, pPos.getY() + Math.random() * 2, pPos.getZ() + 0.5, 1, dx, dy, dz, 0.1);
             }
         }
 
@@ -206,12 +200,22 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
             if (pPlayer.isCreative()) {
                 preventCreativeTabDestroy(pLevel, pPos, pState, pPlayer);
             } else {
-                dropResources(pState, pLevel, pPos, null, pPlayer, pPlayer.getMainHandItem());
+                BlockPos oPos = pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos.above() : pPos.below();
+                BlockState oState = pLevel.getBlockState(oPos);
+
+                if (oState.is(this)) {
+                    pLevel.setBlock(oPos, Blocks.AIR.defaultBlockState(), 35);
+                    pLevel.levelEvent(pPlayer, 2001, oPos, Block.getId(oState));
+                }
+
+                popResource(pLevel, pPos, new ItemStack(this));
             }
+
         }
 
         super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
     }
+
 
     public static void preventCreativeTabDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
         if (pState.getValue(HALF) == DoubleBlockHalf.UPPER) {

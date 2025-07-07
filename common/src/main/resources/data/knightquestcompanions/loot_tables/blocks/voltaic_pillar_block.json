@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "knightquestcompanions:voltaic_pillar_block"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "knightquestcompanions:blocks/voltaic_pillar_block"
+}

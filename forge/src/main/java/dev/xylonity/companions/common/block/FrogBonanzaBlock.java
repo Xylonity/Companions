@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.blockentity.FrogBonanzaBlockEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -63,16 +65,12 @@ public class FrogBonanzaBlock extends Block implements EntityBlock {
 
     public FrogBonanzaBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH)
-                .setValue(LIT, false)
-                .setValue(HALF, DoubleBlockHalf.LOWER));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LIT, false).setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
     public long getSeed(@NotNull BlockState pState, @NotNull BlockPos pPos) {
-        return pState.getValue(HALF) == DoubleBlockHalf.LOWER ?
-                pPos.asLong() : pPos.below().asLong();
+        return pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos.asLong() : pPos.below().asLong();
     }
 
     @Override
@@ -132,7 +130,13 @@ public class FrogBonanzaBlock extends Block implements EntityBlock {
             if (pPlayer.isCreative()) {
                 preventCreativeTabDestroy(pLevel, pPos, pState, pPlayer);
             } else {
-                dropResources(pState, pLevel, pPos, null, pPlayer, pPlayer.getMainHandItem());
+                BlockPos otherPos = pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos.above() : pPos.below();
+                BlockState otherState = pLevel.getBlockState(otherPos);
+
+                if (otherState.is(this)) {
+                    pLevel.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
+                    pLevel.levelEvent(pPlayer, 2001, otherPos, Block.getId(otherState));
+                }
             }
         }
 
@@ -200,25 +204,6 @@ public class FrogBonanzaBlock extends Block implements EntityBlock {
         }
 
         return null;
-    }
-
-    public void updateLitState(Level level, BlockPos pos, BlockState state, boolean lit) {
-        level.setBlock(pos, state.setValue(LIT, lit), 3);
-
-        if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
-            BlockPos lowerPos = pos.below();
-            BlockState lowerState = level.getBlockState(lowerPos);
-            if (lowerState.is(this)) {
-                level.setBlock(lowerPos, lowerState.setValue(LIT, lit), 3);
-            }
-        } else {
-            BlockPos upperPos = pos.above();
-            BlockState upperState = level.getBlockState(upperPos);
-            if (upperState.is(this)) {
-                level.setBlock(upperPos, upperState.setValue(LIT, lit), 3);
-            }
-        }
-
     }
 
 }
