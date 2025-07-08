@@ -1,9 +1,9 @@
 package dev.xylonity.companions.common.item.generic;
 
-import dev.xylonity.companions.client.item.renderer.GenericPickaxeItemRenderer;
+import dev.xylonity.companions.client.item.renderer.GenericAxeItemRenderer;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.AxeItem;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -14,13 +14,13 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.function.Consumer;
 
-public class GeckoPickAxeItem extends PickaxeItem implements GeoItem {
+public class GenericGeckoAxeItem extends AxeItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private final String resourceKey;
 
-    public GeckoPickAxeItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
-        super(material, (int) extraDamage, extraSpeed, properties);
+    public GenericGeckoAxeItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
+        super(material, extraDamage, extraSpeed, properties);
         this.resourceKey = resourceKey;
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
@@ -28,11 +28,11 @@ public class GeckoPickAxeItem extends PickaxeItem implements GeoItem {
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
-            private GenericPickaxeItemRenderer renderer;
+            private GenericAxeItemRenderer renderer;
 
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null) {
-                    this.renderer = new GenericPickaxeItemRenderer(resourceKey);
+                    this.renderer = new GenericAxeItemRenderer(resourceKey);
                 }
 
                 return this.renderer;

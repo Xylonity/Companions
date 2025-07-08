@@ -15,6 +15,7 @@ public class CompanionsSounds {
     public static final Supplier<SoundEvent> FLIP_CARD = registerSound("flip_card", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "flip_card")));
     public static final Supplier<SoundEvent> BONANZA = registerSound("bonanza", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "bonanza")));
     public static final Supplier<SoundEvent> COIN_CLATTER = registerSound("coin_clatter", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "coin_clatter")));
+    public static final Supplier<SoundEvent> WRENCH_CONNECTION = registerSound("wrench_connection", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "wrench_connection")));
 
     public static final Supplier<SoundEvent> DINAMO_STEP = registerSound("dinamo_step", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "dinamo_step")));
     public static final Supplier<SoundEvent> DINAMO_IDLE = registerSound("dinamo_idle", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "dinamo_idle")));

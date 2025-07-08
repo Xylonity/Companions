@@ -1,10 +1,10 @@
 package dev.xylonity.companions.client.item.renderer;
 
 import dev.xylonity.companions.client.item.model.GenericPickaxeItemModel;
-import dev.xylonity.companions.common.item.generic.GeckoPickAxeItem;
+import dev.xylonity.companions.common.item.generic.GenericGeckoPickAxeItem;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
-public class GenericPickaxeItemRenderer extends GeoItemRenderer<GeckoPickAxeItem> {
+public class GenericPickaxeItemRenderer extends GeoItemRenderer<GenericGeckoPickAxeItem> {
     public GenericPickaxeItemRenderer(String resourceKey) {
         super(new GenericPickaxeItemModel(resourceKey));
     }

@@ -55,6 +55,7 @@
       }
     ]
   },
+
   "dinamo_idle": {
     "sounds": [
       {
@@ -62,6 +63,13 @@
       },
       {
         "name": "knightquestcompanions:dinamo_idle2"
+      }
+    ]
+  },
+  "wrench_connection": {
+    "sounds": [
+      {
+        "name": "knightquestcompanions:wrench_connection"
       }
     ]
   },

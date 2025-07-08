@@ -6,26 +6,18 @@
 				"identifier": "geometry.unknown",
 				"texture_width": 64,
 				"texture_height": 64,
-				"visible_bounds_width": 3,
-				"visible_bounds_height": 2.5,
-				"visible_bounds_offset": [0, 0.75, 0]
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 1.5,
+				"visible_bounds_offset": [0, 0.25, 0]
 			},
 			"bones": [
 				{
 					"name": "bb_main",
 					"pivot": [0, 0, 0],
 					"cubes": [
-						{"origin": [-8, 0, -8], "size": [16, 16, 16], "uv": [0, 32]}
+						{"origin": [-8, 0, -8], "size": [16, 3, 16], "uv": [0, 45]},
+						{"origin": [-6, 3, -6], "size": [12, 3, 12], "uv": [6, 4]}
 					]
-				},
-				{
-					"name": "sads",
-					"pivot": [-8, 2, -7],
-					"rotation": [0, 55, 0]
-				},
-				{
-					"name": "tesla",
-					"pivot": [0, 8.83333, 0]
 				}
 			]
 		}

@@ -76,26 +76,26 @@ public class WrenchItem extends Item {
                 if (context == null) {
                     if (connectionAtoB) {
                         manager.removeConnection(firstNode, currentNode);
-                    }
-                    else if (connectionBtoA) {
+                    } else {
                         manager.removeConnection(currentNode, firstNode);
                     }
-                }
-                else {
+                } else {
                     // For example, dinamo -> tesla module
                     if (firstNode.isEntity()) {
                         manager.removeConnection(firstNode, currentNode);
-                    }
-                    else {
+                    } else {
                         BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
                         if (first instanceof AbstractTeslaBlockEntity be) {
                             if (connectionAtoB) {
                                 be.handleNodeRemoval(firstNode, currentNode, context);
-                            } else if (connectionBtoA) {
+                            } else {
                                 be.handleNodeRemoval(currentNode, firstNode, context);
                             }
+
+                            be.setOwnerUUID(player.getUUID());
                         }
                     }
+
                 }
 
                 player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_deleted").withStyle(ChatFormatting.RED), true);
@@ -103,20 +103,27 @@ public class WrenchItem extends Item {
                 // The context is null if the second node selected is a dinamo (and I assume so), so we just add a generic connection
                 if (context == null) {
                     manager.addConnection(firstNode, currentNode, false);
-                }
-                else {
+                } else {
                     if (firstNode.isEntity()) {
                         Entity entity = CompanionsEntityTracker.getEntityByUUID(firstNode.entityId());
                         if (entity instanceof DinamoEntity dinamo) {
                             dinamo.handleNodeSelection(firstNode, currentNode);
                         }
-                    }
-                    else {
+                    } else {
                         BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
                         if (first instanceof AbstractTeslaBlockEntity be) {
                             be.handleNodeSelection(firstNode, currentNode, context);
+                            be.setOwnerUUID(player.getUUID());
                         }
                     }
+
+                    if (currentNode.isBlock()) {
+                        BlockEntity currentBe = context.getLevel().getBlockEntity(currentNode.blockPos());
+                        if (currentBe instanceof AbstractTeslaBlockEntity currentTeslaBe) {
+                            currentTeslaBe.setOwnerUUID(player.getUUID());
+                        }
+                    }
+
                 }
 
                 player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_established").withStyle(ChatFormatting.GREEN), true);

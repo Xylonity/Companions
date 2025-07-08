@@ -15,6 +15,10 @@ public class RecallPlatformModel extends GeoModel<RecallPlatformBlockEntity> {
 
     @Override
     public ResourceLocation getTextureResource(RecallPlatformBlockEntity animatable) {
+        if (animatable.isActive()) {
+            return new ResourceLocation(Companions.MOD_ID, "textures/block/recall_platform_on_block.png");
+        }
+
         return new ResourceLocation(Companions.MOD_ID, "textures/block/recall_platform_block.png");
     }
 

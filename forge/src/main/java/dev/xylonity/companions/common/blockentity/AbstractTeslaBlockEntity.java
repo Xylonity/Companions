@@ -25,6 +25,8 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.util.RenderUtils;
 
+import java.util.UUID;
+
 /**
  * Extend this class to create new components that belong to the Tesla network.
  *
@@ -46,6 +48,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     protected boolean receivesGenerator;
     protected int distance;
     protected boolean isActive;
+
+    protected UUID ownerUUID;
 
     protected ITeslaNodeBehaviour defaultAttackBehaviour;
 
@@ -102,6 +106,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.receivesGenerator = tag.getBoolean("ReceivesGenerator");
         this.setDistance(tag.getInt("Distance"));
         this.setAnimationStartTick(tag.getInt("AnimationTick"));
+        if (tag.contains("OwnerUUID")) setOwnerUUID(tag.getUUID("OwnerUUID"));
     }
 
     @Override
@@ -120,6 +125,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         tag.putBoolean("ReceivesGenerator", this.receivesGenerator);
         tag.putInt("Distance", this.distance);
         tag.putInt("AnimationTick", this.getAnimationStartTick());
+        if (getOwnerUUID() != null) tag.putUUID("OwnerUUID", getOwnerUUID());
     }
 
     @Override
@@ -141,6 +147,14 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    public void setOwnerUUID(UUID uuid) {
+        this.ownerUUID = uuid;
+    }
+
+    public UUID getOwnerUUID() {
+        return this.ownerUUID;
+    }
+
     @Override
     public void handleUpdateTag(CompoundTag tag) {
         super.handleUpdateTag(tag);
@@ -149,6 +163,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.distance = tag.getInt("Distance");
         this.setAnimationStartTick(tag.getInt("AnimationTick"));
         this.cycleCounter = tag.getInt("CycleCounter");
+        if (getOwnerUUID() != null) setOwnerUUID(tag.getUUID("OwnerUUID"));
     }
 
     @Override
@@ -159,6 +174,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         tag.putInt("Distance", this.distance);
         tag.putInt("AnimationTick", this.getAnimationStartTick());
         tag.putInt("CycleCounter", this.cycleCounter);
+        if (tag.contains("OwnerUUID")) tag.putUUID("OwnerUUID", getOwnerUUID());
         return tag;
     }
 

@@ -3,10 +3,12 @@ package dev.xylonity.companions.common.tesla.behaviour;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,7 +37,7 @@ public class DefaultAttackBehaviour implements ITeslaNodeBehaviour {
                         List<LivingEntity> entities =
                                 level.getEntitiesOfClass(LivingEntity.class, new AABB(start, end).inflate(1.0D));
 
-                        hurtNearLine(entities, start, end);
+                        hurtNearLine(module, level, entities, start, end);
                     }
 
                 } else if (connectionNode.isBlock()) {
@@ -46,20 +48,25 @@ public class DefaultAttackBehaviour implements ITeslaNodeBehaviour {
                     List<LivingEntity> entities =
                             level.getEntitiesOfClass(LivingEntity.class, new AABB(start, end).inflate(1.0D));
 
-                    hurtNearLine(entities, start, end);
+                    hurtNearLine(module, level, entities, start, end);
                 }
             }
         }
 
     }
 
-    private void hurtNearLine(List<LivingEntity> entitiesToHurt, Vec3 origin, Vec3 end) {
+    private void hurtNearLine(AbstractTeslaBlockEntity module, Level level, List<LivingEntity> entitiesToHurt, Vec3 origin, Vec3 end) {
         for (LivingEntity victim : entitiesToHurt) {
             if (ITeslaUtil.isEntityNearLine(origin, end, victim, 0.75D)) {
-                victim.hurt(victim.level().damageSources().lightningBolt(), 7f);
-                victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0));
+                if (level instanceof ServerLevel sv && module.getOwnerUUID() != null) {
+                    if (!Util.areEntitiesLinked(sv.getEntity(module.getOwnerUUID()), victim)) {
+                        victim.hurt(victim.level().damageSources().lightningBolt(), 7f);
+                        victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0, false, true, true));
+                    }
+                }
             }
         }
+
     }
 
 }
