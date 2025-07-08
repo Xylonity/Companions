@@ -1,6 +1,8 @@
 package dev.xylonity.companions.common.entity.hostile;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
+import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
@@ -30,8 +32,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -46,9 +46,11 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class IllagerGolemEntity extends Raider implements GeoEntity {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public List<Entity> visibleEntities = new ArrayList<>();
 
@@ -63,7 +65,6 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
 
     private static final int TIME_PER_ACTIVATION = 60;
     public static final int ELECTRICAL_CHARGE_DURATION = 8; // Amount of frames (from the spritesheet) to be played
-    private static final int MAX_RADIUS = 10;
 
     public IllagerGolemEntity(EntityType<? extends Raider> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -159,6 +160,7 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
     public void tick() {
         super.tick();
 
+        // client and server tickcounts are desynched sometimes
         if (!level().isClientSide) this.setTickCount(this.tickCount);
 
         if (getTickCount() % TIME_PER_ACTIVATION == 0) {
@@ -175,53 +177,67 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
         }
 
         if (isActive()) {
-            Vec3 currentPosition = this.position();
-            AABB searchBox = new AABB(
-                    currentPosition.x - MAX_RADIUS, currentPosition.y - MAX_RADIUS, currentPosition.z - MAX_RADIUS,
-                    currentPosition.x + MAX_RADIUS, currentPosition.y + MAX_RADIUS, currentPosition.z + MAX_RADIUS
-            );
+            // populate on both client and server
+            searchAndAttack();
+        }
 
-            visibleEntities = this.level().getEntities(this, searchBox, entity -> {
-                        if (entity instanceof Monster) return false;
-                        if (entity instanceof Player player) return !player.isCreative() && !player.isSpectator();
-                        return entity instanceof LivingEntity;
-                    })
-                    .stream()
-                    .filter(this::hasLineOfSight)
-                    .collect(Collectors.toList());
+    }
 
-            if (!this.visibleEntities.isEmpty()) {
+    @Override
+    protected void tickDeath() {
+        ++this.deathTime;
+        if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
+            this.level().broadcastEntityEvent(this, (byte) 60);
 
-                if (level().isClientSide()) {
-                    double radius = 0.42;
-                    double centerX = position().x;
-                    double centerZ = position().z;
-                    double initialY = position().y() + this.getBbHeight() - 0.60;
+            BrokenDinamoEntity dinamo = CompanionsEntities.BROKEN_DINAMO.get().create(level());
+            if (dinamo != null && level().random.nextFloat() < 0.15f && !level().isClientSide) {
+                dinamo.moveTo(position());
+                dinamo.setLifetime(new Random().nextInt(6000, 10000));
+                level().addFreshEntity(dinamo);
+            }
 
-                    for (int i = 0; i < 360; i += 120) {
-                        double angleRadians = Math.toRadians(i);
+            this.remove(RemovalReason.KILLED);
+        }
 
-                        double particleX = centerX + radius * Math.cos(angleRadians);
-                        double particleZ = centerZ + radius * Math.sin(angleRadians);
+    }
 
-                        level().addParticle(CompanionsParticles.ILLAGER_GOLEM_SPARK.get(), particleX, initialY, particleZ, 0d, 0.35d, 0d);
-                    }
-                }
+    private void searchAndAttack() {
+        visibleEntities = this.level().getEntities(this, getBoundingBox().inflate(10), entity ->
+                {
+                    if (entity instanceof Monster) return false;
+                    if (entity instanceof Player player) return !player.isCreative() && !player.isSpectator();
 
-                int elapsed = getTickCount() - getAnimationStartTick();
+                    return entity instanceof LivingEntity;
+                })
+                .stream()
+                .filter(this::hasLineOfSight)
+                .collect(Collectors.toList());
 
-                if (!level().isClientSide && elapsed >= 3 && elapsed < ELECTRICAL_CHARGE_DURATION) {
-                    for (Entity entity : visibleEntities) {
-                        if (entity instanceof LivingEntity living) {
-                            living.hurt(level().damageSources().lightningBolt(), 6.0F);
-                        }
-                    }
+        if (!this.visibleEntities.isEmpty()) {
+
+            if (level().isClientSide()) {
+                double radius = 0.42;
+                for (int i = 0; i < 360; i += 120) {
+                    double rad = Math.toRadians(i);
+
+                    double particleX = position().x + radius * Math.cos(rad);
+                    double particleZ = position().z + radius * Math.sin(rad);
+
+                    level().addParticle(CompanionsParticles.ILLAGER_GOLEM_SPARK.get(), particleX, position().y() + this.getBbHeight() - 0.60, particleZ, 0d, 0.35d, 0d);
                 }
 
             }
 
-        }
+            int elapsed = getTickCount() - getAnimationStartTick();
+            if (!level().isClientSide && elapsed >= 3 && elapsed < ELECTRICAL_CHARGE_DURATION) {
+                for (Entity entity : visibleEntities) {
+                    if (entity instanceof LivingEntity e && !Util.areEntitiesLinked(this, e)) {
+                        this.doHurtTarget(e);
+                    }
+                }
 
+            }
+        }
     }
 
     public void setActive(boolean active) {

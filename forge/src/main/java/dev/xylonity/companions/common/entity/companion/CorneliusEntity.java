@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.goal.*;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomHopStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -29,10 +30,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -101,13 +100,17 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
-        this.goalSelector.addGoal(1, new CorneliusFireworkToadGoal(this, 60, 260));
-        this.goalSelector.addGoal(1, new CorneliusNetherBullfrogGoal(this, 60, 260));
-        this.goalSelector.addGoal(1, new CorneliusBubbleFrogGoal(this, 60, 260));
-        this.goalSelector.addGoal(1, new CorneliusEnderFrogGoal(this, 60, 260));
-        this.goalSelector.addGoal(1, new CorneliusEmberPoleGoal(this, 60, 260));
+        this.goalSelector.addGoal(2, new CorneliusFireworkToadGoal(this, 60, 260));
+        this.goalSelector.addGoal(2, new CorneliusNetherBullfrogGoal(this, 60, 260));
+        this.goalSelector.addGoal(2, new CorneliusBubbleFrogGoal(this, 60, 260));
+        this.goalSelector.addGoal(2, new CorneliusEnderFrogGoal(this, 60, 260));
+        this.goalSelector.addGoal(2, new CorneliusEmberPoleGoal(this, 60, 260));
+
+        this.goalSelector.addGoal(3, new CorneliusMoveToBeeGoal(this, 0.725D));
+        this.goalSelector.addGoal(3, new CorneliusAttackBeeGoal(this, 10, 30));
 
         this.goalSelector.addGoal(4, new HopToOwnerGoal<>(this, 0.725D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(4, new CompanionRandomHopStrollGoal(this, 0.725D));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
@@ -163,8 +166,6 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
 
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
             NetworkHooks.openScreen(
                     (ServerPlayer) player, new MenuProvider() {
@@ -180,35 +181,12 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
                     },
                     buf -> buf.writeInt(this.getId())
             );
+
             this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
             return InteractionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == Items.APPLE && !isTame()) {
-            if (this.level().isClientSide) {
-                return InteractionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().instabuild) itemstack.shrink(1);
-
-                if (!ForgeEventFactory.onAnimalTame(this, player)) {
-                    if (!this.level().isClientSide) {
-                        tameInteraction(player);
-                    }
-                }
-                setSitVariation(getRandom().nextInt(0, 3));
-                return InteractionResult.SUCCESS;
-            }
-        }
-
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if (itemstack.getItem() == Items.APPLE && this.getHealth() < this.getMaxHealth()) {
-                this.heal(16.0F);
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-            } else {
-                defaultMainActionInteraction(player);
-            }
+        if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
         }
 
@@ -233,7 +211,7 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
 
     @Override
     protected boolean canThisCompanionWork() {
-        return true;
+        return false;
     }
 
     @Override
@@ -255,8 +233,8 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
                     this.spawnAtLocation(itemStack);
                 }
             }
-
         }
+
     }
 
     @Override

@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.tesla.behaviour.coil;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
-import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import net.minecraft.core.BlockPos;
@@ -49,6 +48,7 @@ public class CoilPulseBehaviour implements ITeslaNodeBehaviour {
                         }
                     }
                 }
+
             }
 
             //Reset the counter when either the animation's finished, or when the pulse has been sent

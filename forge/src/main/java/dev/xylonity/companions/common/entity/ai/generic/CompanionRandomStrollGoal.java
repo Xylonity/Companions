@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public class CompanionRandomStrollGoal extends Goal {
-    public static final int DEFAULT_INTERVAL = 120;
     protected final CompanionEntity mob;
     protected double wantedX;
     protected double wantedY;
@@ -17,10 +16,11 @@ public class CompanionRandomStrollGoal extends Goal {
     protected final double speedModifier;
     protected int interval;
     protected boolean forceTrigger;
-    private final boolean checkNoActionTime;
+    private boolean checkNoActionTime;
 
     public CompanionRandomStrollGoal(CompanionEntity pMob, double pSpeedModifier) {
         this(pMob, pSpeedModifier, 120);
+        this.checkNoActionTime = false;
     }
 
     public CompanionRandomStrollGoal(CompanionEntity pMob, double pSpeedModifier, int pInterval) {

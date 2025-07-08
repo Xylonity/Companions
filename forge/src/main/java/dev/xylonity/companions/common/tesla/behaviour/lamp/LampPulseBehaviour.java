@@ -23,8 +23,7 @@ public class LampPulseBehaviour implements ITeslaNodeBehaviour {
     @Override
     public void process(AbstractTeslaBlockEntity lamp, Level level, BlockPos blockPos, BlockState blockState) {
 
-        List<TeslaConnectionManager.ConnectionNode> oldConnections =
-                new ArrayList<>(lamp.connectionManager.getIncoming(lamp.asConnectionNode()));
+        List<TeslaConnectionManager.ConnectionNode> oldConnections = new ArrayList<>(lamp.connectionManager.getIncoming(lamp.asConnectionNode()));
 
         if (lamp.cycleCounter >= 0) {
 
