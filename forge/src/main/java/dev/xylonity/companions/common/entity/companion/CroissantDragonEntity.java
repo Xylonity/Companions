@@ -9,11 +9,14 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.knightlib.common.api.TickScheduler;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.*;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -50,8 +53,6 @@ public class CroissantDragonEntity extends CompanionEntity {
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation EATEN = RawAnimation.begin().thenPlay("eaten");
     private final RawAnimation FLY = RawAnimation.begin().thenPlay("fly");
-    private final RawAnimation LAND = RawAnimation.begin().thenPlay("land");
-    private final RawAnimation TAKE_OFF = RawAnimation.begin().thenPlay("take_off");
 
     private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> ARMOR_NAME = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.STRING);
@@ -60,15 +61,7 @@ public class CroissantDragonEntity extends CompanionEntity {
     private static final EntityDataAccessor<Integer> MILK_AMOUNT = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.INT);
 
     private final int EATEN_DELAY = 10;
-    private final int ANIMATION_TAKE_OFF_TICKS = 14;
-    private final int ANIMATION_LAND_TICKS = 10;
     private int nextEatenRecover = 0;
-
-    // Animation purposes
-    private enum FlightState {
-        GROUND, TAKING_OFF, FLYING, LANDING
-    }
-    private FlightState flightState = FlightState.GROUND;
 
     public CroissantDragonEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -220,6 +213,8 @@ public class CroissantDragonEntity extends CompanionEntity {
         ItemStack itemstack = player.getItemInHand(hand);
 
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getEatenAmount() < 2 && !hasBeenEaten()) {
+            if (level().isClientSide) return InteractionResult.SUCCESS;
+
             this.playSound(SoundEvents.WOOL_BREAK, 0.5F, 1.0F);
 
             setEatenAmount(getEatenAmount() + 1);
@@ -230,7 +225,7 @@ public class CroissantDragonEntity extends CompanionEntity {
 
             switch (getArmorName()) {
                 case "chocolate":
-                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, 0));
+                    player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 200, 0));
                     break;
                 case "strawberry":
                     player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 180, 1));
@@ -268,50 +263,49 @@ public class CroissantDragonEntity extends CompanionEntity {
                 }
 
                 setMilkAmount(getMilkAmount() + 1);
+
+                player.level().playSound(null, this.blockPosition(), SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+
                 return InteractionResult.SUCCESS;
             }
+        } else if (!isTame()) {
+            player.displayClientMessage(
+                    Component.translatable("croissant_dragon.companions.client_message.requires_milk"), true);
+
+            player.level().playSound(null, this.blockPosition(), SoundEvents.NOTE_BLOCK_BANJO.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+
+            return InteractionResult.PASS;
         }
 
         if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
             if (getArmorName().equals("default")) {
+                if (level().isClientSide) return InteractionResult.SUCCESS;
+
                 if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get()) {
                     this.setArmorName("strawberry");
 
-                    if (!player.getAbilities().instabuild) {
-                        itemstack.shrink(1);
-                    }
+                    if (!player.getAbilities().instabuild) itemstack.shrink(1);
 
                     return InteractionResult.SUCCESS;
                 } else if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get()) {
                     this.setArmorName("vanilla");
 
-                    if (!player.getAbilities().instabuild) {
-                        itemstack.shrink(1);
-                    }
+                    if (!player.getAbilities().instabuild) itemstack.shrink(1);
 
                     return InteractionResult.SUCCESS;
                 } else if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get()) {
                     this.setArmorName("chocolate");
 
-                    if (!player.getAbilities().instabuild) {
-                        itemstack.shrink(1);
-                    }
+                    if (!player.getAbilities().instabuild) itemstack.shrink(1);
 
                     return InteractionResult.SUCCESS;
                 }
+
+                this.playSound(SoundEvents.WOOL_BREAK, 0.5F, 1.0F);
             }
         }
 
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if (itemstack.getItem() == Items.APPLE && this.getHealth() < this.getMaxHealth()) {
-                this.heal(16.0F);
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-            } else {
-                defaultMainActionInteraction(player);
-            }
-
+        if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
         }
 
@@ -320,9 +314,8 @@ public class CroissantDragonEntity extends CompanionEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
-        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "eatencontroller", 1, this::eatenPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
+        controllerRegistrar.add(new AnimationController<>(this, "eatencontroller", 2, this::eatenPredicate));
     }
 
     private <T extends GeoAnimatable> PlayState eatenPredicate(AnimationState<T> event) {
@@ -334,46 +327,16 @@ public class CroissantDragonEntity extends CompanionEntity {
         return PlayState.CONTINUE;
     }
 
-    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
-        if (isAttacking() && event.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
-            event.getController().forceAnimationReset();
-            event.setAnimation(ATTACK);
-        }
-
-        return PlayState.CONTINUE;
-    }
-
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
 
         if (getMainAction() == 0) {
             event.getController().setAnimation(getSitVariation() == 0 ? SIT : SIT2);
-            return PlayState.CONTINUE;
-        } else if (getEatenAmount() == 0) {
-            if (flightState == FlightState.GROUND) {
-                flightState = FlightState.TAKING_OFF;
-                event.getController().setAnimation(TAKE_OFF);
-                //TickScheduler.scheduleClient(level(), () -> flightState = FlightState.FLYING, ANIMATION_TAKE_OFF_TICKS);
-                return PlayState.CONTINUE;
-            }
+        } else if (isAttacking()) {
+            event.getController().setAnimation(ATTACK);
+        } else if (event.isMoving()) {
+            event.getController().setAnimation(getEatenAmount() == 0 ? FLY : WALK);
         } else {
-            if (flightState == FlightState.FLYING) {
-                flightState = FlightState.LANDING;
-                event.getController().setAnimation(LAND);
-                //TickScheduler.scheduleClient(level(), () -> flightState = FlightState.GROUND, ANIMATION_LAND_TICKS);
-                return PlayState.CONTINUE;
-            }
-        }
-
-        switch (flightState) {
-            case FLYING -> event.getController().setAnimation(FLY);
-            case GROUND -> {
-                if (event.isMoving()) {
-                    event.getController().setAnimation(WALK);
-                } else {
-                    event.getController().setAnimation(IDLE);
-                }
-            }
-            default -> { ;; }
+            event.getController().setAnimation(IDLE);
         }
 
         return PlayState.CONTINUE;

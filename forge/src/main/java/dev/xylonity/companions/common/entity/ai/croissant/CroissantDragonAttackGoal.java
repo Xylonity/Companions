@@ -103,7 +103,7 @@ public class CroissantDragonAttackGoal extends Goal {
                 CakeCreamTriggerProjectile projectile = new CakeCreamTriggerProjectile(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), dragon.level());
                 projectile.setPos(spawnPos.x, spawnPos.y + new Random().nextDouble(0, 1), spawnPos.z);
                 projectile.setArmorName(dragon.getArmorName());
-
+                projectile.setOwner(dragon);
                 projectile.setDeltaMovement(Util.randomVectorInCone(viewVector, 15.0, new Random()).scale(0.5 * (0.8 + new Random().nextDouble() * 0.4)));
                 dragon.level().addFreshEntity(projectile);
             }

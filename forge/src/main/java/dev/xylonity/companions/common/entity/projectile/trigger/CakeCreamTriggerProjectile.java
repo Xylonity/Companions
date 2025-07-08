@@ -16,7 +16,6 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 public class CakeCreamTriggerProjectile extends GenericTriggerProjectile {
-    private final float GRAVITY = 0.015f;
     private static final EntityDataAccessor<String> ARMOR_NAME = SynchedEntityData.defineId(CakeCreamTriggerProjectile.class, EntityDataSerializers.STRING);
 
     public CakeCreamTriggerProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
@@ -29,14 +28,15 @@ public class CakeCreamTriggerProjectile extends GenericTriggerProjectile {
 
         if (!this.onGround()) {
             Vec3 motion = this.getDeltaMovement();
-            this.setDeltaMovement(motion.x * 0.98, motion.y - GRAVITY, motion.z * 0.98);
+            this.setDeltaMovement(motion.x * 0.98, motion.y - 0.015f, motion.z * 0.98);
             this.move(MoverType.SELF, this.getDeltaMovement());
         } else {
-            FloorCakeCreamProjectile cakeCreamProjectile = CompanionsEntities.FLOOR_CAKE_CREAM.get().create(level());
-            if (cakeCreamProjectile != null) {
-                cakeCreamProjectile.moveTo(getX(), getY(), getZ());
-                cakeCreamProjectile.setArmorName(getArmorName());
-                level().addFreshEntity(cakeCreamProjectile);
+            FloorCakeCreamProjectile cream = CompanionsEntities.FLOOR_CAKE_CREAM.get().create(level());
+            if (cream != null) {
+                cream.moveTo(getX(), getY(), getZ());
+                cream.setArmorName(getArmorName());
+                if (getOwner() != null) cream.setOwner(getOwner());
+                level().addFreshEntity(cream);
             }
 
             this.discard();

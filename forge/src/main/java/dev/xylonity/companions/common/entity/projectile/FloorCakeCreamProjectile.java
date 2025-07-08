@@ -1,10 +1,13 @@
 package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -33,22 +36,39 @@ public class FloorCakeCreamProjectile extends BaseProjectile implements GeoEntit
 
     @Override
     public void tick() {
+
         super.tick();
 
-            AABB effectArea = new AABB(
-                    getX() - getSize(), getY() - 0.5, getZ() - getSize(),
-                    getX() + getSize(), getY() + 0.5, getZ() + getSize()
-            );
+        AABB effectArea = new AABB(
+                getX() - getSize(), getY() - 0.5, getZ() - getSize(),
+                getX() + getSize(), getY() + 0.5, getZ() + getSize()
+        );
 
-            List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, effectArea);
+        List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, effectArea);
 
-            for (LivingEntity entity : entities) {
+        for (LivingEntity entity : entities) {
+            if (getOwner() != null && !Util.areEntitiesLinked(entity, this)) {
                 Vec3 v = entity.getDeltaMovement();
-                entity.setDeltaMovement(v.x * 0.25, v.y, v.z * 0.25);
+                entity.setDeltaMovement(v.x * 0.2, v.y, v.z * 0.2);
+                entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 0));
+            } else {
+                switch (getArmorName()) {
+                    case "chocolate":
+                        entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 80, 0));
+                        break;
+                    case "strawberry":
+                        entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 80, 0));
+                        break;
+                    case "vanilla":
+                        entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 80, 0));
+                        break;
+                    default:
+                        break;
+                }
             }
 
+        }
 
-        if (tickCount >= getLifetime()) this.remove(RemovalReason.DISCARDED);
     }
 
     @Override

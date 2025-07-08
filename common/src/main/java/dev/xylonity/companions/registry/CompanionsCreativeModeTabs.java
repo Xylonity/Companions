@@ -16,7 +16,7 @@ public class CompanionsCreativeModeTabs {
     public static final Supplier<CreativeModeTab> COMPANIONS_TAB =
             CompanionsCommon.COMMON_PLATFORM.registerCreativeModeTab("companions_tab",
                     () -> CompanionsCommon.COMMON_PLATFORM.creativeTabBuilder()
-                            .icon(() -> new ItemStack(Items.ACACIA_BOAT))
+                            .icon(() -> new ItemStack(CompanionsBlocks.CROISSANT_EGG.get()))
                             .title(Component.translatable("creativetab.companions.title"))
                             .displayItems((itemDisplayParameters, output) -> {
 
