@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.ai.croissant;
 import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
 import dev.xylonity.companions.common.particle.CakeCreamParticle;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.knightlib.common.api.TickScheduler;
@@ -103,36 +104,12 @@ public class CroissantDragonAttackGoal extends Goal {
                 projectile.setPos(spawnPos.x, spawnPos.y + new Random().nextDouble(0, 1), spawnPos.z);
                 projectile.setArmorName(dragon.getArmorName());
 
-                Vec3 variedVector = randomVectorInCone(viewVector, 15.0, new Random());
-                double factor = 0.8 + new Random().nextDouble() * 0.4;
-
-                projectile.setDeltaMovement(variedVector.scale(0.5 * factor));
+                projectile.setDeltaMovement(Util.randomVectorInCone(viewVector, 15.0, new Random()).scale(0.5 * (0.8 + new Random().nextDouble() * 0.4)));
                 dragon.level().addFreshEntity(projectile);
             }
         }
 
     }
-
-    private static Vec3 randomVectorInCone(Vec3 base, double maxAngleDegrees, Random random) {
-        double maxAngleRad = Math.toRadians(maxAngleDegrees);
-        double minCos = Math.cos(maxAngleRad);
-        double cosTheta = minCos + random.nextDouble() * (1.0 - minCos);
-        double sinTheta = Math.sqrt(1.0 - cosTheta * cosTheta);
-        double phi = random.nextDouble() * 2 * Math.PI;
-
-        Vec3 baseNorm = base.normalize();
-        Vec3 u = baseNorm.cross(new Vec3(0, 1, 0));
-
-        if (u.lengthSqr() < 1e-6) {
-            u = baseNorm.cross(new Vec3(1, 0, 0));
-        }
-
-        u = u.normalize();
-        Vec3 v = baseNorm.cross(u).normalize();
-
-        return baseNorm.scale(cosTheta).add(u.scale(sinTheta * Math.cos(phi))).add(v.scale(sinTheta * Math.sin(phi))).scale(base.length());
-    }
-
 
     @Override
     public void stop() {
@@ -156,4 +133,5 @@ public class CroissantDragonAttackGoal extends Goal {
 
         cooldown = dragon.getRandom().nextInt(61) + 60;
     }
+
 }

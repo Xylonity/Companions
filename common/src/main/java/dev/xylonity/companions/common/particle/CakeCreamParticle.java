@@ -72,13 +72,7 @@ public class CakeCreamParticle extends TextureSheetParticle {
         this.zd *= 0.98;
     }
 
-    private static Vec3 randomVectorInCone(Vec3 base, double alpha) {
-        double maxAngleRad = Math.toRadians(alpha);
-        double minCos = Math.cos(maxAngleRad);
-        double cosTheta = minCos + new Random().nextDouble() * (1.0 - minCos);
-        double sinTheta = Math.sqrt(1.0 - cosTheta * cosTheta);
-        double phi = new Random().nextDouble() * 2 * Math.PI;
-
+    public static Vec3 randomVectorInCone(Vec3 base, double alpha) {
         Vec3 baseNorm = base.normalize();
 
         Vec3 u = baseNorm.cross(new Vec3(0, 1, 0));
@@ -89,9 +83,11 @@ public class CakeCreamParticle extends TextureSheetParticle {
         u = u.normalize();
         Vec3 v = baseNorm.cross(u).normalize();
 
-        Vec3 result = baseNorm.scale(cosTheta).add(u.scale(sinTheta * Math.cos(phi))).add(v.scale(sinTheta * Math.sin(phi)));
-
-        return result.scale(base.length());
+        double minCos = Math.cos(Math.toRadians(alpha));
+        double cos = minCos + new Random().nextDouble() * (1.0 - minCos);
+        double sin = Math.sqrt(1.0 - cos * cos);
+        double phi = new Random().nextDouble() * 2 * Math.PI;
+        return baseNorm.scale(cos).add(u.scale(sin * Math.cos(phi))).add(v.scale(sin * Math.sin(phi))).scale(base.length());
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {
@@ -103,7 +99,6 @@ public class CakeCreamParticle extends TextureSheetParticle {
 
         @Override
         public Particle createParticle(@NotNull SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
-
             if (dx == 0 && dy == 0 && dz == 0) {
                 Vec3 b = new Vec3(defaultVelocityX, defaultVelocityY, defaultVelocityZ);
                 Vec3 v = randomVectorInCone(b, 15.0);

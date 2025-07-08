@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -185,6 +186,24 @@ public class Util {
         }
 
         return result;
+    }
+
+    public static Vec3 randomVectorInCone(Vec3 base, double maxAngleDegrees, Random random) {
+        Vec3 baseNorm = base.normalize();
+        Vec3 u = baseNorm.cross(new Vec3(0, 1, 0));
+
+        if (u.lengthSqr() < 1e-6) {
+            u = baseNorm.cross(new Vec3(1, 0, 0));
+        }
+
+        u = u.normalize();
+        Vec3 v = baseNorm.cross(u).normalize();
+
+        double minCos = Math.cos(Math.toRadians(maxAngleDegrees));
+        double cos = minCos + random.nextDouble() * (1.0 - minCos);
+        double sin = Math.sqrt(1.0 - cos * cos);
+        double phi = random.nextDouble() * 2 * Math.PI;
+        return baseNorm.scale(cos).add(u.scale(sin * Math.cos(phi))).add(v.scale(sin * Math.sin(phi))).scale(base.length());
     }
 
     /**

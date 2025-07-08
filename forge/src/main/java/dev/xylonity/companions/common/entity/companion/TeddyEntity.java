@@ -270,54 +270,24 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        Item itemForTaming = Items.APPLE;
-        Item item = itemstack.getItem();
-
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (getSecondPhaseCounter() != 0 && getPhase() == 1) {
             return InteractionResult.PASS;
         }
 
-        if (item == itemForTaming && !isTame()) {
-            if (this.level().isClientSide) {
-                return InteractionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().instabuild) itemstack.shrink(1);
+        ItemStack stack = player.getItemInHand(hand);
+        if (!isTame() && stack.getItem() == CompanionsItems.NEEDLE.get()) {
+            if (level().isClientSide) return InteractionResult.SUCCESS;
 
-                if (!ForgeEventFactory.onAnimalTame(this, player)) {
-                    if (!this.level().isClientSide) {
-                        tameInteraction(player);
-                    }
-                }
+            if (!player.getAbilities().instabuild) stack.shrink(1);
 
-                return InteractionResult.SUCCESS;
-            }
-        }
-
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if ((itemstack.getItem().equals(Items.APPLE) || itemstack.getItem().equals(Items.APPLE)) && this.getHealth() < this.getMaxHealth()) {
-                if (itemstack.getItem().equals(Items.APPLE)) {
-                    this.heal(16.0F);
-                } else if (itemstack.getItem().equals(Items.APPLE)) {
-                    this.heal(4.0F);
-                }
-
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-
-            } else if (itemstack.getItem().equals(CompanionsItems.ETERNAL_LIGHTER.get()) && getPhase() == 1 && this.getSecondPhaseCounter() == 0 && getMainAction() != 0) {
-                this.setSecondPhaseCounter(this.getSecondPhaseCounter() + 1);
-            } else {
-                defaultMainActionInteraction(player);
-            }
+            this.tameInteraction(player);
 
             return InteractionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == itemForTaming) {
-            return InteractionResult.PASS;
+        if (handleDefaultMainActionAndHeal(player, hand)) {
+            return InteractionResult.SUCCESS;
         }
 
         return super.mobInteract(player, hand);
