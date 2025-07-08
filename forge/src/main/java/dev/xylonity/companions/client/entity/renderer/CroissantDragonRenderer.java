@@ -15,19 +15,8 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class CroissantDragonRenderer extends GeoEntityRenderer<CroissantDragonEntity> {
 
-    private final String TPATH = "textures/entity/croissant_dragon_";
-
     public CroissantDragonRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new CroissantDragonModel());
-    }
-
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull CroissantDragonEntity animatable) {
-        if (animatable.isAttacking()) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, TPATH + animatable.getArmorName() + "_attack.png");
-        } else {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, TPATH + animatable.getArmorName() + ".png");
-        }
     }
 
     @Override

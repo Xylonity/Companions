@@ -14,9 +14,4 @@ public class PuppetGloveRenderer extends GeoEntityRenderer<PuppetGloveEntity> {
         super(renderManager, new PuppetGloveModel());
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull PuppetGloveEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/puppet_glove.png");
-    }
-
 }

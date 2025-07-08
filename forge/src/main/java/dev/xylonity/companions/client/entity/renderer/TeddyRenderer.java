@@ -19,15 +19,6 @@ public class TeddyRenderer extends GeoEntityRenderer<TeddyEntity> {
         super(renderManager, new TeddyModel());
     }
 
-    private String prefix(TeddyEntity animatable) {
-        return animatable.getPhase() == 1 ? "" : "mutated_";
-    }
-
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull TeddyEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/" + prefix(animatable) + "teddy.png");
-    }
-
     @Override
     protected float getDeathMaxRotation(TeddyEntity animatable) {
         return animatable.getPhase() == 2 ? 0F : super.getDeathMaxRotation(animatable);

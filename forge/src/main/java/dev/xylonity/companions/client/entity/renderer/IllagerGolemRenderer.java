@@ -37,14 +37,6 @@ public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> 
         this(renderManager, IllagerGolemEntity.ELECTRICAL_CHARGE_DURATION, 1);
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull IllagerGolemEntity animatable) {
-        if (animatable.isActive() && !animatable.visibleEntities.isEmpty())
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/illager_golem_charge.png");
-
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/illager_golem.png");
-    }
-
     private static class ElectricConnectionLayer extends GeoRenderLayer<IllagerGolemEntity> {
         private final ResourceLocation texture;
         private final int totalFrames;

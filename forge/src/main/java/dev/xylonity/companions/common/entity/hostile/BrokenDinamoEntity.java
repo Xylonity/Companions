@@ -117,6 +117,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
                     if (level() instanceof ServerLevel serverLevel && getOwnerUUID() != null) {
                         tameDinamo(serverLevel.getEntity(getOwnerUUID()));
                     }
+
                     this.discard();
                 }
 

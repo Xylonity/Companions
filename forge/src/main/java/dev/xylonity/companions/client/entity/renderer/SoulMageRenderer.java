@@ -14,9 +14,4 @@ public class SoulMageRenderer extends GeoEntityRenderer<SoulMageEntity> {
         super(renderManager, new SoulMageModel());
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull SoulMageEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/soul_mage.png");
-    }
-
 }

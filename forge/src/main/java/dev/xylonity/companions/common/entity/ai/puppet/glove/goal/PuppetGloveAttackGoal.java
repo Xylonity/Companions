@@ -2,12 +2,18 @@ package dev.xylonity.companions.common.entity.ai.puppet.glove.goal;
 
 import dev.xylonity.companions.common.entity.ai.puppet.glove.AbstractPuppetGloveAttackGoal;
 import dev.xylonity.companions.common.entity.companion.PuppetGloveEntity;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.world.entity.LivingEntity;
 
 public class PuppetGloveAttackGoal extends AbstractPuppetGloveAttackGoal {
 
     public PuppetGloveAttackGoal(PuppetGloveEntity glove, int minCd, int maxCd) {
         super(glove, 15, minCd, maxCd);
+    }
+
+    @Override
+    public boolean canUse() {
+        return super.canUse() && !glove.isTransforming();
     }
 
     @Override
@@ -24,7 +30,7 @@ public class PuppetGloveAttackGoal extends AbstractPuppetGloveAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        if (glove.hasLineOfSight(target))
+        if (glove.hasLineOfSight(target) && !Util.areEntitiesLinked(glove, target))
             glove.doHurtTarget(target);
     }
 

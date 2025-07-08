@@ -14,9 +14,4 @@ public class LivingCandleRenderer extends GeoEntityRenderer<LivingCandleEntity> 
         super(renderManager, new LivingCandleModel());
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull LivingCandleEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/living_candle" + animatable.tickCount / 3 % 5 + ".png");
-    }
-
 }

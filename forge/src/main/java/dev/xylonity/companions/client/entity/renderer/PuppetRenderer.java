@@ -20,11 +20,6 @@ public class PuppetRenderer extends GeoEntityRenderer<PuppetEntity> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull PuppetEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/puppet.png");
-    }
-
-    @Override
     public void renderRecursively(PoseStack poseStack, PuppetEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         String[] armNames = animatable.getArmNames().split(",");
         String leftArm = armNames[0];

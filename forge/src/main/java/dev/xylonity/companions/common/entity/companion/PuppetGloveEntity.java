@@ -7,12 +7,17 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoa
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.glove.goal.PuppetGloveAttackGoal;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsBlocks;
+import dev.xylonity.companions.registry.CompanionsEntities;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -21,10 +26,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.*;
@@ -36,11 +38,28 @@ public class PuppetGloveEntity extends CompanionEntity {
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation ATTACK = RawAnimation.begin().thenPlay("attack");
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
+    private final RawAnimation RECEIVE_PUPPET = RawAnimation.begin().thenPlay("recieve_puppet");
 
     private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(PuppetGloveEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> TRANSFORMING = SynchedEntityData.defineId(PuppetGloveEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private static final int TRANSFORMATION_TICKS = 25;
+
+    private int transformationCounter;
 
     public PuppetGloveEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        this.transformationCounter = -1;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!level().isClientSide) {
+            if (transformationCounter != -1) transformationCounter++;
+            if (transformationCounter == TRANSFORMATION_TICKS) tameGlove(getOwner());
+        }
     }
 
     @Override
@@ -86,61 +105,66 @@ public class PuppetGloveEntity extends CompanionEntity {
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        Item itemForTaming = Items.APPLE;
-        Item item = itemstack.getItem();
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
 
-        if (item == itemForTaming && !isTame()) {
-            if (this.level().isClientSide) {
-                return InteractionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
+        if (isTransforming()) return InteractionResult.PASS;
 
-                if (!ForgeEventFactory.onAnimalTame(this, player)) {
-                    if (!this.level().isClientSide) {
-                        tameInteraction(player);
-                    }
-                }
+        Item item = player.getItemInHand(hand).getItem();
+        if (item == CompanionsBlocks.EMPTY_PUPPET.get().asItem() && isTame() && getOwner() != null && getOwner() == player) {
+            if (level().isClientSide) return InteractionResult.SUCCESS;
 
-                return InteractionResult.SUCCESS;
-            }
-        }
-
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if ((itemstack.getItem().equals(Items.APPLE) || itemstack.getItem().equals(Items.APPLE))
-                    && this.getHealth() < this.getMaxHealth()) {
-
-                if (itemstack.getItem().equals(Items.APPLE)) {
-                    this.heal(16.0F);
-                } else if (itemstack.getItem().equals(Items.APPLE)) {
-                    this.heal(4.0F);
-                }
-
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-
-            } else {
-                defaultMainActionInteraction(player);
-            }
+            setOwnerUUID(player.getUUID());
+            setTransforming(true);
+            // start transformation counter
+            this.transformationCounter++;
 
             return InteractionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == itemForTaming) {
-            return InteractionResult.PASS;
+        if (level().isClientSide) return InteractionResult.SUCCESS;
+
+        if (handleDefaultMainActionAndHeal(player, hand)) {
+            return InteractionResult.SUCCESS;
         }
 
         return super.mobInteract(player, hand);
+    }
+
+    private void tameGlove(LivingEntity player) {
+        PuppetEntity puppet = CompanionsEntities.PUPPET.get().create(level());
+        if (puppet != null) {
+            puppet.moveTo(position());
+
+            if (player instanceof Player p) {
+                puppet.tameInteraction(p);
+            } else if (getOwner() == null && getOwnerUUID() != null) {
+                puppet.setOwnerUUID(getOwnerUUID());
+            }
+
+            level().addFreshEntity(puppet);
+        }
+
+        generatePoofParticles();
+        this.discard();
+    }
+
+    private void generatePoofParticles() {
+        for (int i = 0; i < 30; i++) {
+            double dx = (this.random.nextDouble() - 0.5) * 1.25;
+            double dy = (this.random.nextDouble() - 0.5) * 1.25;
+            double dz = (this.random.nextDouble() - 0.5) * 1.25;
+            if (this.level() instanceof ServerLevel level) {
+                level.sendParticles(ParticleTypes.POOF, position().x, this.getY() + getBbHeight() * Math.random(), position().z, 1, dx, dy, dz, 0.1);
+            }
+        }
+
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(IS_ATTACKING, false);
+        this.entityData.define(TRANSFORMING, false);
     }
 
     public boolean isAttacking() {
@@ -151,6 +175,14 @@ public class PuppetGloveEntity extends CompanionEntity {
         this.entityData.set(IS_ATTACKING, attacking);
     }
 
+    public boolean isTransforming() {
+        return this.entityData.get(TRANSFORMING);
+    }
+
+    public void setTransforming(boolean transforming) {
+        this.entityData.set(TRANSFORMING, transforming);
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
@@ -158,7 +190,9 @@ public class PuppetGloveEntity extends CompanionEntity {
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
 
-        if (isAttacking()) {
+        if (isTransforming()) {
+            event.getController().setAnimation(RECEIVE_PUPPET);
+        } else if (isAttacking()) {
           event.getController().setAnimation(ATTACK);
         } else if (this.getMainAction() == 0) {
             event.getController().setAnimation(SIT);

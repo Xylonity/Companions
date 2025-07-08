@@ -20,11 +20,6 @@ public class GoldenAllayRenderer extends GeoEntityRenderer<GoldenAllayEntity> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull GoldenAllayEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/golden_allay.png");
-    }
-
-    @Override
     public void renderRecursively(PoseStack poseStack, GoldenAllayEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         if (animatable.getState() < 1 && bone.getName().equals("shirt")) {

@@ -14,9 +14,4 @@ public class MinionRenderer extends GeoEntityRenderer<MinionEntity> {
         super(renderManager, new MinionModel());
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull MinionEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/" + animatable.getVariant() + ".png");
-    }
-
 }
