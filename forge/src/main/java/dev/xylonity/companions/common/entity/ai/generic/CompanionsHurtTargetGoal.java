@@ -3,8 +3,8 @@ package dev.xylonity.companions.common.entity.ai.generic;
 import java.util.EnumSet;
 
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
@@ -33,7 +33,7 @@ public class CompanionsHurtTargetGoal extends TargetGoal {
                 return false;
             }
 
-            if (this.ownerLastHurt != null && sharesOwnerChain(this.tameAnimal, this.ownerLastHurt)) {
+            if (this.ownerLastHurt != null && Util.areEntitiesLinked(this.tameAnimal, this.ownerLastHurt)) {
                 return false;
             }
 
@@ -56,21 +56,8 @@ public class CompanionsHurtTargetGoal extends TargetGoal {
         super.start();
     }
 
-    private boolean sharesOwnerChain(LivingEntity entity1, LivingEntity entity2) {
-        LivingEntity ultimateOwner1 = getUltimateOwner(entity1);
-        LivingEntity ultimateOwner2 = getUltimateOwner(entity2);
-        return ultimateOwner1 != null && ultimateOwner1.equals(ultimateOwner2);
-    }
-
-    private LivingEntity getUltimateOwner(LivingEntity entity) {
-        if (entity instanceof TamableAnimal tame) {
-            LivingEntity owner = tame.getOwner();
-            if (owner != null) {
-                return getUltimateOwner(owner);
-            }
-        }
-
-        return entity;
+    public LivingEntity getOwnerLastHurt() {
+        return this.ownerLastHurt;
     }
 
 }

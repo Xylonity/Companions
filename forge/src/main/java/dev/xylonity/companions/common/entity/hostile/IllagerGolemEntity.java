@@ -2,12 +2,15 @@ package dev.xylonity.companions.common.entity.hostile;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,9 +29,11 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -238,6 +243,34 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
         this.entityData.define(ANIMATION_START_TICK, 0);
         this.entityData.define(TEST_TIMER, 0);
         this.entityData.define(TICKCOUNT, 0);
+    }
+
+    @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        super.playStepSound(pPos, pState);
+        this.playSound(CompanionsSounds.DINAMO_STEP.get(), 0.07875f, 1f);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CompanionsSounds.DINAMO_IDLE.get();
+    }
+
+    @Override
+    protected void playHurtSound(@NotNull DamageSource pSource) {
+        playSound(CompanionsSounds.DINAMO_HURT.get(), 0.25f, 1f);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return CompanionsSounds.DINAMO_DEATH.get();
+    }
+
+    @Override
+    public int getAmbientSoundInterval() {
+        return 320;
     }
 
     @Override

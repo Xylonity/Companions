@@ -27,6 +27,44 @@
       }
     ]
   },
+  "dinamo_step": {
+    "sounds": [
+      {
+        "name": "knightquestcompanions:dinamo_step"
+      }
+    ]
+  },
+  "dinamo_death": {
+    "sounds": [
+      {
+        "name": "knightquestcompanions:dinamo_death"
+      }
+    ]
+  },
+  "dinamo_hurt": {
+    "sounds": [
+      {
+        "name": "knightquestcompanions:dinamo_hurt"
+      }
+    ]
+  },
+  "dinamo_attack": {
+    "sounds": [
+      {
+        "name": "knightquestcompanions:dinamo_attack"
+      }
+    ]
+  },
+  "dinamo_idle": {
+    "sounds": [
+      {
+        "name": "knightquestcompanions:dinamo_idle"
+      },
+      {
+        "name": "knightquestcompanions:dinamo_idle2"
+      }
+    ]
+  },
   "coin_clatter": {
     "sounds": [
       {

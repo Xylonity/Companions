@@ -1,14 +1,15 @@
 package dev.xylonity.companions.common.tesla.behaviour.dinamo;
 
 import dev.xylonity.companions.common.entity.companion.DinamoEntity;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
@@ -17,7 +18,7 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
     public void tick(DinamoEntity dinamo) {
 
         if (dinamo.getAttackCycleCounter() == 0) {
-            searchForNearbyEntities(dinamo);
+            searchForTargets(dinamo);
         }
 
         // Deal with animation stuff
@@ -51,6 +52,8 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
                         dinamo.doHurtTarget(target);
                     }
                 }
+
+                if (dinamo.getAttackCycleCounter() == 0) dinamo.playSound(CompanionsSounds.DINAMO_ATTACK.get(), 0.45f, 1f);
             }
 
         }
@@ -59,6 +62,7 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
         if (dinamo.getAttackCycleCounter() >= DINAMO_ATTACK_DELAY) {
             dinamo.setAttackCycleCounter(0);
             dinamo.entitiesToAttack.clear();
+            dinamo.setTargetIds("");
             return;
         }
 
@@ -66,36 +70,29 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
         dinamo.setAttackCycleCounter(dinamo.getAttackCycleCounter() + 1);
     }
 
-    private void searchForNearbyEntities(DinamoEntity dinamo) {
-        Vec3 pos = dinamo.position();
-        double radius = 10;
-        AABB searchBox = new AABB(
-                pos.x - radius, pos.y - radius, pos.z - radius,
-                pos.x + radius, pos.y + radius, pos.z + radius
-        );
-
-        // We can equal both lists since both of them are mutable. Not doing this on a separated goal to avoid networking and such
-        dinamo.entitiesToAttack = dinamo.level().getEntitiesOfClass(LivingEntity.class, searchBox, e ->
+    private void searchForTargets(DinamoEntity dinamo) {
+        List<LivingEntity> list = dinamo.level().getEntitiesOfClass(LivingEntity.class, dinamo.getBoundingBox().inflate(12), e ->
             {
-                if (dinamo.getOwner() != null && dinamo.getOwner().getLastHurtByMob() != null
-                        && dinamo.getOwner().getLastHurtByMob().getUUID().equals(e.getUUID())) {
-                    return true;
-                }
-
-                if (dinamo.getOwner() != null && dinamo.getOwner().getLastHurtMob() != null
-                        && dinamo.getOwner().getLastHurtMob().getUUID().equals(e.getUUID())) {
-                    return true;
-                }
-
-                if (e.getUUID().equals(dinamo.getOwnerUUID())) {
-                    return false;
-                }
+                if (Util.areEntitiesLinked(e, dinamo)) return false;
 
                 return e instanceof Monster;
             })
             .stream()
             .filter(dinamo::hasLineOfSight)
             .collect(Collectors.toCollection(ArrayList::new));
+
+        for (LivingEntity m : list) {
+            if (!dinamo.entitiesToAttack.contains(m)) {
+                dinamo.entitiesToAttack.add(m);
+                dinamo.setTargetIds(dinamo.getTargetIds() + m.getId() + ";");
+            }
+        }
+
+        if (dinamo.getTarget() != null) {
+            dinamo.entitiesToAttack.add(dinamo.getTarget());
+            dinamo.setTargetIds(dinamo.getTargetIds() + dinamo.getTarget().getId() + ";");
+        }
+
     }
 
 }

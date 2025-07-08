@@ -9,9 +9,12 @@ import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoAttackBehaviour;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
+import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -22,6 +25,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -35,7 +39,9 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -57,9 +63,9 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> CYCLE_COUNTER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> ANIMATION_START_TICK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
-
     private static final EntityDataAccessor<Boolean> ATTACK_ACTIVE = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> ATTACK_CYCLE_COUNTER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> TARGET_IDS = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.STRING);
 
     private static final EntityDataAccessor<Boolean> SHOULD_ATTACK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -87,7 +93,13 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         this.goalSelector.addGoal(2, new CompanionRandomStrollGoal(this, 0.43));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
+        this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this) {
+            @Override
+            public void start() {
+                super.start();
+                DinamoEntity.this.setTargetIds(getTargetIds() + getOwnerLastHurt().getId() + ";");
+            }
+        });
     }
 
     public TeslaConnectionManager.ConnectionNode asConnectionNode() {
@@ -201,10 +213,29 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
             setActive(false);
         }
 
+        // clears the target list on the client upon the cycle end of life
+        if (level().isClientSide) {
+            if (this.getAttackCycleCounter() >= ITeslaUtil.DINAMO_ATTACK_DELAY) {
+                this.entitiesToAttack.clear();
+            }
+        }
+
         if (getMainAction() == 0) {
             pulseBehavior.tick(this);
         } else {
             attackBehavior.tick(this);
+        }
+
+        // populating the server side cached target entities to the client list (to make the ray visible)
+        if (level().isClientSide) {
+            if (!getTargetIds().isEmpty() && !getTargetIds().isBlank()) {
+                for (String s : getTargetIds().split(";")) {
+                    if (level().getEntity(Integer.parseInt(s)) instanceof LivingEntity e) {
+                        this.entitiesToAttack.add(e);
+                    }
+                }
+            }
+
         }
 
     }
@@ -217,6 +248,15 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     public void setActive(boolean active) {
         this.entityData.set(ACTIVE, active);
     }
+
+    public String getTargetIds() {
+        return this.entityData.get(TARGET_IDS);
+    }
+
+    public void setTargetIds(String uuid) {
+        this.entityData.set(TARGET_IDS, uuid);
+    }
+
 
     public boolean isActiveForAttack() {
         return this.entityData.get(ATTACK_ACTIVE);
@@ -272,6 +312,34 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     }
 
     @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        super.playStepSound(pPos, pState);
+        this.playSound(CompanionsSounds.DINAMO_STEP.get(), 0.07875f, 1f);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CompanionsSounds.DINAMO_IDLE.get();
+    }
+
+    @Override
+    protected void playHurtSound(@NotNull DamageSource pSource) {
+        playSound(CompanionsSounds.DINAMO_HURT.get(), 0.25f, 1f);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return CompanionsSounds.DINAMO_DEATH.get();
+    }
+
+    @Override
+    public int getAmbientSoundInterval() {
+        return 400;
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ACTIVE, false);
@@ -280,6 +348,7 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         this.entityData.define(ATTACK_ACTIVE, true);
         this.entityData.define(ATTACK_CYCLE_COUNTER, 0);
         this.entityData.define(SHOULD_ATTACK, true);
+        this.entityData.define(TARGET_IDS, "");
     }
 
     @Override
