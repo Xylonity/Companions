@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.entity.ai.soul_mage;
+package dev.xylonity.companions.common.entity.ai.mage;
 
 import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.knightlib.common.api.TickScheduler;

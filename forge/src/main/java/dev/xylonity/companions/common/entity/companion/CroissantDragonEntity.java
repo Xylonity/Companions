@@ -272,7 +272,7 @@ public class CroissantDragonEntity extends CompanionEntity {
             player.displayClientMessage(
                     Component.translatable("croissant_dragon.companions.client_message.requires_milk"), true);
 
-            player.level().playSound(null, this.blockPosition(), SoundEvents.NOTE_BLOCK_BANJO.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+            player.level().playSound(null, this.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
             return InteractionResult.PASS;
         }

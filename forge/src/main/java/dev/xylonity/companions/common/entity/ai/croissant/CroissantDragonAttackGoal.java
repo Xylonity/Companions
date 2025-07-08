@@ -95,8 +95,7 @@ public class CroissantDragonAttackGoal extends Goal {
                     CompanionsParticles.CAKE_CREAM_CHOCOLATE.get() : dragon.getArmorName().equals("strawberry") ?
                     CompanionsParticles.CAKE_CREAM_STRAWBERRY.get() : CompanionsParticles.CAKE_CREAM.get();
 
-                level.sendParticles(particle, spawnPos.x, spawnPos.y, spawnPos.z,
-                        12, 0.0, 0.0, 0.0, 0.0);
+                level.sendParticles(particle, spawnPos.x, spawnPos.y, spawnPos.z, 12, 0.0, 0.0, 0.0, 0.0);
             }
 
             if (!dragon.level().isClientSide() && tickCount % 2 == 0) {

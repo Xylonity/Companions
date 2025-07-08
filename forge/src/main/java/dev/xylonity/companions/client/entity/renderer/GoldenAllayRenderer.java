@@ -27,11 +27,11 @@ public class GoldenAllayRenderer extends GeoEntityRenderer<GoldenAllayEntity> {
     @Override
     public void renderRecursively(PoseStack poseStack, GoldenAllayEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
-        if (animatable.activePieces() != 1 && animatable.activePieces() != 3 && animatable.activePieces() != 4 && bone.getName().equals("hat")) {
+        if (animatable.getState() < 1 && bone.getName().equals("shirt")) {
             return;
         }
 
-        if (animatable.activePieces() != 2 && animatable.activePieces() != 3 && animatable.activePieces() != 4 && bone.getName().equals("shirt")) {
+        if (animatable.getState() < 3 && bone.getName().equals("hat")) {
             return;
         }
 

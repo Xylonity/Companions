@@ -1,6 +1,6 @@
-package dev.xylonity.companions.common.entity.ai.soul_mage.goal;
+package dev.xylonity.companions.common.entity.ai.mage.goal;
 
-import dev.xylonity.companions.common.entity.ai.soul_mage.AbstractSoulMageAttackGoal;
+import dev.xylonity.companions.common.entity.ai.mage.AbstractSoulMageAttackGoal;
 import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.companions.common.entity.projectile.FireMarkRingProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;

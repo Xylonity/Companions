@@ -2,8 +2,9 @@ package dev.xylonity.companions.common.entity.companion;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
-import dev.xylonity.companions.common.entity.ai.soul_mage.goal.*;
+import dev.xylonity.companions.common.entity.ai.mage.goal.*;
 import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.projectile.*;
 import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
@@ -33,11 +34,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -128,6 +127,7 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
         this.goalSelector.addGoal(3, new SoulMageBraceGoal(this, 100, 160));
 
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(4, new CompanionRandomStrollGoal(this, 0.43));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
@@ -253,8 +253,9 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+
+        if (level().isClientSide) return InteractionResult.SUCCESS;
 
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
             NetworkHooks.openScreen(
@@ -271,35 +272,13 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
                     },
                     buf -> buf.writeInt(this.getId())
             );
+
             this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+
             return InteractionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == Items.APPLE && !isTame()) {
-            if (this.level().isClientSide) {
-                return InteractionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().instabuild) itemstack.shrink(1);
-
-                if (!ForgeEventFactory.onAnimalTame(this, player)) {
-                    if (!this.level().isClientSide) {
-                        tameInteraction(player);
-                    }
-                }
-                setSitVariation(getRandom().nextInt(0, 3));
-                return InteractionResult.SUCCESS;
-            }
-        }
-
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if (itemstack.getItem() == Items.APPLE && this.getHealth() < this.getMaxHealth()) {
-                this.heal(16.0F);
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-            } else {
-                defaultMainActionInteraction(player);
-            }
+        if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
         }
 
