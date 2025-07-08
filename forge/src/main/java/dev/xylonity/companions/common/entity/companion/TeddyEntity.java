@@ -115,7 +115,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         this.goalSelector.addGoal(2, new TeddyAttackGoal(this, 10, 30));
         this.goalSelector.addGoal(2, new TeddyVoodooAttackGoal(this, 60, 200));
 
-        this.goalSelector.addGoal(2, new MutatedTeddyChargeAttackGoal(this, 1.5, 1.0, 2, 10, 2.5, 4.0));
+        //this.goalSelector.addGoal(2, new MutatedTeddyChargeAttackGoal(this, 1.5, 1.0, 2, 10, 2.5, 4.0));
 
         this.goalSelector.addGoal(3, new TeddyApproachTargetGoal(this, 0.45, 0.4f, 1.25f));
 

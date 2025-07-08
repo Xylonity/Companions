@@ -1,6 +1,9 @@
 package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.behaviour.lamp.LampPulseBehaviour;
+import dev.xylonity.companions.common.tesla.behaviour.platform.RecallPlatformPulseBehaviour;
+import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -22,44 +25,47 @@ public class RecallPlatformBlockEntity extends AbstractTeslaBlockEntity {
     private final Set<BlockPos> partnerPositions = new HashSet<>();
     private int cooldown = 0;
 
+    private final ITeslaNodeBehaviour pulseBehaviour;
+
     public RecallPlatformBlockEntity(BlockPos pos, BlockState st) {
         super(CompanionsBlockEntities.RECALL_PLATFORM.get(), pos, st);
+        this.pulseBehaviour = new RecallPlatformPulseBehaviour();
     }
 
-    public static <T extends BlockEntity>
-    void tick(Level lvl, BlockPos pos, BlockState st, T t) {
+    public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
         if (!(t instanceof RecallPlatformBlockEntity platform)) return;
+
+        platform.pulseBehaviour.process(platform, level, blockPos, blockState);
 
         if (platform.cooldown > 0) platform.cooldown--;
         platform.tickCount++;
+
+        platform.sync();
     }
 
     public void onStepped(ServerPlayer player) {
         if (cooldown > 0) return;
 
-        Level lvl = getLevel();
-        if (lvl == null) return;
+        if (getLevel() == null) return;
 
         List<BlockPos> shuffled = new ArrayList<>(partnerPositions);
         Collections.shuffle(shuffled, new Random());
 
         for (BlockPos target : shuffled) {
-            if (!(lvl.getBlockEntity(target) instanceof RecallPlatformBlockEntity otherPlatform)) {
+            if (!(getLevel().getBlockEntity(target) instanceof RecallPlatformBlockEntity otherPlatform)) {
                 partnerPositions.remove(target);
                 setChanged();
                 continue;
             }
 
-            TeslaConnectionManager mgr = TeslaConnectionManager.getInstance();
-            if (!mgr.getConnectedComponent(this.asConnectionNode()).contains(otherPlatform.asConnectionNode())) {
+            TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
+            if (!manager.getConnectedComponent(this.asConnectionNode()).contains(otherPlatform.asConnectionNode())) {
                 partnerPositions.remove(target);
                 setChanged();
                 continue;
             }
 
-            player.teleportTo(target.getX() + .5,
-                    target.getY() + 1,
-                    target.getZ() + .5);
+            player.teleportTo(target.getX() + .5, target.getY() + 1, target.getZ() + .5);
 
             this.cooldown = COOLDOWN_TICKS;
             otherPlatform.cooldown = COOLDOWN_TICKS;

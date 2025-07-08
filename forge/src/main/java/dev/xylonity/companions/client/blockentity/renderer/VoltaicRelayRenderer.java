@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.blockentity.model.VoltaicRelayModel;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
+import dev.xylonity.companions.common.blockentity.RecallPlatformBlockEntity;
 import dev.xylonity.companions.common.blockentity.VoltaicRelayBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
@@ -88,17 +89,46 @@ public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEnti
                     }
                 } else if (node.isBlock()) {
                     AbstractTeslaBlockEntity be = TeslaConnectionManager.getInstance().getBlockEntity(node);
-
                     Vec3 offset = animatable.electricalChargeOriginOffset();
                     Vec3 blockPos = be.getBlockPos().getCenter();
-
                     Vec3 blockPosVec = new Vec3(blockPos.x, blockPos.y, blockPos.z);
-                    Vec3 direction = blockPosVec.subtract(animatable.getBlockPos().getCenter()).add(be.electricalChargeEndOffset());
 
+                    Vec3 endOffset;
+                    if (be instanceof RecallPlatformBlockEntity) {
+                        endOffset = calculateClosestFaceOffset(animatable.getBlockPos().getCenter(), blockPosVec);
+                    } else {
+                        endOffset = be.electricalChargeEndOffset();
+                    }
+
+                    Vec3 direction = blockPosVec.subtract(animatable.getBlockPos().getCenter()).add(endOffset);
                     renderConnection(bufferSource, poseStack, offset, direction, frame, packedLight);
                 }
             }
 
+        }
+
+        private Vec3 calculateClosestFaceOffset(Vec3 sourcePos, Vec3 targetPos) {
+            Vec3[] faceOffsets = {
+                    new Vec3(0.0, -0.45, -0.5), // N
+                    new Vec3(0.0, 0.0, 0.5), // S
+                    new Vec3(0.5, 0.0, 0.0), // E
+                    new Vec3(-0.5, 0.0, 0.0) // O
+            };
+
+            Vec3 closestOffset = Vec3.ZERO;
+            double minDistance = Double.MAX_VALUE;
+
+            for (Vec3 faceOffset : faceOffsets) {
+                Vec3 facePos = targetPos.add(faceOffset);
+                double distance = sourcePos.distanceTo(facePos);
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestOffset = faceOffset;
+                }
+            }
+
+            return closestOffset;
         }
 
         private int calculateCurrentFrame(VoltaicRelayBlockEntity animatable) {

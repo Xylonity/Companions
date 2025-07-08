@@ -26,8 +26,10 @@ import java.util.stream.Stream;
 
 public class RecallPlatformBlock extends AbstractTeslaBlock implements EntityBlock {
 
-    private static final VoxelShape SHAPE_N =
-            Block.box(0, 0, 0, 16, 16, 16);
+    private static final VoxelShape SHAPE_N = Stream.of(
+            Block.box(0, 0, 0, 16, 3, 16),
+            Block.box(2, 3, 2, 14, 6, 14)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public RecallPlatformBlock(Properties properties) {
         super(properties);

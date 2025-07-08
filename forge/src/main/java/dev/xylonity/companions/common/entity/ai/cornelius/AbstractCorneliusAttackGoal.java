@@ -12,16 +12,16 @@ import java.util.EnumSet;
 
 public abstract class AbstractCorneliusAttackGoal extends Goal {
     protected final CorneliusEntity cornelius;
-    private final int minCooldown, maxCooldown;
+    protected final int minCooldown, maxCooldown;
     protected int attackTicks;
     protected int nextUseTick;
     protected boolean started;
 
-    private int currentAttackDelay;
-    private int currentAttackDuration;
+    protected int currentAttackDelay;
+    protected int currentAttackDuration;
 
-    private static final int SPAWN_RADIUS = 3;
-    private static final int MAX_SPAWN_ATTEMPTS = 20;
+    protected static final int SPAWN_RADIUS = 3;
+    protected static final int MAX_SPAWN_ATTEMPTS = 20;
 
     public AbstractCorneliusAttackGoal(CorneliusEntity cornelius, int minCd, int maxCd) {
         this.cornelius = cornelius;
@@ -33,6 +33,7 @@ public abstract class AbstractCorneliusAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
+        if (!cornelius.isTame()) return false;
         if (!cornelius.canAttack()) return false;
         if (cornelius.getAttackType() != 0) return false;
         if (cornelius.getTarget() == null) return false;
