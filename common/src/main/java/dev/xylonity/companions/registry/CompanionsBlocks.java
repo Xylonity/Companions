@@ -157,7 +157,7 @@ public class CompanionsBlocks {
                 BlockBehaviour.Properties.of()
                         .mapColor(MapColor.STONE)
                         .requiresCorrectToolForDrops()
-                        .strength(2.5f, 6f)
+                        .strength(2.5f, 1200f)
                         .sound(SoundType.STONE)
                         .instrument(NoteBlockInstrument.BELL)
                         .noOcclusion(), BlockType.FROG_BONANZA, BlockItem.GENERIC);

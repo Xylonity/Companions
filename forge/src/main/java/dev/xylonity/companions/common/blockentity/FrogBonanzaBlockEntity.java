@@ -1,6 +1,5 @@
 package dev.xylonity.companions.common.blockentity;
 
-import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsBlocks;
@@ -13,16 +12,19 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -53,8 +55,6 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
     public static final RawAnimation COIN = RawAnimation.begin().thenPlay("coin");
     public static final RawAnimation LEVER = RawAnimation.begin().thenPlay("lever");
 
-    private boolean coinInserted = false;
-
     private static final int DELAY_BETWEEN_WHEELS = 4;
     private static final int GAME_TICKS = 100;
     private static final float EXTRA_SPINS = 720f; // meant for recalculating the final pos
@@ -65,6 +65,8 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
     private final int[] faceDeg = new int[3];
     private int spinStartTick;
     private int tickCount;
+
+    private int spinsRemaining = 0;
 
     private static final String TAG_ROT = "Rot";
     private static final String TAG_FACE = "Face";
@@ -165,23 +167,17 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
                 return;
             }
         }
-
     }
 
     private void doubleCreeper() {
         if (getLevel() instanceof ServerLevel server) {
             BlockPos center = worldPosition.above();
-            for (int i = 0; i < 2 + new Random().nextInt(2); i++) {
-                double x = center.getX() + 0.5;
-                double y = center.getY();
-                double z = center.getZ() + 0.5;
-                PrimedTnt tnt = new PrimedTnt(server, x, y, z, null);
-
-                double angle = new Random().nextDouble() * Math.PI * 2;
-                double dx = Math.cos(angle) * 0.1;
-                double dz = Math.sin(angle) * 0.1;
-                tnt.setDeltaMovement(dx, 0.1, dz);
-
+            for (int i = 0; i < 2 + new Random().nextInt(3); i++) {
+                PrimedTnt tnt = new PrimedTnt(server, center.getX() + 0.5, center.getY(), center.getZ() + 0.5, null);
+                double angle = getLevel().random.nextDouble() * Math.PI * 2;
+                double speed = 0.15 + getLevel().random.nextDouble() * 0.6;
+                tnt.setDeltaMovement(Math.cos(angle) * speed, 0.5 + getLevel().random.nextDouble() * 0.3, Math.sin(angle) * speed);
+                tnt.setFuse(40);
                 server.addFreshEntity(tnt);
             }
         }
@@ -244,13 +240,14 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
                 Creeper creeper = EntityType.CREEPER.create(server);
                 if (creeper != null) {
                     creeper.moveTo(x, y, z, new Random().nextFloat() * 360F, 0F);
-                    server.addFreshEntity(creeper);
-
                     LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(server);
                     if (bolt != null) {
                         bolt.moveTo(x, y, z);
                         server.addFreshEntity(bolt);
+                        creeper.thunderHit(server, bolt);
                     }
+
+                    server.addFreshEntity(creeper);
                 }
 
             }
@@ -292,19 +289,20 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     private void tripleSkull() {
-        if (getLevel() instanceof ServerLevel server) {
-            BlockPos center = getBlockPos().above();
-            double angle = server.random.nextDouble() * Math.PI * 2;
-            double dist = server.random.nextDouble() * 3;
-            Warden warden = EntityType.WARDEN.create(server);
-            if (warden != null) {
-                warden.moveTo(center.getX() + 0.5 + Math.cos(angle) * dist, center.getY(), center.getZ() + 0.5 + Math.sin(angle) * dist, 0, 0);
-                server.addFreshEntity(warden);
-            }
+        if (!(level instanceof ServerLevel server)) return;
+        BlockPos center = worldPosition.above();
 
-            getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
-        }
+        Player player = server.getNearestPlayer(center.getX(), center.getY(), center.getZ(), 15.0,false);
+        if (player == null) return;
 
+        SpawnUtil.trySpawnMob(EntityType.WARDEN, MobSpawnType.TRIGGERED, server, center, 20, 5, 6, SpawnUtil.Strategy.ON_TOP_OF_COLLIDER
+        ).ifPresent(warden -> {
+            warden.moveTo(warden.getX(), warden.getY(), warden.getZ(), player.getYRot(), 0);
+            warden.setTarget(player);
+            warden.getBrain().setMemory(MemoryModuleType.ANGRY_AT, player.getUUID());
+        });
+
+        level.playSound(null, center, CompanionsSounds.POP.get(), SoundSource.BLOCKS, 1f, 1f);
     }
 
     public static void popResource(Level pLevel, BlockPos pPos, ItemStack pStack) {
@@ -333,6 +331,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
         tag.put(TAG_START, Util.floatsToList(startRot));
         tag.put(TAG_TOTAL, Util.floatsToList(totalRot));
         tag.put(TAG_FACE, Util.intsToList(faceDeg));
+        tag.putInt("SpinsRemaining", this.spinsRemaining);
     }
 
     @Override
@@ -344,6 +343,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
         Util.listToFloats(tag.getList(TAG_START, Tag.TAG_FLOAT), this.startRot);
         Util.listToFloats(tag.getList(TAG_TOTAL, Tag.TAG_FLOAT), this.totalRot);
         Util.listToInts(tag.getList(TAG_FACE, Tag.TAG_INT), this.faceDeg);
+        this.spinsRemaining = tag.getInt("SpinsRemaining");
     }
 
     @Override
@@ -370,31 +370,36 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
         if (spinStartTick >= 0) return InteractionResult.PASS;
 
-        if (!coinInserted) {
-            if (player.getItemInHand(hand).getItem() instanceof CoinItem) {
+        ItemStack stack = player.getItemInHand(hand);
+        Item item = stack.getItem();
 
-                if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
-
-                coinInserted = true;
-
-                triggerAnim("coin_controller", "coin");
-                sync();
-
-                level.playSound(null, getBlockPos(), CompanionsSounds.COIN_CLATTER.get(), SoundSource.BLOCKS, 1f, 1f);
-
-                return InteractionResult.SUCCESS;
+        if (spinsRemaining <= 0) {
+            if (item == CompanionsBlocks.COPPER_COIN.get().asItem()) {
+                spinsRemaining = 1;
+            } else if (item == CompanionsBlocks.NETHER_COIN.get().asItem()) {
+                spinsRemaining = 3;
+            } else if (item == CompanionsBlocks.END_COIN.get().asItem()) {
+                spinsRemaining = 5;
+            } else {
+                return InteractionResult.PASS;
             }
 
-            return InteractionResult.PASS;
+            if (!player.getAbilities().instabuild) stack.shrink(1);
+
+            triggerAnim("coin_controller", "coin");
+            sync();
+
+            level.playSound(null, getBlockPos(), CompanionsSounds.COIN_CLATTER.get(), SoundSource.BLOCKS, 1f, 1f);
+
+            return InteractionResult.SUCCESS;
         }
 
-        coinInserted = false;
-
+        spinsRemaining--;
         triggerAnim("lever_controller", "lever");
         startGame();
         sync();
 
-        level.playSound(null, getBlockPos(), CompanionsSounds.BONANZA.get(), SoundSource.BLOCKS, 0.65f, 1f);
+        level.playSound(null, getBlockPos(), CompanionsSounds.BONANZA.get(), SoundSource.BLOCKS, 0.35f, 1f);
 
         return InteractionResult.SUCCESS;
     }
