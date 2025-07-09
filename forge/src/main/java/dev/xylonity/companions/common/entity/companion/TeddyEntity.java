@@ -1,11 +1,11 @@
 package dev.xylonity.companions.common.entity.companion;
 
-import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.teddy.control.TeddyMoveControl;
 import dev.xylonity.companions.common.entity.ai.teddy.goal.*;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
@@ -29,15 +29,12 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -69,6 +66,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SECOND_PHASE_COUNTER = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_ON_AIR = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> TELEPORTED = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final int ANIMATION_TRANSFORM_MAX_TICKS = 200;
     private static final int ANIMATION_DEAD_MAX_TICKS = 64;
@@ -80,6 +78,14 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
         return new GroundNavigator(this, pLevel);
+    }
+
+    public boolean getTeleported() {
+        return this.entityData.get(TELEPORTED);
+    }
+
+    public void setTeleported(boolean teleported) {
+        this.entityData.set(TELEPORTED, teleported);
     }
 
     @Override
@@ -114,22 +120,52 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
         this.goalSelector.addGoal(2, new TeddyAttackGoal(this, 10, 30));
         this.goalSelector.addGoal(2, new TeddyVoodooAttackGoal(this, 60, 200));
-
-        //this.goalSelector.addGoal(2, new MutatedTeddyChargeAttackGoal(this, 1.5, 1.0, 2, 10, 2.5, 4.0));
-
         this.goalSelector.addGoal(3, new TeddyApproachTargetGoal(this, 0.45, 0.4f, 1.25f));
 
-        this.goalSelector.addGoal(4, new MutatedTeddyFollowOwnerGoal(this, 0.6D, 3.0F, 7.0F, 0.18f));
-        this.goalSelector.addGoal(4, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false) {
+        this.goalSelector.addGoal(3, new MutatedTeddyAttackGoal(this, 0, 15));
+        this.goalSelector.addGoal(4, new MutatedTeddyFollowTargetGoal(this));
+
+        this.goalSelector.addGoal(5, new MutatedTeddyRandomStrollGoal(this, 0.43f));
+        this.goalSelector.addGoal(5, new MutatedTeddyFollowOwnerGoal(this, 0.6D, 3.0F, 7.0F, 0.18f));
+        this.goalSelector.addGoal(5, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false) {
             @Override
             public boolean canUse() {
                 return super.canUse() && getPhase() == 1;
             }
         });
-        this.goalSelector.addGoal(4, new CompanionRandomStrollGoal(this, 0.43));
+        this.goalSelector.addGoal(5, new CompanionRandomStrollGoal(this, 0.43) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && getPhase() == 1;
+            }
+        });
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        boolean ret = super.hurt(source, amount);
+
+        if (!level().isClientSide && amount > 4.0f && getPhase() == 2 && getTarget() != null) {
+            spawnMutantParticles(25);
+            tpOppositeSide();
+            spawnMutantParticles(25);
+        }
+
+        return ret;
+    }
+
+    private void tpOppositeSide() {
+        LivingEntity target = getTarget();
+        if (target == null) return;
+
+        Vec3 pos = target.position();
+        Vec3 newPos = pos.subtract(position().x - pos.x, 0, position().z - pos.z);
+
+        setPos(newPos.x, position().y, newPos.z);
+        setTeleported(true);
     }
 
     public static AttributeSupplier setAttributes() {
@@ -196,6 +232,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         this.entityData.define(SECOND_PHASE_COUNTER, 0);
         this.entityData.define(ATTACK_TYPE, 0);
         this.entityData.define(IS_ON_AIR, false);
+        this.entityData.define(TELEPORTED, false);
     }
 
     @Override
@@ -219,24 +256,12 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
                 level().addParticle(CompanionsParticles.TEDDY_TRANSFORMATION_CLOUD.get(), true, getX(), getY() + 0.15F, getZ(), 0, 0, 0);
 
-                for (int i = 0; i < 50; i++) {
-                    double dx = (this.random.nextDouble() - 0.5) * 2.0;
-                    double dy = (this.random.nextDouble() - 0.5) * 2.0;
-                    double dz = (this.random.nextDouble() - 0.5) * 2.0;
-                    if (this.level() instanceof ServerLevel level) {
-                        level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.1);
-                        if (i % 5 == 0) level.sendParticles(CompanionsParticles.TEDDY_TRANSFORMATION.get(), this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.2);
-                    }
-                }
+                spawnMutantParticles(50);
 
                 setPhase(2);
                 this.refreshDimensions();
 
-                FlyingNavigator navigation = new FlyingNavigator(this, this.level());
-                navigation.setCanOpenDoors(true);
-                navigation.setCanPassDoors(true);
-
-                this.navigation = navigation;
+                this.moveControl = new TeddyMoveControl(this);
             }
 
             setSecondPhaseCounter(getSecondPhaseCounter() + 1);
@@ -250,6 +275,18 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             }
         }
 
+    }
+
+    private void spawnMutantParticles(int amount) {
+        for (int i = 0; i < amount; i++) {
+            double dx = (this.random.nextDouble() - 0.5) * 2.0;
+            double dy = (this.random.nextDouble() - 0.5) * 2.0;
+            double dz = (this.random.nextDouble() - 0.5) * 2.0;
+            if (this.level() instanceof ServerLevel level) {
+                level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.1);
+                if (i % 5 == 0) level.sendParticles(CompanionsParticles.TEDDY_TRANSFORMATION.get(), this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.2);
+            }
+        }
     }
 
     @Override
@@ -282,6 +319,14 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             if (!player.getAbilities().instabuild) stack.shrink(1);
 
             this.tameInteraction(player);
+
+            return InteractionResult.SUCCESS;
+        }
+
+        if (isTame() && player == getOwner() && stack.getItem() == CompanionsItems.ETERNAL_LIGHTER.get() && getPhase() == 1) {
+            if (level().isClientSide) return InteractionResult.SUCCESS;
+
+            setSecondPhaseCounter(getSecondPhaseCounter() + 1);
 
             return InteractionResult.SUCCESS;
         }
@@ -322,6 +367,9 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         super.readAdditionalSaveData(pCompound);
         if (pCompound.contains("Phase")) {
             this.setPhase(pCompound.getInt("Phase"));
+            if (getPhase() == 2) {
+                this.moveControl = new TeddyMoveControl(this);
+            }
         }
     }
 
@@ -373,10 +421,14 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             }
         } else {
             if (isDeadOrDying()) {
-              event.getController().setAnimation(MUTATED_DEATH);
+                event.getController().setAnimation(MUTATED_DEATH);
             } else if (this.getMainAction() == 0) {
                 RawAnimation vari = getIsOnAir() ? MUTATED_SIT3 : getSitVariation() == 0 ? MUTATED_SIT1 : MUTATED_SIT2;
                 event.getController().setAnimation(vari);
+            } else if (getAttackType() == 1) {
+                event.getController().setAnimation(MUTATED_ATTACK1);
+            } else if (getAttackType() == 2) {
+                event.getController().setAnimation(MUTATED_ATTACK2);
             } else {
                 event.getController().setAnimation(MUTATED_FLY);
             }

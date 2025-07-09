@@ -27,6 +27,7 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
     public boolean canUse() {
         this.list = teddy.level().getEntitiesOfClass(LivingEntity.class, new AABB(teddy.blockPosition()).inflate(15), e -> e.hasEffect(CompanionsEffects.VOODOO.get()));
         if (list.isEmpty()) return false;
+        if (teddy.getPhase() == 2) return false;
         if (this.phase() != teddy.getPhase()) return false;
         if (teddy.getAttackType() != 0) return false;
         if (teddy.getTarget() == null) return false;

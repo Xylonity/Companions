@@ -8,7 +8,7 @@ import java.util.EnumSet;
 
 public abstract class AbstractTeddyAttackGoal extends Goal {
     protected final TeddyEntity teddy;
-    protected final int attackDuration;
+    protected int attackDuration;
     protected final int minCooldown, maxCooldown;
     protected int attackTicks;
     protected int nextUseTick;
