@@ -264,7 +264,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.COPPER_COIN.get(), new Random().nextInt(2, 60)));
             popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.NETHER_COIN.get(), new Random().nextInt(1, 20)));
             popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.END_COIN.get(), new Random().nextInt(1, 6)));
-            
+
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
 

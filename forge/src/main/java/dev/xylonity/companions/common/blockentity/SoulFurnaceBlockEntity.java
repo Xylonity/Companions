@@ -2,16 +2,16 @@ package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.block.SoulFurnaceBlock;
 import dev.xylonity.companions.common.container.SoulFurnaceContainerMenu;
-import dev.xylonity.companions.registry.CompanionsBlockEntities;
-import dev.xylonity.companions.registry.CompanionsBlocks;
-import dev.xylonity.companions.registry.CompanionsEntities;
-import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.*;
+import dev.xylonity.knightlib.common.blockentity.GreatChaliceBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -30,10 +30,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -50,16 +49,19 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
-    private int charge = 0;
-    private static final int MAX_CHARGE = 9;
+
+    private static final int MAX_CHARGES = 9;
+
+    private int charges = 0;
     private int currentProgress = 0;
     private int processingTime = 0;
+
     private SoulFurnaceRecipe currentRecipe = null;
 
     public static final List<SoulFurnaceRecipe> RECIPES = List.of(
-            new SoulFurnaceRecipe(Items.CANDLE, null, 1, 100, CompanionsEntities.LIVING_CANDLE.get(), null),
-            new SoulFurnaceRecipe(Items.DIAMOND, CompanionsItems.SOUL_GEM.get(), 3, 160, null, null),
-            new SoulFurnaceRecipe(CompanionsItems.BIG_BREAD.get(), null, 5, 50, null, CompanionsBlocks.CROISSANT_EGG.get())
+            new SoulFurnaceRecipe(Items.CANDLE, null, 1, 200, CompanionsEntities.LIVING_CANDLE.get(), null),
+            new SoulFurnaceRecipe(Items.DIAMOND, CompanionsItems.SOUL_GEM.get(), 3, 400, null, null),
+            new SoulFurnaceRecipe(CompanionsItems.BIG_BREAD.get(), null, 5, 2400, null, CompanionsBlocks.CROISSANT_EGG.get())
     );
 
     public SoulFurnaceBlockEntity(BlockPos pos, BlockState state) {
@@ -72,7 +74,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     @Override
-    public boolean canTakeItem(Container pTarget, int pIndex, ItemStack pStack) {
+    public boolean canTakeItem(@NotNull Container pTarget, int pIndex, @NotNull ItemStack pStack) {
         return pIndex == 1;
     }
 
@@ -80,134 +82,161 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
         if (F instanceof SoulFurnaceBlockEntity furnace) {
             if (level.isClientSide()) return;
 
-            BlockPos abovePos = pos.above();
-            BlockState aboveState = level.getBlockState(abovePos);
-
-            //if (aboveState.getBlock() instanceof ChaliceBlock && furnace.charge < MAX_CHARGE) {
-            //    if (aboveState.getValue(ChaliceBlock.fill) == 4) {
-            //        level.setBlock(abovePos, aboveState.setValue(ChaliceBlock.fill, 0), 3);
-            //        level.playSound(null, abovePos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1f, 1f);
-            //        furnace.charge = Math.min(furnace.charge + 1, MAX_CHARGE);
-            //        furnace.setChanged();
-            //    }
-            //}
-
-            if (aboveState.getBlock() == Blocks.GOLD_BLOCK && furnace.charge < MAX_CHARGE) {
-                level.setBlock(abovePos, Blocks.AIR.defaultBlockState(), 3);
-                level.playSound(null, abovePos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1f, 1f);
-                furnace.charge = Math.min(furnace.charge + 1, MAX_CHARGE);
-                furnace.setChanged();
-            }
+            furnace.handleGreatChaliceInteraction(level, pos);
 
             if (furnace.currentRecipe == null && !furnace.getItem(0).isEmpty()) {
                 ItemStack inputStack = furnace.getItem(0);
                 for (SoulFurnaceRecipe recipe : RECIPES) {
-                    if (recipe.input == inputStack.getItem() && furnace.charge >= recipe.requiredCharges) {
+                    if (recipe.input == inputStack.getItem() && furnace.charges >= recipe.requiredCharges) {
                         inputStack.shrink(1);
+
                         furnace.currentRecipe = recipe;
                         furnace.processingTime = recipe.processTime;
                         furnace.currentProgress = 0;
                         furnace.setChanged();
+
                         break;
                     }
                 }
             }
 
             if (furnace.currentRecipe != null) {
-                furnace.currentProgress++;
-                if (furnace.currentProgress >= furnace.processingTime) {
-                    level.playSound(null, abovePos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1f, 1f);
-                    SoulFurnaceRecipe recipe = furnace.currentRecipe;
-
-                    if (recipe.output == null || recipe.output == Items.AIR) {
-                        if (recipe.entityType != null) {
-                            BlockPos spawnPos = pos.relative(state.getValue(SoulFurnaceBlock.FACING));
-                            Entity entity = recipe.entityType.create(level);
-                            if (entity != null) {
-                                entity.moveTo(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, 0, 0);
-                                level.addFreshEntity(entity);
-                            }
-                        } else {
-                            if (recipe.block() != null) {
-                                BlockPos targetPos = pos.relative(state.getValue(SoulFurnaceBlock.FACING));
-                                if (level.isEmptyBlock(targetPos)) {
-                                    BlockState recipeBlockState = recipe.block().defaultBlockState();
-
-                                    if (recipeBlockState.hasProperty(SoulFurnaceBlock.FACING)) {
-                                        recipeBlockState = recipeBlockState.setValue(SoulFurnaceBlock.FACING, state.getValue(SoulFurnaceBlock.FACING));
-                                    } else if (recipeBlockState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING)) {
-                                        recipeBlockState = recipeBlockState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, state.getValue(SoulFurnaceBlock.FACING));
-                                    }
-
-                                    level.setBlockAndUpdate(targetPos, recipeBlockState);
-
-                                    Random r = new Random();
-                                    for (int i = 0; i < 25; i++) {
-                                        double dx = (r.nextDouble() - 0.5) * 2.5;
-                                        double dy = (r.nextDouble() - 0.5) * 1.5;
-                                        double dz = (r.nextDouble() - 0.5) * 2.5;
-                                        if (level instanceof ServerLevel serverLevel) {
-                                            serverLevel.sendParticles(ParticleTypes.POOF, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 1, dx, dy, dz, 0.04);
-                                        }
-                                    }
-
-                                } else {
-                                    if (level.getBlockState(targetPos).getBlock() == recipe.block()) {
-                                        BlockPos stackPos = targetPos;
-                                        while (!level.isEmptyBlock(stackPos) && stackPos.getY() < level.getMaxBuildHeight()) {
-                                            stackPos = stackPos.above();
-                                        }
-
-                                        if (level.isEmptyBlock(stackPos)) {
-                                            level.setBlockAndUpdate(stackPos, recipe.block().defaultBlockState());
-                                        } else {
-                                            Containers.dropItemStack(level, targetPos.getX(), targetPos.getY(), targetPos.getZ(), new ItemStack(recipe.block()));
-                                        }
-                                    } else {
-                                        Containers.dropItemStack(level, targetPos.getX(), targetPos.getY(), targetPos.getZ(), new ItemStack(recipe.block()));
-                                    }
-                                }
-
-                                level.playSound(null, pos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS, 1f, 1f);
-                            }
-
-                        }
-                    } else {
-                        if (furnace.getItem(1).isEmpty()) {
-                            furnace.setItem(1, new ItemStack(recipe.output));
-                        } else if (furnace.getItem(1).getItem() == recipe.output) {
-                            furnace.getItem(1).grow(1);
-                        }
-                    }
-
-                    furnace.charge -= recipe.requiredCharges;
-                    furnace.currentRecipe = null;
-                    furnace.currentProgress = 0;
-                    furnace.processingTime = 0;
-                    furnace.setChanged();
-
-                    ItemStack inputStack = furnace.getItem(0);
-                    if (!inputStack.isEmpty()) {
-                        for (SoulFurnaceRecipe r : RECIPES) {
-                            if (r.input == inputStack.getItem() && furnace.charge >= r.requiredCharges) {
-                                inputStack.shrink(1);
-                                furnace.currentRecipe = r;
-                                furnace.processingTime = r.processTime;
-                                furnace.currentProgress = 0;
-                                furnace.setChanged();
-                                break;
-                            }
-                        }
-                    }
-                }
+                furnace.handleCooking(pos, level, state);
             }
 
+            // lits the block when the progress is not zero
             boolean lit = furnace.currentRecipe != null;
             BlockState currentState = level.getBlockState(pos);
             if (currentState.hasProperty(SoulFurnaceBlock.LIT) && currentState.getValue(SoulFurnaceBlock.LIT) != lit) {
                 level.setBlock(pos, currentState.setValue(SoulFurnaceBlock.LIT, lit), 3);
             }
 
+        }
+
+    }
+
+    private void handleGreatChaliceInteraction(Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos.above()) instanceof GreatChaliceBlockEntity be && this.charges < MAX_CHARGES) {
+            if (be.isFull()) {
+                be.setCharges(0);
+
+                level.playSound(null, pos.above(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1f, 1f);
+
+                this.charges = Math.min(this.charges + 1, MAX_CHARGES);
+                this.setChanged();
+            }
+        }
+
+    }
+
+    private void handleCooking(BlockPos pos, Level level, BlockState state) {
+        this.currentProgress++;
+        if (this.currentProgress >= this.processingTime) {
+
+            level.playSound(null, pos.above(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1f, 1f);
+
+            SoulFurnaceRecipe recipe = this.currentRecipe;
+
+            if (recipe.output == null || recipe.output == Items.AIR) {
+                // spawn entity
+                if (recipe.entityType != null) {
+                    BlockPos spawnPos = pos.relative(state.getValue(SoulFurnaceBlock.FACING));
+                    Entity e = recipe.entityType.create(level);
+                    if (e != null) {
+                        e.moveTo(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, 0, 0);
+                        level.addFreshEntity(e);
+                    }
+
+                }
+                else {
+                    // spawn block
+                    if (recipe.block() != null) {
+                        BlockPos targetPos = pos.relative(state.getValue(SoulFurnaceBlock.FACING));
+                        if (level.isEmptyBlock(targetPos)) {
+                            BlockState recipeState = recipe.block().defaultBlockState();
+
+                            // set block in front of the furnace
+                            if (recipeState.hasProperty(SoulFurnaceBlock.FACING)) {
+                                recipeState = recipeState.setValue(SoulFurnaceBlock.FACING, state.getValue(SoulFurnaceBlock.FACING));
+                            } else if (recipeState.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                                recipeState = recipeState.setValue(BlockStateProperties.HORIZONTAL_FACING, state.getValue(SoulFurnaceBlock.FACING));
+                            }
+
+                            level.setBlockAndUpdate(targetPos, recipeState);
+
+                            spawnPoofParticles(targetPos);
+
+                        }
+                        // set output item
+                        else {
+                            if (level.getBlockState(targetPos).getBlock() == recipe.block()) {
+                                BlockPos stackPos = targetPos;
+                                while (!level.isEmptyBlock(stackPos) && stackPos.getY() < level.getMaxBuildHeight()) {
+                                    stackPos = stackPos.above();
+                                }
+
+                                if (level.isEmptyBlock(stackPos)) {
+                                    level.setBlockAndUpdate(stackPos, recipe.block().defaultBlockState());
+                                } else {
+                                    Containers.dropItemStack(level, targetPos.getX(), targetPos.getY(), targetPos.getZ(), new ItemStack(recipe.block()));
+                                }
+
+                            } else {
+                                Containers.dropItemStack(level, targetPos.getX(), targetPos.getY(), targetPos.getZ(), new ItemStack(recipe.block()));
+                            }
+
+                        }
+
+                        level.playSound(null, pos, CompanionsSounds.POP.get(), SoundSource.BLOCKS, 0.65f, 1f);
+                    }
+
+                }
+            }
+            else {
+                if (this.getItem(1).isEmpty()) {
+                    this.setItem(1, new ItemStack(recipe.output));
+                } else if (this.getItem(1).getItem() == recipe.output) {
+                    this.getItem(1).grow(1);
+                }
+
+            }
+
+            this.charges -= recipe.requiredCharges;
+            this.currentRecipe = null;
+            this.currentProgress = 0;
+            this.processingTime = 0;
+            this.setChanged();
+
+            // handles time progress
+            ItemStack stack = this.getItem(0);
+            if (!stack.isEmpty()) {
+                for (SoulFurnaceRecipe r : RECIPES) {
+                    if (r.input == stack.getItem() && this.charges >= r.requiredCharges) {
+                        stack.shrink(1);
+
+                        this.currentRecipe = r;
+                        this.processingTime = r.processTime;
+                        this.currentProgress = 0;
+
+                        this.setChanged();
+
+                        break;
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    private void spawnPoofParticles(BlockPos targetPos) {
+        for (int i = 0; i < 25; i++) {
+            double dx = (new Random().nextDouble() - 0.5) * 2.5;
+            double dy = (new Random().nextDouble() - 0.5) * 1.5;
+            double dz = (new Random().nextDouble() - 0.5) * 2.5;
+            if (level instanceof ServerLevel serverLevel) {
+                serverLevel.sendParticles(ParticleTypes.POOF, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 1, dx, dy, dz, 0.04);
+            }
         }
     }
 
@@ -219,11 +248,21 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
         return false;
     }
 
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
 
     @Override
-    public void load(CompoundTag tag) {
+    public @NotNull CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
+    }
+
+    @Override
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
-        this.charge = tag.getInt("Charge");
+        this.charges = tag.getInt("Charges");
         this.currentProgress = tag.getInt("Progress");
         this.processingTime = tag.getInt("ProcessingTime");
 
@@ -239,9 +278,9 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putInt("Charge", this.charge);
+        tag.putInt("Charges", this.charges);
         tag.putInt("Progress", this.currentProgress);
         tag.putInt("ProcessingTime", this.processingTime);
 
@@ -255,18 +294,6 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
         ContainerHelper.saveAllItems(tag, this.items);
     }
 
-    public int getCharge() {
-        return this.charge;
-    }
-
-    public int getProgress() {
-        return this.currentProgress;
-    }
-
-    public int getProcessingTime() {
-        return this.processingTime;
-    }
-
     public NonNullList<ItemStack> getItems() {
         return this.items;
     }
@@ -278,12 +305,12 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+    public AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player player) {
         return new SoulFurnaceContainerMenu(id, inventory, this, new ContainerData() {
             @Override
             public int get(int index) {
                 return switch (index) {
-                    case 0 -> charge;
+                    case 0 -> charges;
                     case 1 -> currentProgress;
                     case 2 -> processingTime;
                     default -> 0;
@@ -293,7 +320,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
             public void set(int index, int value) {
                 switch (index) {
                     case 0:
-                        charge = value;
+                        charges = value;
                         break;
                     case 1:
                         currentProgress = value;
@@ -337,25 +364,25 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     @Override
-    public ItemStack getItem(int index) {
+    public @NotNull ItemStack getItem(int index) {
         return this.items.get(index);
     }
 
     @Override
-    public ItemStack removeItem(int index, int count) {
+    public @NotNull ItemStack removeItem(int index, int count) {
         return ContainerHelper.removeItem(this.items, index, count);
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int index) {
+    public @NotNull ItemStack removeItemNoUpdate(int index) {
         return ContainerHelper.takeItem(this.items, index);
     }
 
     @Override
-    public void setItem(int index, ItemStack stack) {
+    public void setItem(int index, @NotNull ItemStack stack) {
         if (index == 0 && !stack.isEmpty() && this.currentRecipe == null) {
             for (SoulFurnaceRecipe recipe : RECIPES) {
-                if (recipe.input == stack.getItem() && this.charge >= recipe.requiredCharges) {
+                if (recipe.input == stack.getItem() && this.charges >= recipe.requiredCharges) {
                     stack.shrink(1);
                     this.currentRecipe = recipe;
                     this.processingTime = recipe.processTime;
@@ -364,6 +391,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
                     break;
                 }
             }
+
         }
 
         this.items.set(index, stack);
@@ -376,7 +404,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return true;
     }
 
@@ -386,7 +414,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     public static int getMaxCharges() {
-        return MAX_CHARGE;
+        return MAX_CHARGES;
     }
 
     public record SoulFurnaceRecipe(Item input, Item output, int requiredCharges, int processTime, EntityType<?> entityType, Block block) { ;; }
