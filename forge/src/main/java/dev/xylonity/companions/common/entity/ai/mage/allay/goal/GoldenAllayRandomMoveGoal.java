@@ -25,14 +25,14 @@ public class GoldenAllayRandomMoveGoal extends Goal {
     }
 
     public void tick() {
-        BlockPos $$0 = allay.getOnPos();
+        BlockPos pos = allay.getOnPos();
 
-        for (int $$1 = 0; $$1 < 3; ++$$1) {
-            BlockPos $$2 = $$0.offset(allay.getRandom().nextInt(15) - 7, allay.getRandom().nextInt(7) - 3, allay.getRandom().nextInt(15) - 7);
-            if (allay.level().isEmptyBlock($$2)) {
-                allay.getMoveControl().setWantedPosition((double)$$2.getX() + 0.5, (double)$$2.getY() + 0.5, (double)$$2.getZ() + 0.5, 0.25);
+        for (int i = 0; i < 3; ++i) {
+            BlockPos offset = pos.offset(allay.getRandom().nextInt(15) - 7, allay.getRandom().nextInt(7) - 3, allay.getRandom().nextInt(15) - 7);
+            if (allay.level().isEmptyBlock(offset)) {
+                allay.getMoveControl().setWantedPosition(offset.getX() + 0.5, offset.getY() + 0.5, offset.getZ() + 0.5, 0.25);
                 if (allay.getTarget() == null) {
-                    allay.getLookControl().setLookAt((double)$$2.getX() + 0.5, (double)$$2.getY() + 0.5, (double)$$2.getZ() + 0.5, 180.0F, 20.0F);
+                    allay.getLookControl().setLookAt(offset.getX() + 0.5, offset.getY() + 0.5, offset.getZ() + 0.5, 180.0F, 20.0F);
                 }
 
                 break;
@@ -40,4 +40,5 @@ public class GoldenAllayRandomMoveGoal extends Goal {
         }
 
     }
+
 }

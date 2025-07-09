@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -30,6 +31,13 @@ public class HolinessNaginataProjectile extends ThrownTrident implements GeoEnti
     public HolinessNaginataProjectile(EntityType<? extends ThrownTrident> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.pickup = Pickup.DISALLOWED;
+    }
+
+    @Override
+    protected boolean canHitEntity(@NotNull Entity entity) {
+        if (Util.areEntitiesLinked(this, entity)) return false;
+
+        return super.canHitEntity(entity);
     }
 
     @Override

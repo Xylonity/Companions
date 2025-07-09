@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEffects;
@@ -64,12 +65,15 @@ public class StoneSpikeProjectile extends BaseProjectile {
 
         List<LivingEntity> entities = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.3), e -> !e.equals(getOwner()));
         for (LivingEntity e : entities) {
-            e.hurt(damageSources().magic(),4.0f);
-            if (new Random().nextFloat() < 0.25f) {
-                if (!e.hasEffect(MobEffects.POISON)) {
-                    e.addEffect(new MobEffectInstance(MobEffects.POISON, new Random().nextInt(20, 100), 0, true, true, true));
+            if (!Util.areEntitiesLinked(e, this)) {
+                e.hurt(damageSources().magic(), 4.0f);
+                if (new Random().nextFloat() < 0.25f) {
+                    if (!e.hasEffect(MobEffects.POISON)) {
+                        e.addEffect(new MobEffectInstance(MobEffects.POISON, new Random().nextInt(20, 100), 0, true, true, true));
+                    }
                 }
             }
+
         }
 
     }
@@ -87,7 +91,7 @@ public class StoneSpikeProjectile extends BaseProjectile {
     }
 
     @Override
-    public void playerTouch(@NotNull Player pEntity) { }
+    public void playerTouch(@NotNull Player pEntity) { ;; }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {

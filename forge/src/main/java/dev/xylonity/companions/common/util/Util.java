@@ -1,10 +1,7 @@
 package dev.xylonity.companions.common.util;
 
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
-import dev.xylonity.companions.common.particle.BaseRibbonTrailParticle;
 import dev.xylonity.companions.mixin.CompanionsLevelAccessor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.FloatTag;
@@ -25,34 +22,6 @@ import java.util.UUID;
 public class Util {
 
     private Util() { ;; }
-
-    /**
-     * Spawns a base trail particle
-     */
-    public static void spawnBaseProjectileTrail(Entity entity, float radius, float height, float r, float g, float b) {
-        if (!(entity.level() instanceof ClientLevel level)) return;
-
-        double x = entity.getX() + (level.random.nextDouble() - 0.5) * entity.getBbWidth();
-        double y = entity.getY() + entity.getBbHeight() * level.random.nextDouble();
-        double z = entity.getZ() + (level.random.nextDouble() - 0.5) * entity.getBbWidth();
-
-        Minecraft.getInstance().particleEngine.add(new BaseRibbonTrailParticle(level, x, y, z, r, g, b, radius, height, entity.getId()));
-    }
-
-    public static void spawnBaseProjectileTrail(Entity entity, float radius, float height, float r, float g, float b, float trailHeight) {
-        if (!(entity.level() instanceof ClientLevel level)) return;
-
-        double x = entity.getX() + (level.random.nextDouble() - 0.5) * entity.getBbWidth();
-        double y = entity.getY() + entity.getBbHeight() * level.random.nextDouble();
-        double z = entity.getZ() + (level.random.nextDouble() - 0.5) * entity.getBbWidth();
-
-        Minecraft.getInstance().particleEngine.add(new BaseRibbonTrailParticle(level, x, y, z, r, g, b, radius, height, entity.getId(), trailHeight));
-    }
-
-    public static void spawnBaseProjectileTrail(Entity entity, double x, double y, double z, float radius, float height, float r, float g, float b, float trailHeight) {
-        if (!(entity.level() instanceof ClientLevel level)) return;
-        Minecraft.getInstance().particleEngine.add(new BaseRibbonTrailParticle(level, x, y, z, r, g, b, radius, height, entity.getId(), trailHeight));
-    }
 
     /**
      * Normalize degrees within a 360 degree cap

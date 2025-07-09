@@ -19,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -50,7 +51,7 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
 
         if (isNoMovement()) {
             this.getNavigation().stop();
-            this.setDeltaMovement(0, getDeltaMovement().y, 0);
+            this.setDeltaMovement(Vec3.ZERO);
         }
 
         if (shouldKeepChunkLoaded() && level() instanceof ServerLevel level) {

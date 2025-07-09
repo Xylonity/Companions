@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -8,22 +9,17 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class BraceProjectile extends BaseProjectile implements GeoEntity {
+public class BraceProjectile extends BaseProjectile {
     private static final double BOUNCE_DAMPING_VERTICAL = 0.6;
     private static final double BOUNCE_DAMPING_HORIZONTAL = 0.7;
     private static final int MAX_BOUNCES = 5;
@@ -82,7 +78,7 @@ public class BraceProjectile extends BaseProjectile implements GeoEntity {
                 float r = 250f / 255f;
                 float g = (203 + level().random.nextInt(10)) / 255f;
                 float b = (138 + level().random.nextInt(10)) / 255f;
-                Util.spawnBaseProjectileTrail(this, 0, getBbHeight() * 0.5f, r, g, b, 0.45f);
+                Companions.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), r, g, b, 0, 0.35f);
             }
         }
 
@@ -90,7 +86,7 @@ public class BraceProjectile extends BaseProjectile implements GeoEntity {
 
     private void handleEntityHit(EntityHitResult hit) {
         Entity entity = hit.getEntity();
-        if (!(entity instanceof LivingEntity target) || entity == getOwner() || hitEntities.contains(entity.getId())) {
+        if (!(entity instanceof LivingEntity target) || Util.areEntitiesLinked(target, this) || hitEntities.contains(entity.getId())) {
             move(getDeltaMovement());
             return;
         }
@@ -173,20 +169,19 @@ public class BraceProjectile extends BaseProjectile implements GeoEntity {
     }
 
     private void spawnParticles() {
-        if (level().isClientSide) return;
+        if (!level().isClientSide) return;
+
         for (int i = 0; i < 6; i++) {
-            double speed = 0.1;
-            level().addParticle(CompanionsParticles.EMBER.get(), getX(), getY(), getZ(),
-                    (random.nextDouble() - 0.5) * speed,
-                    (random.nextDouble() - 0.5) * speed,
-                    (random.nextDouble() - 0.5) * speed);
+            float speed = 0.1f;
+            level().addParticle(CompanionsParticles.EMBER.get(), getX(), getY(), getZ(), (random.nextDouble() - 0.5) * speed, (random.nextDouble() - 0.5) * speed, (random.nextDouble() - 0.5) * speed);
         }
+
     }
 
     private LivingEntity findNextTarget() {
         // We should find the nearest entity from the one that triggered the entity hit
         return level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(10),
-                        e -> e.isAlive() && e != getOwner() && !hitEntities.contains(e.getId()))
+                        e -> e.isAlive() && !Util.areEntitiesLinked(this, e) && !hitEntities.contains(e.getId()))
                 .stream()
                 .min(Comparator.comparingDouble(e -> e.distanceToSqr(this)))
                 .orElse(null);
@@ -214,9 +209,6 @@ public class BraceProjectile extends BaseProjectile implements GeoEntity {
 
     @Override
     public void playerTouch(@NotNull Player player) { ;; }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) { ;; }
 
     @Override
     protected int baseLifetime() {

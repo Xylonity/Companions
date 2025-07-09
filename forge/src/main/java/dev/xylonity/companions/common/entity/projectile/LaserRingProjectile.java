@@ -2,15 +2,15 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import software.bernie.geckolib.animatable.GeoEntity;
 
 import java.util.Random;
 
-public class LaserRingProjectile extends BaseProjectile implements GeoEntity {
+public class LaserRingProjectile extends BaseProjectile {
 
     public LaserRingProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -36,7 +36,7 @@ public class LaserRingProjectile extends BaseProjectile implements GeoEntity {
                     px + outer, py + 1.0, pz + outer
             );
 
-            for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, box, e -> e.isAlive() && e != getOwner())) {
+            for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, box, e -> !Util.areEntitiesLinked(this, e))) {
                 double dx = e.getX() - px;
                 double dz = e.getZ() - pz;
                 double dist = Math.sqrt(dx * dx + dz * dz);

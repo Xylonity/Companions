@@ -42,10 +42,9 @@ public class MankhChestShotAttackGoal extends AbstractMankhAttackGoal {
         }
 
         if (mankh.getTarget() != null) {
-            LivingEntity e = mankh.getTarget();
-            mankh.getLookControl().setLookAt(e.getX(), e.getY() + e.getBbHeight() * 0.5f, e.getZ(), 6, 90);
-            mankh.lookAt(e, 30, 30);
+            mankh.lookAt(mankh.getTarget(), 30, 30);
         }
+
     }
 
     @Override
@@ -54,8 +53,7 @@ public class MankhChestShotAttackGoal extends AbstractMankhAttackGoal {
 
         LaserTriggerProjectile laser = CompanionsEntities.LASER_PROJECTILE.get().create(mankh.level());
         if (laser != null) {
-            Vec3 base = mankh.position().add(0, mankh.getBbHeight() * 0.5, 0);
-            Vec3 spawn = base.add(dir.scale(0.05));
+            Vec3 spawn = mankh.position().add(0, mankh.getBbHeight() * 0.5, 0).add(dir.scale(0.05));
 
             laser.setPos(spawn.x, spawn.y, spawn.z);
             laser.setOwner(mankh);

@@ -29,15 +29,11 @@ public class ImpBraceAttackGoal extends AbstractMinionAttackGoal {
     public void tick() {
         LivingEntity target = minion.getTarget();
         if (target != null) {
-            minion.getLookControl().setLookAt(target, 30.0F, 30.0F);
+            minion.lookAt(target, 30.0F, 30.0F);
 
-            double dx = target.getX() - minion.getX();
-            double dz = target.getZ() - minion.getZ();
-
-            float angle = (float)(Math.atan2(dz, dx) * (180.0 / Math.PI)) - 90.0F;
+            float angle = (float)(Math.atan2(target.getZ() - minion.getZ(), target.getX() - minion.getX()) * (180.0 / Math.PI)) - 90.0F;
 
             minion.setYRot(angle);
-
             minion.yBodyRot = angle;
             minion.yHeadRot = angle;
             minion.yRotO = angle;

@@ -72,6 +72,7 @@ public class FireworkToadGoal extends AbstractCorneliusSummonAttackGoal {
 
         Vec3 dir = Util.bezier(p0, p1, p2, Math.min(attackTicks / (double) totalTicks + .01, 1.0)).subtract(pos).normalize();
         float yaw = (float)(Mth.atan2(dir.z, dir.x) * 180 / Math.PI) - 90F;
+
         summon.setYRot(yaw);
         summon.setYBodyRot(yaw);
         summon.setXRot((float)(-Mth.atan2(dir.y, Math.sqrt(dir.x*dir.x + dir.z*dir.z)) * 180 / Math.PI));

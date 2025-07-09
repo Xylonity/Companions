@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.ai.shade.sword.goal;
 import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.common.entity.ai.shade.AbstractShadeAttackGoal;
 import dev.xylonity.companions.common.entity.companion.ShadeSwordEntity;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
@@ -62,7 +63,7 @@ public class ShadeSwordMeleeAttackGoal extends AbstractShadeAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         for (Entity e : shade.level().getEntitiesOfClass(Entity.class, new AABB(shade.blockPosition()).inflate(3))) {
-            if (e instanceof LivingEntity livingEntity && shade.hasLineOfSight(livingEntity) && isEntityInFront(shade, livingEntity, 150) && livingEntity != shade) {
+            if (e instanceof LivingEntity livingEntity && shade.hasLineOfSight(livingEntity) && isEntityInFront(shade, livingEntity, 150) && !Util.areEntitiesLinked(e, shade)) {
                 shade.doHurtTarget(livingEntity);
                 livingEntity.knockback(0.5f, shade.getX() - target.getX(), shade.getZ() - target.getZ());
             }

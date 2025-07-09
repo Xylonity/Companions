@@ -26,12 +26,13 @@ public class ImpFireMarkAttackGoal extends AbstractMinionAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        FireMarkRingProjectile fireMarkRing = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get().create(minion.level());
-        if (fireMarkRing != null) {
-            fireMarkRing.moveTo(target.getX(), target.getY(), target.getZ());
-            fireMarkRing.setOwner(minion);
-            minion.level().addFreshEntity(fireMarkRing);
+        FireMarkRingProjectile ring = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get().create(minion.level());
+        if (ring != null) {
+            ring.moveTo(target.getX(), target.getY(), target.getZ());
+            ring.setOwner(minion);
+            minion.level().addFreshEntity(ring);
         }
+
     }
 
     @Override

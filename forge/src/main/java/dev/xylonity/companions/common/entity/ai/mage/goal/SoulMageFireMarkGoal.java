@@ -16,16 +16,15 @@ public class SoulMageFireMarkGoal extends AbstractSoulMageAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        if (!soulMage.level().isClientSide && soulMage.getOwner() != null) {
-            FireMarkRingProjectile fireMarkRing = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get().create(soulMage.level());
-            if (fireMarkRing != null) {
-                fireMarkRing.moveTo(target.getX(), target.getY(), target.getZ());
-                fireMarkRing.setOwner(target);
-                fireMarkRing.setmayAffectOwner(true);
-                fireMarkRing.setMageOwnerUUID(String.valueOf(this.soulMage.getOwnerUUID()));
-                soulMage.level().addFreshEntity(fireMarkRing);
+        if (soulMage.getOwner() != null) {
+            FireMarkRingProjectile ring = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get().create(soulMage.level());
+            if (ring != null) {
+                ring.moveTo(target.getX(), target.getY(), target.getZ());
+                ring.setOwner(soulMage);
+                soulMage.level().addFreshEntity(ring);
             }
         }
+
     }
 
     @Override

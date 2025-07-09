@@ -28,15 +28,17 @@ public class MinionTornadoAttackGoal extends AbstractMinionAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         if (minion.getOwner() != null) {
-            TornadoProjectile tornadoProjectile = CompanionsEntities.TORNADO_PROJECTILE.get().create(this.minion.level());
-            if (tornadoProjectile != null) {
+            TornadoProjectile tornado = CompanionsEntities.TORNADO_PROJECTILE.get().create(this.minion.level());
+            if (tornado != null) {
                 Vec3 startPos = this.minion.getEyePosition(1f);
                 Vec3 spawnPos = startPos.add(target.getEyePosition(1.0F).subtract(startPos).normalize());
-                tornadoProjectile.moveTo(spawnPos.x, spawnPos.y - 1, spawnPos.z);
-                tornadoProjectile.setOwner(this.minion);
-                this.minion.level().addFreshEntity(tornadoProjectile);
+                tornado.moveTo(spawnPos.x, spawnPos.y - 1, spawnPos.z);
+                tornado.setOwner(this.minion);
+
+                this.minion.level().addFreshEntity(tornado);
             }
         }
+
     }
 
     @Override

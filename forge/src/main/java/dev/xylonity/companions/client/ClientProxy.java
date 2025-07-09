@@ -45,6 +45,17 @@ public class ClientProxy implements IProxy {
     }
 
     @Override
+    public void spawnBaseProjectileTrail(Entity entity, float radius, float height, float r, float g, float b) {
+        if (!(entity.level() instanceof ClientLevel level)) return;
+
+        double x = entity.getX() + (level.random.nextDouble() - 0.5) * entity.getBbWidth();
+        double y = entity.getY() + entity.getBbHeight() * level.random.nextDouble();
+        double z = entity.getZ() + (level.random.nextDouble() - 0.5) * entity.getBbWidth();
+
+        Minecraft.getInstance().particleEngine.add(new BaseRibbonTrailParticle(level, x, y, z, r, g, b, radius, height, entity.getId()));
+    }
+
+    @Override
     public void shakePlayerCamera(Player player, int durationTicks, float intensityX, float intensityY, float intensityZ, int fadeStartTick) {
         CameraShakeManager.shakePlayer(player, durationTicks, intensityX, intensityY, intensityZ, fadeStartTick);
     }

@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.ShadeEntity;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -12,7 +13,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -20,7 +20,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class ShadeSwordImpactProjectile extends BaseProjectile implements GeoEntity {
+public class ShadeSwordImpactProjectile extends BaseProjectile {
 
     private final RawAnimation SHOOT = RawAnimation.begin().thenPlay("shoot");
 
@@ -56,18 +56,17 @@ public class ShadeSwordImpactProjectile extends BaseProjectile implements GeoEnt
             }
         }
 
-        Vec3 m = this.getDeltaMovement();
-        this.setPos(this.getX() + m.x, this.getY() + m.y, this.getZ() + m.z);
+        Vec3 v = this.getDeltaMovement();
+        this.setPos(this.getX() + v.x, this.getY() + v.y, this.getZ() + v.z);
 
         if (!this.level().isClientSide) {
-            for (LivingEntity victim : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox(), e -> e.isAlive() && e != getOwner())) {
+            for (LivingEntity victim : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox(), e -> !Util.areEntitiesLinked(e, this))) {
                 if (this.getOwner() != null && this.getOwner() instanceof ShadeEntity entity) {
                     entity.doHurtTarget(victim);
                 }
-
-                break;
             }
         }
+
     }
 
     @Override

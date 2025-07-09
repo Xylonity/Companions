@@ -1,13 +1,17 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -29,6 +33,13 @@ public class StakeProjectile extends AbstractArrow implements GeoEntity {
     public StakeProjectile(Level pLevel, LivingEntity pShooter) {
         super(CompanionsEntities.STAKE_PROJECTILE.get(), pShooter, pLevel);
         this.noPhysics = false;
+    }
+
+    @Override
+    protected boolean canHitEntity(@NotNull Entity entity) {
+        if (Util.areEntitiesLinked(entity, this)) return false;
+
+        return super.canHitEntity(entity);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
-import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -12,11 +12,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -25,8 +23,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 import java.util.Random;
 
-public class BlackHoleProjectile extends BaseProjectile implements GeoEntity {
-    private static final RawAnimation APPEAR = RawAnimation.begin().thenPlay("appear");
+public class BlackHoleProjectile extends BaseProjectile {
     private static final RawAnimation DISAPPEAR = RawAnimation.begin().thenPlay("disappear");
     private static final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
 
@@ -34,7 +31,6 @@ public class BlackHoleProjectile extends BaseProjectile implements GeoEntity {
     private static final EntityDataAccessor<Integer> TICKCOUNT = SynchedEntityData.defineId(BlackHoleProjectile.class, EntityDataSerializers.INT);
 
     private static final double ATTRACT_RADIUS = 12.0;
-    private static final double ATTRACT_STRENGTH = 0.3;
     private static final float GRAVITY = 0.03F;
 
     public BlackHoleProjectile(EntityType<? extends BaseProjectile> type, Level level) {
@@ -65,10 +61,10 @@ public class BlackHoleProjectile extends BaseProjectile implements GeoEntity {
         this.entityData.set(TICKCOUNT, tickCount);
     }
 
-    private void updateRotation(Vec3 velocity) {
-        double horizontalMag = velocity.horizontalDistance();
-        float newYaw   = (float) (Mth.atan2(velocity.x, velocity.z) * (180F / Math.PI));
-        float newPitch = (float) (Mth.atan2(velocity.y, horizontalMag) * (180F / Math.PI));
+    private void updateRotation(Vec3 vel) {
+        double horizontalMag = vel.horizontalDistance();
+        float newYaw = (float) (Mth.atan2(vel.x, vel.z) * (180F / Math.PI));
+        float newPitch = (float) (Mth.atan2(vel.y, horizontalMag) * (180F / Math.PI));
 
         this.setYRot(lerpRotation(this.getYRot(), newYaw));
         this.setXRot(lerpRotation(this.getXRot(), newPitch));
@@ -82,14 +78,11 @@ public class BlackHoleProjectile extends BaseProjectile implements GeoEntity {
 
         if (new Random().nextFloat() < 0.44 && getTickCount() < getLifetime() - 20) for (int i = 0; i < 1; i++) {
             if (this.level() instanceof ServerLevel level) {
-                double offsetX = (Math.random() - 0.5) * 0.5;
-                double offsetZ = (Math.random() - 0.5) * 0.5;
-
-                double speedX = (Math.random() - 0.5) * 0.1;
-                double speedZ = (Math.random() - 0.5) * 0.1;
-
-                level.sendParticles(CompanionsParticles.BLACK_HOLE_STAR.get(), this.getX() + offsetX, this.getY() - 0.2, this.getZ() + offsetZ, 1, speedX, 0.0, speedZ, 0.2);
+                double x = (Math.random() - 0.5) * 0.5;
+                double z = (Math.random() - 0.5) * 0.5;
+                level.sendParticles(CompanionsParticles.BLACK_HOLE_STAR.get(), this.getX() + x, this.getY() - 0.2, this.getZ() + z, 1, (Math.random() - 0.5) * 0.1, 0.0, (Math.random() - 0.5) * 0.1, 0.2);
             }
+
         }
 
         if (this.getTickCount() >= getLifetime()) {
@@ -112,22 +105,13 @@ public class BlackHoleProjectile extends BaseProjectile implements GeoEntity {
         }
 
         Vec3 oldPos = this.position();
-        Vec3 velocity = this.getDeltaMovement();
-        if (!this.noPhysics) {
-            velocity = velocity.add(0, -GRAVITY, 0);
-        }
-        velocity = velocity.scale(0.99);
+        Vec3 vel = this.getDeltaMovement();
 
-        Vec3 newPos = oldPos.add(velocity);
+        if (!this.noPhysics) vel = vel.add(0, -GRAVITY, 0);
 
-        ClipContext ctx = new ClipContext(
-                oldPos,
-                newPos,
-                ClipContext.Block.COLLIDER,
-                ClipContext.Fluid.NONE,
-                this
-        );
-        BlockHitResult blockHit = level().clip(ctx);
+        vel = vel.scale(0.99);
+
+        BlockHitResult blockHit = level().clip(new ClipContext(oldPos, oldPos.add(vel), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
         if (blockHit.getType() == HitResult.Type.BLOCK) {
             Vec3 hitPos = blockHit.getLocation();
@@ -135,65 +119,43 @@ public class BlackHoleProjectile extends BaseProjectile implements GeoEntity {
 
             this.setDeltaMovement(Vec3.ZERO);
             this.setLocked(true);
+        } else {
+            this.setDeltaMovement(vel);
+            this.move(MoverType.SELF, vel);
 
-        }
-        else {
-            this.setDeltaMovement(velocity);
-            this.move(MoverType.SELF, velocity);
-
-            updateRotation(velocity);
+            updateRotation(vel);
 
             if (this.onGround()) {
                 this.setLocked(true);
                 this.setDeltaMovement(Vec3.ZERO);
             }
+
         }
 
         attractNearbyEntities();
     }
 
     private void attractNearbyEntities() {
-        AABB area = this.getBoundingBox().inflate(ATTRACT_RADIUS);
-
-        List<LivingEntity> nearby = level().getEntitiesOfClass(LivingEntity.class, area,
-                e -> e.isAlive()
-                && !e.equals(getOwner())
-                && !(getOwner() instanceof SoulMageEntity
-                    && ((SoulMageEntity) getOwner()).getOwner() != null
-                    && ((SoulMageEntity) getOwner()).getOwner().equals(e))
-                && !(e instanceof TamableAnimal
-                    && ((TamableAnimal) e).getOwner() != null
-                    && ((TamableAnimal) e).getOwner().equals(getOwner()))
-                && !(getOwner() instanceof SoulMageEntity && e instanceof TamableAnimal
-                    && ((TamableAnimal) e).getOwner() != null
-                    && ((TamableAnimal) e).getOwner().equals(((SoulMageEntity) getOwner()).getOwner()))
-        );
+        List<LivingEntity> nearby = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(ATTRACT_RADIUS), e -> !Util.areEntitiesLinked(e, this));
 
         for (LivingEntity ent : nearby) {
-            Vec3 toCenter = new Vec3(this.getX() - ent.getX(),
-                    this.getY() - ent.getY(),
-                    this.getZ() - ent.getZ());
+            Vec3 toCenter = new Vec3(this.getX() - ent.getX(), this.getY() - ent.getY(), this.getZ() - ent.getZ());
+
             double distance = toCenter.length();
-            if (distance < 0.05) {
-                continue;
-            }
+            if (distance < 0.05) continue;
 
             toCenter = toCenter.normalize();
 
-            double maxPullSpeed = 1.4;
+            double linear = (ATTRACT_RADIUS - distance) / ATTRACT_RADIUS;
+            if (linear < 0) linear = 0;
+            Vec3 desiredVel = toCenter.scale(Math.pow(linear, 2) * 1.4);
 
-            double exponent = 2.0;
-            double linearFactor = (ATTRACT_RADIUS - distance) / ATTRACT_RADIUS;
-            if (linearFactor < 0) linearFactor = 0;
-            double factor = Math.pow(linearFactor, exponent);
-            Vec3 desiredVel = toCenter.scale(factor * maxPullSpeed);
-
-            double alpha = 0.15;
             Vec3 currentVel = ent.getDeltaMovement();
-            Vec3 newVel = currentVel.lerp(desiredVel, alpha);
+            Vec3 newVel = currentVel.lerp(desiredVel, 0.15);
 
             ent.setDeltaMovement(newVel);
         }
+
     }
 
     @Override
@@ -209,7 +171,6 @@ public class BlackHoleProjectile extends BaseProjectile implements GeoEntity {
 
     private <T extends GeoAnimatable> PlayState extraPredicate(AnimationState<T> event) {
         if (getTickCount() >= getLifetime() - 7) event.getController().setAnimation(DISAPPEAR);
-        //else if (getTickCount() <= 4) event.getController().setAnimation(APPEAR);
 
         return PlayState.CONTINUE;
     }

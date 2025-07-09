@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 public interface IProxy {
 
     default void spawnGenericRibbonTrail(Entity e, Level level, double x, double y, double z, float r, float g, float b, float radius, float height) { ;; }
+    default void spawnBaseProjectileTrail(Entity entity, float radius, float height, float r, float g, float b) { ;; }
     default void spawnElectricArc(Entity e, Entity target, Level level, float distance) { ;; }
     default void spawnLaserRingElectricArc(Entity e, Level level, float distance) { ;; }
     default void spawnPlasmaLampElectricArc(AbstractTeslaBlockEntity e, Level level, BlockPos pos) { ;; }

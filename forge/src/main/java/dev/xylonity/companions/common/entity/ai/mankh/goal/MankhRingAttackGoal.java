@@ -48,9 +48,9 @@ public class MankhRingAttackGoal extends AbstractMankhAttackGoal {
 
         if (mankh.getTarget() != null) {
             LivingEntity e = mankh.getTarget();
-            mankh.getLookControl().setLookAt(e.getX(), e.getY() + e.getBbHeight() * 0.5f, e.getZ(), 6, 90);
             mankh.lookAt(e, 30, 30);
         }
+
     }
 
     @Override

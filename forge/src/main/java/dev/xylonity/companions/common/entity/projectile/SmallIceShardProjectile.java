@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -59,6 +60,13 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
     }
 
     @Override
+    protected boolean canHitEntity(@NotNull Entity entity) {
+        if (Util.areEntitiesLinked(entity, this)) return false;
+
+        return super.canHitEntity(entity);
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -105,7 +113,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
                 float r = (190 + level().random.nextInt(30)) / 255f;
                 float g = (240 + level().random.nextInt(10)) / 255f;
                 float b = (247 + level().random.nextInt(5)) / 255f;
-                Util.spawnBaseProjectileTrail(this, 0, getBbHeight() * 0.5f, r, g, b);
+                Companions.PROXY.spawnBaseProjectileTrail(this, 0, getBbHeight() * 0.5f, r, g, b);
             }
         }
 

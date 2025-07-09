@@ -52,16 +52,15 @@ public class BubbleFrogAttackGoal extends AbstractCorneliusSummonAttackGoal {
             Vec3 basePos = summon.position().add(0, 0.5 + Math.random() * 0.4, 0);
             Vec3 targetPos = target.position().add(0, target.getEyeHeight(), 0);
             Vec3 dir = targetPos.subtract(basePos).normalize();
-            Vec3 perpen = new Vec3(-dir.z, 0, dir.x).normalize();
 
-            Vec3 spawnPos = basePos.add(perpen.scale(-0.5f + summon.level().random.nextFloat()));
-            Vec3 vel = targetPos.subtract(spawnPos).normalize().scale(projectile.getDefaultSpeed());
+            Vec3 spawnPos = basePos.add(new Vec3(-dir.z, 0, dir.x).normalize().scale(-0.5f + summon.level().random.nextFloat()));
 
             projectile.setOwner(summon);
             projectile.setTarget(target);
             projectile.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
-            projectile.setDeltaMovement(vel);
+            projectile.setDeltaMovement(targetPos.subtract(spawnPos).normalize().scale(projectile.getDefaultSpeed()));
             projectile.setNoGravity(true);
+
             summon.level().addFreshEntity(projectile);
         }
     }

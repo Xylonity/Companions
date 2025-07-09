@@ -15,25 +15,27 @@ public class SoulMageHealRingGoal extends AbstractSoulMageAttackGoal {
     }
 
     @Override
-    protected void performAttack(LivingEntity target) {
-        if (!soulMage.level().isClientSide && soulMage.getOwner() != null) {
-            Projectile healRing = CompanionsEntities.HEAL_RING_PROJECTILE.get().create(soulMage.level());
-            if (healRing != null) {
-                healRing.moveTo(soulMage.getOwner().getX(), soulMage.getOwner().getY(), soulMage.getOwner().getZ());
-                healRing.setOwner(soulMage.getOwner());
-                soulMage.level().addFreshEntity(healRing);
-            }
-        }
-    }
-
-    @Override
     public boolean canUse() {
         if (soulMage.isAttacking()) return false;
         if (soulMage.tickCount < nextUseTick) return false;
         if (!hasRequiredBook()) return false;
         if (this.soulMage.getOwner() == null) return false;
         if (soulMage.getOwner().getHealth() >= soulMage.getOwner().getMaxHealth() * 0.7) return false;
+
         return true;
+    }
+
+    @Override
+    protected void performAttack(LivingEntity target) {
+        if (soulMage.getOwner() != null) {
+            Projectile ring = CompanionsEntities.HEAL_RING_PROJECTILE.get().create(soulMage.level());
+            if (ring != null) {
+                ring.moveTo(soulMage.getOwner().getX(), soulMage.getOwner().getY(), soulMage.getOwner().getZ());
+                ring.setOwner(soulMage.getOwner());
+                soulMage.level().addFreshEntity(ring);
+            }
+        }
+
     }
 
     @Override

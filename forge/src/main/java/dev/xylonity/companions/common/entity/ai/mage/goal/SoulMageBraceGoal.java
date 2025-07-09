@@ -17,24 +17,23 @@ public class SoulMageBraceGoal extends AbstractSoulMageAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        if (!soulMage.level().isClientSide && soulMage.getOwner() != null) {
+        if (soulMage.getOwner() != null) {
             BraceProjectile projectile = CompanionsEntities.BRACE_PROJECTILE.get().create(this.soulMage.level());
             if (projectile != null) {
                 Vec3 eyePos = this.soulMage.getEyePosition();
-                Vec3 targetPos = target.getEyePosition();
 
-                Vec3 direction = targetPos.subtract(eyePos).normalize();
+                Vec3 dir = target.getEyePosition().subtract(eyePos).normalize();
+                Vec3 spawnPos = eyePos.add(dir.scale(0.3));
 
-                Vec3 spawnPos = eyePos.add(direction.scale(0.3));
                 projectile.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
                 projectile.setOwner(this.soulMage);
 
-                double speed = 0.85;
-                projectile.setDeltaMovement(direction.scale(speed));
+                projectile.setDeltaMovement(dir.scale(0.8225));
 
-                this.soulMage.level().addFreshEntity(projectile);
+                soulMage.level().addFreshEntity(projectile);
             }
         }
+
     }
 
     @Override

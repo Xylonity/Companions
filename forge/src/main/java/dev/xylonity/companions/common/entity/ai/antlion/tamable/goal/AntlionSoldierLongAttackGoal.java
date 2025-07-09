@@ -37,18 +37,18 @@ public class AntlionSoldierLongAttackGoal extends AbstractAntlionAttackGoal {
             Vec3 basePos = antlion.position().add(0, antlion.getBbHeight() * 0.5f, 0);
             Vec3 targetPos = target.position().add(0, target.getEyeHeight(), 0);
             Vec3 dir = targetPos.subtract(basePos).normalize();
-            Vec3 perpen = new Vec3(-dir.z, 0, dir.x).normalize();
 
-            Vec3 spawnPos = basePos.add(perpen.scale(-0.5f + antlion.level().random.nextFloat()));
-            Vec3 vel = targetPos.subtract(spawnPos).normalize().scale(projectile.getDefaultSpeed());
+            Vec3 spawnPos = basePos.add(new Vec3(-dir.z, 0, dir.x).normalize().scale(-0.5f + antlion.level().random.nextFloat()));
 
             projectile.setOwner(antlion);
             projectile.setTarget(target);
             projectile.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
-            projectile.setDeltaMovement(vel);
+            projectile.setDeltaMovement(targetPos.subtract(spawnPos).normalize().scale(projectile.getDefaultSpeed()));
             projectile.setNoGravity(true);
+
             antlion.level().addFreshEntity(projectile);
         }
+
     }
 
     @Override

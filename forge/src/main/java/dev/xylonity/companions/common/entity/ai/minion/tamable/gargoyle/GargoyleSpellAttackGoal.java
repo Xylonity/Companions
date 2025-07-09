@@ -42,11 +42,11 @@ public class GargoyleSpellAttackGoal extends AbstractMinionAttackGoal {
     private void spawnSpikeRow(Vec3 direction, int count) {
         for (int i = 0; i < count; i++) {
             Vec3 pos = minion.position().add(direction.scale(1.5 + i * 1.5));
-            int terrainY = minion.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, new BlockPos((int) pos.x, 0, (int) pos.z)).getY();
+            int y = minion.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, new BlockPos((int) pos.x, 0, (int) pos.z)).getY();
 
             StoneSpikeProjectile spike = CompanionsEntities.STONE_SPIKE_PROJECTILE.get().create(minion.level());
             if (spike != null) {
-                spike.moveTo(pos.x, Util.findValidSpawnPos(new BlockPos((int) pos.x, terrainY, (int) pos.z), minion.level()).getY(), pos.z, minion.getYRot(), 0.0F);
+                spike.moveTo(pos.x, Util.findValidSpawnPos(new BlockPos((int) pos.x, y, (int) pos.z), minion.level()).getY(), pos.z, minion.getYRot(), 0.0F);
                 spike.setOwner(minion);
 
                 if (i == 0) {

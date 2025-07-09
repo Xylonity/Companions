@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.companion;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.mage.goal.*;
@@ -10,7 +11,6 @@ import dev.xylonity.companions.common.entity.projectile.*;
 import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -24,19 +24,16 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +46,7 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.*;
 
-public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, ContainerListener {
+public class SoulMageEntity extends CompanionEntity implements ContainerListener {
     public SimpleContainer inventory;
 
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
@@ -117,16 +114,16 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
-        this.goalSelector.addGoal(3, new SoulMageMagicRayGoal(this, 80, 120));
-        this.goalSelector.addGoal(3, new SoulMageBlackHoleGoal(this, 100, 200));
-        this.goalSelector.addGoal(3, new SoulMageStoneSpikesGoal(this, 120, 240));
-        this.goalSelector.addGoal(3, new SoulMageHealRingGoal(this, 100, 160));
-        this.goalSelector.addGoal(3, new SoulMageIceShardGoal(this, 100, 160));
-        this.goalSelector.addGoal(3, new SoulMageFireMarkGoal(this, 100, 160));
-        this.goalSelector.addGoal(3, new SoulMageTornadoGoal(this, 100, 160));
-        this.goalSelector.addGoal(3, new SoulMageBraceGoal(this, 100, 160));
+        this.goalSelector.addGoal(3, new SoulMageMagicRayGoal(this, 70, 160));
+        this.goalSelector.addGoal(3, new SoulMageBlackHoleGoal(this, 70, 160));
+        this.goalSelector.addGoal(3, new SoulMageStoneSpikesGoal(this, 70, 160));
+        this.goalSelector.addGoal(3, new SoulMageHealRingGoal(this, 70, 160));
+        this.goalSelector.addGoal(3, new SoulMageIceShardGoal(this, 70, 160));
+        this.goalSelector.addGoal(3, new SoulMageFireMarkGoal(this, 70, 160));
+        this.goalSelector.addGoal(3, new SoulMageTornadoGoal(this, 70, 160));
+        this.goalSelector.addGoal(3, new SoulMageBraceGoal(this, 70, 160));
 
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(4, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(4, new CompanionRandomStrollGoal(this, 0.43));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
@@ -348,67 +345,6 @@ public class SoulMageEntity extends CompanionEntity implements RangedAttackMob, 
     public void aiStep() {
         setNoMovement(isAttacking());
         super.aiStep();
-    }
-
-    @Override
-    public void performRangedAttack(@NotNull LivingEntity target, float v) {
-        if (!level().isClientSide) {
-            double maxDistance = 30.0D;
-            Vec3 startPos = this.getEyePosition(1.0F);
-            Vec3 targetPos = target.getEyePosition(1.0F);
-            Vec3 direction = targetPos.subtract(startPos).normalize();
-
-            double offset = 1.0D;
-            Vec3 spawnPos = startPos.add(direction.scale(offset));
-
-            double traveled  = 0.0;
-            double increment = 1.0D;
-            int maxSteps = (int)(maxDistance / increment);
-
-            for (int i = 0; i < maxSteps; i++) {
-                Vec3 piecePos = spawnPos.add(direction.scale(traveled));
-                traveled += increment;
-
-                BlockPos blockPos = BlockPos.containing(piecePos);
-                if (!isPassableBlock(level(), blockPos)) {
-                    spawnRayPiece(level(), this, piecePos, direction, (i == 0));
-                    break;
-                }
-
-                spawnRayPiece(level(), this, piecePos, direction, (i == 0));
-            }
-        }
-    }
-
-    private boolean isPassableBlock(Level level, BlockPos pos) {
-        return level.getBlockState(pos).getCollisionShape(level, pos).isEmpty();
-    }
-
-    private void spawnRayPiece(Level pLevel, LivingEntity caster, Vec3 piecePos, Vec3 direction, boolean isFirstPiece) {
-        if (isFirstPiece) {
-            MagicRayCircleProjectile circle = CompanionsEntities.MAGIC_RAY_PIECE_CIRCLE_PROJECTILE.get().create(pLevel);
-            if (circle != null) {
-                circle.setPos(piecePos.x, piecePos.y, piecePos.z);
-                setProjectileRotation(circle, direction);
-                pLevel.addFreshEntity(circle);
-            }
-        } else {
-            MagicRayPieceProjectile rayPiece = CompanionsEntities.MAGIC_RAY_PIECE_PROJECTILE.get().create(pLevel);
-            if (rayPiece != null) {
-                rayPiece.setPos(piecePos.x, piecePos.y, piecePos.z);
-                setProjectileRotation(rayPiece, direction);
-                pLevel.addFreshEntity(rayPiece);
-            }
-        }
-    }
-
-    private void setProjectileRotation(MagicRayPieceProjectile projectile, Vec3 direction) {
-        Vec3 dir = direction.normalize();
-        float yaw = (float) (Math.atan2(dir.z, dir.x) * (180.0F / Math.PI)) - 90.0F;
-        float pitch = (float) (-(Math.atan2(dir.y, Math.sqrt(dir.x * dir.x + dir.z * dir.z))) * (180.0F / Math.PI));
-
-        projectile.setPitch(pitch);
-        projectile.setYaw(yaw);
     }
 
     @Override

@@ -51,7 +51,7 @@ public class ShadeSwordFollowOwnerGoal extends Goal {
         }
 
         // Kinda the same as the target follow goal but adapted to the player movement
-        angle = (angle + (2 * Math.PI)/(7.5 * 20d)) % (Math.PI * 2);
+        angle = (angle + (2 * Math.PI)/(7.5f * 20f)) % (Math.PI * 2);
         Vec3 nextPos = shade.position().lerp(center.add(ORBIT_RADIUS * Math.cos(angle), 0, ORBIT_RADIUS * Math.sin(angle)), 0.15);
 
         shade.setPos(nextPos.x, nextPos.y, nextPos.z);

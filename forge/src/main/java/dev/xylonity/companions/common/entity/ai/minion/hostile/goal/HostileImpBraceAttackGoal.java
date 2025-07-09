@@ -29,15 +29,11 @@ public class HostileImpBraceAttackGoal extends AbstractHostileImpAttackGoal {
     public void tick() {
         LivingEntity target = imp.getTarget();
         if (target != null) {
-            imp.getLookControl().setLookAt(target, 30.0F, 30.0F);
+            imp.lookAt(target, 30.0F, 30.0F);
 
-            double dx = target.getX() - imp.getX();
-            double dz = target.getZ() - imp.getZ();
-
-            float angle = (float)(Math.atan2(dz, dx) * (180.0 / Math.PI)) - 90.0F;
+            float angle = (float)(Math.atan2(target.getZ() - imp.getZ(), target.getX() - imp.getX()) * (180.0 / Math.PI)) - 90.0F;
 
             imp.setYRot(angle);
-
             imp.yBodyRot = angle;
             imp.yHeadRot = angle;
             imp.yRotO = angle;
@@ -58,8 +54,7 @@ public class HostileImpBraceAttackGoal extends AbstractHostileImpAttackGoal {
 
                 projectile.setOwner(imp);
 
-                Vec3 initialVelocity = target.getEyePosition().subtract(spawnPos).normalize().scale(1.15).add(imp.getTarget().getDeltaMovement());
-                projectile.setDeltaMovement(initialVelocity);
+                projectile.setDeltaMovement(target.getEyePosition().subtract(spawnPos).normalize().scale(1.15).add(imp.getTarget().getDeltaMovement()));
 
                 imp.level().addFreshEntity(projectile);
             }

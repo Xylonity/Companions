@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
@@ -56,11 +57,19 @@ public class BigIceShardProjectile extends AbstractArrow implements GeoEntity {
         this.pickup = Pickup.DISALLOWED;
     }
 
+    @Override
+    protected boolean canHitEntity(@NotNull Entity entity) {
+        if (Util.areEntitiesLinked(entity, this)) return false;
+
+        return super.canHitEntity(entity);
+    }
+
     public void setTarget(@Nullable LivingEntity tgt) {
         this.target = tgt;
     }
 
-    @Nullable public LivingEntity getTarget() {
+    @Nullable
+    public LivingEntity getTarget() {
         return target;
     }
 

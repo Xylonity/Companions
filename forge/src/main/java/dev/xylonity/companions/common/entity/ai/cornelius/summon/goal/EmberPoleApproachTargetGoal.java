@@ -53,7 +53,7 @@ public class EmberPoleApproachTargetGoal extends Goal {
     public void tick() {
         if (this.target == null) return;
 
-        this.pole.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
+        this.pole.getLookControl().setLookAt(this.target, 30f, 30f);
 
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = this.adjustedTickDelay(10);
@@ -65,6 +65,7 @@ public class EmberPoleApproachTargetGoal extends Goal {
                 this.navigation.stop();
             }
         }
+
     }
 
 }

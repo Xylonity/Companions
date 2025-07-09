@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -45,6 +46,13 @@ public class NeedleProjectile extends ThrownTrident implements GeoEntity {
     private boolean dealtDamage;
     private float lockedYaw;
     private float lockedPitch;
+
+    @Override
+    protected boolean canHitEntity(@NotNull Entity entity) {
+        if (Util.areEntitiesLinked(this, entity)) return false;
+
+        return super.canHitEntity(entity);
+    }
 
     public NeedleProjectile(EntityType<? extends ThrownTrident> type, Level level) {
         super(type, level);

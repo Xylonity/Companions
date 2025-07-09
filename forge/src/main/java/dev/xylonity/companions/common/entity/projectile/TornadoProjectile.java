@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
-import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -19,7 +19,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -27,10 +26,9 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.Objects;
 import java.util.Random;
 
-public class TornadoProjectile extends BaseProjectile implements GeoEntity {
+public class TornadoProjectile extends BaseProjectile {
     private final RawAnimation SPIN = RawAnimation.begin().thenPlay("spin");
 
     private static final EntityDataAccessor<Float> GROUNDY = SynchedEntityData.defineId(TornadoProjectile.class, EntityDataSerializers.FLOAT);
@@ -127,22 +125,7 @@ public class TornadoProjectile extends BaseProjectile implements GeoEntity {
         this.setPos(this.getStartX() + (xLocal * cosA - zLocal * sinA), this.getGroundY(), this.getStartZ() + (xLocal * sinA + zLocal * cosA));
 
         // This will push entities away if they are within the hitbox
-        this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1),
-                e -> {
-                    if (e.equals(getOwner())) {
-                        return false;
-                    }
-
-                    if (getOwner() instanceof SoulMageEntity entity && Objects.equals(entity.getOwner(), e)) {
-                        return false;
-                    }
-
-                    if (e instanceof SoulMageBookEntity entity && Objects.equals(entity.getOwner(), getOwner())) {
-                        return false;
-                    }
-
-                    return true;
-                })
+        this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1), e -> !Util.areEntitiesLinked(this, e))
                 .forEach(e -> {
                     Vec3 dir = e.position().subtract(this.position()).normalize().scale(1.4);
                     e.push(dir.x + 0.1, dir.y + 0.1, dir.z + 0.1);
@@ -153,11 +136,7 @@ public class TornadoProjectile extends BaseProjectile implements GeoEntity {
 
         if (this.level() instanceof ServerLevel sv) {
             if (new Random().nextFloat() <= 0.8) {
-                sv.sendParticles(ParticleTypes.SNOWFLAKE,
-                        getX() + (getBbWidth() * 2) * Math.random(),
-                        getY() + (getBbHeight() * 2) * Math.random(),
-                        getZ() + (getBbWidth() * 2) * Math.random(),
-                        1, 0, 0, 0, 0.05);
+                sv.sendParticles(ParticleTypes.SNOWFLAKE, getX() + (getBbWidth() * 2) * Math.random(), getY() + (getBbHeight() * 2) * Math.random(), getZ() + (getBbWidth() * 2) * Math.random(), 1, 0, 0, 0, 0.05);
             }
         }
 
@@ -167,11 +146,7 @@ public class TornadoProjectile extends BaseProjectile implements GeoEntity {
                     float r = (190 + level().random.nextInt(30)) / 255f;
                     float g = (240 + level().random.nextInt(10)) / 255f;
                     float b = (247 + level().random.nextInt(5)) / 255f;
-                    Util.spawnBaseProjectileTrail(
-                            this,
-                            this.getBbWidth() + level().random.nextFloat() * 0.6f,
-                            getBbHeight() + level().random.nextFloat() * 0.5f,
-                            r, g, b);
+                    Companions.PROXY.spawnBaseProjectileTrail(this, this.getBbWidth() + level().random.nextFloat() * 0.6f, getBbHeight() + level().random.nextFloat() * 0.5f, r, g, b);
                 }
 
             }

@@ -97,9 +97,7 @@ public class AntlionAdultAttackGoal extends AbstractAntlionAttackGoal {
         antlion.cycleState();
 
         groundLevel = getGroundLevel();
-        double distanceToGround = antlion.getY() - groundLevel;
-
-        diveSpeed = -(distanceToGround / DIVE_DURATION);
+        diveSpeed = -(antlion.getY() - groundLevel / DIVE_DURATION);
 
         hasStartedDive = true;
     }
@@ -109,10 +107,10 @@ public class AntlionAdultAttackGoal extends AbstractAntlionAttackGoal {
         int y = pos.getY();
         while (y > antlion.level().getMinBuildHeight()) {
             pos.setY(--y);
-            BlockState state = antlion.level().getBlockState(pos);
-            if (!state.getCollisionShape(antlion.level(), pos).isEmpty()) {
+            if (!antlion.level().getBlockState(pos).getCollisionShape(antlion.level(), pos).isEmpty()) {
                 return y + 1;
             }
+
         }
 
         return antlion.level().getMinBuildHeight();

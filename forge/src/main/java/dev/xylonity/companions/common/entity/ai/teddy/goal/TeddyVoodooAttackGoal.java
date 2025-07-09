@@ -3,10 +3,10 @@ package dev.xylonity.companions.common.entity.ai.teddy.goal;
 import dev.xylonity.companions.common.entity.ai.teddy.AbstractTeddyAttackGoal;
 import dev.xylonity.companions.common.entity.companion.TeddyEntity;
 import dev.xylonity.companions.common.entity.projectile.NeedleProjectile;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -75,46 +75,43 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
     @Override
     protected void performAttack(LivingEntity unused) {
         for (LivingEntity e : list) {
-            e.removeEffect(CompanionsEffects.VOODOO.get());
+            if (!Util.areEntitiesLinked(e, teddy)) {
+                e.removeEffect(CompanionsEffects.VOODOO.get());
 
-            if (teddy.level().isClientSide) continue;
+                if (teddy.level().isClientSide) continue;
 
-            RandomSource rng = teddy.getRandom();
+                for (int i = 0; i < 2; i++) {
+                    double radius = 2.0 + teddy.getRandom().nextDouble();
+                    double angle = teddy.getRandom().nextDouble() * Math.PI * 2;
 
-            double bbMinY = e.getBoundingBox().minY;
-            double bbH = e.getBbHeight();
-            double minY = bbMinY + bbH * 0.75;
-            double rangeY = bbH * 0.5 + 1.0;
+                    double x = e.getX() + Math.cos(angle) * radius;
+                    double y = (e.getBoundingBox().minY + e.getBbHeight() * 0.75) + teddy.getRandom().nextDouble() * e.getBbHeight() * 0.5 + 1.0;
+                    double z = e.getZ() + Math.sin(angle) * radius;
 
-            for (int i = 0; i < 2; i++) {
-                double radius = 2.0 + rng.nextDouble();
-                double angle  = rng.nextDouble() * Math.PI * 2;
+                    NeedleProjectile needle = CompanionsEntities.NEEDLE_PROJECTILE.get().create(teddy.level());
+                    if (needle != null) {
+                        needle.setOwner(teddy);
+                        needle.setPos(x, y, z);
+                        needle.setNoGravity(true);
 
-                double x = e.getX() + Math.cos(angle) * radius;
-                double y = minY + rng.nextDouble() * rangeY;
-                double z = e.getZ() + Math.sin(angle) * radius;
+                        Vec3 dir = e.getEyePosition().subtract(new Vec3(x, y, z)).normalize();
+                        float yaw = (float) Math.atan2(dir.x, dir.z) * Mth.RAD_TO_DEG;
+                        float pitch = (float) Math.atan2(dir.y, Math.hypot(dir.x, dir.z)) * Mth.RAD_TO_DEG;
+                        needle.setYRot(yaw);
+                        needle.setXRot(pitch);
+                        needle.yRotO = yaw;
+                        needle.xRotO = pitch;
 
-                NeedleProjectile needle = new NeedleProjectile(CompanionsEntities.NEEDLE_PROJECTILE.get(), teddy.level());
-                needle.setOwner(teddy);
-                needle.setPos(x, y, z);
-                needle.setNoGravity(true);
+                        needle.setTargetEntity(e);
 
-                Vec3 dir = e.getEyePosition().subtract(new Vec3(x, y, z)).normalize();
-                float yaw = (float) Math.atan2(dir.x, dir.z) * Mth.RAD_TO_DEG;
-                float pitch = (float) Math.atan2(dir.y, Math.hypot(dir.x, dir.z)) * Mth.RAD_TO_DEG;
-                needle.setYRot(yaw);
-                needle.setXRot(pitch);
-                needle.yRotO = yaw;
-                needle.xRotO = pitch;
-
-                needle.setTargetEntity(e);
-
-                needle.setInvisible(true);
-                teddy.level().addFreshEntity(needle);
+                        needle.setInvisible(true);
+                        teddy.level().addFreshEntity(needle);
+                    }
+                }
             }
         }
-    }
 
+    }
 
     @Override
     protected int attackDelay() {

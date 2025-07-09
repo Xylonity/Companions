@@ -29,7 +29,6 @@ public class IceShardBook extends AbstractMagicBook {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player player, @NotNull InteractionHand pUsedHand) {
 
         BigIceShardProjectile projectile = CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.get().create(pLevel);
-
         if (projectile != null) {
             Vec3 forward = player.getLookAngle().normalize();
 
@@ -46,17 +45,17 @@ public class IceShardBook extends AbstractMagicBook {
             projectile.moveTo(spawnX, spawnY, spawnZ);
             projectile.setOwner(player);
 
-            double maxAngle = Math.toRadians(30);
-            Random random = new Random();
-            double cosTheta = random.nextDouble() * (1 - Math.cos(maxAngle)) + Math.cos(maxAngle);
-            double sinTheta = Math.sqrt(1 - cosTheta * cosTheta);
-            double phi = random.nextDouble() * 2 * Math.PI;
+            // conical distribution
+            // https://gist.github.com/Piratkopia13/6db0896218e5d83479d38b0e43ab2b68
+            double angle = Math.toRadians(30);
+            double cos = new Random().nextDouble() * (1 - Math.cos(angle)) + Math.cos(angle);
+            double sin = Math.sqrt(1 - cos * cos);
+            double phi = new Random().nextDouble() * 2 * Math.PI;
 
-            Vec3 randomDir = forward.scale(cosTheta).add(right.scale(sinTheta * Math.cos(phi))).add(up.scale(sinTheta * Math.sin(phi))).normalize();
-            projectile.setDeltaMovement(randomDir.scale(0.2));
+            projectile.setDeltaMovement(forward.scale(cos).add(right.scale(sin * Math.cos(phi))).add(up.scale(sin * Math.sin(phi))).normalize().scale(0.2));
 
-            LivingEntity tByMob = player.getLastHurtByMob();
-            projectile.setTarget(tByMob == null ? player.getLastHurtMob() : tByMob);
+            LivingEntity e = player.getLastHurtByMob();
+            projectile.setTarget(e == null ? player.getLastHurtMob() : e);
 
             pLevel.addFreshEntity(projectile);
         }

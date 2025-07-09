@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -96,7 +97,7 @@ public class FireRayPieceProjectile extends BaseProjectile {
 
         if (!level().isClientSide && !isInvisible()) {
             List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.25),
-                    e -> e != getOwner()
+                    e -> !Util.areEntitiesLinked(this, getOwner())
             );
 
             if (!entities.isEmpty()) {

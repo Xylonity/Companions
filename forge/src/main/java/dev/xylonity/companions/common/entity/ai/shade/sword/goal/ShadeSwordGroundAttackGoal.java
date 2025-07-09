@@ -32,24 +32,6 @@ public class ShadeSwordGroundAttackGoal extends AbstractShadeAttackGoal {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        //if (attackTicks < 4) shade.setShouldLookAtTarget(false);
-        //if (attackTicks > attackDuration - 5) shade.setShouldLookAtTarget(true);
-
-        //LivingEntity tgt = shade.getTarget();
-        //if (tgt != null) {
-        //    shade.setPos(shade.getX(), anchorY, shade.getZ());
-        //    shade.setDeltaMovement(Vec3.ZERO);
-
-        //    float yaw = (float)(180 + Math.toDegrees(Math.atan2(tgt.getX()-shade.getX(), tgt.getZ()-shade.getZ())));
-        //    shade.setYRot(yaw);
-        //    shade.setYBodyRot(yaw);
-        //}
-    }
-
-    @Override
     public boolean canUse() {
         if (!super.canUse()) return false;
         if (shade.getTarget() == null || shade.distanceTo(shade.getTarget()) >= 8.0D) return false;

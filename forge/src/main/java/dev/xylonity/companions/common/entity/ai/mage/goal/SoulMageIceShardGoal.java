@@ -18,8 +18,13 @@ public class SoulMageIceShardGoal extends AbstractSoulMageAttackGoal {
     }
 
     @Override
+    public boolean canUse() {
+        return super.canUse() && this.soulMage.getOwner() != null;
+    }
+
+    @Override
     protected void performAttack(LivingEntity target) {
-        if (!soulMage.level().isClientSide && soulMage.getOwner() != null) {
+        if (soulMage.getOwner() != null) {
             BigIceShardProjectile projectile = CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.get().create(soulMage.level());
 
             if (projectile != null) {
@@ -32,35 +37,29 @@ public class SoulMageIceShardGoal extends AbstractSoulMageAttackGoal {
                 }
 
                 Vec3 right = forward.cross(up).normalize();
-
                 double spawnX = soulMage.getX() + right.x * 0.5 + up.x * 0.5;
                 double spawnY = soulMage.getY() + soulMage.getBbHeight() + right.y * 0.5 + up.y * 0.5;
                 double spawnZ = soulMage.getZ() + right.z * 0.5 + up.z * 0.5;
+
                 projectile.moveTo(spawnX, spawnY, spawnZ);
                 projectile.setOwner(soulMage);
 
-                double maxAngle = Math.toRadians(30);
-                Random random = new Random();
+                // conical distribution
+                // https://gist.github.com/Piratkopia13/6db0896218e5d83479d38b0e43ab2b68
+                double angle = Math.toRadians(30);
+                double cos = new Random().nextDouble() * (1 - Math.cos(angle)) + Math.cos(angle);
+                double sin = Math.sqrt(1 - cos * cos);
+                double phi = new Random().nextDouble() * 2 * Math.PI;
 
-                double u = random.nextDouble();
-                double cosTheta = u * (1 - Math.cos(maxAngle)) + Math.cos(maxAngle);
-                double sinTheta = Math.sqrt(1 - cosTheta * cosTheta);
-                double phi = random.nextDouble() * 2 * Math.PI;
+                Vec3 dir = new Vec3(sin * Math.cos(phi), cos, sin * Math.sin(phi)).normalize();
 
-                Vec3 randomDir = new Vec3(sinTheta * Math.cos(phi), cosTheta, sinTheta * Math.sin(phi)).normalize();
-
-                double initialSpeed = 0.2;
-                projectile.setDeltaMovement(randomDir.scale(initialSpeed));
+                projectile.setDeltaMovement(dir.scale(0.2f));
                 projectile.setTarget(target);
 
                 soulMage.level().addFreshEntity(projectile);
             }
         }
-    }
 
-    @Override
-    public boolean canUse() {
-        return super.canUse() && this.soulMage.getOwner() != null;
     }
 
     @Override
