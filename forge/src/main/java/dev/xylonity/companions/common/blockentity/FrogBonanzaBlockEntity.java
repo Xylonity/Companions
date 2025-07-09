@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.blockentity;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
+import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
@@ -11,12 +12,24 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -31,6 +44,7 @@ import software.bernie.geckolib.util.RenderUtils;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntity {
 
@@ -139,7 +153,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             return;
         }
 
-        for (var entry : counts.entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
             if (entry.getValue() == 2) {
                 switch (entry.getKey()) {
                     case 0 -> doubleCreeper();
@@ -154,35 +168,159 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
     }
 
-    private void doubleCreeper()   {
+    private void doubleCreeper() {
+        if (getLevel() instanceof ServerLevel server) {
+            BlockPos center = worldPosition.above();
+            for (int i = 0; i < 2 + new Random().nextInt(2); i++) {
+                double x = center.getX() + 0.5;
+                double y = center.getY();
+                double z = center.getZ() + 0.5;
+                PrimedTnt tnt = new PrimedTnt(server, x, y, z, null);
+
+                double angle = new Random().nextDouble() * Math.PI * 2;
+                double dx = Math.cos(angle) * 0.1;
+                double dz = Math.sin(angle) * 0.1;
+                tnt.setDeltaMovement(dx, 0.1, dz);
+
+                server.addFreshEntity(tnt);
+            }
+        }
 
     }
 
     private void doubleCoin()  {
+        if (getLevel() != null) {
+            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.COPPER_COIN.get(), new Random().nextInt(2, 10)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.NETHER_COIN.get(), new Random().nextInt(1, 4)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.END_COIN.get()));
+            getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
+        }
 
     }
 
     private void doubleTeddy() {
+        if (getLevel() != null) {
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLDEN_APPLE, new Random().nextInt(1, 4)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.FEATHER, new Random().nextInt(1, 12)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_PEARL, new Random().nextInt(1, 2)));
+            if (getLevel().getRandom().nextFloat() < 0.35f) popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_SCRAP, new Random().nextInt(1, 2)));
+            if (getLevel().getRandom().nextFloat() < 0.5f) popResource(getLevel(), getBlockPos(), new ItemStack(Items.WITHER_SKELETON_SKULL));
+            if (getLevel().getRandom().nextFloat() < 0.45f) popResource(getLevel(), getBlockPos(), new ItemStack(Items.AXOLOTL_BUCKET));
+            if (getLevel().getRandom().nextFloat() < 0.25f) popResource(getLevel(), getBlockPos(), new ItemStack(Items.MUSIC_DISC_PIGSTEP));
+
+            getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
+        }
 
     }
 
     private void doubleSkull() {
+        if (getLevel() instanceof ServerLevel serverLevel) {
+            Vec3 center = Vec3.atCenterOf(getBlockPos());
+            Player player = serverLevel.getNearestPlayer(center.x, center.y, center.z, 15.0, false);
+            if (player != null) {
+                FallingBlockEntity anvil = new FallingBlockEntity(serverLevel, player.getX(), player.getY() + 15, player.getZ(), Blocks.ANVIL.defaultBlockState());
+
+                anvil.time = 1;
+                anvil.setHurtsEntities(2.0f, 40);
+                serverLevel.addFreshEntity(anvil);
+            }
+
+            getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
+        }
 
     }
 
-    private void tripleCreeper()   {
+    private void tripleCreeper() {
+        if (getLevel() instanceof ServerLevel server) {
+            BlockPos center = worldPosition.above();
+
+            for (int i = 0; i < 3; i++) {
+                double angle = new Random().nextDouble() * Math.PI * 2;
+                double dist = new Random().nextDouble() * 4;
+                double x = center.getX() + 0.5 + Math.cos(angle) * dist;
+                double y = center.getY();
+                double z = center.getZ() + 0.5 + Math.sin(angle) * dist;
+
+                Creeper creeper = EntityType.CREEPER.create(server);
+                if (creeper != null) {
+                    creeper.moveTo(x, y, z, new Random().nextFloat() * 360F, 0F);
+                    server.addFreshEntity(creeper);
+
+                    LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(server);
+                    if (bolt != null) {
+                        bolt.moveTo(x, y, z);
+                        server.addFreshEntity(bolt);
+                    }
+                }
+
+            }
+        }
 
     }
 
     private void tripleCoin()  {
+        if (getLevel() != null) {
+            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.COPPER_COIN.get(), new Random().nextInt(2, 60)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.NETHER_COIN.get(), new Random().nextInt(1, 20)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.END_COIN.get(), new Random().nextInt(1, 6)));
+            getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
+        }
 
     }
 
     private void tripleTeddy() {
+        if (getLevel() != null) {
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, new Random().nextInt(1, 3)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLDEN_APPLE, new Random().nextInt(1, 7)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_PEARL, new Random().nextInt(1, 5)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_EYE, new Random().nextInt(1, 5)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.DIAMOND, new Random().nextInt(1, 15)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLD_INGOT, new Random().nextInt(1, 15)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.CAKE));
+
+            if (getLevel().getRandom().nextFloat() < 0.7f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_SCRAP, new Random().nextInt(1, 2)));
+            } else {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_INGOT, new Random().nextInt(1, 3)));
+            }
+
+            if (getLevel().getRandom().nextFloat() < 0.5f) popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHER_STAR));
+
+            getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
+        }
 
     }
 
     private void tripleSkull() {
+        if (getLevel() instanceof ServerLevel server) {
+            BlockPos center = getBlockPos().above();
+            double angle = server.random.nextDouble() * Math.PI * 2;
+            double dist = server.random.nextDouble() * 3;
+            Warden warden = EntityType.WARDEN.create(server);
+            if (warden != null) {
+                warden.moveTo(center.getX() + 0.5 + Math.cos(angle) * dist, center.getY(), center.getZ() + 0.5 + Math.sin(angle) * dist, 0, 0);
+                server.addFreshEntity(warden);
+            }
+
+            getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
+        }
+
+    }
+
+    public static void popResource(Level pLevel, BlockPos pPos, ItemStack pStack) {
+        double d0 = EntityType.ITEM.getHeight() / 2f;
+        double d1 = pPos.getX() + 0.5;
+        double d2 = pPos.getY() + 1.5 + Mth.nextDouble(pLevel.random, -0.25, 0.25) - d0;
+        double d3 = pPos.getZ() + 0.5;
+        popResource(pLevel, () -> new ItemEntity(pLevel, d1, d2, d3, pStack, -0.25 + Math.random() * 0.25f, -0.35 + Math.random() * 0.35f, -0.25 + Math.random() * 0.25f), pStack);
+    }
+
+    private static void popResource(Level pLevel, Supplier<ItemEntity> pItemEntitySupplier, ItemStack pStack) {
+        if (!pLevel.isClientSide && !pStack.isEmpty()) {
+            ItemEntity itementity = pItemEntitySupplier.get();
+            itementity.setDefaultPickUpDelay();
+            pLevel.addFreshEntity(itementity);
+        }
 
     }
 

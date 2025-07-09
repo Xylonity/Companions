@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -145,6 +146,9 @@ public class TornadoProjectile extends BaseProjectile implements GeoEntity {
                 .forEach(e -> {
                     Vec3 dir = e.position().subtract(this.position()).normalize().scale(1.4);
                     e.push(dir.x + 0.1, dir.y + 0.1, dir.z + 0.1);
+                    if (e instanceof LivingEntity living) {
+                        living.hurt(damageSources().magic(), 2f);
+                    }
                 });
 
         if (this.level() instanceof ServerLevel sv) {
