@@ -180,6 +180,8 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
                 tnt.setFuse(40);
                 server.addFreshEntity(tnt);
             }
+
+            getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
 
     }
@@ -189,6 +191,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.COPPER_COIN.get(), new Random().nextInt(2, 10)));
             popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.NETHER_COIN.get(), new Random().nextInt(1, 4)));
             popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.END_COIN.get()));
+
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
 
@@ -249,8 +252,9 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
                     server.addFreshEntity(creeper);
                 }
-
             }
+
+            getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
 
     }
@@ -260,6 +264,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.COPPER_COIN.get(), new Random().nextInt(2, 60)));
             popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.NETHER_COIN.get(), new Random().nextInt(1, 20)));
             popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.END_COIN.get(), new Random().nextInt(1, 6)));
+            
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
 
