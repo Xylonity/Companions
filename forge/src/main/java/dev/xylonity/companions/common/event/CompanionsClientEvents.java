@@ -61,6 +61,7 @@ public class CompanionsClientEvents {
             EntityRenderers.register(CompanionsEntities.SMALL_ICE_SHARD_PROJECTILE.get(), IceShardSmallRenderer::new);
             EntityRenderers.register(CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.get(), IceShardBigRenderer::new);
             EntityRenderers.register(CompanionsEntities.TORNADO_PROJECTILE.get(), TornadoRenderer::new);
+            EntityRenderers.register(CompanionsEntities.BLOOD_TORNADO_PROJECTILE.get(), BloodTornadoRenderer::new);
             EntityRenderers.register(CompanionsEntities.FIRE_MARK_PROJECTILE.get(), FireMarkRenderer::new);
             EntityRenderers.register(CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get(), FireMarkRingRenderer::new);
             EntityRenderers.register(CompanionsEntities.STONE_SPIKE_PROJECTILE.get(), StoneSpikeRenderer::new);

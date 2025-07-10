@@ -57,6 +57,7 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<SmallIceShardProjectile>> SMALL_ICE_SHARD_PROJECTILE;
     public static final RegistryObject<EntityType<BigIceShardProjectile>> BIG_ICE_SHARD_PROJECTILE;
     public static final RegistryObject<EntityType<TornadoProjectile>> TORNADO_PROJECTILE;
+    public static final RegistryObject<EntityType<BloodTornadoProjectile>> BLOOD_TORNADO_PROJECTILE;
     public static final RegistryObject<EntityType<FireMarkProjectile>> FIRE_MARK_PROJECTILE;
     public static final RegistryObject<EntityType<FireMarkRingProjectile>> FIRE_MARK_RING_PROJECTILE;
     public static final RegistryObject<EntityType<StoneSpikeProjectile>> STONE_SPIKE_PROJECTILE;
@@ -126,6 +127,7 @@ public class CompanionsEntities {
         SMALL_ICE_SHARD_PROJECTILE = register("small_ice_shard_projectile", SmallIceShardProjectile::new, MobCategory.MISC, 0.4f, 0.5f, List.of(EntityType.Builder::noSummon));
         BIG_ICE_SHARD_PROJECTILE = register("big_ice_shard_projectile", BigIceShardProjectile::new, MobCategory.MISC, 1f, 0.5f, List.of(EntityType.Builder::noSummon));
         TORNADO_PROJECTILE = register("tornado_projectile", TornadoProjectile::new, MobCategory.MISC, 0.8f, 1f, List.of(EntityType.Builder::noSummon));
+        BLOOD_TORNADO_PROJECTILE = register("blood_tornado_projectile", BloodTornadoProjectile::new, MobCategory.MISC, 0.8f, 1f, List.of(EntityType.Builder::noSummon));
         FIRE_MARK_PROJECTILE = register("fire_mark_projectile", FireMarkProjectile::new, MobCategory.MISC, 1f, 1f, List.of(EntityType.Builder::noSummon));
         FIRE_MARK_RING_PROJECTILE = register("fire_mark_ring_projectile", FireMarkRingProjectile::new, MobCategory.MISC, 1f, 0.2f, List.of(EntityType.Builder::noSummon));
         STONE_SPIKE_PROJECTILE = register("stone_spike_projectile", StoneSpikeProjectile::new, MobCategory.MISC, 0.5f, 1f, List.of(EntityType.Builder::noSummon));

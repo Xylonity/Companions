@@ -1,0 +1,26 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"spin": {
+			"loop": true,
+			"bones": {
+				"middle": {
+					"rotation": {
+						"vector": [0, "-query.anim_time*400", 0]
+					}
+				},
+				"tip": {
+					"rotation": {
+						"vector": [0, "query.anim_time*500", 0]
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [0, "query.anim_time*300", 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}
