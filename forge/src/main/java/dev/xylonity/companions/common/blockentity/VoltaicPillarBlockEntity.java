@@ -43,12 +43,12 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implement
 
     @Override
     public @NotNull Vec3 electricalChargeOriginOffset() {
-        return new Vec3(0, 0, 0);
+        return new Vec3(0, 0.5, 0);
     }
 
     @Override
     public @NotNull Vec3 electricalChargeEndOffset() {
-        return new Vec3(0, 0, 0);
+        return new Vec3(0, 0.5, 0);
     }
 
     public void connectToNearestPillar() {
