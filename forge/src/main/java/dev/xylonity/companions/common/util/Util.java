@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.util;
 
+import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.mixin.CompanionsLevelAccessor;
 import net.minecraft.core.BlockPos;
@@ -11,7 +12,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.HashSet;
@@ -22,6 +26,17 @@ import java.util.UUID;
 public class Util {
 
     private Util() { ;; }
+
+    public static BlockPos findClosestGroundBelow(CompanionEntity entity, float y) {
+        Vec3 start = new Vec3(entity.getX(), entity.getBoundingBox().minY + 0.01, entity.getZ());
+        BlockHitResult trace = entity.level().clip(new ClipContext(start, start.subtract(0, y, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
+
+        if (trace.getType() == HitResult.Type.BLOCK) {
+            return trace.getBlockPos();
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Normalize degrees within a 360 degree cap

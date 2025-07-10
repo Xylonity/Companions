@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.ai.antlion.tamable.goal.*;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.knightlib.common.api.TickScheduler;
@@ -231,6 +232,19 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
     }
 
+    @Override
+    public void setOrderedToSit(boolean pOrderedToSit) {
+        super.setOrderedToSit(pOrderedToSit);
+        if (!level().isClientSide && pOrderedToSit && getVariant() == 2) {
+            BlockPos groundPos = Util.findClosestGroundBelow(this, 7.0f);
+            if (groundPos != null) {
+                double y = groundPos.getY() + 1.0;
+                this.teleportTo(getX(), y, getZ());
+            }
+        }
+
+    }
+
     private void earthquake() {
         int radius = 2;
         // manhattan distance
@@ -415,7 +429,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
                 if (handleDefaultMainActionAndHeal(player, hand)) {
                     return InteractionResult.SUCCESS;
                 }
-            } else {
+            } else if (getMainAction() != 0) {
                 player.startRiding(this, true);
             }
         }

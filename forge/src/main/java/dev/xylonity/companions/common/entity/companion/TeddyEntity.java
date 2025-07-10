@@ -7,6 +7,7 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoa
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.teddy.control.TeddyMoveControl;
 import dev.xylonity.companions.common.entity.ai.teddy.goal.*;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -30,10 +31,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -109,7 +107,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                     double currentX = getX();
                     double currentZ = getZ();
 
-                    BlockPos groundPos = findClosestGroundBelow(TeddyEntity.this);
+                    BlockPos groundPos = Util.findClosestGroundBelow(TeddyEntity.this, 3.0f);
                     if (groundPos != null) {
                         double y = groundPos.getY() + 1.0;
                         teleportTo(currentX, y, currentZ);
@@ -175,17 +173,6 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
-    }
-
-    private BlockPos findClosestGroundBelow(TeddyEntity entity) {
-        Vec3 start = new Vec3(entity.getX(), entity.getBoundingBox().minY + 0.01, entity.getZ());
-        BlockHitResult trace = entity.level().clip(new ClipContext(start, start.subtract(0, 3.0, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
-
-        if (trace.getType() == HitResult.Type.BLOCK) {
-            return trace.getBlockPos();
-        } else {
-            return null;
-        }
     }
 
     public int getPhase() {
