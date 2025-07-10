@@ -2,10 +2,10 @@ package dev.xylonity.companions.common.entity.ai.antlion.tamable.goal;
 
 import dev.xylonity.companions.common.entity.ai.antlion.tamable.AbstractAntlionAttackGoal;
 import dev.xylonity.companions.common.entity.companion.AntlionEntity;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class AntlionAdultAttackGoal extends AbstractAntlionAttackGoal {
@@ -91,13 +91,14 @@ public class AntlionAdultAttackGoal extends AbstractAntlionAttackGoal {
         super.stop();
         antlion.setAttackType(0);
         hasStartedDive = false;
+        performAttack(null);
     }
 
     private void startDive() {
         antlion.cycleState();
 
         groundLevel = getGroundLevel();
-        diveSpeed = -(antlion.getY() - groundLevel / DIVE_DURATION);
+        diveSpeed = -((antlion.getY() - groundLevel) / DIVE_DURATION);
 
         hasStartedDive = true;
     }
@@ -133,6 +134,11 @@ public class AntlionAdultAttackGoal extends AbstractAntlionAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
+        for (LivingEntity e : antlion.level().getEntitiesOfClass(LivingEntity.class, antlion.getBoundingBox().inflate(1))) {
+            if (!Util.areEntitiesLinked(e, antlion)) {
+                antlion.doHurtTarget(e);
+            }
+        }
 
     }
 

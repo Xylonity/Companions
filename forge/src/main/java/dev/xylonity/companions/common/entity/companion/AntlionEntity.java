@@ -410,6 +410,16 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
         if (level().isClientSide) return InteractionResult.SUCCESS;
 
+        if (isTame() && player == getOwner() && getVariant() == 2) {
+            if (player.isShiftKeyDown()) {
+                if (handleDefaultMainActionAndHeal(player, hand)) {
+                    return InteractionResult.SUCCESS;
+                }
+            } else {
+                player.startRiding(this, true);
+            }
+        }
+
         if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
         }
