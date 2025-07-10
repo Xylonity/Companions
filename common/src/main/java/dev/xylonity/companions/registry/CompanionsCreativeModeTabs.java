@@ -56,6 +56,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.BOOK_STONE_SPIKES.get());
                                 output.accept(CompanionsItems.BOOK_MAGIC_RAY.get());
                                 output.accept(CompanionsItems.BOOK_BLACK_HOLE.get());
+                                output.accept(CompanionsItems.BOOK_NAGINATA.get());
 
                                 output.accept(CompanionsItems.ETERNAL_LIGHTER.get());
                                 output.accept(CompanionsItems.WRENCH.get());

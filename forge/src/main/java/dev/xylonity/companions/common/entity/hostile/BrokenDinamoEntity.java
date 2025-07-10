@@ -189,7 +189,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
     }
 
     private InteractionResult giveFirstItem(Player pPlayer, InteractionHand pHand, ItemStack stack) {
-        if (stack.getItem() == Items.OAK_PLANKS && stack.getCount() > woodAmount) {
+        if (stack.getItem() == Items.OAK_PLANKS && stack.getCount() >= woodAmount) {
             if (confirmationCheck) {
                 if (level().isClientSide) return InteractionResult.SUCCESS;
 
@@ -252,7 +252,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
     }
 
     private InteractionResult giveThirdItem(Player pPlayer, InteractionHand pHand, ItemStack stack) {
-        if (stack.getItem() == Items.IRON_INGOT && stack.getCount() > ironAmount) {
+        if (stack.getItem() == Items.IRON_INGOT && stack.getCount() >= ironAmount) {
             if (confirmationCheck) {
                 if (level().isClientSide) return InteractionResult.SUCCESS;
 

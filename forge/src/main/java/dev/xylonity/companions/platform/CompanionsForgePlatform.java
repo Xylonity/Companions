@@ -138,6 +138,9 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
             case BLACK_HOLE -> {
                 return (Supplier<T>) registerItem(id, () -> new BlackHoleBook(properties));
             }
+            case NAGINATA -> {
+                return (Supplier<T>) registerItem(id, () -> new NaginataBook(properties));
+            }
             default -> { // ICE_SHARDS
                 return (Supplier<T>) registerItem(id, () -> new IceShardBook(properties));
             }

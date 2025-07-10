@@ -6,6 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -19,6 +20,7 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class HolinessNaginataProjectile extends ThrownTrident implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -27,10 +29,12 @@ public class HolinessNaginataProjectile extends ThrownTrident implements GeoEnti
     private final Quaternionf currentRot = new Quaternionf();
 
     private boolean dealtDamage;
+    private int timeToDespawn;
 
     public HolinessNaginataProjectile(EntityType<? extends ThrownTrident> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.pickup = Pickup.DISALLOWED;
+        if (!level().isClientSide) timeToDespawn = new Random().nextInt(120, 300);
     }
 
     @Override
@@ -38,6 +42,18 @@ public class HolinessNaginataProjectile extends ThrownTrident implements GeoEnti
         if (Util.areEntitiesLinked(this, entity)) return false;
 
         return super.canHitEntity(entity);
+    }
+
+    @Override
+    public void tickDespawn() {
+        if (this.inGroundTime >= timeToDespawn) {
+            this.discard();
+        }
+    }
+
+    @Override
+    protected boolean tryPickup(@NotNull Player pPlayer) {
+        return false;
     }
 
     @Override

@@ -41,6 +41,7 @@ public class CompanionsItems {
     public static final Supplier<Item> BOOK_BRACE = registerMagicBook("book_brace", new Item.Properties().stacksTo(1), MagicType.BRACE);
     public static final Supplier<Item> BOOK_MAGIC_RAY = registerMagicBook("book_magic_ray", new Item.Properties().stacksTo(1), MagicType.MAGIC_RAY);
     public static final Supplier<Item> BOOK_BLACK_HOLE = registerMagicBook("book_black_hole", new Item.Properties().stacksTo(1), MagicType.BLACK_HOLE);
+    public static final Supplier<Item> BOOK_NAGINATA = registerMagicBook("book_naginata", new Item.Properties().stacksTo(1), MagicType.NAGINATA);
 
     public static final Supplier<Item> ETERNAL_LIGHTER = registerItem("eternal_lighter", () -> new EternalLighter(new Item.Properties().stacksTo(1)));
     public static final Supplier<Item> WRENCH = registerSpecificItem("wrench", new Item.Properties().durability(128), ItemType.WRENCH);
@@ -88,6 +89,7 @@ public class CompanionsItems {
         STONE_SPIKES,
         BRACE,
         BLACK_HOLE,
+        NAGINATA,
         MAGIC_RAY
     }
 
