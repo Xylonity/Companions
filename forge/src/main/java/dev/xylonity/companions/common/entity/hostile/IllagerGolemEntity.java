@@ -91,7 +91,7 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
 
     public static AttributeSupplier setAttributes() {
         return Raider.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 40D)
+                .add(Attributes.MAX_HEALTH, 40)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.3f)

@@ -174,7 +174,7 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
     public static AttributeSupplier setAttributes() {
         return Raider.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 50.0D)
+                .add(Attributes.MAX_HEALTH, 65.0D)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)

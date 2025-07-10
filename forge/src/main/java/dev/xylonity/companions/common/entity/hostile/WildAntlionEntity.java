@@ -195,7 +195,7 @@ public class WildAntlionEntity extends HostileEntity implements PlayerRideable {
 
     public static AttributeSupplier setAttributes() {
         return HostileEntity.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 60)
+                .add(Attributes.MAX_HEALTH, 50)
                 .add(Attributes.ATTACK_DAMAGE, 7f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)

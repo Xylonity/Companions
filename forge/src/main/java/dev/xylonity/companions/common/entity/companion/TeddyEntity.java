@@ -168,7 +168,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     public static AttributeSupplier setAttributes() {
         return CompanionEntity.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 60)
+                .add(Attributes.MAX_HEALTH, 70)
                 .add(Attributes.ATTACK_DAMAGE, 7f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
