@@ -18,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -29,8 +30,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +43,8 @@ import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
+
+import java.util.Random;
 
 public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private final RawAnimation LAY = RawAnimation.begin().thenPlay("lay");
@@ -303,7 +309,10 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         if (!isTame() && stack.getItem() == CompanionsItems.NEEDLE.get()) {
             if (level().isClientSide) return InteractionResult.SUCCESS;
 
-            if (!player.getAbilities().instabuild) stack.shrink(1);
+            if (!player.getAbilities().instabuild) {
+                stack.shrink(1);
+                player.setItemInHand(hand, new ItemStack(Items.BUCKET));
+            }
 
             this.tameInteraction(player);
 
@@ -314,6 +323,18 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             if (level().isClientSide) return InteractionResult.SUCCESS;
 
             setSecondPhaseCounter(getSecondPhaseCounter() + 1);
+
+            return InteractionResult.SUCCESS;
+        }
+
+        if (isTame() && player == getOwner() && stack.getItem() == Items.LAVA_BUCKET && getPhase() == 2) {
+            if (level().isClientSide) return InteractionResult.SUCCESS;
+
+            if (!player.getAbilities().instabuild) stack.shrink(1);
+
+            level().addFreshEntity(new ItemEntity(level(), position().x, position().y, position().z, new ItemStack(CompanionsItems.MUTANT_FLESH.get(), new Random().nextInt(1, 3))));
+
+            playSound(SoundEvents.PLAYER_BURP);
 
             return InteractionResult.SUCCESS;
         }
