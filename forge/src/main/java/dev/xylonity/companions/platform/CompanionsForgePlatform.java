@@ -48,6 +48,9 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
             case CRYSTALLIZED_BLOOD -> {
                 return (Supplier<T>) registerItem(id, () -> new CrystallizedBloodItem(properties));
             }
+            case NEEDLE -> {
+                return (Supplier<T>) registerItem(id, () -> new NeedleItem(properties));
+            }
             case GENERIC -> {
                 return (Supplier<T>) registerItem(id, () -> new GenericGeckoItem(properties, id));
             }

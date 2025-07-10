@@ -16,7 +16,6 @@ public class CompanionsItems {
 
     public static final Supplier<Item> NETHERITE_CHAINS = registerItem("netherite_chains", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> BIG_BREAD = registerItem("big_bread", () -> new Item(new Item.Properties().stacksTo(16).food((new FoodProperties.Builder()).nutrition(10).saturationMod(0.6F).meat().build())));
-    public static final Supplier<Item> NEEDLE = registerItem("needle", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> SOUL_GEM = registerItem("soul_gem", () -> new Item(new Item.Properties()));
     public static final Supplier<Item> CANNON_ARM = registerItem("cannon_arm", () -> new PuppetArm(new Item.Properties().stacksTo(1)));
     public static final Supplier<Item> WHIP_ARM = registerItem("whip_arm", () -> new PuppetArm(new Item.Properties().stacksTo(1)));
@@ -48,6 +47,7 @@ public class CompanionsItems {
     public static final Supplier<Item> HOURGLASS = registerSpecificItem("hourglass", new Item.Properties().stacksTo(1), ItemType.HOURGLASS);
     public static final Supplier<Item> SHADOW_BELL = registerSpecificItem("shadow_bell", new Item.Properties().stacksTo(1).fireResistant(), ItemType.SHADOW_BELL);
     public static final Supplier<Item> CRYSTALLIZED_BLOOD = registerSpecificItem("crystallized_blood", new Item.Properties(), ItemType.CRYSTALLIZED_BLOOD);
+    public static final Supplier<Item> NEEDLE = registerSpecificItem("needle", new Item.Properties(), ItemType.NEEDLE);
 
     public static final Supplier<Item> MAGE_COAT = registerArmorItem("mage_coat", ArmorMaterials.MAGE, ArmorItem.Type.CHESTPLATE, false);
     public static final Supplier<Item> MAGE_HAT = registerArmorItem("mage_hat", ArmorMaterials.MAGE, ArmorItem.Type.HELMET, true);
@@ -98,6 +98,7 @@ public class CompanionsItems {
         WRENCH,
         SHADOW_BELL,
         CRYSTALLIZED_BLOOD,
+        NEEDLE,
         GENERIC, // 3D renderer
         BLOOD_SWORD, // 3D renderer
         BLOOD_PICKAXE, // 3D renderer
