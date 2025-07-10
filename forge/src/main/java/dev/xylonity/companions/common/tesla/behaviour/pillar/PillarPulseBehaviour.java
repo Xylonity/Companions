@@ -15,7 +15,7 @@ public class PillarPulseBehaviour implements ITeslaNodeBehaviour {
     public void process(AbstractTeslaBlockEntity pillar, Level level, BlockPos blockPos, BlockState blockState) {
         if (pillar.cycleCounter >= 0) {
 
-            // Keeps the lamp active for a full cycle
+            // Keeps the pillar active for a full cycle
             pillar.setActive(true);
 
             // Pulses pillars only
@@ -24,7 +24,7 @@ public class PillarPulseBehaviour implements ITeslaNodeBehaviour {
                     for (TeslaConnectionManager.ConnectionNode node : pillar.connectionManager.getOutgoing(pillar.asConnectionNode())) {
                         if (!node.isEntity()) {
                             BlockEntity be = level.getBlockEntity(node.blockPos());
-                            if (be instanceof VoltaicPillarBlockEntity outCoil) {
+                            if (be instanceof AbstractTeslaBlockEntity outCoil) {
                                 if (!outCoil.isReceivesGenerator()) {
                                     outCoil.startCycle();
                                 }

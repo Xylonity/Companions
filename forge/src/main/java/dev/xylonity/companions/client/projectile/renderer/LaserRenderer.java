@@ -1,4 +1,3 @@
-// src/main/java/dev/xylonity/companions/client/projectile/renderer/LaserRenderer.java
 package dev.xylonity.companions.client.projectile.renderer;
 
 import dev.xylonity.companions.client.projectile.model.LaserModel;
