@@ -1,18 +1,6 @@
 {
-  "parent": "minecraft:item/handheld",
-  "loader": "forge:separate_transforms",
-  "base": {
-    "parent": "knightquestcompanions:item/crystallized_blood_scythe_3d"
-  },
-  "perspectives": {
-    "gui": {
-      "parent": "knightquestcompanions:item/crystallized_blood_scythe_icon"
-    },
-    "ground": {
-      "parent": "knightquestcompanions:item/crystallized_blood_scythe_icon"
-    },
-    "fixed": {
-      "parent": "knightquestcompanions:item/crystallized_blood_scythe_icon"
-    }
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "knightquestcompanions:item/crystallized_blood_scythe_icon"
   }
 }

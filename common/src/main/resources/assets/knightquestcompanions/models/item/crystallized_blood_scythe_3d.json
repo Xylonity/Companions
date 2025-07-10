@@ -1,6 +1,7 @@
 {
   "credit": "Made with Blockbench",
   "parent": "builtin/entity",
+  "gui_light": "front",
   "texture_size": [
     64,
     64
