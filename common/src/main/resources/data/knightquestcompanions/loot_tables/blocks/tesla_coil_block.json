@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "knightquestcompanions:tesla_coil_block"
+          "name": "companions:tesla_coil_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "knightquestcompanions:blocks/tesla_coil_block"
+  "random_sequence": "companions:blocks/tesla_coil_block"
 }

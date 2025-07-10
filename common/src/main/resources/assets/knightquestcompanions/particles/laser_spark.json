@@ -1,10 +1,10 @@
 {
   "textures": [
-    "knightquestcompanions:laser_spark0",
-    "knightquestcompanions:laser_spark1",
-    "knightquestcompanions:laser_spark2",
-    "knightquestcompanions:laser_spark3",
-    "knightquestcompanions:laser_spark4",
-    "knightquestcompanions:laser_spark5"
+    "companions:laser_spark0",
+    "companions:laser_spark1",
+    "companions:laser_spark2",
+    "companions:laser_spark3",
+    "companions:laser_spark4",
+    "companions:laser_spark5"
   ]
 }

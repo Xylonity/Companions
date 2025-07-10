@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "knightquestcompanions:item/whip_arm"
+    "layer0": "companions:item/whip_arm"
   }
 }

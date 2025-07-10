@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "knightquestcompanions:empty_puppet_block"
+          "name": "companions:empty_puppet_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "knightquestcompanions:blocks/empty_puppet_block"
+  "random_sequence": "companions:blocks/empty_puppet_block"
 }

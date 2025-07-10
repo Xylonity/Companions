@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "knightquestcompanions:item/book_black_hole"
+    "layer0": "companions:item/book_black_hole"
   }
 }

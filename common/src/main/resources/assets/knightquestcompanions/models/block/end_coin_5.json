@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "knightquestcompanions:block/end_coin_solid_side",
-    "end": "knightquestcompanions:block/end_coin_solid_end"
+    "side": "companions:block/end_coin_solid_side",
+    "end": "companions:block/end_coin_solid_end"
   }
 }

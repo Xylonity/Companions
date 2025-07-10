@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "knightquestcompanions:item/mage_hat"
+    "layer0": "companions:item/mage_hat"
   }
 }

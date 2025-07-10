@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "knightquestcompanions:block/soul_furnace_block" }
+    "": { "model": "companions:block/soul_furnace_block" }
   }
 }

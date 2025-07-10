@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "knightquestcompanions:block/respawn_totem_block" }
+    "": { "model": "companions:block/respawn_totem_block" }
   }
 }

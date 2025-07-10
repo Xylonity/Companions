@@ -9,7 +9,7 @@ import java.util.ServiceLoader;
 
 public class CompanionsCommon {
 
-    public static final String MOD_ID = "knightquestcompanions";
+    public static final String MOD_ID = "companions";
     public static final Logger LOGGER = LoggerFactory.getLogger("Companions!");
 
     public static final CompanionsPlatform COMMON_PLATFORM = ServiceLoader.load(CompanionsPlatform.class).findFirst().orElseThrow();

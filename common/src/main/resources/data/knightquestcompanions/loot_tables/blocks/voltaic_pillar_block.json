@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "knightquestcompanions:voltaic_pillar_block"
+          "name": "companions:voltaic_pillar_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "knightquestcompanions:blocks/voltaic_pillar_block"
+  "random_sequence": "companions:blocks/voltaic_pillar_block"
 }

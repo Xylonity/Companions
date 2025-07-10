@@ -1,9 +1,9 @@
 {
   "textures": [
-    "knightquestcompanions:ember0",
-    "knightquestcompanions:ember1",
-    "knightquestcompanions:ember2",
-    "knightquestcompanions:ember3",
-    "knightquestcompanions:ember4"
+    "companions:ember0",
+    "companions:ember1",
+    "companions:ember2",
+    "companions:ember3",
+    "companions:ember4"
   ]
 }

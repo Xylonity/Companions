@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "knightquestcompanions:item/copper_coin"
+    "layer0": "companions:item/copper_coin"
   }
 }

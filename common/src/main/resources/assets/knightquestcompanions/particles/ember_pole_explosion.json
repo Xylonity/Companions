@@ -1,12 +1,12 @@
 {
   "textures": [
-    "knightquestcompanions:ember_pole_explosion0",
-    "knightquestcompanions:ember_pole_explosion1",
-    "knightquestcompanions:ember_pole_explosion2",
-    "knightquestcompanions:ember_pole_explosion3",
-    "knightquestcompanions:ember_pole_explosion4",
-    "knightquestcompanions:ember_pole_explosion5",
-    "knightquestcompanions:ember_pole_explosion6",
-    "knightquestcompanions:ember_pole_explosion7"
+    "companions:ember_pole_explosion0",
+    "companions:ember_pole_explosion1",
+    "companions:ember_pole_explosion2",
+    "companions:ember_pole_explosion3",
+    "companions:ember_pole_explosion4",
+    "companions:ember_pole_explosion5",
+    "companions:ember_pole_explosion6",
+    "companions:ember_pole_explosion7"
   ]
 }

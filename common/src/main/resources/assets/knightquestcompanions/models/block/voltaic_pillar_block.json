@@ -6,7 +6,7 @@
     32
   ],
   "textures": {
-    "particle": "knightquestcompanions:block/voltaic_pillar_block"
+    "particle": "companions:block/voltaic_pillar_block"
   },
   "display": {
     "thirdperson_righthand": {

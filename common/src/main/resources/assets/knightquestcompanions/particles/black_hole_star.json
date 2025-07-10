@@ -1,9 +1,9 @@
 {
   "textures": [
-    "knightquestcompanions:black_hole_star0",
-    "knightquestcompanions:black_hole_star1",
-    "knightquestcompanions:black_hole_star2",
-    "knightquestcompanions:black_hole_star3",
-    "knightquestcompanions:black_hole_star4"
+    "companions:black_hole_star0",
+    "companions:black_hole_star1",
+    "companions:black_hole_star2",
+    "companions:black_hole_star3",
+    "companions:black_hole_star4"
   ]
 }

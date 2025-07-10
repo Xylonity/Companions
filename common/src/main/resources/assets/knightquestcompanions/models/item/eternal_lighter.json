@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "knightquestcompanions:item/eternal_lighter"
+    "layer0": "companions:item/eternal_lighter"
   }
 }

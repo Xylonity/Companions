@@ -6,7 +6,7 @@
     96
   ],
   "textures": {
-    "particle": "knightquestcompanions:block/illager_golem"
+    "particle": "companions:block/illager_golem"
   },
   "display": {
     "thirdperson_righthand": {

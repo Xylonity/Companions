@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "knightquestcompanions:block/shade_maw_altar" }
+    "": { "model": "companions:block/shade_maw_altar" }
   }
 }

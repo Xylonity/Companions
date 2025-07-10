@@ -1,6 +1,6 @@
 {
   "values": [
-    "knightquestcompanions:frog_bonanza_block",
-    "knightquestcompanions:soul_furnace_block"
+    "companions:frog_bonanza_block",
+    "companions:soul_furnace_block"
   ]
 }

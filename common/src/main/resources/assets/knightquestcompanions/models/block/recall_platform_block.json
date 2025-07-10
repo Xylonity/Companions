@@ -6,7 +6,7 @@
     64
   ],
   "textures": {
-    "particle": "knightquestcompanions:block/recall_platform_block"
+    "particle": "companions:block/recall_platform_block"
   },
   "display": {
     "thirdperson_righthand": {

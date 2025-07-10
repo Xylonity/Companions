@@ -6,7 +6,7 @@
     32
   ],
   "textures": {
-    "particle": "knightquestcompanions:block/shade_maw_altar"
+    "particle": "companions:block/shade_maw_altar"
   },
   "display": {
     "thirdperson_righthand": {

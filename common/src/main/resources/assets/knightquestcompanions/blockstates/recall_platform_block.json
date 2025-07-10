@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "knightquestcompanions:block/recall_platform_block" }
+    "": { "model": "companions:block/recall_platform_block" }
   }
 }

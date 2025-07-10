@@ -3,8 +3,8 @@
 	"parent": "builtin/entity",
 	"texture_size": [96, 96],
 	"textures": {
-		"8": "knightquestcompanions:block/empty_puppet_block",
-		"particle": "knightquestcompanions:block/empty_puppet_block"
+		"8": "companions:block/empty_puppet_block",
+		"particle": "companions:block/empty_puppet_block"
 	},
 	"elements": [
 		{

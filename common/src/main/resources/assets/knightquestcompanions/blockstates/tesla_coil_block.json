@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "knightquestcompanions:block/tesla_coil_block" }
+    "": { "model": "companions:block/tesla_coil_block" }
   }
 }

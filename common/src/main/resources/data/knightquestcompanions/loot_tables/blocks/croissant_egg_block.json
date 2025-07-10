@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "knightquestcompanions:croissant_egg_block"
+          "name": "companions:croissant_egg_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "knightquestcompanions:blocks/croissant_egg_block"
+  "random_sequence": "companions:blocks/croissant_egg_block"
 }

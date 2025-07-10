@@ -1,10 +1,10 @@
 {
   "textures": [
-    "knightquestcompanions:golden_allay_trail0",
-    "knightquestcompanions:golden_allay_trail1",
-    "knightquestcompanions:golden_allay_trail2",
-    "knightquestcompanions:golden_allay_trail3",
-    "knightquestcompanions:golden_allay_trail4",
-    "knightquestcompanions:golden_allay_trail5"
+    "companions:golden_allay_trail0",
+    "companions:golden_allay_trail1",
+    "companions:golden_allay_trail2",
+    "companions:golden_allay_trail3",
+    "companions:golden_allay_trail4",
+    "companions:golden_allay_trail5"
   ]
 }

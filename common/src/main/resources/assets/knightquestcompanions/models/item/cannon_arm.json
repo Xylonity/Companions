@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "knightquestcompanions:item/cannon_arm"
+    "layer0": "companions:item/cannon_arm"
   }
 }

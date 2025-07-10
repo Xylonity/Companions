@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "knightquestcompanions:item/crystallized_blood_chestplate"
+    "layer0": "companions:item/crystallized_blood_chestplate"
   }
 }

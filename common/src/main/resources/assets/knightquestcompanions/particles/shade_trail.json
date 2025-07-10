@@ -1,9 +1,9 @@
 {
   "textures": [
-    "knightquestcompanions:shade_trail0",
-    "knightquestcompanions:shade_trail1",
-    "knightquestcompanions:shade_trail2",
-    "knightquestcompanions:shade_trail3",
-    "knightquestcompanions:shade_trail4"
+    "companions:shade_trail0",
+    "companions:shade_trail1",
+    "companions:shade_trail2",
+    "companions:shade_trail3",
+    "companions:shade_trail4"
   ]
 }

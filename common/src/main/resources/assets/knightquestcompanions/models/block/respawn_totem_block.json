@@ -6,7 +6,7 @@
 		64
 	],
 	"textures": {
-		"particle": "knightquestcompanions:block/respawn_totem_block"
+		"particle": "companions:block/respawn_totem_block"
 	},
 	"display": {
 		"thirdperson_righthand": {

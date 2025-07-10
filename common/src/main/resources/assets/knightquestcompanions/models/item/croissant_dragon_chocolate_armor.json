@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "knightquestcompanions:item/croissant_dragon_chocolate_armor"
+    "layer0": "companions:item/croissant_dragon_chocolate_armor"
   }
 }

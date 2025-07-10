@@ -6,7 +6,7 @@
     48
   ],
   "textures": {
-    "particle": "knightquestcompanions:block/tesla_coil_block"
+    "particle": "companions:block/tesla_coil_block"
   },
   "display": {
     "thirdperson_righthand": {

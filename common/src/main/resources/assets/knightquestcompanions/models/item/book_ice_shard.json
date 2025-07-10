@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "knightquestcompanions:item/book_ice_shard"
+    "layer0": "companions:item/book_ice_shard"
   }
 }

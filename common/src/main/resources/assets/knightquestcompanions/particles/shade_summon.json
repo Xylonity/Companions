@@ -1,18 +1,18 @@
 {
   "textures": [
-    "knightquestcompanions:shade_summon0",
-    "knightquestcompanions:shade_summon1",
-    "knightquestcompanions:shade_summon2",
-    "knightquestcompanions:shade_summon3",
-    "knightquestcompanions:shade_summon4",
-    "knightquestcompanions:shade_summon5",
-    "knightquestcompanions:shade_summon6",
-    "knightquestcompanions:shade_summon7",
-    "knightquestcompanions:shade_summon8",
-    "knightquestcompanions:shade_summon9",
-    "knightquestcompanions:shade_summon10",
-    "knightquestcompanions:shade_summon11",
-    "knightquestcompanions:shade_summon12",
-    "knightquestcompanions:shade_summon13"
+    "companions:shade_summon0",
+    "companions:shade_summon1",
+    "companions:shade_summon2",
+    "companions:shade_summon3",
+    "companions:shade_summon4",
+    "companions:shade_summon5",
+    "companions:shade_summon6",
+    "companions:shade_summon7",
+    "companions:shade_summon8",
+    "companions:shade_summon9",
+    "companions:shade_summon10",
+    "companions:shade_summon11",
+    "companions:shade_summon12",
+    "companions:shade_summon13"
   ]
 }

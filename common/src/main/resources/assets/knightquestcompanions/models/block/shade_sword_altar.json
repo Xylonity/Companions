@@ -6,7 +6,7 @@
     64
   ],
   "textures": {
-    "particle": "knightquestcompanions:block/shade_sword_altar"
+    "particle": "companions:block/shade_sword_altar"
   },
   "display": {
     "thirdperson_righthand": {

@@ -1,10 +1,10 @@
 {
   "textures": [
-    "knightquestcompanions:illager_golem_spark0",
-    "knightquestcompanions:illager_golem_spark1",
-    "knightquestcompanions:illager_golem_spark2",
-    "knightquestcompanions:illager_golem_spark3",
-    "knightquestcompanions:illager_golem_spark4",
-    "knightquestcompanions:illager_golem_spark5"
+    "companions:illager_golem_spark0",
+    "companions:illager_golem_spark1",
+    "companions:illager_golem_spark2",
+    "companions:illager_golem_spark3",
+    "companions:illager_golem_spark4",
+    "companions:illager_golem_spark5"
   ]
 }

@@ -3,8 +3,8 @@
 	"parent": "builtin/entity",
 	"texture_size": [64, 32],
 	"textures": {
-		"8": "knightquestcompanions:block/soul_furnace_block",
-		"particle": "knightquestcompanions:block/soul_furnace_block"
+		"8": "companions:block/soul_furnace_block",
+		"particle": "companions:block/soul_furnace_block"
 	},
 	"elements": [
 		{

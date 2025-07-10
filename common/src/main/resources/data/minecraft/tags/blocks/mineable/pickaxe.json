@@ -1,16 +1,16 @@
 {
   "values": [
-    "knightquestcompanions:shade_maw_altar",
-    "knightquestcompanions:shade_sword_altar",
-    "knightquestcompanions:respawn_totem_block",
-    "knightquestcompanions:voltaic_relay_block",
-    "knightquestcompanions:recall_platform_block",
-    "knightquestcompanions:plasma_lamp_block",
-    "knightquestcompanions:tesla_coil_block",
-    "knightquestcompanions:frog_bonanza_block",
-    "knightquestcompanions:soul_furnace_block",
-    "knightquestcompanions:end_coin",
-    "knightquestcompanions:copper_coin",
-    "knightquestcompanions:nether_coin"
+    "companions:shade_maw_altar",
+    "companions:shade_sword_altar",
+    "companions:respawn_totem_block",
+    "companions:voltaic_relay_block",
+    "companions:recall_platform_block",
+    "companions:plasma_lamp_block",
+    "companions:tesla_coil_block",
+    "companions:frog_bonanza_block",
+    "companions:soul_furnace_block",
+    "companions:end_coin",
+    "companions:copper_coin",
+    "companions:nether_coin"
   ]
 }

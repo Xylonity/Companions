@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "knightquestcompanions:block/croissant_egg_block" }
+    "": { "model": "companions:block/croissant_egg_block" }
   }
 }

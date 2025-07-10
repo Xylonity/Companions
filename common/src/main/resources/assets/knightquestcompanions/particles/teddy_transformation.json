@@ -1,12 +1,12 @@
 {
   "textures": [
-    "knightquestcompanions:teddy_transformation0",
-    "knightquestcompanions:teddy_transformation1",
-    "knightquestcompanions:teddy_transformation2",
-    "knightquestcompanions:teddy_transformation3",
-    "knightquestcompanions:teddy_transformation4",
-    "knightquestcompanions:teddy_transformation5",
-    "knightquestcompanions:teddy_transformation6",
-    "knightquestcompanions:teddy_transformation7"
+    "companions:teddy_transformation0",
+    "companions:teddy_transformation1",
+    "companions:teddy_transformation2",
+    "companions:teddy_transformation3",
+    "companions:teddy_transformation4",
+    "companions:teddy_transformation5",
+    "companions:teddy_transformation6",
+    "companions:teddy_transformation7"
   ]
 }

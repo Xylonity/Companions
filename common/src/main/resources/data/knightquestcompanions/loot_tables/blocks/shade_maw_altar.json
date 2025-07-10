@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "knightquestcompanions:shade_maw_altar"
+          "name": "companions:shade_maw_altar"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "knightquestcompanions:blocks/shade_maw_altar"
+  "random_sequence": "companions:blocks/shade_maw_altar"
 }

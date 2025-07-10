@@ -1,10 +1,10 @@
 {
   "textures": [
-    "knightquestcompanions:dinamo_spark0",
-    "knightquestcompanions:dinamo_spark1",
-    "knightquestcompanions:dinamo_spark2",
-    "knightquestcompanions:dinamo_spark3",
-    "knightquestcompanions:dinamo_spark4",
-    "knightquestcompanions:dinamo_spark5"
+    "companions:dinamo_spark0",
+    "companions:dinamo_spark1",
+    "companions:dinamo_spark2",
+    "companions:dinamo_spark3",
+    "companions:dinamo_spark4",
+    "companions:dinamo_spark5"
   ]
 }

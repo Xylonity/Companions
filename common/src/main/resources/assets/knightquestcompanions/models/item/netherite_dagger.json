@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "knightquestcompanions:item/netherite_dagger"
+    "layer0": "companions:item/netherite_dagger"
   },
   "display": {
     "thirdperson_righthand": {

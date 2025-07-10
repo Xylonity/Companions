@@ -2,7 +2,7 @@
   "angel_of_gertrude": {
     "sounds": [
       {
-        "name": "knightquestcompanions:angel_of_gertrude",
+        "name": "companions:angel_of_gertrude",
         "stream": true
       }
     ]
@@ -10,61 +10,61 @@
   "flip_card": {
     "sounds": [
       {
-        "name": "knightquestcompanions:card1"
+        "name": "companions:card1"
       },
       {
-        "name": "knightquestcompanions:card2"
+        "name": "companions:card2"
       },
       {
-        "name": "knightquestcompanions:card3"
+        "name": "companions:card3"
       }
     ]
   },
   "pop": {
     "sounds": [
       {
-        "name": "knightquestcompanions:pop1"
+        "name": "companions:pop1"
       },
       {
-        "name": "knightquestcompanions:pop2"
+        "name": "companions:pop2"
       },
       {
-        "name": "knightquestcompanions:pop3"
+        "name": "companions:pop3"
       }
     ]
   },
   "bonanza": {
     "sounds": [
       {
-        "name": "knightquestcompanions:bonanza"
+        "name": "companions:bonanza"
       }
     ]
   },
   "dinamo_step": {
     "sounds": [
       {
-        "name": "knightquestcompanions:dinamo_step"
+        "name": "companions:dinamo_step"
       }
     ]
   },
   "dinamo_death": {
     "sounds": [
       {
-        "name": "knightquestcompanions:dinamo_death"
+        "name": "companions:dinamo_death"
       }
     ]
   },
   "dinamo_hurt": {
     "sounds": [
       {
-        "name": "knightquestcompanions:dinamo_hurt"
+        "name": "companions:dinamo_hurt"
       }
     ]
   },
   "dinamo_attack": {
     "sounds": [
       {
-        "name": "knightquestcompanions:dinamo_attack"
+        "name": "companions:dinamo_attack"
       }
     ]
   },
@@ -72,24 +72,24 @@
   "dinamo_idle": {
     "sounds": [
       {
-        "name": "knightquestcompanions:dinamo_idle"
+        "name": "companions:dinamo_idle"
       },
       {
-        "name": "knightquestcompanions:dinamo_idle2"
+        "name": "companions:dinamo_idle2"
       }
     ]
   },
   "wrench_connection": {
     "sounds": [
       {
-        "name": "knightquestcompanions:wrench_connection"
+        "name": "companions:wrench_connection"
       }
     ]
   },
   "coin_clatter": {
     "sounds": [
       {
-        "name": "knightquestcompanions:coin_clatter"
+        "name": "companions:coin_clatter"
       }
     ]
   }

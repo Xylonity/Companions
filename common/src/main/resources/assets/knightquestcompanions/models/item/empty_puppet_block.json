@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "knightquestcompanions:item/empty_puppet_block"
+    "layer0": "companions:item/empty_puppet_block"
   }
 }

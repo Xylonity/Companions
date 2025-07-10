@@ -11,7 +11,7 @@
               "add": false,
               "conditions": [
                 {
-                  "block": "knightquestcompanions:copper_coin",
+                  "block": "companions:copper_coin",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "level": "0"
@@ -25,7 +25,7 @@
               "add": false,
               "conditions": [
                 {
-                  "block": "knightquestcompanions:copper_coin",
+                  "block": "companions:copper_coin",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "level": "1"
@@ -39,7 +39,7 @@
               "add": false,
               "conditions": [
                 {
-                  "block": "knightquestcompanions:copper_coin",
+                  "block": "companions:copper_coin",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "level": "2"
@@ -53,7 +53,7 @@
               "add": false,
               "conditions": [
                 {
-                  "block": "knightquestcompanions:copper_coin",
+                  "block": "companions:copper_coin",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "level": "3"
@@ -67,7 +67,7 @@
               "add": false,
               "conditions": [
                 {
-                  "block": "knightquestcompanions:copper_coin",
+                  "block": "companions:copper_coin",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "level": "4"
@@ -81,7 +81,7 @@
               "add": false,
               "conditions": [
                 {
-                  "block": "knightquestcompanions:copper_coin",
+                  "block": "companions:copper_coin",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "level": "5"
@@ -95,7 +95,7 @@
               "function": "minecraft:explosion_decay"
             }
           ],
-          "name": "knightquestcompanions:copper_coin"
+          "name": "companions:copper_coin"
         }
       ],
       "rolls": 1.0

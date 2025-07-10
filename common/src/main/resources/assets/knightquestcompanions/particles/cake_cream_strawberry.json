@@ -1,9 +1,9 @@
 {
   "textures": [
-    "knightquestcompanions:cake_cream_strawberry0",
-    "knightquestcompanions:cake_cream_strawberry1",
-    "knightquestcompanions:cake_cream_strawberry2",
-    "knightquestcompanions:cake_cream_strawberry3",
-    "knightquestcompanions:cake_cream_strawberry4"
+    "companions:cake_cream_strawberry0",
+    "companions:cake_cream_strawberry1",
+    "companions:cake_cream_strawberry2",
+    "companions:cake_cream_strawberry3",
+    "companions:cake_cream_strawberry4"
   ]
 }

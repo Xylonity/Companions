@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "knightquestcompanions:plasma_lamp_block"
+          "name": "companions:plasma_lamp_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "knightquestcompanions:blocks/plasma_lamp_block"
+  "random_sequence": "companions:blocks/plasma_lamp_block"
 }

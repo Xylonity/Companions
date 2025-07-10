@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "knightquestcompanions:block/frog_bonanza_block" }
+    "": { "model": "companions:block/frog_bonanza_block" }
   }
 }

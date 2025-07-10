@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "knightquestcompanions:recall_platform_block"
+          "name": "companions:recall_platform_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "knightquestcompanions:blocks/recall_platform_block"
+  "random_sequence": "companions:blocks/recall_platform_block"
 }
