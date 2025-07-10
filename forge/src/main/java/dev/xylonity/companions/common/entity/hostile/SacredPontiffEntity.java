@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.hostile;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
+import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
 import dev.xylonity.companions.common.util.interfaces.IBossMusicProvider;
@@ -27,10 +28,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -129,8 +130,15 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
         this.goalSelector.addGoal(2, new PontiffStrafeAroundTargetGoal(this, 0.5, 10));
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && shouldSearchTarget();
+            }
+        });
         this.targetSelector.addGoal(2, new PontiffNearestAttackableTargetGoal<>(this, Player.class, true));
+        this.targetSelector.addGoal(2, new PontiffNearestAttackableTargetGoal<>(this, TamableAnimal.class, true));
+        this.targetSelector.addGoal(2, new PontiffNearestAttackableTargetGoal<>(this, Turtle.class, true));
     }
 
     private boolean hasRegisteredBossBar = false;
