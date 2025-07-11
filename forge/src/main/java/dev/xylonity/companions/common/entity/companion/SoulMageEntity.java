@@ -7,10 +7,8 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoa
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.mage.goal.*;
 import dev.xylonity.companions.common.container.SoulMageContainerMenu;
-import dev.xylonity.companions.common.entity.projectile.*;
 import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -58,18 +56,11 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<String> ATTACK_ANIMATION_NAME = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> CANDLE_COUNT = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> BOOK_ID = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> CURRENT_ATTACK_TYPE = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.STRING);
 
     public static final int MAX_CANDLES_COUNT = 6;
     public List<LivingCandleEntity> candles = new LinkedList<>();
-
-    public SoulMageEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
-        this.createInventory();
-    }
-
-    private SoulMageBookEntity book;
-
-    private static final EntityDataAccessor<Integer> BOOK_ID = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.INT);
 
     public static final Map<String, int[]> ATTACK_COLORS = Map.of(
             "MAGIC_RAY", new int[]{173, 216, 230},
@@ -82,7 +73,15 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
             "NONE", new int[]{169, 134, 60}
     );
 
-    private static final EntityDataAccessor<String> CURRENT_ATTACK_TYPE = SynchedEntityData.defineId(SoulMageEntity.class, EntityDataSerializers.STRING);
+    public SoulMageEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+        super(pEntityType, pLevel);
+        this.createInventory();
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+    }
 
     @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
@@ -144,50 +143,12 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
         return super.hurt(pSource, pAmount);
     }
 
-    private @Nullable SoulMageBookEntity getBook() {
-        if ((book == null || book.isRemoved())) {
-            if (getBookId() != -1) {
-                Entity e = this.level().getEntity(getBookId());
-                if (e instanceof SoulMageBookEntity be) {
-                    book = be;
-                }
-            }
-        }
-
-        return book;
-    }
-
-    public void setBook(SoulMageBookEntity book) {
-        this.book = book;
-        if (book != null) {
-            setBookId(book.getId());
-        } else {
-            setBookId(-1);
-        }
-    }
-
     public String getCurrentAttackType() {
         return this.entityData.get(CURRENT_ATTACK_TYPE);
     }
 
     public void setCurrentAttackType(String attackType) {
         this.entityData.set(CURRENT_ATTACK_TYPE, attackType);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (tickCount == 2 && getBookId() == -1) {
-            SoulMageBookEntity book = CompanionsEntities.SOUL_MAGE_BOOK.get().create(this.level());
-            if (book instanceof SoulMageBookEntity) {
-                book.setOwner(this);
-                book.moveTo(this.getX(), this.getY(), this.getZ());
-                this.level().addFreshEntity(book);
-                setBook(book);
-            }
-        }
-
     }
 
     public static AttributeSupplier setAttributes() {

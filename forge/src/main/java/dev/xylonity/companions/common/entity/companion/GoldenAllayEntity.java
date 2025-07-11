@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.mage.allay.control.GoldenAllayMoveControl;
 import dev.xylonity.companions.common.entity.ai.mage.allay.goal.GoldenAllayRandomMoveGoal;
+import dev.xylonity.companions.common.entity.projectile.SoulMageBookEntity;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -120,6 +121,13 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
                     }
 
                     level().addFreshEntity(mage);
+
+                    SoulMageBookEntity book = CompanionsEntities.SOUL_MAGE_BOOK.get().create(level());
+                    if (book != null) {
+                        book.moveTo(position());
+                        book.setOwner(mage);
+                        level().addFreshEntity(book);
+                    }
                 }
 
                 generatePoofParticles();
