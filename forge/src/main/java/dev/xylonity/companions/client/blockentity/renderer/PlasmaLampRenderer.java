@@ -12,20 +12,20 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
-public class PlasmaLampRenderer extends GeoBlockRenderer<PlasmaLampBlockEntity> implements ITeslaUtil {
+public class PlasmaLampRenderer extends GeoBlockRenderer<PlasmaLampBlockEntity> {
 
     public PlasmaLampRenderer(BlockEntityRendererProvider.Context rendererDispatcher) {
         super(new PlasmaLampModel());
     }
 
     @Override
-    public boolean shouldRenderOffScreen(@NotNull PlasmaLampBlockEntity pBlockEntity) {
-        return true;
+    protected void rotateBlock(Direction facing, PoseStack poseStack) {
+        ;;
     }
 
     @Override
-    protected void rotateBlock(Direction facing, PoseStack poseStack) {
-
+    public int getViewDistance() {
+        return 256;
     }
 
 }

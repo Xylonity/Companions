@@ -9,7 +9,7 @@ import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
-public class RecallPlatformRenderer extends GeoBlockRenderer<RecallPlatformBlockEntity> implements ITeslaUtil {
+public class RecallPlatformRenderer extends GeoBlockRenderer<RecallPlatformBlockEntity> {
 
     public RecallPlatformRenderer(BlockEntityRendererProvider.Context rendererDispatcher) {
         super(new RecallPlatformModel());
@@ -17,12 +17,12 @@ public class RecallPlatformRenderer extends GeoBlockRenderer<RecallPlatformBlock
 
     @Override
     protected void rotateBlock(Direction facing, PoseStack poseStack) {
-
+        ;;
     }
 
     @Override
-    public boolean shouldRenderOffScreen(@NotNull RecallPlatformBlockEntity pBlockEntity) {
-        return true;
+    public int getViewDistance() {
+        return 256;
     }
 
 }

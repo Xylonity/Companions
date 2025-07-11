@@ -16,6 +16,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,6 +65,11 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.pendingRemoval = false;
         this.receivesGenerator = false;
         this.defaultAttackBehaviour = new DefaultAttackBehaviour();
+    }
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return INFINITE_EXTENT_AABB;
     }
 
     public int getDistance() {

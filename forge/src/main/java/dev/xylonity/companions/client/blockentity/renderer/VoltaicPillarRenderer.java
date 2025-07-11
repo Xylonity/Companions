@@ -25,12 +25,12 @@ public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEn
 
     @Override
     protected void rotateBlock(Direction facing, PoseStack poseStack) {
-
+        ;;
     }
 
     @Override
-    public boolean shouldRenderOffScreen(@NotNull VoltaicPillarBlockEntity pBlockEntity) {
-        return true;
+    public int getViewDistance() {
+        return 256;
     }
 
 }

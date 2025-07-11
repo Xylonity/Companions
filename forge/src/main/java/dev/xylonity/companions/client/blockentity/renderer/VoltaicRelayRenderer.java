@@ -24,13 +24,13 @@ public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEnti
     }
 
     @Override
-    public boolean shouldRenderOffScreen(@NotNull VoltaicRelayBlockEntity pBlockEntity) {
-        return true;
+    protected void rotateBlock(Direction facing, PoseStack poseStack) {
+        ;;
     }
 
     @Override
-    protected void rotateBlock(Direction facing, PoseStack poseStack) {
-
+    public int getViewDistance() {
+        return 256;
     }
 
 }
