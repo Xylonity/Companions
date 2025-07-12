@@ -168,15 +168,14 @@ public class WrenchItem extends Item {
 
     private void handleFirstNodeMessage(Player player, TeslaConnectionManager.ConnectionNode currentNode, @Nullable UseOnContext context) {
         if (firstNode != null) {
+            String name = "";
             if (firstNode.isEntity()) {
-                String name = "";
                 if (CompanionsEntityTracker.getEntityByUUID(firstNode.entityId()) instanceof DinamoEntity dinamo) {
                     name = dinamo.getName().getString();
                 }
 
                 player.displayClientMessage(Component.translatable("wrench.companions.client_message.first_node_selection_entity", name).withStyle(ChatFormatting.GREEN), true);
             } else {
-                String name = "";
                 if (player.level().getBlockEntity(currentNode.blockPos()) instanceof AbstractTeslaBlockEntity be) {
                     name = new ItemStack(be.getBlockState().getBlock()).getHoverName().getString();
                 }

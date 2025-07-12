@@ -6,6 +6,7 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.config.ConfigComposer;
+import dev.xylonity.knightlib.registry.KnightLibLootModifier;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
@@ -41,6 +42,7 @@ public class Companions {
         CompanionsEntities.ENTITY.register(modEventBus);
         CompanionsBlockEntities.BLOCK_ENTITY.register(modEventBus);
         CompanionsMenuTypes.MENU_TYPES.register(modEventBus);
+        CompanionsLootModifier.LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
 
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);

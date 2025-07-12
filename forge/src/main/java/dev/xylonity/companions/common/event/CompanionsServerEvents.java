@@ -4,7 +4,12 @@ import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.common.entity.companion.*;
 import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.summon.*;
+import dev.xylonity.companions.datagen.CompanionsLootModifierGenerator;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.knightlib.datagen.KnightLibLootModifierGenerator;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -42,6 +47,14 @@ public class CompanionsServerEvents {
         event.put(CompanionsEntities.SACRED_PONTIFF.get(), SacredPontiffEntity.setAttributes());
         event.put(CompanionsEntities.WILD_ANTLION.get(), WildAntlionEntity.setAttributes());
         event.put(CompanionsEntities.HOSTILE_IMP.get(), HostileImpEntity.setAttributes());
+    }
+
+    @SubscribeEvent
+    public static void gatherData(GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+        PackOutput packOutput = generator.getPackOutput();
+
+        generator.addProvider(event.includeServer(), new CompanionsLootModifierGenerator(packOutput));
     }
 
 }

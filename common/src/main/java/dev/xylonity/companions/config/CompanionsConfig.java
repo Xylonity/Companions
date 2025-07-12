@@ -8,6 +8,13 @@ import dev.xylonity.knightlib.config.api.DecorationType;
 public final class CompanionsConfig {
 
     @ConfigEntry(
+            comment = "Demon flesh drop rate",
+            min = 0.0,
+            max = 1.0
+    )
+    public static double DEMON_FLESH_DROP_RATE = 0.2;
+
+    @ConfigEntry(
             comment = "The amount of charges a single altar can cap",
             min = 0, max = 1000
     )
