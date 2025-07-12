@@ -362,10 +362,9 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     private void sync() {
-        if (!(level instanceof ServerLevel serverLevel)) return;
+        if (!(level instanceof ServerLevel)) return;
 
-        Packet<ClientGamePacketListener> pkt = ClientboundBlockEntityDataPacket.create(this);
-        serverLevel.getChunkSource().chunkMap.getPlayers(serverLevel.getChunkAt(worldPosition).getPos(), false).forEach(p -> p.connection.send(pkt));
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
     }
 
     public InteractionResult interact(Player player, InteractionHand hand) {
