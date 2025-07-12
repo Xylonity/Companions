@@ -1,9 +1,11 @@
 package dev.xylonity.companions.common.item;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
+import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.companion.DinamoEntity;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -16,6 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,9 +26,11 @@ public class WrenchItem extends Item {
 
     @Nullable
     private TeslaConnectionManager.ConnectionNode firstNode = null;
+    private final int maxConnDist;
 
     public WrenchItem(Properties properties) {
         super(properties);
+        this.maxConnDist = CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE * CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE;
     }
 
     @Override
@@ -58,10 +63,10 @@ public class WrenchItem extends Item {
     private void handleNodeSelection(Player player, TeslaConnectionManager.ConnectionNode currentNode, @Nullable UseOnContext context) {
         if (firstNode == null) {
             firstNode = currentNode;
-            player.displayClientMessage(Component.translatable("wrench.companions.client_message.first_node_selection").withStyle(ChatFormatting.GREEN), true);
+            handleFirstNodeMessage(player, currentNode, context);
         } else {
             if (firstNode.equals(currentNode)) {
-                player.displayClientMessage(Component.translatable("wrench.companions.client_message.invalid_selection").withStyle(ChatFormatting.RED), true);
+                player.displayClientMessage(Component.translatable("wrench.companions.client_message.same_node").withStyle(ChatFormatting.RED), true);
                 firstNode = null;
                 return;
             }
@@ -87,9 +92,9 @@ public class WrenchItem extends Item {
                         BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
                         if (first instanceof AbstractTeslaBlockEntity be) {
                             if (connectionAtoB) {
-                                be.handleNodeRemoval(firstNode, currentNode, context);
+                                be.handleNodeRemoval(firstNode, currentNode, context, player);
                             } else {
-                                be.handleNodeRemoval(currentNode, firstNode, context);
+                                be.handleNodeRemoval(currentNode, firstNode, context, player);
                             }
 
                             be.setOwnerUUID(player.getUUID());
@@ -100,6 +105,20 @@ public class WrenchItem extends Item {
 
                 player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_deleted").withStyle(ChatFormatting.RED), true);
             } else {
+                // caps conn max distance
+                Vec3 posFirst = getNodePosition(firstNode);
+                Vec3 posCurrent = getNodePosition(currentNode);
+
+                if (posFirst == null) return;
+                if (posCurrent == null) return;
+
+                if (posFirst.distanceToSqr(posCurrent) > maxConnDist) {
+                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_distance", maxConnDist).withStyle(ChatFormatting.RED), true);
+                    return;
+                }
+
+                boolean msgFlag = false;
+
                 // The context is null if the second node selected is a dinamo (and I assume so), so we just add a generic connection
                 if (context == null) {
                     manager.addConnection(firstNode, currentNode, false);
@@ -108,11 +127,21 @@ public class WrenchItem extends Item {
                         Entity entity = CompanionsEntityTracker.getEntityByUUID(firstNode.entityId());
                         if (entity instanceof DinamoEntity dinamo) {
                             dinamo.handleNodeSelection(firstNode, currentNode);
+                            msgFlag = true;
                         }
                     } else {
                         BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
                         if (first instanceof AbstractTeslaBlockEntity be) {
-                            be.handleNodeSelection(firstNode, currentNode, context);
+
+                            if (currentNode.isBlock()) {
+                                BlockEntity curr = context.getLevel().getBlockEntity(currentNode.blockPos());
+                                if (curr instanceof VoltaicPillarBlockEntity pillar && !pillar.isTop()) {
+                                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_top_voltaic_pillar", maxConnDist).withStyle(ChatFormatting.RED), true);
+                                    return;
+                                }
+                            }
+
+                            msgFlag = be.handleNodeSelection(firstNode, currentNode, context, player);
                             be.setOwnerUUID(player.getUUID());
                         }
                     }
@@ -126,12 +155,47 @@ public class WrenchItem extends Item {
 
                 }
 
-                player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_established").withStyle(ChatFormatting.GREEN), true);
+                if (msgFlag) {
+                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_established").withStyle(ChatFormatting.GREEN), true);
+                }
+
             }
 
             firstNode = null;
         }
 
+    }
+
+    private void handleFirstNodeMessage(Player player, TeslaConnectionManager.ConnectionNode currentNode, @Nullable UseOnContext context) {
+        if (firstNode != null) {
+            if (firstNode.isEntity()) {
+                String name = "";
+                if (CompanionsEntityTracker.getEntityByUUID(firstNode.entityId()) instanceof DinamoEntity dinamo) {
+                    name = dinamo.getName().getString();
+                }
+
+                player.displayClientMessage(Component.translatable("wrench.companions.client_message.first_node_selection_entity", name).withStyle(ChatFormatting.GREEN), true);
+            } else {
+                String name = "";
+                if (player.level().getBlockEntity(currentNode.blockPos()) instanceof AbstractTeslaBlockEntity be) {
+                    name = new ItemStack(be.getBlockState().getBlock()).getHoverName().getString();
+                }
+
+                player.displayClientMessage(Component.translatable("wrench.companions.client_message.first_node_selection_block", name).withStyle(ChatFormatting.GREEN), true);
+            }
+        }
+
+    }
+
+    @Nullable
+    private Vec3 getNodePosition(TeslaConnectionManager.ConnectionNode node) {
+        if (node.isEntity()) {
+            Entity e = CompanionsEntityTracker.getEntityByUUID(node.entityId());
+            return (e != null) ? e.position() : null;
+        } else {
+            BlockPos p = node.blockPos();
+            return new Vec3(p.getX(), p.getY(), p.getZ());
+        }
     }
 
 }

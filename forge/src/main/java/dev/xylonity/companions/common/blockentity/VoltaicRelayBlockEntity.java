@@ -23,11 +23,6 @@ public class VoltaicRelayBlockEntity extends AbstractTeslaBlockEntity {
         this.pulseBehaviour = new CoilPulseBehaviour();
     }
 
-    @Override
-    public AABB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
-    }
-
     public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
         if (level.isClientSide) return;
         if (!(t instanceof VoltaicRelayBlockEntity relay)) return;

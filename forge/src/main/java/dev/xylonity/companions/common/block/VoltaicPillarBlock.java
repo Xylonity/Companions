@@ -21,9 +21,14 @@ import java.util.stream.Stream;
 
 public class VoltaicPillarBlock extends AbstractTeslaBlock {
 
-    private static final VoxelShape SHAPE = Stream.of(
+    private static final VoxelShape SHAPE_BASE = Stream.of(
             Block.box(4, 6.5, 4, 12, 9.5, 12),
             Block.box(5.5, 0, 5.5, 10.5, 16, 10.5)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
+    private static final VoxelShape SHAPE_TOP = Stream.of(
+            Block.box(4, 6.5, 4, 12, 9.5, 12),
+            Block.box(5.5, 0, 5.5, 10.5, 10, 10.5)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public VoltaicPillarBlock(Properties properties) {
@@ -32,7 +37,12 @@ public class VoltaicPillarBlock extends AbstractTeslaBlock {
 
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
-        return SHAPE;
+        BlockEntity be = pLevel.getBlockEntity(pPos);
+        if (be instanceof VoltaicPillarBlockEntity pillarEntity && pillarEntity.isTop()) {
+            return SHAPE_TOP;
+        }
+
+        return SHAPE_BASE;
     }
 
     @Nullable

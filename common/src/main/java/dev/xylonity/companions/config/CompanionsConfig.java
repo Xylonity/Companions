@@ -57,6 +57,13 @@ public final class CompanionsConfig {
     )
     public static int DINAMO_MAX_CHAIN_CONNECTIONS = 7;
 
+    @ConfigEntry(
+            category = "Dinamo",
+            comment = "The maximum distance a tesla module can connect to another",
+            min = 0, max = 100
+    )
+    public static int DINAMO_MAX_CONNECTION_DISTANCE = 13;
+
 
     /**
      * ANTLION

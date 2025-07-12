@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -241,16 +242,18 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
      * Defers the call from the wrench item when this node is getting connected to another one
      * Don't override if the connection is simple (one node to another node)
      */
-    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx) {
+    public boolean handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx, Player player) {
         connectionManager.addConnection(thisNode, nodeToConnect);
+        return true;
     }
 
     /**
      * Defers the call from the wrench item when this node is getting removed from the tesla network
      * Don't override if the connection is simple (one node to another node)
      */
-    public void handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx) {
+    public boolean handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx, Player player) {
         connectionManager.removeConnection(thisNode, nodeToConnect);
+        return true;
     }
 
 }

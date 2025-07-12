@@ -9,7 +9,6 @@ import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEntity> implements ITeslaUtil {

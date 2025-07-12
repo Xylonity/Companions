@@ -4,27 +4,31 @@ import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.tesla.behaviour.pillar.PillarPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoBlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implements GeoBlockEntity {
+public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
 
     private final ITeslaNodeBehaviour pulseBehaviour;
+    private boolean isTop;
 
     public VoltaicPillarBlockEntity(BlockPos pos, BlockState state) {
         super(CompanionsBlockEntities.VOLTAIC_PILLAR.get(), pos, state);
         this.pulseBehaviour = new PillarPulseBehaviour();
+        this.isTop = false;
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
@@ -33,12 +37,42 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implement
         pillar.pulseBehaviour.process(pillar, level, blockPos, blockState);
         pillar.defaultAttackBehaviour.process(pillar, level, blockPos, blockState);
 
+        pillar.setIsTop(!(level.getBlockEntity(pillar.getBlockPos().above()) instanceof VoltaicPillarBlockEntity));
+
         pillar.sync();
     }
 
+    public boolean isTop() {
+        return this.isTop;
+    }
+
+    public void setIsTop(boolean top) {
+        this.isTop = top;
+    }
+
     @Override
-    public AABB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
+        this.setIsTop(tag.getBoolean("IsTop"));
+    }
+
+    @Override
+    protected void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putBoolean("IsTop", this.isTop());
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
+        this.setIsTop(tag.getBoolean("IsTop"));
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
+        tag.putBoolean("IsTop", this.isTop());
+        return tag;
     }
 
     @Override
@@ -65,9 +99,9 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implement
     }
 
     @Override
-    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx) {
+    public boolean handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx, Player player) {
         if (ctx != null) {
-            if (ctx.getLevel().getBlockEntity(nodeToConnect.blockPos()) instanceof VoltaicPillarBlockEntity be) {
+            if (ctx.getLevel().getBlockEntity(nodeToConnect.blockPos()) instanceof VoltaicPillarBlockEntity) {
                 List<VoltaicPillarBlockEntity> thisList = new ArrayList<>();
                 List<VoltaicPillarBlockEntity> otherList = new ArrayList<>();
                 pillarsBelow(thisList, thisNode.blockPos());
@@ -77,12 +111,17 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implement
                         connectionManager.addConnection(thisList.get(i).asConnectionNode(), otherList.get(i).asConnectionNode());
                     }
                 } else {
-                    return;
+                    if (player != null) {
+                        player.displayClientMessage(Component.translatable("voltaic_pillar.companions.client_message.wrong_amount").withStyle(ChatFormatting.RED), true);
+                    }
+
+                    return false;
                 }
             }
+
         }
 
-        super.handleNodeSelection(thisNode, nodeToConnect, ctx);
+        return super.handleNodeSelection(thisNode, nodeToConnect, ctx, player);
     }
 
     private void pillarsBelow(List<VoltaicPillarBlockEntity> pillars, BlockPos pos) {
@@ -102,11 +141,6 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity implement
             }
 
         }
-    }
-
-    @Override
-    public void handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx) {
-        super.handleNodeRemoval(thisNode, nodeToConnect, ctx);
     }
 
 }
