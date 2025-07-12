@@ -6,7 +6,6 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetBladeAttackGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetCannonAttackGoal;
-import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetFarmGoal;
 import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
 import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -113,8 +112,6 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
         this.goalSelector.addGoal(2, new PuppetCannonAttackGoal(this, 30, 50));
         this.goalSelector.addGoal(2, new PuppetBladeAttackGoal(this, 30, 50));
-
-        this.goalSelector.addGoal(3, new PuppetFarmGoal(this));
 
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
 
