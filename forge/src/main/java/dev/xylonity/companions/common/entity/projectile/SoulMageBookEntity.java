@@ -121,8 +121,7 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
         Vec3 vel = this.getDeltaMovement();
 
         double K = 0.006;
-        double C = 2.0 * Math.sqrt(K);
-        Vec3 accel = targetPos.subtract(position()).scale(K).subtract(vel.scale(C));
+        Vec3 accel = targetPos.subtract(position()).scale(K).subtract(vel.scale(2.0 * Math.sqrt(K)));
         vel = vel.add(accel);
 
         this.setDeltaMovement(vel);

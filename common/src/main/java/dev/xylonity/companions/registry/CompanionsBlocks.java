@@ -2,6 +2,7 @@ package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.CompanionsCommon;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -23,6 +24,7 @@ public class CompanionsBlocks {
     public static final Supplier<Block> FROG_BONANZA;
     public static final Supplier<Block> SHADE_SWORD_ALTAR;
     public static final Supplier<Block> SHADE_MAW_ALTAR;
+    public static final Supplier<Block> ETERNAL_FIRE;
 
     public static final Supplier<Block> COPPER_COIN;
     public static final Supplier<Block> NETHER_COIN;
@@ -161,6 +163,9 @@ public class CompanionsBlocks {
                         .sound(SoundType.STONE)
                         .instrument(NoteBlockInstrument.BELL)
                         .noOcclusion(), BlockType.FROG_BONANZA, BlockItem.GENERIC);
+
+        ETERNAL_FIRE = registerBlock("eternal_fire",
+                BlockBehaviour.Properties.copy(Blocks.FIRE), BlockType.ETERNAL_FIRE, BlockItem.GENERIC);
     }
 
     private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType, BlockItem blockItem) {
@@ -180,7 +185,8 @@ public class CompanionsBlocks {
         SHADE_MAW_ALTAR,
         RECALL_PLATFORM,
         FROG_BONANZA,
-        VOLTAIC_RELAY
+        VOLTAIC_RELAY,
+        ETERNAL_FIRE
     }
 
     public enum BlockItem {
