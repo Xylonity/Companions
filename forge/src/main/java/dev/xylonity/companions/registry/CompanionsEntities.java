@@ -114,11 +114,11 @@ public class CompanionsEntities {
         CLOAK = register("cloak", CloakEntity::new, MobCategory.CREATURE, 1f, 2f, List.of(EntityType.Builder::fireImmune));
 
         LIVING_CANDLE = register("living_candle", LivingCandleEntity::new, MobCategory.CREATURE, 0.5f, 0.75f, null);
-        FIREWORK_TOAD = register("firework_toad", FireworkToadEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::noSummon));
-        BUBBLE_FROG = register("bubble_frog", BubbleFrogEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::noSummon));
-        EMBER_POLE = register("ember_pole", EmberPoleEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::noSummon));
-        NETHER_BULLFROG = register("nether_bullfrog", NetherBullfrogEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::noSummon));
-        ENDER_FROG = register("ender_frog", EnderFrogEntity::new, MobCategory.CREATURE, 1f, 2f, List.of(EntityType.Builder::noSummon));
+        FIREWORK_TOAD = register("firework_toad", FireworkToadEntity::new, MobCategory.CREATURE, 1f, 1f, null);
+        BUBBLE_FROG = register("bubble_frog", BubbleFrogEntity::new, MobCategory.CREATURE, 1f, 1f, null);
+        EMBER_POLE = register("ember_pole", EmberPoleEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::fireImmune));
+        NETHER_BULLFROG = register("nether_bullfrog", NetherBullfrogEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::fireImmune));
+        ENDER_FROG = register("ender_frog", EnderFrogEntity::new, MobCategory.CREATURE, 1f, 2f, null);
 
         ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f, null);
         HOSTILE_PUPPET_GLOVE = register("hostile_puppet_glove", HostilePuppetGloveEntity::new, MobCategory.CREATURE, 0.8f, 2f, null);
