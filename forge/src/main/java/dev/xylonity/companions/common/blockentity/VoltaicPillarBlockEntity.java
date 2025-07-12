@@ -39,6 +39,10 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
 
         pillar.setIsTop(!(level.getBlockEntity(pillar.getBlockPos().above()) instanceof VoltaicPillarBlockEntity));
 
+        if (level.getBlockEntity(pillar.getBlockPos().above()) instanceof VoltaicPillarBlockEntity be) {
+            pillar.setOwnerUUID(be.getOwnerUUID());
+        }
+
         pillar.sync();
     }
 
@@ -85,19 +89,6 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
         return new Vec3(0, 0.5, 0);
     }
 
-    public void connectToNearestPillar() {
-        if (level == null || level.isClientSide) return;
-
-        if (level.getBlockEntity(this.getBlockPos().below()) instanceof VoltaicPillarBlockEntity be) {
-            connectionManager.addConnection(this.asConnectionNode(), be.asConnectionNode());
-        }
-
-        if (level.getBlockEntity(this.getBlockPos().above()) instanceof VoltaicPillarBlockEntity be) {
-            be.connectToNearestPillar();
-        }
-
-    }
-
     @Override
     public boolean handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx, Player player) {
         if (ctx != null) {
@@ -122,6 +113,26 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
         }
 
         return super.handleNodeSelection(thisNode, nodeToConnect, ctx, player);
+    }
+
+    @Override
+    public boolean handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx, Player player) {
+        if (ctx != null) {
+            if (ctx.getLevel().getBlockEntity(nodeToConnect.blockPos()) instanceof VoltaicPillarBlockEntity) {
+                List<VoltaicPillarBlockEntity> thisList = new ArrayList<>();
+                List<VoltaicPillarBlockEntity> otherList = new ArrayList<>();
+                pillarsBelow(thisList, thisNode.blockPos());
+                pillarsBelow(otherList, nodeToConnect.blockPos());
+                if (thisList.size() == otherList.size()) {
+                    for (int i = 0; i < thisList.size(); i++) {
+                        connectionManager.removeConnection(thisList.get(i).asConnectionNode(), otherList.get(i).asConnectionNode());
+                    }
+                }
+            }
+
+        }
+
+        return super.handleNodeRemoval(thisNode, nodeToConnect, ctx, player);
     }
 
     private void pillarsBelow(List<VoltaicPillarBlockEntity> pillars, BlockPos pos) {

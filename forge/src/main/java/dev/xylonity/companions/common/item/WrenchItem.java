@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.item;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
+import dev.xylonity.companions.common.blockentity.VoltaicRelayBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.companion.DinamoEntity;
@@ -62,6 +63,14 @@ public class WrenchItem extends Item {
 
     private void handleNodeSelection(Player player, TeslaConnectionManager.ConnectionNode currentNode, @Nullable UseOnContext context) {
         if (firstNode == null) {
+
+            if (currentNode.isBlock()) {
+                if (player.level().getBlockEntity(currentNode.blockPos()) instanceof VoltaicPillarBlockEntity be && !be.isTop()) {
+                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_top_voltaic_pillar").withStyle(ChatFormatting.RED), true);
+                    return;
+                }
+            }
+
             firstNode = currentNode;
             handleFirstNodeMessage(player, currentNode, context);
         } else {
@@ -113,7 +122,7 @@ public class WrenchItem extends Item {
                 if (posCurrent == null) return;
 
                 if (posFirst.distanceToSqr(posCurrent) > maxConnDist) {
-                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_distance", maxConnDist).withStyle(ChatFormatting.RED), true);
+                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_distance", CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE).withStyle(ChatFormatting.RED), true);
                     return;
                 }
 
@@ -136,7 +145,11 @@ public class WrenchItem extends Item {
                             if (currentNode.isBlock()) {
                                 BlockEntity curr = context.getLevel().getBlockEntity(currentNode.blockPos());
                                 if (curr instanceof VoltaicPillarBlockEntity pillar && !pillar.isTop()) {
-                                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_top_voltaic_pillar", maxConnDist).withStyle(ChatFormatting.RED), true);
+                                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_top_voltaic_pillar").withStyle(ChatFormatting.RED), true);
+                                    return;
+                                }
+                                if (be.getDistance() == CompanionsConfig.DINAMO_MAX_CHAIN_CONNECTIONS && !(curr instanceof VoltaicRelayBlockEntity)) {
+                                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.max_chain_connections").withStyle(ChatFormatting.RED), true);
                                     return;
                                 }
                             }

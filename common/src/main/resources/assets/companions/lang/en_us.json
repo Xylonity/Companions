@@ -26,6 +26,7 @@
   "wrench.companions.client_message.connection_deleted": "Connection deleted successfully.",
   "wrench.companions.client_message.connection_non_top_voltaic_pillar": "You must select the voltaic pillar on top.",
   "wrench.companions.client_message.connection_distance": "Nodes must be within %1$d blocks of each other to connect.",
+  "wrench.companions.client_message.max_chain_connections": "Maximum chain distance achieved. Use a Voltaic Relay to lengthen the connections.",
 
   "voltaic_pillar.companions.client_message.wrong_amount": "The amount of pillars on both columns must be the same.",
 

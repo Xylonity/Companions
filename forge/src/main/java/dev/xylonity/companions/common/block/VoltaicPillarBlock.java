@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.block;
 
 import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
+import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -58,9 +59,21 @@ public class VoltaicPillarBlock extends AbstractTeslaBlock {
     }
 
     @Override
-    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pMovedByPiston) {
-        if (pLevel.getBlockEntity(pPos) instanceof VoltaicPillarBlockEntity be) {
-            be.connectToNearestPillar();
+    public void onPlace(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pOldState, boolean pMovedByPiston) {
+        BlockEntity aboveBe = pLevel.getBlockEntity(pPos.above());
+        if (aboveBe instanceof VoltaicPillarBlockEntity above) {
+            if (pLevel.getBlockEntity(pPos) instanceof VoltaicPillarBlockEntity curr) {
+                TeslaConnectionManager.getInstance().addConnection(above.asConnectionNode(), curr.asConnectionNode());
+            }
+        }
+
+        BlockEntity belowBe = pLevel.getBlockEntity(pPos.below());
+        if (belowBe instanceof VoltaicPillarBlockEntity below) {
+            if (pLevel.getBlockEntity(pPos) instanceof VoltaicPillarBlockEntity curr) {
+                if (!TeslaConnectionManager.getInstance().getIncoming(below.asConnectionNode()).contains(curr.asConnectionNode())) {
+                    TeslaConnectionManager.getInstance().addConnection(curr.asConnectionNode(), below.asConnectionNode());
+                }
+            }
         }
 
         super.onPlace(pState, pLevel, pPos, pOldState, pMovedByPiston);

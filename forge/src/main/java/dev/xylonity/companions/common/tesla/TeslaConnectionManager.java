@@ -283,10 +283,17 @@ public class TeslaConnectionManager {
                 for (ConnectionNode nb : outgoing.getOrDefault(cur, Collections.emptySet())) {
                     if (!nb.isBlock()) continue;
 
-                    final int newDistance;
+                    int newDistance;
+                    AbstractTeslaBlockEntity childBe = blockEntities.get(nb);
+
+                    boolean flag = currentBe instanceof VoltaicPillarBlockEntity
+                                    && childBe instanceof VoltaicPillarBlockEntity
+                                    && currentBe.getBlockPos().getX() == childBe.getBlockPos().getX()
+                                    && currentBe.getBlockPos().getZ() == childBe.getBlockPos().getZ();
+
                     if (currentBe instanceof VoltaicRelayBlockEntity) {
                         newDistance = 1;
-                    } else if (currentBe instanceof VoltaicPillarBlockEntity be && be.getLevel() != null && be.getLevel().getBlockEntity(be.getBlockPos().above()) instanceof VoltaicPillarBlockEntity) {
+                    } else if (flag) {
                         newDistance = currentDistance;
                     } else {
                         newDistance = currentDistance + 1;
