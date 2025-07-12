@@ -104,18 +104,18 @@ public class ShadowBellItem extends Item {
     public void appendHoverText(ItemStack stack, Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         CompoundTag t = stack.getTag();
         if (t == null || !t.contains(ST_DIM) || !t.contains(ST_X) ||!t.contains(ST_Y) || !t.contains(ST_Z)) {
-            tooltip.add(Component.translatable("item.companions.shadow_bell.default").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+            tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.default").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
             return;
         }
 
         if (t.contains(BELL_CURR) && t.contains(ALTAR_NAME)) {
-            tooltip.add(Component.translatable("item.companions.shadow_bell.linked_to", t.getString(ALTAR_NAME)));
-            tooltip.add(Component.translatable("item.companions.shadow_bell.charges_remaining", t.getInt(BELL_CURR)));
+            tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.linked_to", t.getString(ALTAR_NAME)));
+            tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.charges_remaining", t.getInt(BELL_CURR)));
 
             if (t.hasUUID(UUID_SHADE)) {
                 Entity e = CompanionsEntityTracker.getEntityByUUID(t.getUUID(UUID_SHADE));
                 if (e instanceof ShadeEntity shade) {
-                    tooltip.add(Component.translatable("item.companions.shadow_bell.lifetime", shade.getLifetime() / 20));
+                    tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.lifetime", shade.getLifetime() / 20));
                 } else {
                     t.remove(UUID_SHADE);
                     stack.setTag(t);
@@ -142,7 +142,7 @@ public class ShadowBellItem extends Item {
 
         if (altar.getCharges() <= 0) {
             if (ctx.getPlayer() != null) {
-                ctx.getPlayer().displayClientMessage(Component.translatable("item.companions.shadow_bell.altar_empty"), true);
+                ctx.getPlayer().displayClientMessage(Component.translatable("shadow_bell.companions.client_message.altar_empty"), true);
             }
 
             return InteractionResult.FAIL;
@@ -159,7 +159,7 @@ public class ShadowBellItem extends Item {
         stack.setTag(tag);
 
         if (ctx.getPlayer() != null) {
-            ctx.getPlayer().displayClientMessage(Component.translatable("item.companions.shadow_bell.altar_saved"), true);
+            ctx.getPlayer().displayClientMessage(Component.translatable("shadow_bell.companions.client_message.altar_saved"), true);
         }
 
         return InteractionResult.SUCCESS;
@@ -178,7 +178,7 @@ public class ShadowBellItem extends Item {
 
         ServerLevel world = pLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString(ST_DIM))));
         if (world == null) {
-            pPlayer.displayClientMessage(Component.translatable("item.companions.shadow_bell.dimension_doesnt_exist"), true);
+            pPlayer.displayClientMessage(Component.translatable("shadow_bell.companions.client_message.couldnt_find"), true);
 
             clearLink(stack);
             return InteractionResultHolder.pass(stack);
@@ -187,7 +187,7 @@ public class ShadowBellItem extends Item {
         if (world.getBlockEntity(new BlockPos(tag.getInt(ST_X), tag.getInt(ST_Y), tag.getInt(ST_Z))) instanceof AbstractShadeAltarBlockEntity altar) {
 
             if (altar.getCharges() <= 0) {
-                pPlayer.displayClientMessage(Component.translatable("item.companions.shadow_bell.no_charges"), true);
+                pPlayer.displayClientMessage(Component.translatable("shadow_bell.companions.client_message.no_charges"), true);
                 clearLink(stack);
                 return InteractionResultHolder.pass(stack);
             }
@@ -213,13 +213,13 @@ public class ShadowBellItem extends Item {
                 tag.putInt(BELL_CURR, altar.getCharges());
                 stack.setTag(tag);
             } else {
-                pPlayer.displayClientMessage(Component.translatable("item.companions.shadow_bell.no_charges"), true);
+                pPlayer.displayClientMessage(Component.translatable("shadow_bell.companions.client_message.no_charges"), true);
                 clearLink(stack);
             }
 
         } else {
             clearLink(stack);
-            pPlayer.displayClientMessage(Component.translatable("item.companions.shadow_bell.couldnt_find"), true);
+            pPlayer.displayClientMessage(Component.translatable("shadow_bell.companions.client_message.couldnt_find"), true);
         }
 
         return InteractionResultHolder.sidedSuccess(stack, false);
