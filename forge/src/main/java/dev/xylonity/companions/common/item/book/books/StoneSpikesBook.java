@@ -22,8 +22,8 @@ public class StoneSpikesBook extends AbstractMagicBook {
     }
 
     @Override
-    public String getName() {
-        return "stone_spikes";
+    protected String tooltipName() {
+        return "stone_spikes_book";
     }
 
     @Override

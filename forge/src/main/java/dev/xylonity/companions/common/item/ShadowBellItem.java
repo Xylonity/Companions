@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-public class ShadowBellItem extends Item {
+public class ShadowBellItem extends TooltipItem {
 
     private static final String ST_DIM = "stored_dim";
     private static final String ST_X = "stored_x";
@@ -101,7 +101,7 @@ public class ShadowBellItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack stack, Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         CompoundTag t = stack.getTag();
         if (t == null || !t.contains(ST_DIM) || !t.contains(ST_X) ||!t.contains(ST_Y) || !t.contains(ST_Z)) {
             tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.default").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
@@ -123,6 +123,11 @@ public class ShadowBellItem extends Item {
             }
         }
 
+    }
+
+    @Override
+    protected String tooltipName() {
+        return "";
     }
 
     // If the interaction is done on an altar, its relevant data is written in memory

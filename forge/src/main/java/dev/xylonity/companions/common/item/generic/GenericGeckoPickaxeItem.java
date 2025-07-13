@@ -14,12 +14,12 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.function.Consumer;
 
-public class GenericGeckoPickAxeItem extends PickaxeItem implements GeoItem {
+public class GenericGeckoPickaxeItem extends PickaxeItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private final String resourceKey;
 
-    public GenericGeckoPickAxeItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
+    public GenericGeckoPickaxeItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
         super(material, (int) extraDamage, extraSpeed, properties);
         this.resourceKey = resourceKey;
         SingletonGeoAnimatable.registerSyncedAnimatable(this);

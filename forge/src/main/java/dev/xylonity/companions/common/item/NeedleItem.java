@@ -14,10 +14,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 
-public class NeedleItem extends Item {
+public class NeedleItem extends TooltipItem {
 
     public NeedleItem(Item.Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected String tooltipName() {
+        return "needle";
     }
 
     @Override

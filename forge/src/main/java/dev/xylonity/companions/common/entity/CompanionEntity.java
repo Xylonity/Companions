@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.entity;
 
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.knightlib.KnightLib;
 import dev.xylonity.knightlib.registry.KnightLibItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

@@ -19,8 +19,8 @@ public class BlackHoleBook extends AbstractMagicBook {
     }
 
     @Override
-    public String getName() {
-        return "black_hole";
+    protected String tooltipName() {
+        return "black_hole_book";
     }
 
     @Override

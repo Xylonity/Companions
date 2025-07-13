@@ -63,7 +63,12 @@ public class CompanionsCreativeModeTabs {
 
                                 output.accept(CompanionsItems.MAGE_HAT.get());
                                 output.accept(CompanionsItems.MAGE_COAT.get());
+                                output.accept(CompanionsItems.MAGE_LEGGINGS.get());
                                 output.accept(CompanionsItems.MAGE_STAFF.get());
+
+                                output.accept(CompanionsItems.HOLY_ROBE_MASK.get());
+                                output.accept(CompanionsItems.HOLY_ROBE_COAT.get());
+                                output.accept(CompanionsItems.HOLY_ROBE_LEGGINGS.get());
 
                                 output.accept(CompanionsBlocks.TESLA_COIL.get());
                                 output.accept(CompanionsBlocks.PLASMA_LAMP.get());

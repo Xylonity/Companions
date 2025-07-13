@@ -18,8 +18,8 @@ public class BraceBook extends AbstractMagicBook {
     }
 
     @Override
-    public String getName() {
-        return "fire_mark";
+    protected String tooltipName() {
+        return "brace_book";
     }
 
     @Override

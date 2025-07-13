@@ -15,7 +15,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class WrenchItem extends Item {
+public class WrenchItem extends TooltipItem {
 
     @Nullable
     private TeslaConnectionManager.ConnectionNode firstNode = null;
@@ -32,6 +31,11 @@ public class WrenchItem extends Item {
     public WrenchItem(Properties properties) {
         super(properties);
         this.maxConnDist = CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE * CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE;
+    }
+
+    @Override
+    protected String tooltipName() {
+        return "wrench";
     }
 
     @Override

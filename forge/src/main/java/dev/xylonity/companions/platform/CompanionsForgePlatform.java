@@ -3,6 +3,7 @@ package dev.xylonity.companions.platform;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.block.*;
 import dev.xylonity.companions.common.item.*;
+import dev.xylonity.companions.common.item.armor.*;
 import dev.xylonity.companions.common.item.generic.*;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
@@ -10,6 +11,7 @@ import dev.xylonity.companions.common.item.book.books.*;
 import dev.xylonity.companions.common.item.weapon.BloodAxeItem;
 import dev.xylonity.companions.common.item.weapon.BloodScytheItem;
 import dev.xylonity.companions.common.item.weapon.BloodSwordItem;
+import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
@@ -110,11 +112,18 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     }
 
     @Override
-    public <T extends Item> Supplier<T> registerArmorItem(String id, ArmorMaterial armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
+    public <T extends Item> Supplier<T> registerArmorItem(String id, ArmorMaterials armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
         if (isGeckoArmor) {
-            return (Supplier<T>) registerItem(id, () -> new GenericGeckoArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+            return switch (armorMaterial) {
+                case CRYSTALLIZED_BLOOD -> (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+                case MAGE -> (Supplier<T>) registerItem(id, () -> new GeckoMageArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+                case HOLY_ROBE -> (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+            };
         } else {
-            return (Supplier<T>) registerItem(id, () -> new ArmorItem(armorMaterial, armorType, new Item.Properties()));
+            return switch (armorMaterial) {
+                case CRYSTALLIZED_BLOOD -> (Supplier<T>) registerItem(id, () -> new BloodArmorItem(armorMaterial, armorType, new Item.Properties()));
+                default -> (Supplier<T>) registerItem(id, () -> new ArmorItem(armorMaterial, armorType, new Item.Properties()));
+            };
         }
     }
 

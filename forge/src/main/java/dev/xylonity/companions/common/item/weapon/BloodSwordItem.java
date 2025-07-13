@@ -5,13 +5,19 @@ import dev.xylonity.companions.common.entity.projectile.HolinessStartProjectile;
 import dev.xylonity.companions.common.item.generic.GenericGeckoSwordItem;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BloodSwordItem extends GenericGeckoSwordItem {
 
@@ -37,6 +43,52 @@ public class BloodSwordItem extends GenericGeckoSwordItem {
         }
 
         return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide());
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(Component.translatable("tooltip.icon.companions.star").append(Component
+                .translatable("tooltip.item.companions.key.blood_weapon")
+                .withStyle(ChatFormatting.YELLOW)));
+
+        pTooltipComponents.add(
+                Component.literal(" ")
+                        .append(Component
+                                .translatable("tooltip.item.companions.key.abilities")
+                                .withStyle(ChatFormatting.DARK_GRAY))
+        );
+
+        pTooltipComponents.add(
+                Component.literal("  ")
+                        .append(Component
+                                .translatable("tooltip.item.companions.crystallized_blood_sword")
+                                .withStyle(ChatFormatting.WHITE)
+                        )
+        );
+
+        pTooltipComponents.add(
+                Component.literal("   ")
+                        .append(Component
+                                .translatable("tooltip.item.companions.crystallized_blood_sword_desc_1")
+                                .withStyle(ChatFormatting.GRAY)
+                        )
+        );
+        pTooltipComponents.add(
+                Component.literal("   ")
+                        .append(Component
+                                .translatable("tooltip.item.companions.crystallized_blood_sword_desc_2")
+                                .withStyle(ChatFormatting.GRAY)
+                        )
+        );
+        pTooltipComponents.add(
+                Component.literal("   ")
+                        .append(Component
+                                .translatable("tooltip.item.companions.crystallized_blood_sword_desc_3")
+                                .withStyle(ChatFormatting.GRAY)
+                        )
+        );
+
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
 }

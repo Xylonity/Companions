@@ -118,10 +118,10 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
             cycleOwners();
             if (getOwner() instanceof Player) {
                 player.displayClientMessage(Component
-                        .translatable("main_action_summon.companions.client_message.following_player"), true);
+                        .translatable("main_action_summon.companions.client_message.following_player", getName()), true);
             } else {
                 player.displayClientMessage(Component
-                        .translatable("main_action_summon.companions.client_message.following_companion"), true);
+                        .translatable("main_action_summon.companions.client_message.following_companion", getName(), getOwner() != null ? getOwner().getName() : "the companion."), true);
             }
 
         }

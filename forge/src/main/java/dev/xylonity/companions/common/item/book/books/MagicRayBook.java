@@ -22,8 +22,8 @@ public class MagicRayBook extends AbstractMagicBook {
     }
 
     @Override
-    public String getName() {
-        return "magic_ray";
+    protected String tooltipName() {
+        return "magic_ray_book";
     }
 
     @Override

@@ -251,4 +251,57 @@ public final class CompanionsConfig {
     )
     public static double HEAL_RING_HEALING = 6.0D;
 
+    /**
+     * ARMOURY
+     */
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Percentage of life-steal per hit. For example, if set to 0.10, a hit of 10HP will heal the player 1HP",
+            min = 0d, max = 1d
+    )
+    public static double CRYSTALLIZED_BLOOD_SCYTHE_LIFE_STEAL = 0.15d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Percentage of incoming damage reduction per hit per armor piece.",
+            min = 0d, max = 1d
+    )
+    public static double CRYSTALLIZED_BLOOD_SET_REDUCTION = 0.1d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Percentage of health the entity should have to apply the armor effect",
+            min = 0d, max = 1d
+    )
+    public static double CRYSTALLIZED_BLOOD_SET_MIN_HEALTH = 0.5d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Percentage of incoming magic damage reduction per hit per armor piece, which are 3 in total.",
+            min = 0d, max = 1d
+    )
+    public static double MAGE_SET_DAMAGE_REDUCTION = 0.1d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Mage set magical book cooldown reduction",
+            min = 0d, max = 1d
+    )
+    public static double MAGE_SET_COOLDOWN_REDUCTION = 0.5d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Holy robe damage reduction per piece",
+            min = 0d, max = 1d
+    )
+    public static double HOLY_ROBE_DAMAGE_REDUCTION = 0.07d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Holy robe fire ring spawn chance",
+            min = 0d, max = 1d
+    )
+    public static double HOLY_ROBE_FIRE_RING_SPAWN_CHANCE = 0.20d;
+
 }

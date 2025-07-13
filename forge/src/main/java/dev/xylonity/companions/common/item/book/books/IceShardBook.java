@@ -21,8 +21,8 @@ public class IceShardBook extends AbstractMagicBook {
     }
 
     @Override
-    public String getName() {
-        return "ice_shard";
+    protected String tooltipName() {
+        return "ice_shard_book";
     }
 
     @Override

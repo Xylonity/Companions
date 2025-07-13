@@ -18,8 +18,8 @@ public class IceTornadoBook extends AbstractMagicBook {
     }
 
     @Override
-    public String getName() {
-        return "ice_tornado";
+    protected String tooltipName() {
+        return "ice_tornado_book";
     }
 
     @Override

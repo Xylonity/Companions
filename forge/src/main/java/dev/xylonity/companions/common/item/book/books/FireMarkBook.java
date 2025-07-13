@@ -22,8 +22,8 @@ public class FireMarkBook extends AbstractMagicBook {
     }
 
     @Override
-    public String getName() {
-        return "fire_mark";
+    protected String tooltipName() {
+        return "fire_mark_book";
     }
 
     @Override

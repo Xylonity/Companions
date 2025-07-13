@@ -1,0 +1,33 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.mage_hat",
+				"texture_width": 64,
+				"texture_height": 32,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 4.5,
+				"visible_bounds_offset": [0, 1.75, 0]
+			},
+			"bones": [
+				{
+					"name": "bipedHead",
+					"pivot": [0, 24, 0]
+				},
+				{
+					"name": "armorHead",
+					"parent": "bipedHead",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-4, 26, -4], "size": [8, 8, 8], "inflate": 1, "uv": [0, 0]},
+						{"origin": [-4.5, 25.06031, -6.59202], "size": [9, 8, 4], "uv": [38, 1]},
+						{"origin": [-2.5, 23.06031, -6.59202], "size": [5, 2, 4], "uv": [41, 25]},
+						{"origin": [2.5, 25.06031, -5.59202], "size": [6, 2, 1], "uv": [41, 19], "mirror": true},
+						{"origin": [-8.5, 25.06031, -5.59202], "size": [6, 2, 1], "uv": [41, 19]}
+					]
+				}
+			]
+		}
+	]
+}

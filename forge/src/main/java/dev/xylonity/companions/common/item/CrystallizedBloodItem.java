@@ -8,10 +8,15 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class CrystallizedBloodItem extends Item {
+public class CrystallizedBloodItem extends TooltipItem {
 
     public CrystallizedBloodItem(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected String tooltipName() {
+        return "crystallized_blood";
     }
 
     @Override

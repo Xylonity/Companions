@@ -17,8 +17,8 @@ public class HealRingBook extends AbstractMagicBook {
     }
 
     @Override
-    public String getName() {
-        return "fire_mark";
+    protected String tooltipName() {
+        return "heal_ring_book";
     }
 
     @Override
