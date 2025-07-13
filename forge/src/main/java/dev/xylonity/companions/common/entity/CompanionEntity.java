@@ -259,4 +259,8 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     protected abstract int sitAnimationsAmount();
     protected abstract boolean shouldKeepChunkLoaded();
 
+    @Override
+    public boolean canChangeDimensions() {
+        return true;
+    }
 }
