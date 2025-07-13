@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.particle;
 
 import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.knightlib.common.particle.AbstractRibbonTrailParticle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;

@@ -76,12 +76,15 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":common")
 
-    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:4.7.1.2")
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
 
     implementation fg.deobf("curse.maven:puzzles-lib-495476:5904750")
     implementation fg.deobf("curse.maven:overflowing-bars-852662:5763974")
 
-    implementation fg.deobf("curse.maven:knight-lib-1105855:6662850")
+    implementation fg.deobf("dev.xylonity.knightlib:knightlib-forge-${minecraft_version}:1.3.0")
+
+    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
+    implementation fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 

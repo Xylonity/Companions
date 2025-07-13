@@ -64,6 +64,22 @@ subprojects {
             name = "Fuzs Mod Resources"
             url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
         }
+        maven {
+            name = "Xylonity's resources"
+            url = "https://raw.githubusercontent.com/Xylonity/maven-centralish/main/maven/"
+        }
+        maven {
+            name = "Progwml6's maven"
+            url = "https://dvs1.progwml6.com/files/maven/"
+        }
+        maven {
+            name = "Jared's maven"
+            url = "https://maven.blamejared.com/"
+        }
+        maven {
+            name = "ModMaven"
+            url = "https://modmaven.dev"
+        }
     }
 
     tasks.withType(JavaCompile).configureEach {
@@ -86,7 +102,10 @@ subprojects {
                 "mod_author": mod_author,
                 "mod_id": mod_id,
                 "license": license,
-                "description": project.description
+                "description": project.description,
+                "geckolib_version": geckolib_version,
+                "jei_version": jei_version,
+                "knightlib_version": knightlib_version
         ]
 
         filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', '*.mixins.json']) {
