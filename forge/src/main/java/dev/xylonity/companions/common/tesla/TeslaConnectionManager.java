@@ -92,8 +92,8 @@ public class TeslaConnectionManager {
 
         }
 
-        outgoing.computeIfAbsent(source, c -> new HashSet<>()).add(target);
-        incoming.computeIfAbsent(target, c -> new HashSet<>()).add(source);
+        outgoing.computeIfAbsent(source, c -> ConcurrentHashMap.newKeySet()).add(target);
+        incoming.computeIfAbsent(target, c -> ConcurrentHashMap.newKeySet()).add(source);
 
         if (!bypassValidation) {
             recalculateDistances();
@@ -121,7 +121,7 @@ public class TeslaConnectionManager {
      */
     private void refreshRecallCachesAround(ConnectionNode... nodes) {
         // Caches processed nodes
-        Set<ConnectionNode> visitedComponents = new HashSet<>();
+        Set<ConnectionNode> visitedComponents = ConcurrentHashMap.newKeySet();
 
         for (ConnectionNode node : nodes) {
             if (visitedComponents.contains(node)) continue;
@@ -165,7 +165,7 @@ public class TeslaConnectionManager {
      * @return set of all connected nodes (undirected graph)
      */
     public Set<ConnectionNode> getConnectedComponent(ConnectionNode start) {
-        Set<ConnectionNode> comp = new HashSet<>();
+        Set<ConnectionNode> comp = ConcurrentHashMap.newKeySet();
         Deque<ConnectionNode> queue = new ArrayDeque<>();
         comp.add(start);
         queue.add(start);
@@ -175,7 +175,7 @@ public class TeslaConnectionManager {
             comp.add(cur);
 
             // Checks both incoming/outgoing conns
-            Set<ConnectionNode> neighbors = new HashSet<>();
+            Set<ConnectionNode> neighbors = ConcurrentHashMap.newKeySet();
             neighbors.addAll(outgoing.getOrDefault(cur, Collections.emptySet()));
             neighbors.addAll(incoming.getOrDefault(cur, Collections.emptySet()));
 
@@ -243,14 +243,14 @@ public class TeslaConnectionManager {
         }
 
         Set<ConnectionNode> allNodes = getAllNodes();
-        Set<ConnectionNode> visited = new HashSet<>();
+        Set<ConnectionNode> visited = ConcurrentHashMap.newKeySet();
 
         // Process each connected node separately
         for (ConnectionNode start : allNodes) {
             if (!visited.add(start)) continue;
 
             Queue<ConnectionNode> queue = new LinkedList<>();
-            Set<ConnectionNode> component = new HashSet<>();
+            Set<ConnectionNode> component = ConcurrentHashMap.newKeySet();
             queue.add(start);
             component.add(start);
             while (!queue.isEmpty()) {
@@ -331,7 +331,7 @@ public class TeslaConnectionManager {
      * @return all nodes in every graph
      */
     private Set<ConnectionNode> getAllNodes() {
-        Set<ConnectionNode> nodes = new HashSet<>();
+        Set<ConnectionNode> nodes = ConcurrentHashMap.newKeySet();
         nodes.addAll(outgoing.keySet());
         nodes.addAll(incoming.keySet());
 
