@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -10,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -91,6 +93,12 @@ public class BlackHoleProjectile extends BaseProjectile {
         }
 
         if (this.isLocked()) {
+            if (level().isClientSide) {
+                for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                    Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+                }
+            }
+
             this.setDeltaMovement(Vec3.ZERO);
             attractNearbyEntities();
             return;

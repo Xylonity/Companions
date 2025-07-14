@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.util.Util;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +79,16 @@ public class HolinessNaginataProjectile extends ThrownTrident implements GeoEnti
 
         prevRot.set(currentRot);
         currentRot.set(quaternionf);
+    }
+
+    @Override
+    protected void onHitBlock(@NotNull BlockHitResult pResult) {
+        super.onHitBlock(pResult);
+        if (level().isClientSide) {
+            for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+            }
+        }
     }
 
     @Override

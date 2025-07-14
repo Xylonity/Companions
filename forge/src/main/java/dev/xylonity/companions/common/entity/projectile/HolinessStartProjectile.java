@@ -146,6 +146,10 @@ public class HolinessStartProjectile extends BaseProjectile {
             } else {
                 blueExplosion();
             }
+        } else {
+            for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+            }
         }
 
         super.remove(pReason);
