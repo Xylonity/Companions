@@ -43,9 +43,10 @@ public abstract class ModelBakeryMixin {
 
     static {
         companions$MODELS = List.of(
-                new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_axe_3d",   "inventory"),
+                new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_axe_3d", "inventory"),
                 new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_scythe_3d","inventory"),
-                new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_sword_3d",  "inventory")
+                new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_sword_3d", "inventory"),
+                new ModelResourceLocation(CompanionsCommon.MOD_ID, "mage_staff_3d", "inventory")
         );
     }
 

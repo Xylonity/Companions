@@ -61,14 +61,16 @@ public abstract class ItemRendererMixin {
 
     static {
         companions$MODELS_3D = Map.of(
-                CompanionsItems.CRYSTALLIZED_BLOOD_AXE.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_axe_3d",   "inventory"),
+                CompanionsItems.CRYSTALLIZED_BLOOD_AXE.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_axe_3d", "inventory"),
                 CompanionsItems.CRYSTALLIZED_BLOOD_SCYTHE.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_scythe_3d","inventory"),
-                CompanionsItems.CRYSTALLIZED_BLOOD_SWORD.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_sword_3d", "inventory")
+                CompanionsItems.CRYSTALLIZED_BLOOD_SWORD.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_sword_3d", "inventory"),
+                CompanionsItems.MAGE_STAFF.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "mage_staff_3d", "inventory")
         );
         companions$MODELS_2D = Map.of(
-                CompanionsItems.CRYSTALLIZED_BLOOD_AXE.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_axe",   "inventory"),
+                CompanionsItems.CRYSTALLIZED_BLOOD_AXE.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_axe", "inventory"),
                 CompanionsItems.CRYSTALLIZED_BLOOD_SCYTHE.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_scythe","inventory"),
-                CompanionsItems.CRYSTALLIZED_BLOOD_SWORD.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_sword", "inventory")
+                CompanionsItems.CRYSTALLIZED_BLOOD_SWORD.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_sword", "inventory"),
+                CompanionsItems.MAGE_STAFF.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "mage_staff", "inventory")
         );
 
     }

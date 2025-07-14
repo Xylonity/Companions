@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "companions:item/mage_staff"
+    "layer0": "companions:item/mage_staff_icon"
   }
 }
