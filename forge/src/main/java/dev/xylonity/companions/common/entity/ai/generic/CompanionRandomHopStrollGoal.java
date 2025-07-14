@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.generic;
 
-import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.phys.Vec3;
@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public class CompanionRandomHopStrollGoal extends Goal {
-    protected final CompanionEntity mob;
+    protected final CorneliusEntity mob;
     protected double wantedX;
     protected double wantedY;
     protected double wantedZ;
@@ -22,16 +22,16 @@ public class CompanionRandomHopStrollGoal extends Goal {
     private static final int MOVE_DURATION = 11;
     private static final int CYCLE_DURATION = 20;
 
-    public CompanionRandomHopStrollGoal(CompanionEntity pMob, double pSpeedModifier) {
+    public CompanionRandomHopStrollGoal(CorneliusEntity pMob, double pSpeedModifier) {
         this(pMob, pSpeedModifier, 120);
         this.checkNoActionTime = false;
     }
 
-    public CompanionRandomHopStrollGoal(CompanionEntity pMob, double pSpeedModifier, int pInterval) {
+    public CompanionRandomHopStrollGoal(CorneliusEntity pMob, double pSpeedModifier, int pInterval) {
         this(pMob, pSpeedModifier, pInterval, true);
     }
 
-    public CompanionRandomHopStrollGoal(CompanionEntity pMob, double pSpeedModifier, int pInterval, boolean pCheckNoActionTime) {
+    public CompanionRandomHopStrollGoal(CorneliusEntity pMob, double pSpeedModifier, int pInterval, boolean pCheckNoActionTime) {
         this.mob = pMob;
         this.speedModifier = pSpeedModifier;
         this.interval = pInterval;
@@ -89,18 +89,8 @@ public class CompanionRandomHopStrollGoal extends Goal {
 
     @Override
     public void tick() {
-        if (this.cycleCounter < MOVE_DURATION) {
-            ;;
-        } else {
-            this.mob.getNavigation().stop();
-        }
-
-        this.cycleCounter++;
-        if (this.cycleCounter >= CYCLE_DURATION) {
-            this.cycleCounter = 0;
-            this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, this.speedModifier);
-        }
-
+        if (mob.getCycleCount() == -1) mob.setCycleCount(mob.getCycleCount() + 1);
+        this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, this.speedModifier);
     }
 
     @Override

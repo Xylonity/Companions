@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,6 +26,9 @@ import java.util.concurrent.TimeUnit;
 public class GroundNavigator extends GroundPathNavigation {
 
     private static final float EPSILON = 1.0E-8F;
+
+    private Vec3 lastPos = Vec3.ZERO;
+    private int noMoveTicks = 0;
 
     // Cache of block positions to a bool indicating whether that block is pathfindable or not
     private final Cache<BlockPos, Boolean> cache =
@@ -66,11 +70,10 @@ public class GroundNavigator extends GroundPathNavigation {
         // Shortcut raycast
         Vec3 base = entityPos.subtract(this.mob.getBbWidth(), 0, this.mob.getBbWidth());
 
-        if (this.attemptShortcut(this.path, entityPos, lastIdx, base)) {
-            // If the entity is very close to the next node (or on an elevation change), advance the path index
-            if (this.hasReached(this.path, 1f) || (this.isAtElevationChange(this.path) && this.hasReached(this.path, 1f))) {
-                this.path.advance();
-            }
+        this.attemptShortcut(this.path, entityPos, lastIdx, base);
+        // If the entity is very close to the next node (or on an elevation change), advance the path index
+        if (this.hasReached(this.path, 1f) || (this.isAtElevationChange(this.path) && this.hasReached(this.path, 1f))) {
+            this.path.advance();
         }
 
         // If we still have a node to reach, instruct the mob to move over there
@@ -95,16 +98,37 @@ public class GroundNavigator extends GroundPathNavigation {
 
                 if (shapeHeight > 0 && shapeHeight <= 1.0D) {
                     BlockPos abovePos = frontPos.above();
-                    BlockPathTypes aboveType = this.nodeEvaluator.getBlockPathType(
-                            this.level, abovePos.getX(), abovePos.getY(), abovePos.getZ(), this.mob);
-                    float malusAbove = this.mob.getPathfindingMalus(aboveType);
+                    BlockPathTypes aboveType = this.nodeEvaluator.getBlockPathType(this.level, abovePos.getX(), abovePos.getY(), abovePos.getZ(), this.mob);
+                    float malus = this.mob.getPathfindingMalus(aboveType);
 
-                    if (malusAbove >= 0.0F && malusAbove < 8.0F) {
+                    if (malus >= 0.0F && malus < 8.0F) {
                         this.mob.getJumpControl().jump();
                     }
                 }
             }
 
+        }
+
+        Vec3 curr = Vec3.atLowerCornerOf(this.mob.blockPosition()).add(0.0, this.mob.getBbHeight()/2, 0.0);
+        if (curr.distanceTo(lastPos) < 0.01) {
+            noMoveTicks++;
+        } else {
+            noMoveTicks = 0;
+        }
+
+        lastPos = curr;
+
+        if (noMoveTicks > 10) {
+            cache.invalidateAll();
+
+            this.path = null;
+            this.mob.getMoveControl().setWantedPosition(this.mob.getX(), this.mob.getY(), this.mob.getZ(), 0);
+
+            if (this.getTargetPos() != null) {
+                this.createPath(this.getTargetPos(), (int) this.mob.getAttributeValue(Attributes.FOLLOW_RANGE));
+            }
+
+            noMoveTicks = 0;
         }
 
         this.doStuckDetection(entityPos);
@@ -147,7 +171,7 @@ public class GroundNavigator extends GroundPathNavigation {
     }
 
     /**
-     * 3A DDA algorithm to check if a straight line to a node is clear
+     * 3D DDA algorithm to check if a straight line to a node is clear
      */
     private boolean catchF(Vec3 vec, Vec3 base) {
         float maxT = (float) vec.length();

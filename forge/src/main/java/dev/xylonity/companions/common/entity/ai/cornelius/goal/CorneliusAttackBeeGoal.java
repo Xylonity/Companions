@@ -19,6 +19,7 @@ public class CorneliusAttackBeeGoal extends AbstractCorneliusAttackGoal {
 
     @Override
     public boolean canUse() {
+        if (cornelius.isTame()) return false;
         if (cornelius.getAttackType() != 0) return false;
         if (cornelius.getTarget() == null) return false;
 

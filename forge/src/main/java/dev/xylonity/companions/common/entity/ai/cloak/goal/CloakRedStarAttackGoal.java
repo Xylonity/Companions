@@ -26,11 +26,6 @@ public class CloakRedStarAttackGoal extends AbstractCloakAttackGoal {
     }
 
     @Override
-    public boolean canUse() {
-        return super.canUse() && cloak.getTarget() != null && cloak.distanceTo(cloak.getTarget()) <= 6;
-    }
-
-    @Override
     public void tick() {
         super.tick();
 

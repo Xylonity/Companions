@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.cornelius.summon.goal;
 
+import dev.xylonity.companions.common.entity.SummonFrogEntity;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionSummonFollowOwnerGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
@@ -51,12 +52,9 @@ public class SummonHopToOwnerGoal<T extends CompanionSummonEntity & IFrogJumpUti
             this.timeToRecalcPath = this.adjustedTickDelay(10);
             if (this.tamable.distanceToSqr(this.owner) >= TELEPORT_WHEN_DISTANCE_IS * TELEPORT_WHEN_DISTANCE_IS) {
                 this.teleportToOwner();
-            } else if (cycleCounter < 11) {
-                this.navigation.moveTo(this.owner, this.speedModifier);
-                ((IFrogJumpUtil) tamable).setCanAttack(false);
             } else {
-                this.navigation.stop();
-                ((IFrogJumpUtil) tamable).setCanAttack(true);
+                if (((SummonFrogEntity) tamable).getCycleCount() == -1) ((SummonFrogEntity) tamable).setCycleCount(((SummonFrogEntity) tamable).getCycleCount() + 1);
+                this.navigation.moveTo(this.owner, this.speedModifier);
             }
 
         }

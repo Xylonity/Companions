@@ -32,6 +32,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,6 +61,9 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     // Prevent attacking while the moving cycle is active
     private static final EntityDataAccessor<Boolean> CAN_ATTACK = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> SUMMONED_COUNT = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> CYCLE_COUNTER = SynchedEntityData.defineId(CorneliusEntity.class, EntityDataSerializers.INT);
+
+    private static final int MAX_CYCLE_TICKS = 20;
 
     public CorneliusEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -84,6 +88,14 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         }
 
         this.inventory.addListener(this);
+    }
+
+    public int getCycleCount() {
+        return this.entityData.get(CYCLE_COUNTER);
+    }
+
+    public void setCycleCount(int count) {
+        this.entityData.set(CYCLE_COUNTER, count);
     }
 
     @Override
@@ -124,6 +136,24 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         this.entityData.set(CAN_ATTACK, canAttack);
     }
 
+    @Override
+    public void tick() {
+
+        super.tick();
+
+        if (!level().isClientSide) {
+
+            if (getCycleCount() >= 12) this.setDeltaMovement(new Vec3(0, 0, 0));
+
+            if (getCycleCount() >= 0) setCycleCount(getCycleCount() + 1);
+
+            if (getCycleCount() >= MAX_CYCLE_TICKS) setCycleCount(-1);
+
+            System.out.println(getCycleCount());
+        }
+
+    }
+
     public static AttributeSupplier setAttributes() {
         return Animal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 50D)
@@ -140,6 +170,7 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         this.entityData.define(CAN_ATTACK, true);
         this.entityData.define(ATTACK_TYPE, 0);
         this.entityData.define(SUMMONED_COUNT, 0);
+        this.entityData.define(CYCLE_COUNTER, -1);
     }
 
     public int getAttackType() {

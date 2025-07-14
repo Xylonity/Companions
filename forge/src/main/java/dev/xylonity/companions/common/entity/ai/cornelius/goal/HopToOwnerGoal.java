@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.ai.cornelius.goal;
 
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
+import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
@@ -52,19 +53,13 @@ public class HopToOwnerGoal<T extends CompanionEntity & IFrogJumpUtil> extends C
             this.timeToRecalcPath = this.adjustedTickDelay(10);
             if (this.tamable.distanceToSqr(this.owner) >= TELEPORT_WHEN_DISTANCE_IS * TELEPORT_WHEN_DISTANCE_IS) {
                 this.teleportToOwner();
-            } else if (cycleCounter < 11) {
-                this.navigation.moveTo(this.owner, this.speedModifier);
-                ((IFrogJumpUtil) tamable).setCanAttack(false);
             } else {
-                this.navigation.stop();
-                ((IFrogJumpUtil) tamable).setCanAttack(true);
+                if (((CorneliusEntity) tamable).getCycleCount() == -1) ((CorneliusEntity) tamable).setCycleCount(((CorneliusEntity) tamable).getCycleCount() + 1);
+                this.navigation.moveTo(this.owner, this.speedModifier);
             }
 
         }
 
-        if (cycleCounter == 20) cycleCounter = 0;
-
-        cycleCounter++;
     }
 
 }

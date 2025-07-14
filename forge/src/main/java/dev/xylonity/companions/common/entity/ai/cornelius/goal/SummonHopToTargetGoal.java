@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity.ai.cornelius.goal;
 
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
+import dev.xylonity.companions.common.entity.SummonFrogEntity;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -57,13 +58,8 @@ public class SummonHopToTargetGoal<T extends CompanionSummonEntity & IFrogJumpUt
     public void tick() {
         this.summon.getLookControl().setLookAt(this.target, 10.0F, (float)this.summon.getMaxHeadXRot());
 
-        if (this.cycleCounter < 11) {
-            this.navigation.moveTo(this.target, this.speedModifier);
-            this.summon.setCanAttack(false);
-        } else {
-            this.navigation.stop();
-            this.summon.setCanAttack(true);
-        }
+        if (((SummonFrogEntity) summon).getCycleCount() == -1) ((SummonFrogEntity) summon).setCycleCount(((SummonFrogEntity) summon).getCycleCount() + 1);
+        this.navigation.moveTo(this.target, this.speedModifier);
 
         this.cycleCounter = (this.cycleCounter + 1) % 20;
     }

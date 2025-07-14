@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
+import dev.xylonity.companions.common.entity.SummonFrogEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.FireworkToadGoal;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.SummonHopToOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsSummonHurtTargetGoal;
@@ -29,7 +30,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class FireworkToadEntity extends CompanionSummonEntity implements IFrogJumpUtil {
+public class FireworkToadEntity extends SummonFrogEntity implements IFrogJumpUtil {
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
