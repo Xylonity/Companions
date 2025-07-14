@@ -13,7 +13,8 @@
     "CompanionsLevelAccessor",
     "CompanionsProjectileAccessor",
     "LivingEntityMixin",
-    "MobMixin"
+    "MobMixin",
+    "PlayerMixin"
   ],
   "server": [
   ],

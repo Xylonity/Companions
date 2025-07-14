@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.util;
 
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
+import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.mixin.CompanionsLevelAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,9 +10,13 @@ import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -188,6 +193,22 @@ public class Util {
         double sin = Math.sqrt(1.0 - cos * cos);
         double phi = random.nextDouble() * 2 * Math.PI;
         return baseNorm.scale(cos).add(u.scale(sin * Math.cos(phi))).add(v.scale(sin * Math.sin(phi))).scale(base.length());
+    }
+
+    /**
+     * Checks how many pieces of an armor set are equipped
+     */
+    public static int hasFullSetOn(Player player, ArmorMaterials material) {
+        int amount = 0;
+        for (ItemStack armorStack : player.getInventory().armor) {
+            if (!armorStack.isEmpty() && armorStack.getItem() instanceof ArmorItem armorItem) {
+                if (armorItem.getMaterial() == material) {
+                    amount++;
+                }
+            }
+        }
+
+        return amount;
     }
 
     /**

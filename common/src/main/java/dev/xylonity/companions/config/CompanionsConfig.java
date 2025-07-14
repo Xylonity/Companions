@@ -302,6 +302,6 @@ public final class CompanionsConfig {
             comment = "Holy robe fire ring spawn chance",
             min = 0d, max = 1d
     )
-    public static double HOLY_ROBE_FIRE_RING_SPAWN_CHANCE = 0.20d;
+    public static double HOLY_ROBE_FIRE_RING_SPAWN_CHANCE = 0.1d;
 
 }

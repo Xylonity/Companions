@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.HostileEntity;
+import dev.xylonity.companions.common.util.Util;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -34,13 +35,13 @@ public class PontiffFireRingProjectile extends BaseProjectile implements GeoEnti
                     px + outer, py + 1.0, pz + outer
             );
 
-            for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, box, e -> e.isAlive() && e != getOwner())) {
+            for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, box, e -> e.isAlive() && !Util.areEntitiesLinked(e, this))) {
                 double dx = e.getX() - px;
                 double dz = e.getZ() - pz;
                 double dist = Math.sqrt(dx * dx + dz * dz);
                 if (dist > inner && dist <= outer) {
-                    if (getOwner() != null && getOwner() instanceof HostileEntity owner) {
-                        owner.doHurtTarget(e);
+                    if (getOwner() != null) {
+                        e.hurt(damageSources().magic(), 5f);
                     }
 
                     e.setSecondsOnFire(level().getRandom().nextInt(1, 15));
