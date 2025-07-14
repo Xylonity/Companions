@@ -121,6 +121,7 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
         this.goalSelector.addGoal(3, new SoulMageFireMarkGoal(this, 70, 160));
         this.goalSelector.addGoal(3, new SoulMageTornadoGoal(this, 70, 160));
         this.goalSelector.addGoal(3, new SoulMageBraceGoal(this, 70, 160));
+        this.goalSelector.addGoal(3, new SoulMageNaginataGoal(this, 70, 160));
 
         this.goalSelector.addGoal(4, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(4, new CompanionRandomStrollGoal(this, 0.43));

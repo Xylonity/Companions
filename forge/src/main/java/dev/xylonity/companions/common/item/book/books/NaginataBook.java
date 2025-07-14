@@ -54,7 +54,7 @@ public class NaginataBook extends AbstractMagicBook {
                         spawnNaginata(player, spawnPos, targetPos, level, 3.35);
                     }
                 } else {
-                    for (int i = 0; i < 5; i++) {
+                    for (int i = 0; i < 6; i++) {
                         double dx = (new Random().nextDouble() - 0.5) * 30;
                         double dz = (new Random().nextDouble() - 0.5) * 30;
                         double x = targetPos.x + dx;
