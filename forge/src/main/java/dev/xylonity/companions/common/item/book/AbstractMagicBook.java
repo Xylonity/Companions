@@ -21,7 +21,9 @@ public abstract class AbstractMagicBook extends TooltipItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player player, @NotNull InteractionHand pUsedHand) {
+        player.swing(pUsedHand, true);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENCHANTMENT_TABLE_USE, player.getSoundSource(), 1.0F, 1.0F);
+
         return super.use(pLevel, player, pUsedHand);
     }
 
