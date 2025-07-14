@@ -91,6 +91,6 @@
     }
   },
   "textures": {
-    "particle": "item/mutant_netherite_scythe"
+    "particle": "companions:item/crystallized_blood_scythe"
   }
 }
