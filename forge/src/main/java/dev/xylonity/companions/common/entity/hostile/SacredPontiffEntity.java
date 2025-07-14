@@ -2,10 +2,10 @@ package dev.xylonity.companions.common.entity.hostile;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
-import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
 import dev.xylonity.companions.common.util.interfaces.IBossMusicProvider;
+import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.nbt.CompoundTag;
@@ -31,6 +31,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -367,6 +368,10 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         ++this.deathTime;
         if (this.deathTime >= ANIMATION_PHASE2_DEAD && !this.level().isClientSide() && !this.isRemoved()) {
             this.level().broadcastEntityEvent(this, (byte) 60);
+
+            spawnAtLocation(new ItemStack(CompanionsItems.RELIC_GOLD.get(), getRandom().nextInt(2, 6)));
+            spawnAtLocation(new ItemStack(CompanionsItems.OLD_CLOTH.get(), getRandom().nextInt(2, 6)));
+
             this.remove(RemovalReason.KILLED);
         }
     }
