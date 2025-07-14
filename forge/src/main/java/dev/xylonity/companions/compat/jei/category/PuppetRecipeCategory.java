@@ -34,7 +34,7 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
     public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "puppet_interaction");
     public static final RecipeType<EmptyPuppetRecipe> TYPE = new RecipeType<>(UID, EmptyPuppetRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/shade_maw_altar_shadow.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
@@ -44,7 +44,7 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
     private long lastUpdateTime = 0;
 
     public PuppetRecipeCategory(IGuiHelper gui) {
-        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.CROISSANT_EGG.get()));
+        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.EMPTY_PUPPET.get()));
     }
 
     @Override

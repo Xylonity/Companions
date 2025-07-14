@@ -38,7 +38,7 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
 
     public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_altar_interaction");
     public static final RecipeType<ShadeAltarRecipe> TYPE = new RecipeType<>(UID, ShadeAltarRecipe.class);
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/shade_maw_altar_shadow.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private ShadeMawAltarBlockEntity cachedBlockEntity;
     private ShadeAltarUpgradeHaloProjectile cachedEntity;

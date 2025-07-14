@@ -8,6 +8,7 @@ import dev.xylonity.companions.common.entity.companion.AntlionEntity;
 import dev.xylonity.companions.common.recipe.HourglassRecipe;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -31,7 +32,7 @@ public class AntlionRecipeCategory implements IRecipeCategory<HourglassRecipe> {
 
     public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "antlion_interaction");
     public static final RecipeType<HourglassRecipe> TYPE = new RecipeType<>(UID, HourglassRecipe.class);
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/shade_maw_altar_shadow.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private AntlionEntity cachedEntity;
 
@@ -40,7 +41,7 @@ public class AntlionRecipeCategory implements IRecipeCategory<HourglassRecipe> {
     private int phaseCooldown;
 
     public AntlionRecipeCategory(IGuiHelper gui) {
-        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.RESPAWN_TOTEM.get()));
+        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsItems.HOURGLASS.get()));
     }
 
     @Override

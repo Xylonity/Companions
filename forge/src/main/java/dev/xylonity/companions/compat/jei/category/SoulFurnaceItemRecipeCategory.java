@@ -36,7 +36,7 @@ public final class SoulFurnaceItemRecipeCategory implements IRecipeCategory<Soul
     public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "soul_furnace_item_interaction");
     public static final RecipeType<SoulFurnaceItemRecipe> TYPE = new RecipeType<>(UID, SoulFurnaceItemRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/shade_maw_altar_shadow.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 

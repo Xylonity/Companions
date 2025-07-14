@@ -34,7 +34,7 @@ public final class CroissantDragonArmorRecipeCategory implements IRecipeCategory
     public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "croissant_dragon_armor_interaction");
     public static final RecipeType<CroissantDragonArmorRecipe> TYPE = new RecipeType<>(UID, CroissantDragonArmorRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/shade_maw_altar_shadow.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 

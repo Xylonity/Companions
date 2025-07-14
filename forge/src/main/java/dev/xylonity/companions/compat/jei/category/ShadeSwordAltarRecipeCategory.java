@@ -37,7 +37,7 @@ public final class ShadeSwordAltarRecipeCategory implements IRecipeCategory<Shad
     public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_sword_altar_interaction");
     public static final RecipeType<ShadeSwordAltarRecipe> TYPE = new RecipeType<>(UID, ShadeSwordAltarRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/shade_maw_altar_shadow.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 

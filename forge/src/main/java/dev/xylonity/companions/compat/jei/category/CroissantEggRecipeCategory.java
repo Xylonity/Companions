@@ -37,7 +37,7 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
     public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "croissant_egg_interaction");
     public static final RecipeType<CroissantEggRecipe> TYPE = new RecipeType<>(UID, CroissantEggRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/shade_maw_altar_shadow.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
@@ -47,7 +47,7 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
     private long lastUpdateTime = 0;
 
     public CroissantEggRecipeCategory(IGuiHelper gui) {
-        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.SHADE_MAW_ALTAR.get()));
+        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.CROISSANT_EGG.get()));
     }
 
     @Override

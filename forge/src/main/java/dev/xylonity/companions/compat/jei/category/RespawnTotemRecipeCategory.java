@@ -37,7 +37,7 @@ public class RespawnTotemRecipeCategory implements IRecipeCategory<HourglassReci
 
     public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "respawn_totem_interaction");
     public static final RecipeType<HourglassRecipe> TYPE = new RecipeType<>(UID, HourglassRecipe.class);
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/shade_maw_altar_shadow.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private RespawnTotemBlockEntity cachedBlockEntity;
     private RespawnTotemRingProjectile cachedEntity;
