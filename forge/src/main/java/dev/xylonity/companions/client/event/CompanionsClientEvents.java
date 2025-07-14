@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.event;
+package dev.xylonity.companions.client.event;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.blockentity.renderer.*;

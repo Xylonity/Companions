@@ -71,6 +71,16 @@ public abstract class AbstractShadeAltarBlockEntity extends BlockEntity implemen
         return true;
     }
 
+    public void setCharges(int charges) {
+        this.charges = charges;
+        setChanged();
+    }
+
+    public void clearCharges() {
+        this.charges = 0;
+        setChanged();
+    }
+
     protected boolean isImportantChargeDiff() {
         return prevCharges == 0 && charges == 1 || prevCharges == MAX_CHARGES - MAX_BLOOD_CHARGES - 1 && charges == MAX_CHARGES - MAX_BLOOD_CHARGES;
     }

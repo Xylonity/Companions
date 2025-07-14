@@ -6,7 +6,6 @@ import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.summon.*;
 import dev.xylonity.companions.datagen.CompanionsLootModifierGenerator;
 import dev.xylonity.companions.registry.CompanionsEntities;
-import dev.xylonity.knightlib.datagen.KnightLibLootModifierGenerator;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.data.event.GatherDataEvent;

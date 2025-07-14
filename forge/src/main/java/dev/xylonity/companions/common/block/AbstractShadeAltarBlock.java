@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.block;
 
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.entity.ShadeEntity;
-import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

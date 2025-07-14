@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.event;
+package dev.xylonity.companions.client.event;
 
 import dev.xylonity.companions.CompanionsCommon;
 import net.minecraft.Util;

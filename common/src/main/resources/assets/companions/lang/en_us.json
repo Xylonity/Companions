@@ -233,5 +233,16 @@
   "tooltip.block.companions.shade_maw_altar": "Summons the Shade Maw. Activate using crystallized blood.",
   "tooltip.block.companions.frog_bonanza_block": "Frog bonanza why not",
 
-  "tooltip.icon.companions.star": "\uEA0D"
+  "tooltip.icon.companions.star": "\uEA0D",
+
+  "jei.companions.soul_furnace_item_interaction.title": "Soul Furnace Items",
+  "jei.companions.soul_furnace_entity_interaction.title": "Soul Furnace Entities",
+  "jei.companions.shade_sword_altar_interaction.title": "Sword Altar",
+  "jei.companions.shade_maw_altar_interaction.title": "Maw Altar",
+  "jei.companions.shade_altar_interaction.title": "Fill Altar",
+  "jei.companions.respawn_totem_interaction.title": "Activate Respawn Totem",
+  "jei.companions.puppet_interaction.title": "Create Puppet",
+  "jei.companions.croissant_egg_interaction.title": "Spawn Croissant Dragon",
+  "jei.companions.croissant_dragon_armor_interaction.title": "Croissant Dragon Armor",
+  "jei.companions.antlion_interaction.title": "Cycle Antlion state"
 }

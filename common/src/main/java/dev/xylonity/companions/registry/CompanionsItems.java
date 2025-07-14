@@ -1,6 +1,7 @@
 package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.common.item.CroissantDragonArmor;
 import dev.xylonity.companions.common.item.EternalLighter;
 import dev.xylonity.companions.common.item.PuppetArm;
 import dev.xylonity.companions.common.item.TooltipItem;
@@ -29,9 +30,9 @@ public class CompanionsItems {
     public static final Supplier<Item> OLD_CLOTH = registerItem("old_cloth", () -> new TooltipItem(new Item.Properties().fireResistant(), "old_cloth"));
     public static final Supplier<Item> RELIC_GOLD = registerItem("relic_gold", () -> new TooltipItem(new Item.Properties().fireResistant(), "relic_gold"));
 
-    public static final Supplier<Item> CROISSANT_DRAGON_ARMOR_STRAWBERRY = registerItem("croissant_dragon_strawberry_armor", () -> new TooltipItem(new Item.Properties(), "croissant_dragon_strawberry_armor"));
-    public static final Supplier<Item> CROISSANT_DRAGON_ARMOR_VANILLA = registerItem("croissant_dragon_vanilla_armor", () -> new TooltipItem(new Item.Properties(), "croissant_dragon_vanilla_armor"));
-    public static final Supplier<Item> CROISSANT_DRAGON_ARMOR_CHOCOLATE = registerItem("croissant_dragon_chocolate_armor", () -> new TooltipItem(new Item.Properties(), "croissant_dragon_chocolate_armor"));
+    public static final Supplier<Item> CROISSANT_DRAGON_ARMOR_STRAWBERRY = registerItem("croissant_dragon_strawberry_armor", () -> new CroissantDragonArmor(new Item.Properties(), "croissant_dragon_strawberry_armor"));
+    public static final Supplier<Item> CROISSANT_DRAGON_ARMOR_VANILLA = registerItem("croissant_dragon_vanilla_armor", () -> new CroissantDragonArmor(new Item.Properties(), "croissant_dragon_vanilla_armor"));
+    public static final Supplier<Item> CROISSANT_DRAGON_ARMOR_CHOCOLATE = registerItem("croissant_dragon_chocolate_armor", () -> new CroissantDragonArmor(new Item.Properties(), "croissant_dragon_chocolate_armor"));
 
     public static final Supplier<Item> BOOK_ICE_SHARD = registerMagicBook("book_ice_shard", new Item.Properties().stacksTo(1), MagicType.ICE_SHARD);
     public static final Supplier<Item> BOOK_ICE_TORNADO = registerMagicBook("book_ice_tornado", new Item.Properties().stacksTo(1), MagicType.ICE_TORNADO);

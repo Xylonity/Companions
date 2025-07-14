@@ -52,20 +52,24 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
 
     private static final int MAX_CHARGES = 9;
 
-    private int charges = 0;
+    public int charges = 0;
     private int currentProgress = 0;
     private int processingTime = 0;
 
     private SoulFurnaceRecipe currentRecipe = null;
 
+    public boolean isLit;
+
     public static final List<SoulFurnaceRecipe> RECIPES = List.of(
             new SoulFurnaceRecipe(Items.CANDLE, null, 1, 200, CompanionsEntities.LIVING_CANDLE.get(), null),
             new SoulFurnaceRecipe(Items.DIAMOND, CompanionsItems.SOUL_GEM.get(), 3, 400, null, null),
+            new SoulFurnaceRecipe(Items.ROTTEN_FLESH, CompanionsItems.CRYSTALLIZED_BLOOD.get(), 2, 100, null, null),
             new SoulFurnaceRecipe(CompanionsItems.BIG_BREAD.get(), null, 5, 2400, null, CompanionsBlocks.CROISSANT_EGG.get())
     );
 
     public SoulFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(CompanionsBlockEntities.SOUL_FURNACE.get(), pos, state);
+        this.isLit = false;
     }
 
     @Override
@@ -415,6 +419,10 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
 
     public static int getMaxCharges() {
         return MAX_CHARGES;
+    }
+
+    public boolean isLit() {
+        return isLit;
     }
 
     public record SoulFurnaceRecipe(Item input, Item output, int requiredCharges, int processTime, EntityType<?> entityType, Block block) { ;; }

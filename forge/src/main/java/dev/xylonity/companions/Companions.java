@@ -39,10 +39,12 @@ public class Companions {
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        CompanionsEntities.ENTITY.register(modEventBus);
+        CompanionsLootModifier.LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
         CompanionsBlockEntities.BLOCK_ENTITY.register(modEventBus);
         CompanionsMenuTypes.MENU_TYPES.register(modEventBus);
-        CompanionsLootModifier.LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
+        CompanionsRecipes.TYPES.register(modEventBus);
+        CompanionsRecipes.SERIALIZERS.register(modEventBus);
+        CompanionsEntities.ENTITY.register(modEventBus);
 
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
