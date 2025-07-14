@@ -49,7 +49,9 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
                 // Delay before hurting, so it syncs with the electrical charge anim
                 if (dinamo.getAttackCycleCounter() == 3) {
                     for (LivingEntity target : dinamo.entitiesToAttack) {
-                        dinamo.doHurtTarget(target);
+                        if (target.distanceToSqr(target) <= 64) {
+                            dinamo.doHurtTarget(target);
+                        }
                     }
                 }
 
@@ -71,7 +73,7 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
     }
 
     private void searchForTargets(DinamoEntity dinamo) {
-        List<LivingEntity> list = dinamo.level().getEntitiesOfClass(LivingEntity.class, dinamo.getBoundingBox().inflate(12), e ->
+        List<LivingEntity> list = dinamo.level().getEntitiesOfClass(LivingEntity.class, dinamo.getBoundingBox().inflate(10), e ->
             {
                 if (Util.areEntitiesLinked(e, dinamo)) return false;
 

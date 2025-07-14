@@ -6,9 +6,11 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.behaviour.DefaultAttackBehaviour;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoAttackBehaviour;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
+import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
