@@ -17,7 +17,7 @@ public class CorneliusEmberPoleGoal extends AbstractCorneliusAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        BlockPos spawnPos = findPosAroundTarget();
+        BlockPos spawnPos = findPosAroundCornelius();
         ScrollProjectile scroll = CompanionsEntities.SCROLL.get().create(cornelius.level());
         if (scroll != null) {
             scroll.setPos(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
