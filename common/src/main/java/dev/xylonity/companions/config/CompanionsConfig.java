@@ -15,6 +15,13 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "General",
+            comment = "Respawn totem spawn charges when activated.",
+            min = 0, max = 200
+    )
+    public static int RESPAWN_TOTEM_CHARGES = 5;
+
+    @ConfigEntry(
+            category = "General",
             comment = "Maximum number of charges a single shade altar can store.",
             min = 0, max = 1000
     )
@@ -97,58 +104,58 @@ public final class CompanionsConfig {
     @ConfigEntry(
             category = "Antlion",
             comment = "Damage dealt by the Antlion in its normal phase",
-            min = 0.0, max = 50.0
+            min = 0.0, max = 500.0
     )
-    public static double ANTLION_NORMAL_DAMAGE = 8.0;
+    public static double ANTLION_NORMAL_DAMAGE = 7.0;
 
     @ConfigEntry(
             category = "Antlion",
             comment = "Max life of the Antlion in its normal phase",
             min = 0, max = 1000
     )
-    public static double ANTLION_NORMAL_MAX_LIFE = 60;
+    public static double ANTLION_NORMAL_MAX_LIFE = 70;
 
     @ConfigEntry(
             category = "Antlion",
             comment = "Damage dealt by the Antlion in its soldier phase",
-            min = 0.0, max = 100.0
+            min = 0.0, max = 1000.0
     )
-    public static double ANTLION_SOLDIER_DAMAGE = 15.0;
+    public static double ANTLION_SOLDIER_DAMAGE = 10.0;
 
     @ConfigEntry(
             category = "Antlion",
             comment = "Max life of the Antlion in its soldier phase",
             min = 0, max = 2000
     )
-    public static double ANTLION_SOLDIER_MAX_LIFE = 120;
+    public static double ANTLION_SOLDIER_MAX_LIFE = 70;
 
     @ConfigEntry(
             category = "Antlion",
             comment = "Damage dealt by the Antlion in its flying phase",
             min = 0.0, max = 100.0
     )
-    public static double ANTLION_FLYER_DAMAGE = 12.0;
+    public static double ANTLION_FLYER_DAMAGE = 10.0;
 
     @ConfigEntry(
             category = "Antlion",
             comment = "Max life of the Antlion in its flying phase",
             min = 0, max = 1500
     )
-    public static double ANTLION_FLYER_MAX_LIFE = 80;
+    public static double ANTLION_FLYER_MAX_LIFE = 45;
 
     @ConfigEntry(
             category = "Antlion",
             comment = "Damage dealt by the Antlion in its tank phase",
             min = 0.0, max = 200.0
     )
-    public static double ANTLION_TANK_DAMAGE = 25.0;
+    public static double ANTLION_TANK_DAMAGE = 6.0;
 
     @ConfigEntry(
             category = "Antlion",
             comment = "Max life of the Antlion in its tank phase",
             min = 0, max = 5000
     )
-    public static double ANTLION_TANK_MAX_LIFE = 300;
+    public static double ANTLION_TANK_MAX_LIFE = 120.0;
 
     @ConfigEntry(
             category = "Antlion",
@@ -180,7 +187,7 @@ public final class CompanionsConfig {
             comment = "Max life of the Cornelius",
             min = 0d, max = 5000d
     )
-    public static double CORNELIUS_MAX_LIFE = 60d;
+    public static double CORNELIUS_MAX_LIFE = 70d;
 
     /**
      * CROISSANT DRAGON
@@ -224,14 +231,14 @@ public final class CompanionsConfig {
             comment = "Max life of the Teddy",
             min = 0d, max = 65d
     )
-    public static double TEDDY_MAX_LIFE = 65d;
+    public static double TEDDY_MAX_LIFE = 70d;
 
     @ConfigEntry(
             category = "Teddy",
             comment = "Damage dealt by the Teddy",
             min = 0.0, max = 50.0
     )
-    public static double TEDDY_DAMAGE = 12.5;
+    public static double TEDDY_DAMAGE = 7d;
 
     @ConfigEntry(
             category = "Teddy",
@@ -245,7 +252,7 @@ public final class CompanionsConfig {
             comment = "Damage dealt by the Teddy in mutant phase",
             min = 0.0, max = 100.0
     )
-    public static double TEDDY_MUTANT_DAMAGE = 25.0;
+    public static double TEDDY_MUTANT_DAMAGE = 8.5d;
 
     @ConfigEntry(
             category = "Teddy",
@@ -270,7 +277,7 @@ public final class CompanionsConfig {
             comment = "Max life of the Soul Mage",
             min = 0d, max = 5000d
     )
-    public static double SOUL_MAGE_MAX_LIFE = 60d;
+    public static double SOUL_MAGE_MAX_LIFE = 75d;
 
     /**
      * SHADE SWORD
@@ -289,14 +296,14 @@ public final class CompanionsConfig {
             comment = "Max life of the Shadow Sword",
             min = 0d, max = 5000d
     )
-    public static double SHADOW_SWORD_MAX_LIFE = 60d;
+    public static double SHADOW_SWORD_MAX_LIFE = 70d;
 
     @ConfigEntry(
             category = "Shadow Sword",
             comment = "Damage dealt by the Shadow Sword",
             min = 0.0, max = 500.0
     )
-    public static double SHADOW_SWORD_DAMAGE = 30.0;
+    public static double SHADOW_SWORD_DAMAGE = 8.0;
 
     /**
      * SHADE MAW
@@ -315,14 +322,14 @@ public final class CompanionsConfig {
             comment = "Max life of the Shadow Maw",
             min = 0d, max = 5000d
     )
-    public static double SHADOW_MAW_MAX_LIFE = 70d;
+    public static double SHADOW_MAW_MAX_LIFE = 100d;
 
     @ConfigEntry(
             category = "Shadow Maw",
             comment = "Damage dealt by the Shadow Maw",
             min = 0.0, max = 500.0
     )
-    public static double SHADOW_MAW_DAMAGE = 28.0;
+    public static double SHADOW_MAW_DAMAGE = 6.0;
 
     /**
      * MINION
@@ -358,14 +365,14 @@ public final class CompanionsConfig {
             comment = "Max life of the Mankh",
             min = 0, max = 5000
     )
-    public static double MANKH_MAX_LIFE = 110;
+    public static double MANKH_MAX_LIFE = 85;
 
     @ConfigEntry(
             category = "Mankh",
             comment = "Damage dealt by the Mankh",
             min = 0.0, max = 500.0
     )
-    public static double MANKH_DAMAGE = 17.5;
+    public static double MANKH_DAMAGE = 8.5;
 
 
     /**
@@ -384,14 +391,14 @@ public final class CompanionsConfig {
             comment = "Max life of the Cloak",
             min = 0d, max = 5000d
     )
-    public static double CLOAK_MAX_LIFE = 85d;
+    public static double CLOAK_MAX_LIFE = 75d;
 
     @ConfigEntry(
             category = "Cloak",
             comment = "Damage dealt by the Cloak",
             min = 0.0, max = 500.0
     )
-    public static double CLOAK_DAMAGE = 16.0;
+    public static double CLOAK_DAMAGE = 8.0;
 
     /**
      * PUPPET
@@ -409,14 +416,14 @@ public final class CompanionsConfig {
             comment = "Max life of the Puppet",
             min = 0, max = 1000
     )
-    public static double PUPPET_MAX_LIFE = 100;
+    public static double PUPPET_MAX_LIFE = 85;
 
     @ConfigEntry(
             category = "Puppet",
             comment = "Damage dealt by the Puppet",
             min = 0.0, max = 100.0
     )
-    public static double PUPPET_DAMAGE = 10.0;
+    public static double PUPPET_DAMAGE = 7.0;
 
     /**
      * PUPPET GLOVE
@@ -434,14 +441,14 @@ public final class CompanionsConfig {
             comment = "Max life of the Puppet Glove",
             min = 0d, max = 1000d
     )
-    public static double PUPPET_GLOVE_MAX_LIFE = 80d;
+    public static double PUPPET_GLOVE_MAX_LIFE = 35;
 
     @ConfigEntry(
             category = "Puppet Glove",
             comment = "Damage dealt by the Puppet Glove",
             min = 0.0, max = 100.0
     )
-    public static double PUPPET_GLOVE_DAMAGE = 7.5;
+    public static double PUPPET_GLOVE_DAMAGE = 6.5;
 
     /**
      * MAGIC BOOKS

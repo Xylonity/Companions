@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.entity.projectile.RespawnTotemRingProjectile;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -237,7 +238,7 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
                 }
             }
 
-            t.setCharges(3);
+            t.setCharges(CompanionsConfig.RESPAWN_TOTEM_CHARGES);
             t.captureNearby();
             t.setCapturing(false);
             t.setCaptureCooldown(40);
