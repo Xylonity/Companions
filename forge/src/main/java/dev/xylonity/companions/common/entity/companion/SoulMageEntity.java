@@ -154,7 +154,7 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
 
     public static AttributeSupplier setAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 75)
+                .add(Attributes.MAX_HEALTH, CompanionsConfig.SOUL_MAGE_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)

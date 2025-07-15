@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.item;
 
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -43,8 +44,8 @@ public class NeedleItem extends TooltipItem {
                 if (!Util.areEntitiesLinked(target, player)) {
                     if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
                     if (target instanceof LivingEntity e) {
-                        e.hurt(player.damageSources().magic(), 3f);
-                        player.hurt(player.damageSources().magic(), 3f);
+                        e.hurt(player.damageSources().magic(), (float) CompanionsConfig.NEEDLE_ITEM_DAMAGE);
+                        player.hurt(player.damageSources().magic(), (float) CompanionsConfig.NEEDLE_ITEM_DAMAGE);
                     }
                 }
 

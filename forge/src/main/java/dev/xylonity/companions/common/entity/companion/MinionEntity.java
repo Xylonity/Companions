@@ -75,7 +75,7 @@ public class MinionEntity extends CompanionEntity {
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 75d)
+                .add(Attributes.MAX_HEALTH, CompanionsConfig.MINION_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)

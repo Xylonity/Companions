@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
@@ -92,7 +93,8 @@ public class BraceProjectile extends BaseProjectile {
         }
 
         // Hurts the trigger entity and caches its id so the projectile doesn't attack it again and continues bouncing
-        target.hurt(damageSources().thrown(this, getOwner()), 3);
+        target.hurt(damageSources().thrown(this, getOwner()), (float) CompanionsConfig.BRACE_PROJECTILE_DAMAGE);
+        target.setSecondsOnFire(random.nextInt(1, 10));
         hitEntities.add(target.getId());
         entityBounces++;
 
@@ -197,6 +199,7 @@ public class BraceProjectile extends BaseProjectile {
     }
 
     protected boolean canHitEntity(@NotNull Entity e) {
+        if (Util.areEntitiesLinked(this, e)) return false;
         if (e == this.getOwner() || e == this) return false;
         if (hitEntities.contains(e.getId())) return false;
         return e instanceof LivingEntity;

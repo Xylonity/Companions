@@ -2,45 +2,43 @@ package dev.xylonity.companions.config;
 
 import dev.xylonity.knightlib.config.api.AutoConfig;
 import dev.xylonity.knightlib.config.api.ConfigEntry;
-import dev.xylonity.knightlib.config.api.DecorationType;
 
-@AutoConfig(file = "companions", style = DecorationType.STARSET)
+@AutoConfig(file = "companions")
 public final class CompanionsConfig {
 
     @ConfigEntry(
-            comment = "Demon flesh drop rate",
-            min = 0.0,
-            max = 1.0
+            category = "General",
+            comment = "Probability (0.0–1.0) that demon flesh will drop when defeating certain enemies.",
+            min = 0.0, max = 1.0
     )
     public static double DEMON_FLESH_DROP_RATE = 0.2;
 
     @ConfigEntry(
-            comment = "The amount of charges a single altar can cap",
+            category = "General",
+            comment = "Maximum number of charges a single shade altar can store.",
             min = 0, max = 1000
     )
     public static int SHADOW_ALTAR_MAX_CHARGES = 20;
 
     @ConfigEntry(
-            comment = "The amount of blood charges a single altar can cap",
+            category = "General",
+            comment = "Number of blood charges a shade altar can hold.",
             min = 0, max = 1000
     )
     public static int SHADOW_ALTAR_BLOOD_CHARGES_AMOUNT = 4;
 
     @ConfigEntry(
-            comment = "Should certain companions have the ability to work?"
-    )
-    public static boolean SHOULD_COMPANIONS_WORK = true;
-
-    @ConfigEntry(
-            comment = "Can companions wander around if either not following the owner nor sitting?"
+            category = "General",
+            comment = "Whether companions are allowed to wander when neither following nor sitting."
     )
     public static boolean SHOULD_COMPANIONS_WANDER = true;
 
     @ConfigEntry(
+            category = "General",
             comment = "The maximum distance (in blocks) at which companions will teleport to their owner (in a valid position).",
             min = 0, max = 1000
     )
-    public static int COMPANIONS_FOLLOW_OWNER_TELEPORT_DISTANCE = 25;
+    public static int COMPANIONS_FOLLOW_OWNER_TELEPORT_DISTANCE = 20;
 
     /**
      * DINAMO
@@ -71,6 +69,19 @@ public final class CompanionsConfig {
     )
     public static int DINAMO_MAX_CONNECTION_DISTANCE = 13;
 
+    @ConfigEntry(
+            category = "Dinamo",
+            comment = "Max life of the Dinamo",
+            min = 0d, max = 5000d
+    )
+    public static double DINAMO_MAX_LIFE = 65d;
+
+    @ConfigEntry(
+            category = "Dinamo",
+            comment = "Electricity damage from both Dinamo and tesla network blocks.",
+            min = 0d, max = 500d
+    )
+    public static double ELECTRICITY_DAMAGE = 7.5d;
 
     /**
      * ANTLION
@@ -83,6 +94,68 @@ public final class CompanionsConfig {
     )
     public static boolean ANTLION_KEEP_CHUNK_LOADED = true;
 
+    @ConfigEntry(
+            category = "Antlion",
+            comment = "Damage dealt by the Antlion in its normal phase",
+            min = 0.0, max = 50.0
+    )
+    public static double ANTLION_NORMAL_DAMAGE = 8.0;
+
+    @ConfigEntry(
+            category = "Antlion",
+            comment = "Max life of the Antlion in its normal phase",
+            min = 0, max = 1000
+    )
+    public static double ANTLION_NORMAL_MAX_LIFE = 60;
+
+    @ConfigEntry(
+            category = "Antlion",
+            comment = "Damage dealt by the Antlion in its soldier phase",
+            min = 0.0, max = 100.0
+    )
+    public static double ANTLION_SOLDIER_DAMAGE = 15.0;
+
+    @ConfigEntry(
+            category = "Antlion",
+            comment = "Max life of the Antlion in its soldier phase",
+            min = 0, max = 2000
+    )
+    public static double ANTLION_SOLDIER_MAX_LIFE = 120;
+
+    @ConfigEntry(
+            category = "Antlion",
+            comment = "Damage dealt by the Antlion in its flying phase",
+            min = 0.0, max = 100.0
+    )
+    public static double ANTLION_FLYER_DAMAGE = 12.0;
+
+    @ConfigEntry(
+            category = "Antlion",
+            comment = "Max life of the Antlion in its flying phase",
+            min = 0, max = 1500
+    )
+    public static double ANTLION_FLYER_MAX_LIFE = 80;
+
+    @ConfigEntry(
+            category = "Antlion",
+            comment = "Damage dealt by the Antlion in its tank phase",
+            min = 0.0, max = 200.0
+    )
+    public static double ANTLION_TANK_DAMAGE = 25.0;
+
+    @ConfigEntry(
+            category = "Antlion",
+            comment = "Max life of the Antlion in its tank phase",
+            min = 0, max = 5000
+    )
+    public static double ANTLION_TANK_MAX_LIFE = 300;
+
+    @ConfigEntry(
+            category = "Antlion",
+            comment = "Damage dealt by the Antlion's sand projectile in its soldier phase",
+            min = 0.0, max = 200.0
+    )
+    public static double ANTLION_SOLDIER_PROJECTILE_DAMAGE = 10f;
 
     /**
      * CORNELIUS
@@ -102,6 +175,12 @@ public final class CompanionsConfig {
     )
     public static double ENDER_FROG_HEAL_PROJECTILE_HEAL_AMOUNT = 2.5d;
 
+    @ConfigEntry(
+            category = "Cornelius",
+            comment = "Max life of the Cornelius",
+            min = 0d, max = 5000d
+    )
+    public static double CORNELIUS_MAX_LIFE = 60d;
 
     /**
      * CROISSANT DRAGON
@@ -122,6 +201,12 @@ public final class CompanionsConfig {
     )
     public static int CROISSANT_EGG_LIFETIME = 6000;
 
+    @ConfigEntry(
+            category = "Croissant Dragon",
+            comment = "Max life of the Croissant Dragon",
+            min = 0d, max = 5000d
+    )
+    public static double CROISSANT_DRAGON_MAX_LIFE = 80d;
 
     /**
      * TEDDY
@@ -133,6 +218,40 @@ public final class CompanionsConfig {
                     + "If false, the entity will not teleport to its owner from unloaded chunks. "
     )
     public static boolean TEDDY_KEEP_CHUNK_LOADED = true;
+
+    @ConfigEntry(
+            category = "Teddy",
+            comment = "Max life of the Teddy",
+            min = 0d, max = 65d
+    )
+    public static double TEDDY_MAX_LIFE = 65d;
+
+    @ConfigEntry(
+            category = "Teddy",
+            comment = "Damage dealt by the Teddy",
+            min = 0.0, max = 50.0
+    )
+    public static double TEDDY_DAMAGE = 12.5;
+
+    @ConfigEntry(
+            category = "Teddy",
+            comment = "Max life of the Teddy in mutant phase",
+            min = 0, max = 2000
+    )
+    public static double TEDDY_MUTANT_MAX_LIFE = 130;
+
+    @ConfigEntry(
+            category = "Teddy",
+            comment = "Damage dealt by the Teddy in mutant phase",
+            min = 0.0, max = 100.0
+    )
+    public static double TEDDY_MUTANT_DAMAGE = 25.0;
+
+    @ConfigEntry(
+            category = "Teddy",
+            comment = "Should the Teddy heal over time in its mutant form?"
+    )
+    public static boolean TEDDY_MUTANT_HEALS_OVER_TIME = true;
 
 
     /**
@@ -146,6 +265,12 @@ public final class CompanionsConfig {
     )
     public static boolean SOUL_MAGE_KEEP_CHUNK_LOADED = true;
 
+    @ConfigEntry(
+            category = "Soul Mage",
+            comment = "Max life of the Soul Mage",
+            min = 0d, max = 5000d
+    )
+    public static double SOUL_MAGE_MAX_LIFE = 60d;
 
     /**
      * SHADE SWORD
@@ -159,6 +284,19 @@ public final class CompanionsConfig {
     )
     public static int SHADOW_SWORD_LIFETIME = 4800;
 
+    @ConfigEntry(
+            category = "Shadow Sword",
+            comment = "Max life of the Shadow Sword",
+            min = 0d, max = 5000d
+    )
+    public static double SHADOW_SWORD_MAX_LIFE = 60d;
+
+    @ConfigEntry(
+            category = "Shadow Sword",
+            comment = "Damage dealt by the Shadow Sword",
+            min = 0.0, max = 500.0
+    )
+    public static double SHADOW_SWORD_DAMAGE = 30.0;
 
     /**
      * SHADE MAW
@@ -172,6 +310,19 @@ public final class CompanionsConfig {
     )
     public static int SHADOW_MAW_LIFETIME = 4800;
 
+    @ConfigEntry(
+            category = "Shadow Maw",
+            comment = "Max life of the Shadow Maw",
+            min = 0d, max = 5000d
+    )
+    public static double SHADOW_MAW_MAX_LIFE = 70d;
+
+    @ConfigEntry(
+            category = "Shadow Maw",
+            comment = "Damage dealt by the Shadow Maw",
+            min = 0.0, max = 500.0
+    )
+    public static double SHADOW_MAW_DAMAGE = 28.0;
 
     /**
      * MINION
@@ -184,6 +335,12 @@ public final class CompanionsConfig {
     )
     public static boolean MINION_KEEP_CHUNK_LOADED = true;
 
+    @ConfigEntry(
+            category = "Minion",
+            comment = "Max life of the Minion",
+            min = 0d, max = 5000d
+    )
+    public static double MINION_MAX_LIFE = 70d;
 
     /**
      * MANKH
@@ -196,6 +353,20 @@ public final class CompanionsConfig {
     )
     public static boolean MANKH_KEEP_CHUNK_LOADED = true;
 
+    @ConfigEntry(
+            category = "Mankh",
+            comment = "Max life of the Mankh",
+            min = 0, max = 5000
+    )
+    public static double MANKH_MAX_LIFE = 110;
+
+    @ConfigEntry(
+            category = "Mankh",
+            comment = "Damage dealt by the Mankh",
+            min = 0.0, max = 500.0
+    )
+    public static double MANKH_DAMAGE = 17.5;
+
 
     /**
      * CLOAK
@@ -206,8 +377,21 @@ public final class CompanionsConfig {
             comment = "Determines whether this entity keeps its current chunk loaded. "
                     + "If false, the entity will not teleport to its owner from unloaded chunks. "
     )
-    public static boolean MANKH_VICAR_KEEP_CHUNK_LOADED = true;
+    public static boolean CLOAK_KEEP_CHUNK_LOADED = true;
 
+    @ConfigEntry(
+            category = "Cloak",
+            comment = "Max life of the Cloak",
+            min = 0d, max = 5000d
+    )
+    public static double CLOAK_MAX_LIFE = 85d;
+
+    @ConfigEntry(
+            category = "Cloak",
+            comment = "Damage dealt by the Cloak",
+            min = 0.0, max = 500.0
+    )
+    public static double CLOAK_DAMAGE = 16.0;
 
     /**
      * PUPPET
@@ -220,6 +404,19 @@ public final class CompanionsConfig {
     )
     public static boolean PUPPET_KEEP_CHUNK_LOADED = true;
 
+    @ConfigEntry(
+            category = "Puppet",
+            comment = "Max life of the Puppet",
+            min = 0, max = 1000
+    )
+    public static double PUPPET_MAX_LIFE = 100;
+
+    @ConfigEntry(
+            category = "Puppet",
+            comment = "Damage dealt by the Puppet",
+            min = 0.0, max = 100.0
+    )
+    public static double PUPPET_DAMAGE = 10.0;
 
     /**
      * PUPPET GLOVE
@@ -232,6 +429,19 @@ public final class CompanionsConfig {
     )
     public static boolean PUPPET_GLOVE_KEEP_CHUNK_LOADED = true;
 
+    @ConfigEntry(
+            category = "Puppet Glove",
+            comment = "Max life of the Puppet Glove",
+            min = 0d, max = 1000d
+    )
+    public static double PUPPET_GLOVE_MAX_LIFE = 80d;
+
+    @ConfigEntry(
+            category = "Puppet Glove",
+            comment = "Damage dealt by the Puppet Glove",
+            min = 0.0, max = 100.0
+    )
+    public static double PUPPET_GLOVE_DAMAGE = 7.5;
 
     /**
      * MAGIC BOOKS
@@ -239,17 +449,66 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Magic Books",
-            comment = "The radius (in blocks) of the Fire Mark book's effect area.",
-            min = 1.0D, max = 10.0D
+            comment = "Damage dealt by each fragment of the magic ray.",
+            min = 1.0D, max = 1000.0D
+    )
+    public static double MAGIC_PIECE_DAMAGE = 5.5d;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Damage dealt by the ice tornado spell.",
+            min = 1.0D, max = 1000.0D
+    )
+    public static double ICE_TORNADO_DAMAGE = 3.0d;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Damage dealt by the stone spike spell.",
+            min = 1.0D, max = 1000.0D
+    )
+    public static double STONE_SPIKE_DAMAGE = 4.0d;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Radius (in blocks) of the Fire Mark spell's effect.",
+            min = 1.0D, max = 1000.0D
     )
     public static double FIRE_MARK_EFFECT_RADIUS = 2.5D;
 
     @ConfigEntry(
             category = "Magic Books",
-            comment = "The amount of HP the heal ring heals",
-            min = 0.0D, max = 100.0D
+            comment = "Amount of health restored by the healing ring spell.",
+            min = 0.0D, max = 1000.0D
     )
     public static double HEAL_RING_HEALING = 6.0D;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Attraction radius (in blocks) of the black hole spell.",
+            min = 0.0D, max = 1000.0D
+    )
+    public static double BLACK_HOLE_ATTRACTION_RADIUS = 12.0D;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Speed at which entities are pulled toward the black hole.",
+            min = 0.0D, max = 100.0D
+    )
+    public static double BLACK_HOLE_ATTRACTION_SPEED = 1.45d;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Damage dealt by each small ice shard.",
+            min = 0.0D, max = 100.0D
+    )
+    public static double SMALL_ICE_SHARD_DAMAGE = 2.5d;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Duration (in ticks) that a single small ice shard freezes a target",
+            min = 0, max = 10000
+    )
+    public static int SMALL_ICE_SHARD_FREEZE_TICKS = 100;
 
     /**
      * ARMOURY
@@ -257,51 +516,145 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Armoury",
-            comment = "Percentage of life-steal per hit. For example, if set to 0.10, a hit of 10HP will heal the player 1HP",
-            min = 0d, max = 1d
+            comment = "Crystallized Blood armor stats: [helmet, chest, legs, boots, toughness, knockbackRes, durabilityMult]. Don't use negative values and stick to the format."
     )
-    public static double CRYSTALLIZED_BLOOD_SCYTHE_LIFE_STEAL = 0.15d;
+    public static String CRYSTALLIZED_BLOOD_SET_STATS = "3, 8, 6, 3, 2.5, 0.05, 35";
 
     @ConfigEntry(
             category = "Armoury",
-            comment = "Percentage of incoming damage reduction per hit per armor piece.",
+            comment = "Mage armor stats: [helmet, chest, legs, boots, toughness, knockbackRes, durabilityMult]. Don't use negative values and stick to the format."
+    )
+    public static String MAGE_SET_STATS = "3, 8, 6, 3, 2.5, 0.05, 35";
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Holy Robe armor stats: [helmet, chest, legs, boots, toughness, knockbackRes, durabilityMult]. Don't use negative values and stick to the format."
+    )
+    public static String HOLY_ROBE_SET_STATS = "3, 8, 6, 3, 2.5, 0.05, 35";
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Netherite Dagger stats: [miningLvl, durability, miningSpeed, baseDmg, enchantability]. Don't use negative values and stick to the format."
+    )
+    public static String NETHERITE_DAGGER_STATS = "4, 1785, 6, 1, 15";
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Crystallized Blood weapon stats: [miningLvl, durability, miningSpeed, baseDmg, enchant, axeDmg, scytheDmg, swordDmg, axeSpd, scytheSpd, swordSpd]. Stick to the format."
+    )
+    public static String CRYSTALLIZED_BLOOD_WEAPON_STATS = "4, 2031, 9, 4, 15, 5, 1, 3, -3, -2.8, -2.4";
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Damage reduction per hit per piece of Crystallized Blood armor.",
             min = 0d, max = 1d
     )
     public static double CRYSTALLIZED_BLOOD_SET_REDUCTION = 0.1d;
 
     @ConfigEntry(
             category = "Armoury",
-            comment = "Percentage of health the entity should have to apply the armor effect",
+            comment = "Minimum health % required to activate Crystallized Blood armor effect.",
             min = 0d, max = 1d
     )
     public static double CRYSTALLIZED_BLOOD_SET_MIN_HEALTH = 0.5d;
 
     @ConfigEntry(
             category = "Armoury",
-            comment = "Percentage of incoming magic damage reduction per hit per armor piece, which are 3 in total.",
+            comment = "Magic damage reduction per hit per piece of Mage armor.",
             min = 0d, max = 1d
     )
     public static double MAGE_SET_DAMAGE_REDUCTION = 0.1d;
 
     @ConfigEntry(
             category = "Armoury",
-            comment = "Mage set magical book cooldown reduction",
+            comment = "Cooldown reduction fraction for Mage armor when using magic books.",
             min = 0d, max = 1d
     )
     public static double MAGE_SET_COOLDOWN_REDUCTION = 0.5d;
 
     @ConfigEntry(
             category = "Armoury",
-            comment = "Holy robe damage reduction per piece",
+            comment = "Damage reduction per piece of Holy Robe armor.",
             min = 0d, max = 1d
     )
     public static double HOLY_ROBE_DAMAGE_REDUCTION = 0.07d;
 
     @ConfigEntry(
             category = "Armoury",
-            comment = "Holy robe fire ring spawn chance",
+            comment = "Chance per hit to spawn a Fire Ring from Holy Robe armor.",
             min = 0d, max = 1d
     )
     public static double HOLY_ROBE_FIRE_RING_SPAWN_CHANCE = 0.1d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Damage dealt by Naginata weapon.",
+            min = 0d, max = 1000d
+    )
+    public static double NAGINATA_DAMAGE = 8d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Damage dealt by Fire Ring ability.",
+            min = 0d, max = 1000d
+    )
+    public static double FIRE_RING_DAMAGE = 5d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Damage dealt by Needle projectile.",
+            min = 0d, max = 1000d
+    )
+    public static double NEEDLE_PROJECTILE_DAMAGE = 5d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Damage dealt by Needle item on hit (both player and target).",
+            min = 0d, max = 1000d
+    )
+    public static double NEEDLE_ITEM_DAMAGE = 2d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Damage dealt by Holiness Star when thrown.",
+            min = 0d, max = 1000d
+    )
+    public static double HOLINESS_STAR_DAMAGE = 8d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Damage dealt by Brace projectile per hit.",
+            min = 0d, max = 1000d
+    )
+    public static double BRACE_PROJECTILE_DAMAGE = 4d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Lifesteal fraction per hit for Crystallized Blood Scythe.",
+            note = "0.10 = heal 10% of damage dealt",
+            min = 0d, max = 1d
+    )
+    public static double CRYSTALLIZED_BLOOD_SCYTHE_LIFE_STEAL = 0.15d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Damage dealt by Blood Tornado (axe ability).",
+            min = 0d, max = 1000d
+    )
+    public static double BLOOD_TORNADO_DAMAGE = 4d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Damage dealt by Blood Slash (sword ability).",
+            min = 0d, max = 1000d
+    )
+    public static double BLOOD_SLASH_DAMAGE = 7.5d;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Travel speed of Blood Slash projectile.",
+            min = 0d, max = 1000d
+    )
+    public static double BLOOD_SLASH_SPEED = 0.5225d;
 
 }

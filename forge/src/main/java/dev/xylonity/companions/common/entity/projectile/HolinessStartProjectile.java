@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.mixin.CompanionsProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -212,7 +213,7 @@ public class HolinessStartProjectile extends BaseProjectile {
         Entity entity = pResult.getEntity();
         Entity owner = this.getOwner();
         DamageSource damageSource = this.damageSources().trident(this, (owner == null ? this : owner));
-        entity.hurt(damageSource, 8.0F);
+        entity.hurt(damageSource, (float) CompanionsConfig.HOLINESS_STAR_DAMAGE);
         this.playSound(SoundEvents.DRAGON_FIREBALL_EXPLODE, 5.0f, 1.0F);
         this.remove(RemovalReason.KILLED);
     }

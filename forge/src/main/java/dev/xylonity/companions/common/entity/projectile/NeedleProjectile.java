@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -168,7 +169,7 @@ public class NeedleProjectile extends ThrownTrident implements GeoEntity {
         Entity owner = this.getOwner();
         DamageSource damageSource = this.damageSources().trident(this, (owner == null ? this : owner));
         this.dealtDamage = true;
-        entity.hurt(damageSource, 8.0F);
+        entity.hurt(damageSource, (float) CompanionsConfig.NEEDLE_PROJECTILE_DAMAGE);
         this.playSound(SoundEvents.TRIDENT_HIT, 5.0f, 1.0F);
     }
 

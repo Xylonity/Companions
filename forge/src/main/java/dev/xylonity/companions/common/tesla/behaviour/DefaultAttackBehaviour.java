@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -60,7 +61,7 @@ public class DefaultAttackBehaviour implements ITeslaNodeBehaviour {
             if (ITeslaUtil.isEntityNearLine(origin, end, victim, 0.75D)) {
                 if (level instanceof ServerLevel sv && module.getOwnerUUID() != null) {
                     if (!Util.areEntitiesLinked(sv.getEntity(module.getOwnerUUID()), victim)) {
-                        victim.hurt(victim.level().damageSources().lightningBolt(), 7f);
+                        victim.hurt(victim.level().damageSources().lightningBolt(), (float) CompanionsConfig.ELECTRICITY_DAMAGE);
                         victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0, false, true, true));
                     }
                 }

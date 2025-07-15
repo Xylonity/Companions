@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.material;
 
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -9,53 +10,82 @@ import java.util.function.Supplier;
 
 public enum ItemMaterials implements Tier {
 
-    NETHERITE_DAGGER(4, 1785, 3.0F, 3.2F, 15, () -> Ingredient.of(Items.NETHERITE_SCRAP)),
-    CRYSTALLIZED_BLOOD(4, 2031, 9.0F, 4.0F, 15, () -> Ingredient.of(Items.NETHERITE_INGOT));
+    NETHERITE_DAGGER(
+            "netherite_dagger",
+            () -> Ingredient.of(Items.NETHERITE_SCRAP),
+            CompanionsConfig.NETHERITE_DAGGER_STATS
+    ),
 
-    private final int miningLevel;
-    private final int itemDurability;
-    private final float miningSpeed;
-    private final float attackDamage;
-    private final int enchantability;
+    CRYSTALLIZED_BLOOD(
+            "crystallized_blood",
+            () -> Ingredient.of(Items.NETHERITE_INGOT),
+            CompanionsConfig.CRYSTALLIZED_BLOOD_WEAPON_STATS
+    );
+
+    private final String name;
     private final Supplier<Ingredient> repairIngredient;
+    private final String statsCsv;
 
-    ItemMaterials(int miningLevel, int itemDurability, float miningSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
-        this.miningLevel = miningLevel;
-        this.itemDurability = itemDurability;
-        this.miningSpeed = miningSpeed;
-        this.attackDamage = attackDamage;
-        this.enchantability = enchantability;
+    ItemMaterials(String name, Supplier<Ingredient> repairIngredient, String statsCsv) {
+        this.name = name;
         this.repairIngredient = repairIngredient;
+        this.statsCsv = statsCsv;
+    }
+
+    private Stats stats() {
+        return new Stats(statsCsv);
     }
 
     @Override
     public int getUses() {
-        return this.itemDurability;
+        return stats().durability;
     }
 
     @Override
     public float getSpeed() {
-        return this.miningSpeed;
+        return stats().miningSpeed;
     }
 
     @Override
     public float getAttackDamageBonus() {
-        return this.attackDamage;
+        return stats().attackDamage;
     }
 
     @Override
     public int getLevel() {
-        return this.miningLevel;
+        return stats().miningLevel;
     }
 
     @Override
     public int getEnchantmentValue() {
-        return this.enchantability;
+        return stats().enchantability;
     }
 
     @Override
     public @NotNull Ingredient getRepairIngredient() {
-        return this.repairIngredient.get();
+        return repairIngredient.get();
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    private static class Stats {
+        final int miningLevel;
+        final int durability;
+        final float miningSpeed;
+        final float attackDamage;
+        final int enchantability;
+
+        private Stats(String csv) {
+            String[] parts = csv.trim().split("\\s*,\\s*");
+            miningLevel = Integer.parseInt(parts[0]);
+            durability = Integer.parseInt(parts[1]);
+            miningSpeed = Float.parseFloat(parts[2]);
+            attackDamage = Float.parseFloat(parts[3]);
+            enchantability= Integer.parseInt(parts[4]);
+        }
     }
 
 }

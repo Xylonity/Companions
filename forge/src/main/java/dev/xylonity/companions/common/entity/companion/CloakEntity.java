@@ -63,7 +63,7 @@ public class CloakEntity extends CompanionEntity {
 
     @Override
     protected boolean shouldKeepChunkLoaded() {
-        return CompanionsConfig.MANKH_KEEP_CHUNK_LOADED;
+        return CompanionsConfig.CLOAK_KEEP_CHUNK_LOADED;
     }
 
     @Override
@@ -73,8 +73,8 @@ public class CloakEntity extends CompanionEntity {
 
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 70.0D)
-                .add(Attributes.ATTACK_DAMAGE, 7f)
+                .add(Attributes.MAX_HEALTH, CompanionsConfig.CLOAK_MAX_LIFE)
+                .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.CLOAK_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();

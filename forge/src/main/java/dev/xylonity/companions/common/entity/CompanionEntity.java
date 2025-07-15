@@ -120,9 +120,9 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
             allowedActions.add(2);
         }
 
-        if (CompanionsConfig.SHOULD_COMPANIONS_WORK && this.canThisCompanionWork()) {
-            allowedActions.add(3);
-        }
+        //if (CompanionsConfig.SHOULD_COMPANIONS_WORK && this.canThisCompanionWork()) {
+        //    allowedActions.add(3);
+        //}
 
         int newAction = allowedActions.get(action % allowedActions.size());
 

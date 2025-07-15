@@ -25,6 +25,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -173,11 +174,24 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     public static AttributeSupplier setAttributes() {
         return CompanionEntity.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 70)
-                .add(Attributes.ATTACK_DAMAGE, 7f)
+                .add(Attributes.MAX_HEALTH, CompanionsConfig.TEDDY_MAX_LIFE)
+                .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.TEDDY_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
+    }
+
+    private void updateStats() {
+        AttributeInstance maxHealth = this.getAttribute(Attributes.MAX_HEALTH);
+        if (maxHealth != null) {
+            maxHealth.setBaseValue(CompanionsConfig.TEDDY_MUTANT_MAX_LIFE);
+        }
+
+        AttributeInstance damage = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (damage != null) {
+            damage.setBaseValue(CompanionsConfig.TEDDY_MUTANT_DAMAGE);
+        }
+
     }
 
     public int getPhase() {
@@ -253,6 +267,8 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                 setPhase(2);
                 this.refreshDimensions();
 
+                updateStats();
+
                 this.moveControl = new TeddyMoveControl(this);
             }
 
@@ -265,6 +281,10 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                     getOwner().addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0, true, true, true));
                 }
             }
+        }
+
+        if (getPhase() == 2 && !level().isClientSide && CompanionsConfig.TEDDY_MUTANT_HEALS_OVER_TIME) {
+            if (tickCount % 200 == 0) this.heal(1f);
         }
 
     }

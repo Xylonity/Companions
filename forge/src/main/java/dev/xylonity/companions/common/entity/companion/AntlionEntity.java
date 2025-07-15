@@ -23,6 +23,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -308,6 +309,30 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         }
 
         spawnVariantParticles();
+        updateStats();
+    }
+
+    private void updateStats() {
+        AttributeInstance maxHealth = this.getAttribute(Attributes.MAX_HEALTH);
+        if (maxHealth != null && getHealth() >= getMaxHealth() * 0.97) {
+            switch (getVariant()) {
+                case 0 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_NORMAL_MAX_LIFE);
+                case 1 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_TANK_MAX_LIFE);
+                case 2 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_FLYER_MAX_LIFE);
+                default -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_SOLDIER_MAX_LIFE);
+            }
+        }
+
+        AttributeInstance damage = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (damage != null) {
+            switch (getVariant()) {
+                case 0 -> damage.setBaseValue(CompanionsConfig.ANTLION_NORMAL_DAMAGE);
+                case 1 -> damage.setBaseValue(CompanionsConfig.ANTLION_TANK_DAMAGE);
+                case 2 -> damage.setBaseValue(CompanionsConfig.ANTLION_FLYER_DAMAGE);
+                default -> damage.setBaseValue(CompanionsConfig.ANTLION_SOLDIER_DAMAGE);
+            }
+        }
+
     }
 
     private void spawnVariantParticles() {

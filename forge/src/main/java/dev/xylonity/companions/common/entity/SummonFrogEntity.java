@@ -39,14 +39,11 @@ public class SummonFrogEntity extends CompanionSummonEntity {
         super.tick();
 
         if (!level().isClientSide) {
-
             if (getCycleCount() >= 12) this.setDeltaMovement(new Vec3(0, 0, 0));
 
             if (getCycleCount() >= 0) setCycleCount(getCycleCount() + 1);
 
             if (getCycleCount() >= MAX_CYCLE_TICKS) setCycleCount(-1);
-
-            System.out.println(getCycleCount());
         }
 
     }

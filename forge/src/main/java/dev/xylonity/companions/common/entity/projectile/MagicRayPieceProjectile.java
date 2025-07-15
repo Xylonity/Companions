@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -48,7 +49,7 @@ public class MagicRayPieceProjectile extends BaseProjectile {
 
             if (!hitEntities.isEmpty()) {
                 LivingEntity hit = hitEntities.get(0);
-                hit.hurt(damageSources().generic(), 5.0F);
+                hit.hurt(damageSources().magic(), (float) CompanionsConfig.MAGIC_PIECE_DAMAGE);
             }
         }
 

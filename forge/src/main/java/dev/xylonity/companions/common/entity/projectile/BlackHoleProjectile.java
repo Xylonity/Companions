@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -32,7 +33,7 @@ public class BlackHoleProjectile extends BaseProjectile {
     private static final EntityDataAccessor<Boolean> IS_LOCKED = SynchedEntityData.defineId(BlackHoleProjectile.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> TICKCOUNT = SynchedEntityData.defineId(BlackHoleProjectile.class, EntityDataSerializers.INT);
 
-    private static final double ATTRACT_RADIUS = 12.0;
+    private static final double ATTRACT_RADIUS = CompanionsConfig.BLACK_HOLE_ATTRACTION_RADIUS;
     private static final float GRAVITY = 0.03F;
 
     public BlackHoleProjectile(EntityType<? extends BaseProjectile> type, Level level) {
@@ -156,7 +157,7 @@ public class BlackHoleProjectile extends BaseProjectile {
 
             double linear = (ATTRACT_RADIUS - distance) / ATTRACT_RADIUS;
             if (linear < 0) linear = 0;
-            Vec3 desiredVel = toCenter.scale(Math.pow(linear, 2) * 1.4);
+            Vec3 desiredVel = toCenter.scale(Math.pow(linear, 2) * CompanionsConfig.BLACK_HOLE_ATTRACTION_SPEED);
 
             Vec3 currentVel = ent.getDeltaMovement();
             Vec3 newVel = currentVel.lerp(desiredVel, 0.15);

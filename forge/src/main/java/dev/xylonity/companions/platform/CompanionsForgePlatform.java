@@ -13,6 +13,7 @@ import dev.xylonity.companions.common.item.weapon.BloodScytheItem;
 import dev.xylonity.companions.common.item.weapon.BloodSwordItem;
 import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.common.material.ItemMaterials;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
@@ -67,17 +68,27 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     public <T extends Item> Supplier<T> registerSpecificItem(String id, Item.Properties properties, CompanionsItems.ItemType itemType, ItemMaterials material, float extraDamage, float extraSpeed) {
         switch (itemType) {
             case BLOOD_SWORD -> {
-                return (Supplier<T>) registerItem(id, () -> new BloodSwordItem(properties, id, material, extraDamage, extraSpeed));
+                return (Supplier<T>) registerItem(id, () -> new BloodSwordItem(properties, id, material, extra(8, extraDamage), extra(11, extraSpeed)));
             }
             case BLOOD_AXE -> {
-                return (Supplier<T>) registerItem(id, () -> new BloodAxeItem(properties, id, material, extraDamage, extraSpeed));
+                return (Supplier<T>) registerItem(id, () -> new BloodAxeItem(properties, id, material, extra(6, extraDamage), extra(9, extraSpeed)));
             }
             case BLOOD_PICKAXE -> {
-                return (Supplier<T>) registerItem(id, () -> new BloodScytheItem(properties, id, material, extraDamage, extraSpeed));
+                return (Supplier<T>) registerItem(id, () -> new BloodScytheItem(properties, id, material, extra(7, extraDamage), extra(10, extraSpeed)));
             }
         }
 
         return registerSpecificItem(id, properties, itemType);
+    }
+
+    private float extra(int idx, float fallback) {
+        String[] parts = CompanionsConfig.CRYSTALLIZED_BLOOD_WEAPON_STATS.trim().split("\\s*,\\s*");
+        float ret = fallback;
+        if (parts.length >= idx) {
+            ret = Float.parseFloat(parts[idx - 1]);
+        }
+
+        return ret;
     }
 
     @Override

@@ -142,21 +142,18 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         super.tick();
 
         if (!level().isClientSide) {
-
             if (getCycleCount() >= 12) this.setDeltaMovement(new Vec3(0, 0, 0));
 
             if (getCycleCount() >= 0) setCycleCount(getCycleCount() + 1);
 
             if (getCycleCount() >= MAX_CYCLE_TICKS) setCycleCount(-1);
-
-            System.out.println(getCycleCount());
         }
 
     }
 
     public static AttributeSupplier setAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 50D)
+                .add(Attributes.MAX_HEALTH, CompanionsConfig.CORNELIUS_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)

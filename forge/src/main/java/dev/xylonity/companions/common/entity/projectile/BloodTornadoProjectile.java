@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -127,7 +128,7 @@ public class BloodTornadoProjectile extends BaseProjectile {
         this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1), e -> !Util.areEntitiesLinked(this, e))
                 .forEach(e -> {
                     if (e instanceof LivingEntity living) {
-                        living.hurt(damageSources().magic(), 2f);
+                        living.hurt(damageSources().magic(), (float) CompanionsConfig.BLOOD_TORNADO_DAMAGE);
                     }
                 });
 

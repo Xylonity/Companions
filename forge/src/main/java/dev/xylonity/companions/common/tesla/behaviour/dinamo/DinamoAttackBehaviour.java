@@ -3,8 +3,11 @@ package dev.xylonity.companions.common.tesla.behaviour.dinamo;
 import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
+import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 
@@ -50,9 +53,14 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
                 if (dinamo.getAttackCycleCounter() == 3) {
                     for (LivingEntity target : dinamo.entitiesToAttack) {
                         if (target.distanceToSqr(target) <= 64) {
-                            dinamo.doHurtTarget(target);
+                            target.hurt(dinamo.damageSources().lightningBolt(), (float) CompanionsConfig.ELECTRICITY_DAMAGE);
+                            if (target.getRandom().nextFloat() < 0.4f) {
+                                target.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0, false, true, true));
+                            }
+
                         }
                     }
+
                 }
 
                 if (dinamo.getAttackCycleCounter() == 0) dinamo.playSound(CompanionsSounds.DINAMO_ATTACK.get(), 0.45f, 1f);

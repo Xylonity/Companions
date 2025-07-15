@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -116,7 +117,7 @@ public class HolinessNaginataProjectile extends ThrownTrident implements GeoEnti
         Entity owner = this.getOwner();
         DamageSource damageSource = this.damageSources().trident(this, (owner == null ? this : owner));
         this.dealtDamage = true;
-        entity.hurt(damageSource, 8.0F);
+        entity.hurt(damageSource, (float) CompanionsConfig.NAGINATA_DAMAGE);
         this.playSound(SoundEvents.TRIDENT_HIT, 5.0f, 1.0F);
     }
 

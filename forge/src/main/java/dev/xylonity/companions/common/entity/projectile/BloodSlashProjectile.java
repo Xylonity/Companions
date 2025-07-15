@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.mixin.CompanionsProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
@@ -14,8 +15,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +28,7 @@ public class BloodSlashProjectile extends FrogHealProjectile {
     }
 
     public float getDefaultSpeed() {
-        return 0.5225f;
+        return (float) CompanionsConfig.BLOOD_SLASH_SPEED;
     }
 
     public float getDefaultLerp() {
@@ -36,7 +37,7 @@ public class BloodSlashProjectile extends FrogHealProjectile {
 
     @Override
     public void spawnRibbon() {
-
+        ;;
     }
 
     @Override
@@ -87,8 +88,8 @@ public class BloodSlashProjectile extends FrogHealProjectile {
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         Entity e = pResult.getEntity();
         if (e instanceof LivingEntity entity) {
-            if (getOwner() != null && getOwner() instanceof LivingEntity owner && !Util.areEntitiesLinked(this, entity)) {
-                entity.hurt(damageSources().magic(), 6f);
+            if (!Util.areEntitiesLinked(this, entity)) {
+                entity.hurt(damageSources().magic(), (float) CompanionsConfig.BLOOD_SLASH_DAMAGE);
             }
         }
 
@@ -124,8 +125,8 @@ public class BloodSlashProjectile extends FrogHealProjectile {
     }
 
     @Override
-    protected void onHit(@NotNull HitResult pResult) {
-        super.onHit(pResult);
+    protected void onHitBlock(@NotNull BlockHitResult pResult) {
+        super.onHitBlock(pResult);
         this.discard();
     }
 

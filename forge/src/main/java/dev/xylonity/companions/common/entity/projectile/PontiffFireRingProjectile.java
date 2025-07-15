@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -40,10 +41,7 @@ public class PontiffFireRingProjectile extends BaseProjectile implements GeoEnti
                 double dz = e.getZ() - pz;
                 double dist = Math.sqrt(dx * dx + dz * dz);
                 if (dist > inner && dist <= outer) {
-                    if (getOwner() != null) {
-                        e.hurt(damageSources().magic(), 5f);
-                    }
-
+                    e.hurt(damageSources().magic(), (float) CompanionsConfig.FIRE_RING_DAMAGE);
                     e.setSecondsOnFire(level().getRandom().nextInt(1, 15));
                 }
             }

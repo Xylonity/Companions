@@ -102,8 +102,8 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
 
     public static AttributeSupplier setAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 80D)
-                .add(Attributes.ATTACK_DAMAGE, 5f)
+                .add(Attributes.MAX_HEALTH, CompanionsConfig.SHADOW_MAW_MAX_LIFE)
+                .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.SHADOW_MAW_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.45f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();

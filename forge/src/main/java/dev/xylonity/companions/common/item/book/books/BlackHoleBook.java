@@ -3,7 +3,6 @@ package dev.xylonity.companions.common.item.book.books;
 import dev.xylonity.companions.common.entity.projectile.BlackHoleProjectile;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
 import dev.xylonity.companions.registry.CompanionsEntities;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -28,18 +27,10 @@ public class BlackHoleBook extends AbstractMagicBook {
         if (!level.isClientSide) {
             BlackHoleProjectile blackHole = CompanionsEntities.BLACK_HOLE_PROJECTILE.get().create(level);
             if (blackHole != null) {
-                Vec3 look = player.getLookAngle();
-                Vec3 spawnAt = player.getEyePosition(1.0F)
-                        .add(look.scale(0.5D))
-                        .add(0, 0.0D, 0);
-
-                blackHole.setPos(spawnAt.x, spawnAt.y, spawnAt.z);
-
+                Vec3 spawnPos = player.getEyePosition(1.0F).add(player.getLookAngle().scale(0.5D)).add(0, 0.0D, 0);
+                blackHole.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
                 blackHole.setOwner(player);
-
-                float velocity = 0.80F;
-                blackHole.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, velocity, 0.0F);
-
+                blackHole.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.8f, 0.0F);
                 level.addFreshEntity(blackHole);
             }
         }

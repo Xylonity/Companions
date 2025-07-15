@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -45,8 +46,8 @@ public class AntlionSandProjectile extends FrogLevitateProjectile {
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         for (LivingEntity e : this.level().getEntitiesOfClass(LivingEntity.class, new AABB(this.blockPosition()).inflate(3))) {
-            if (!Util.areEntitiesLinked(e, this) && getOwner() instanceof LivingEntity entity) {
-                entity.doHurtTarget(e);
+            if (!Util.areEntitiesLinked(e, this)) {
+                e.hurt(damageSources().magic(), (float) CompanionsConfig.ANTLION_SOLDIER_PROJECTILE_DAMAGE);
             }
         }
 

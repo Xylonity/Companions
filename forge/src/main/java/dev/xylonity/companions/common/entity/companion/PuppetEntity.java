@@ -129,8 +129,8 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     public static AttributeSupplier setAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 80d)
-                .add(Attributes.ATTACK_DAMAGE, 5f)
+                .add(Attributes.MAX_HEALTH, CompanionsConfig.PUPPET_MAX_LIFE)
+                .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.PUPPET_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();

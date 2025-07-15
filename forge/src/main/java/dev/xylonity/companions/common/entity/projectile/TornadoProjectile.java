@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -130,7 +131,7 @@ public class TornadoProjectile extends BaseProjectile {
                     Vec3 dir = e.position().subtract(this.position()).normalize().scale(1.4);
                     e.push(dir.x + 0.1, dir.y + 0.1, dir.z + 0.1);
                     if (e instanceof LivingEntity living) {
-                        living.hurt(damageSources().magic(), 2f);
+                        living.hurt(damageSources().magic(), (float) CompanionsConfig.ICE_TORNADO_DAMAGE);
                     }
                 });
 
