@@ -11,13 +11,19 @@ import dev.xylonity.companions.common.entity.ai.minion.tamable.imp.ImpBraceAttac
 import dev.xylonity.companions.common.entity.ai.minion.tamable.imp.ImpFireMarkAttackGoal;
 import dev.xylonity.companions.common.entity.ai.minion.tamable.minion.MinionTornadoAttackGoal;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsParticles;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -26,14 +32,18 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
+
+import java.util.function.Supplier;
 
 public class MinionEntity extends CompanionEntity {
 
@@ -101,25 +111,6 @@ public class MinionEntity extends CompanionEntity {
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (!this.entityData.get(IS_LOCKED)) {
-            updateVariantByDimension();
-        }
-
-        if (getVariant().equals(Variant.OVERWORLD.getName())) {
-
-        } else if (getVariant().equals(Variant.END.getName())) {
-
-        } else {
-
-        }
-
-
-    }
-
     private void updateVariantByDimension() {
         ResourceKey<Level> currentDim = this.level().dimension();
 
@@ -153,11 +144,92 @@ public class MinionEntity extends CompanionEntity {
             return InteractionResult.SUCCESS;
         }
 
+        if (isTame() && player == getOwner()) {
+            if (Variant.NETHER.getName().equals(getVariant()) && player.getItemInHand(hand).getItem() == CompanionsBlocks.NETHER_COIN.get().asItem()) {
+                if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
+
+                if (getRandom().nextFloat() < 0.45f) {
+                    popResource(level(), new BlockPos(blockPosition().getX(), blockPosition().getY() + 1, blockPosition().getZ()),
+                            new ItemStack(getRandom().nextBoolean() ? CompanionsItems.BOOK_FIRE_MARK.get() : CompanionsItems.BOOK_BRACE.get()));
+                    rewardParticles();
+                } else {
+                    failureParticles();
+                }
+
+                return InteractionResult.SUCCESS;
+            } else if (Variant.END.getName().equals(getVariant()) && player.getItemInHand(hand).getItem() == CompanionsBlocks.END_COIN.get().asItem()) {
+                if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
+
+                if (getRandom().nextFloat() < 0.55f) {
+                    popResource(level(), new BlockPos(blockPosition().getX(), blockPosition().getY() + 1, blockPosition().getZ()),
+                            new ItemStack(getRandom().nextBoolean() ? CompanionsItems.BOOK_HEAL_RING.get() : CompanionsItems.BOOK_STONE_SPIKES.get()));
+                    rewardParticles();
+                } else {
+                    failureParticles();
+                }
+
+                return InteractionResult.SUCCESS;
+            } else if (Variant.OVERWORLD.getName().equals(getVariant()) && player.getItemInHand(hand).getItem() == CompanionsBlocks.COPPER_COIN.get().asItem()) {
+                if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
+
+                if (getRandom().nextFloat() < 0.25f) {
+                    popResource(level(), new BlockPos(blockPosition().getX(), blockPosition().getY() + 1, blockPosition().getZ()),
+                            new ItemStack(getRandom().nextBoolean() ? CompanionsItems.BOOK_ICE_SHARD.get() : CompanionsItems.BOOK_ICE_TORNADO.get()));
+                    rewardParticles();
+                } else {
+                    failureParticles();
+                }
+
+                return InteractionResult.SUCCESS;
+            }
+
+        }
+
         if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
         }
 
         return super.mobInteract(player, hand);
+    }
+
+    private static void popResource(Level pLevel, BlockPos pPos, ItemStack pStack) {
+        double d0 = EntityType.ITEM.getHeight() / 2f;
+        double d1 = pPos.getX() + 0.5;
+        double d2 = pPos.getY() + 1.5 + Mth.nextDouble(pLevel.random, -0.25, 0.25) - d0;
+        double d3 = pPos.getZ() + 0.5;
+        popResource(pLevel, () -> new ItemEntity(pLevel, d1, d2, d3, pStack, -0.25 + Math.random() * 0.25f, -0.35 + Math.random() * 0.35f, -0.25 + Math.random() * 0.25f), pStack);
+    }
+
+    private static void popResource(Level pLevel, Supplier<ItemEntity> pItemEntitySupplier, ItemStack pStack) {
+        if (!pLevel.isClientSide && !pStack.isEmpty()) {
+            ItemEntity itementity = pItemEntitySupplier.get();
+            itementity.setDefaultPickUpDelay();
+            pLevel.addFreshEntity(itementity);
+        }
+
+    }
+
+    private void rewardParticles() {
+        for (int i = 0; i < 20; i++) {
+            double dx = (this.random.nextDouble() - 0.5) * 2.0;
+            double dy = (this.random.nextDouble() - 0.5) * 2.0;
+            double dz = (this.random.nextDouble() - 0.5) * 2.0;
+            if (this.level() instanceof ServerLevel level) {
+                if (level.random.nextFloat() < 0.65f) level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.1);
+            }
+        }
+
+    }
+
+    private void failureParticles() {
+        for (int i = 0; i < 20; i++) {
+            double dx = (this.random.nextDouble() - 0.5) * 2.0;
+            double dy = (this.random.nextDouble() - 0.5) * 2.0;
+            double dz = (this.random.nextDouble() - 0.5) * 2.0;
+            if (this.level() instanceof ServerLevel level) {
+                if (level.random.nextFloat() < 0.65f) level.sendParticles(ParticleTypes.SMOKE, this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.025);
+            }
+        }
     }
 
     @Override
@@ -234,12 +306,12 @@ public class MinionEntity extends CompanionEntity {
     public @NotNull Component getName() {
         if (this.hasCustomName()) {
             return super.getName();
-        } else if (this.level().dimension().equals(Level.NETHER)) {
-            return Component.literal("Imp");
-        } else if (this.level().dimension().equals(Level.END)) {
-            return Component.literal("Gargoyle");
+        } else if (Variant.NETHER.getName().equals(getVariant())) {
+            return Component.translatable("entity.companions.imp");
+        } else if (Variant.END.getName().equals(getVariant())) {
+            return Component.translatable("entity.companions.gargoyle");
         } else {
-            return Component.literal("Minion");
+            return Component.translatable("entity.companions.minion");
         }
     }
 
