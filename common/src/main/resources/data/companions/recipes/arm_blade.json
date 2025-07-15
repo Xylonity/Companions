@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "s s",
+    " p "
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:shears"
+    },
+    "p": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "companions:blade_arm",
+    "count": 1
+  }
+}

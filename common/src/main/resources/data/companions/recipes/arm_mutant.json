@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "p  ",
+    "ppe"
+  ],
+  "key": {
+    "e": {
+      "item": "companions:mutant_flesh"
+    },
+    "p": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "companions:mutant_arm",
+    "count": 1
+  }
+}

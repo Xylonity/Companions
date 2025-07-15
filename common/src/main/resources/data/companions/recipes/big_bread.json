@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iii",
+    "iei",
+    "iii"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:bread"
+    },
+    "e": {
+      "item": "knightlib:homunculus"
+    }
+  },
+  "result": {
+    "item": "companions:big_bread",
+    "count": 1
+  }
+}
