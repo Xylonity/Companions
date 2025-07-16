@@ -3,6 +3,11 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEffects;
+import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.knightlib.registry.KnightLibParticles;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,10 +44,19 @@ public class HealRingProjectile extends BaseProjectile implements GeoEntity {
 
         if (owner == null) this.remove(RemovalReason.DISCARDED);
 
-        if (owner != null && !owner.isRemoved() && owner instanceof LivingEntity livingEntity) {
+        if (owner != null && !owner.isRemoved() && owner instanceof LivingEntity) {
 
             if (tickCount % 10 == 0 && !hasHealed) {
-                livingEntity.heal((float) CompanionsConfig.HEAL_RING_HEALING);
+                for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(2))) {
+                    if (e.isInvertedHealAndHarm()) {
+                        e.hurt(damageSources().magic(), (float) CompanionsConfig.HEAL_RING_HEALING);
+                        spawnParticles(e, CompanionsParticles.SHADE_SUMMON.get());
+                    } else {
+                        e.heal((float) CompanionsConfig.HEAL_RING_HEALING);
+                        spawnParticles(e, KnightLibParticles.STARSET.get());
+                    }
+                }
+
                 hasHealed = true;
             }
 
@@ -60,6 +74,18 @@ public class HealRingProjectile extends BaseProjectile implements GeoEntity {
             this.move(MoverType.SELF, velocity);
         }
 
+    }
+
+    private void spawnParticles(Entity e, SimpleParticleType p) {
+        for (int i = 0; i < 10; i++) {
+            double dx = (this.random.nextDouble() - 0.5) * 1.25;
+            double dy = (this.random.nextDouble() - 0.5) * 1.25;
+            double dz = (this.random.nextDouble() - 0.5) * 1.25;
+            if (this.level() instanceof ServerLevel level) {
+                if (level.random.nextFloat() < 0.45f) level.sendParticles(ParticleTypes.POOF, e.getX(), e.getY() + 0.15, e.getZ(), 1, dx, dy, dz, 0.1);
+                if (level.random.nextFloat() < 0.55f) level.sendParticles(p, e.getX(), e.getY() + 0.15, e.getZ(), 1, dx, dy, dz, 0.1);
+            }
+        }
     }
 
     @Override
