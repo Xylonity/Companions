@@ -4,8 +4,11 @@ import dev.xylonity.companions.common.entity.projectile.StoneSpikeProjectile;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -37,6 +40,11 @@ public class StoneSpikesBook extends AbstractMagicBook {
         spawnSpikeRow(Util.rotateHorizontalDirection(baseDir, 30), (int) (spikes * 0.3), player);
 
         return super.use(level, player, usedHand);
+    }
+
+    @Override
+    protected void playSound(Player player) {
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENCHANTMENT_TABLE_USE, player.getSoundSource(), 1.0F, 1.0F);
     }
 
     private void spawnSpikeRow(Vec3 direction, int count, Player player) {

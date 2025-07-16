@@ -31,8 +31,8 @@ public class HolinessNaginataProjectile extends ThrownTrident implements GeoEnti
     private final Quaternionf prevRot = new Quaternionf();
     private final Quaternionf currentRot = new Quaternionf();
 
-    private boolean dealtDamage;
-    private int timeToDespawn;
+    protected boolean dealtDamage;
+    protected int timeToDespawn;
 
     public HolinessNaginataProjectile(EntityType<? extends ThrownTrident> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -85,6 +85,10 @@ public class HolinessNaginataProjectile extends ThrownTrident implements GeoEnti
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
+        doShake();
+    }
+
+    protected void doShake() {
         if (level().isClientSide) {
             for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
                 Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);

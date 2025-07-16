@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.ai.pontiff.goal;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,6 +32,14 @@ public class HolinessStakeAttackGoal extends AbstractSacredPontiffAttackGoal {
     @Override
     public boolean canUse() {
         return super.canUse() && pontiff.getTarget() != null && pontiff.distanceTo(pontiff.getTarget()) < 8 && isEntityInFront(pontiff, pontiff.getTarget(), 200);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (attackTicks == 5) {
+            pontiff.playSound(CompanionsSounds.HOLINESS_STAKE.get());
+        }
     }
 
     @Override

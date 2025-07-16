@@ -8,16 +8,20 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoa
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.*;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -33,6 +37,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -126,6 +131,31 @@ public class CroissantDragonEntity extends CompanionEntity {
 
     public String getArmorName() {
         return this.entityData.get(ARMOR_NAME);
+    }
+
+    @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        if (getEatenAmount() > 0) {
+            playSound(CompanionsSounds.CROISSANT_DRAGON_CREAM_STEPS.get());
+        }
+
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return CompanionsSounds.CROISSANT_DRAGON_CREAM_DEATH.get();
+    }
+
+    @Override
+    public void playAmbientSound() {
+        playSound(CompanionsSounds.CROISSANT_DRAGON_CREAM_IDLE.get(), 0.4f, 1);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return CompanionsSounds.CROISSANT_DRAGON_CREAM_HURT.get();
     }
 
     public boolean isAttacking() {

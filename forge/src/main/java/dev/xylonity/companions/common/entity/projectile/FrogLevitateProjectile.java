@@ -4,8 +4,10 @@ import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.mixin.CompanionsProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -76,6 +78,8 @@ public class FrogLevitateProjectile extends FrogHealProjectile {
                 if (level.random.nextFloat() < 0.3f) level.sendParticles(CompanionsParticles.TEDDY_TRANSFORMATION.get(), e.getX(), e.getY() + e.getBbHeight() * 0.5, e.getZ(), 1, dx, dy, dz, 0.2);
             }
         }
+
+        playSound(SoundEvents.DRAGON_FIREBALL_EXPLODE, 0.5f, 1f);
 
         this.remove(RemovalReason.KILLED);
     }

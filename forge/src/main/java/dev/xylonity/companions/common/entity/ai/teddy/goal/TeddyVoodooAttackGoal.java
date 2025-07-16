@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.projectile.NeedleProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
@@ -25,12 +26,11 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
 
     @Override
     public boolean canUse() {
-        this.list = teddy.level().getEntitiesOfClass(LivingEntity.class, new AABB(teddy.blockPosition()).inflate(15), e -> e.hasEffect(CompanionsEffects.VOODOO.get()));
+        this.list = teddy.level().getEntitiesOfClass(LivingEntity.class, new AABB(teddy.blockPosition()).inflate(20), e -> e.hasEffect(CompanionsEffects.VOODOO.get()) && !Util.areEntitiesLinked(e, teddy));
         if (list.isEmpty()) return false;
         if (teddy.getPhase() == 2) return false;
         if (this.phase() != teddy.getPhase()) return false;
         if (teddy.getAttackType() != 0) return false;
-        if (teddy.getTarget() == null) return false;
         if (teddy.getMainAction() != 1) return false;
 
         if (nextUseTick < 0) {
@@ -45,6 +45,7 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
     public void start() {
         super.start();
         teddy.setNoMovement(true);
+        teddy.playSound(CompanionsSounds.TEDDY_AUTO_STAB.get());
     }
 
     @Override
@@ -65,7 +66,7 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
             performAttack(target);
         }
 
-        if (attackTicks == attackDelay() && target != null && target.isAlive()) {
+        if (attackTicks == attackDelay()) {
             performAttack(target);
         }
 
@@ -78,10 +79,8 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
             if (!Util.areEntitiesLinked(e, teddy)) {
                 e.removeEffect(CompanionsEffects.VOODOO.get());
 
-                if (teddy.level().isClientSide) continue;
-
                 for (int i = 0; i < 2; i++) {
-                    double radius = 2.0 + teddy.getRandom().nextDouble();
+                    double radius = 4 + teddy.getRandom().nextDouble();
                     double angle = teddy.getRandom().nextDouble() * Math.PI * 2;
 
                     double x = e.getX() + Math.cos(angle) * radius;
@@ -91,19 +90,9 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
                     NeedleProjectile needle = CompanionsEntities.NEEDLE_PROJECTILE.get().create(teddy.level());
                     if (needle != null) {
                         needle.setOwner(teddy);
-                        needle.setPos(x, y, z);
-                        needle.setNoGravity(true);
-
-                        Vec3 dir = e.getEyePosition().subtract(new Vec3(x, y, z)).normalize();
-                        float yaw = (float) Math.atan2(dir.x, dir.z) * Mth.RAD_TO_DEG;
-                        float pitch = (float) Math.atan2(dir.y, Math.hypot(dir.x, dir.z)) * Mth.RAD_TO_DEG;
-                        needle.setYRot(yaw);
-                        needle.setXRot(pitch);
-                        needle.yRotO = yaw;
-                        needle.xRotO = pitch;
-
-                        needle.setTargetEntity(e);
-
+                        needle.moveTo(new Vec3(x, y, z));
+                        needle.setDeltaMovement(e.position().add(new Vec3(0, e.getBbHeight() * 0.65, 0)).subtract(new Vec3(x, y, z)).normalize().scale(1.25));
+                        needle.refreshOrientation();
                         needle.setInvisible(true);
                         teddy.level().addFreshEntity(needle);
                     }

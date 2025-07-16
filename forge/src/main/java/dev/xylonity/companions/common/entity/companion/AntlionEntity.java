@@ -9,6 +9,7 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,6 +19,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -173,6 +175,10 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
             } else if (getVariant() == 2) {
 
+                if (tickCount % 30 == 0 && getMainAction() != 0) {
+                    playSound(CompanionsSounds.ADULT_ANTLION_FLY.get());
+                }
+
                 setNoMovement(getState() != 0);
 
                 // turn
@@ -310,11 +316,13 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
         spawnVariantParticles();
         updateStats();
+        playSound(CompanionsSounds.SPELL_RELEASE_DARK_HOLE.get());
+        if (getVariant() == 2) playSound(CompanionsSounds.ADULT_ANTLION_FLY.get());
     }
 
     private void updateStats() {
         AttributeInstance maxHealth = this.getAttribute(Attributes.MAX_HEALTH);
-        if (maxHealth != null && getHealth() >= getMaxHealth() * 0.97) {
+        if (maxHealth != null && getHealth() >= getMaxHealth() * 0.95) {
             switch (getVariant()) {
                 case 0 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_NORMAL_MAX_LIFE);
                 case 1 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_TANK_MAX_LIFE);
@@ -456,6 +464,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
                 }
             } else if (getMainAction() != 0) {
                 player.startRiding(this, true);
+                return InteractionResult.SUCCESS;
             }
         }
 
@@ -553,6 +562,45 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
             double baseY = this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset();
             pCallback.accept(pPassenger, this.getX(), baseY, this.getZ());
         }
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return switch (getVariant()) {
+            case 0, 1 -> CompanionsSounds.ANTLION_DEATH.get();
+            case 2 -> CompanionsSounds.ADULT_ANTLION_DEATH.get();
+            default -> CompanionsSounds.SOLDIER_ANTLION_DEATH.get();
+        };
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return switch (getVariant()) {
+            case 0, 1 -> CompanionsSounds.ANTLION_HURT.get();
+            case 2 -> CompanionsSounds.ADULT_ANTLION_HURT.get();
+            default -> CompanionsSounds.SOLDIER_ANTLION_HURT.get();
+        };
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return switch (getVariant()) {
+            case 0, 1, 2 -> CompanionsSounds.ANTLION_IDLE.get();
+            default -> CompanionsSounds.SOLDIER_ANTLION_IDLE.get();
+        };
+    }
+
+    @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        switch (getVariant()) {
+            case 0 -> playSound(CompanionsSounds.ANTLION_STEPS.get());
+            case 1 -> playSound(CompanionsSounds.PUPA_ANTLION_STEP.get());
+            case 2 -> { ;; }
+            default -> playSound(CompanionsSounds.SOLDIER_ANTLION_STEP.get());
+        };
     }
 
     @Override

@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.item;
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -221,6 +222,7 @@ public class ShadowBellItem extends TooltipItem {
                 clearLink(stack);
             }
 
+            pPlayer.level().playSound(null, pPlayer.blockPosition(), CompanionsSounds.SHADE_BELL_SUMMON.get(), pPlayer.getSoundSource(), 0.3f, 1);
         } else {
             clearLink(stack);
             pPlayer.displayClientMessage(Component.translatable("shadow_bell.companions.client_message.couldnt_find"), true);

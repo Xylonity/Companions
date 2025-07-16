@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.ai.puppet.AbstractPuppetAttackGoal;
 import dev.xylonity.companions.common.entity.companion.PuppetEntity;
 import dev.xylonity.companions.common.entity.projectile.StakeProjectile;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -32,19 +33,26 @@ public class PuppetCannonAttackGoal extends AbstractPuppetAttackGoal {
     }
 
     @Override
+    public void start() {
+        super.start();
+        puppet.playSound(CompanionsSounds.PUPPET_ATTACK_CANON.get());
+    }
+
+    @Override
     public boolean canUse() {
         return super.canUse() && this.puppet.getOwner() != null;
     }
 
     @Override
-    protected boolean hasRequiredArm() {
+    protected int hasRequiredArm() {
         for (int i = 0; i < puppet.inventory.getContainerSize(); i++) {
             ItemStack stack = puppet.inventory.getItem(i);
             if (stack.getItem() == CompanionsItems.CANNON_ARM.get()) {
-                return true;
+                return i + 1;
             }
         }
 
-        return false;
+        return 0;
     }
+
 }

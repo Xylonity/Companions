@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.item.book;
 
 import dev.xylonity.companions.common.item.TooltipItem;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -20,11 +19,14 @@ public abstract class AbstractMagicBook extends TooltipItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player player, @NotNull InteractionHand pUsedHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player player, @NotNull InteractionHand pUsedHand) {
         player.swing(pUsedHand, true);
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENCHANTMENT_TABLE_USE, player.getSoundSource(), 1.0F, 1.0F);
+
+        playSound(player);
 
         return super.use(pLevel, player, pUsedHand);
     }
+
+    protected abstract void playSound(Player player);
 
 }

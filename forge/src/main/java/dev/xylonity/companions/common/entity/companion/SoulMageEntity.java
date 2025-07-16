@@ -9,12 +9,15 @@ import dev.xylonity.companions.common.entity.ai.mage.goal.*;
 import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsSounds;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
@@ -32,6 +35,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -259,6 +263,29 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
         super.addAdditionalSaveData(pCompound);
         pCompound.put("Inventory", this.inventory.createTag());
         pCompound.putInt("BookId", getBookId());
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CompanionsSounds.MAGE_IDLE.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return CompanionsSounds.MAGE_DEATH.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return CompanionsSounds.MAGE_HURT.get();
+    }
+
+    @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        playSound(CompanionsSounds.MAGE_STEP.get(), 0.2f, 1f);
     }
 
     @Override

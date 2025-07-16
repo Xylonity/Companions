@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.hostile;
 
 import dev.xylonity.companions.common.entity.companion.PuppetGloveEntity;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -105,6 +106,10 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
             playingPlayerUUID = null;
         }
 
+        if (tickCount % 15 == 0 && !level().isClientSide && getBroomPhase() == 0 && !isPlaying()) {
+            playSound(CompanionsSounds.HOSTILE_PUPPET_GLOVE_CLEAN.get(), 0.5f, 1f);
+        }
+
         this.setPos(lastX, getY(), lastZ);
     }
 
@@ -147,6 +152,7 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
             } else if (res == 1) {
                 // Punches the player and goes back to idle
                 TickScheduler.scheduleServer(level(), () -> setGloveMove(4), 20);
+                TickScheduler.scheduleServer(level(), () -> playSound(CompanionsSounds.HOSTILE_PUPPET_GLOVE_ATTACK.get()), 20);
 
                 // Delayed hurt
                 List<Player> list = this.level().getEntitiesOfClass(Player.class, new AABB(this.blockPosition()).inflate(4));
@@ -160,6 +166,7 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
             } else {
                 if (roundsLost != 3) {
                     TickScheduler.scheduleServer(level(), () -> setGloveMove(5), 20);
+                    TickScheduler.scheduleServer(level(), () -> playSound(CompanionsSounds.HOSTILE_PUPPET_GLOVE_LOOSE.get()), 20);
                     TickScheduler.scheduleServer(level(), () -> setGloveMove(0), 20 + 33);
 
                     pPlayer.displayClientMessage(Component.translatable("hostile_puppet_glove.companions.client_message.player_wins_round"), true);

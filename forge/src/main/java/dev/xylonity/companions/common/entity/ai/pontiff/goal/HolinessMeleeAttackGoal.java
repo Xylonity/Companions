@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.ai.pontiff.goal;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,6 +19,7 @@ public class HolinessMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
     public void start() {
         super.start();
         pontiff.setNoMovement(true);
+        pontiff.playSound(CompanionsSounds.HOLINESS_STAB.get());
     }
 
     @Override

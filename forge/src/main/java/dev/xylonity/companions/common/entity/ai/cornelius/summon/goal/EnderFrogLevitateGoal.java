@@ -15,6 +15,11 @@ public class EnderFrogLevitateGoal extends AbstractCorneliusSummonAttackGoal {
     }
 
     @Override
+    public boolean canUse() {
+        return super.canUse() && summon.getTarget() != null && summon.distanceTo(summon.getTarget()) < 15;
+    }
+
+    @Override
     public void start() {
         super.start();
         summon.setNoMovement(true);

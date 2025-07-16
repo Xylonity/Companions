@@ -8,9 +8,11 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -107,6 +109,26 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.45f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
+    }
+
+    @Override
+    protected void playHurtSound(@NotNull DamageSource pSource) {
+        playSound(CompanionsSounds.SHADE_HURT.get());
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CompanionsSounds.SHADE_IDLE.get();
+    }
+
+    @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        if (getDeltaMovement().horizontalDistanceSqr() > RUN_THETA * RUN_THETA) {
+            if (tickCount % 5 == 0) playSound(CompanionsSounds.SHADE_STEP.get(), 2, 1);
+        } else {
+            playSound(CompanionsSounds.SHADE_STEP.get(), 2, 1);
+        }
     }
 
     @Override
@@ -285,6 +307,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
                 }
             }, 10);
 
+            playSound(CompanionsSounds.SHADE_MAW_BITE.get(), 0.3325f, 1f);
         }
 
     }

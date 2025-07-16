@@ -75,10 +75,12 @@ public abstract class AbstractShadeAttackGoal extends Goal {
     }
 
     public static boolean isEntityInFront(LivingEntity viewer, Entity target, double fov) {
-        Vec3 view = viewer.getLookAngle().normalize();
-        Vec3 toTarget = target.position().add(0, target.getEyeHeight() * 0.5, 0).subtract(viewer.getEyePosition(1)).normalize();
-        double angle = Math.acos(view.dot(toTarget)) * (180.0 / Math.PI);
-        return angle < (fov / 2);
+        Vec3 toTarget = target.getBoundingBox().getCenter().subtract(viewer.getEyePosition(1.0f));
+        double distance = toTarget.length();
+        if (distance < 1e-6) return true;
+
+        Vec3 norm = toTarget.scale(1.0 / distance);
+        return viewer.getLookAngle().dot(norm) >= Math.cos(Math.toRadians(fov / 2.0));
     }
 
     @Override

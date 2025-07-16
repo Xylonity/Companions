@@ -7,11 +7,15 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionSummonFollowOwn
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsSummonHurtTargetGoal;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -23,6 +27,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -96,7 +101,9 @@ public class EmberPoleEntity extends CompanionSummonEntity {
 
             if (explodeCounter >= 0) {
                 explodeCounter++;
-                if (explodeCounter >= ANIMATION_EXPLODE_TICKS) {
+                if (explodeCounter == 2) {
+                    playSound(SoundEvents.DRAGON_FIREBALL_EXPLODE, 0.75f, 1f);
+                } else if (explodeCounter >= ANIMATION_EXPLODE_TICKS) {
                     discard();
                 }
             }
@@ -125,6 +132,24 @@ public class EmberPoleEntity extends CompanionSummonEntity {
             }
         }
 
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return CompanionsSounds.SMALL_FROG_DEATH.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return CompanionsSounds.SMALL_FROG_HURT.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CompanionsSounds.SMALL_FROG_IDLE.get();
     }
 
     @Override

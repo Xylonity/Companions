@@ -9,6 +9,8 @@ import dev.xylonity.companions.common.entity.ai.puppet.glove.goal.PuppetGloveAtt
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -27,6 +29,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.*;
@@ -80,6 +83,11 @@ public class PuppetGloveEntity extends CompanionEntity {
     @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
         return new GroundNavigator(this, pLevel);
+    }
+
+    @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        playSound(CompanionsSounds.PUPPET_GLOVE_STEP.get());
     }
 
     public static AttributeSupplier setAttributes() {

@@ -4,7 +4,10 @@ import dev.xylonity.companions.common.entity.projectile.HolinessNaginataProjecti
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -60,6 +63,11 @@ public class NaginataBook extends AbstractMagicBook {
         }
 
         return super.use(level, player, hand);
+    }
+
+    @Override
+    protected void playSound(Player player) {
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), CompanionsSounds.SPELL_RELEASE_SPEARS.get(), player.getSoundSource(), 1.0F, 1.0F);
     }
 
     private void spawnNaginatas(Player player, Vec3 targetPos, Level level) {

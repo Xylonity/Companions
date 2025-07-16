@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -110,7 +111,7 @@ public class BlackHoleProjectile extends BaseProjectile {
         }
 
         if (isLocked() && getTickCount() == 20) {
-            this.level().playSound(null, getX(), getY(), getZ(), SoundEvents.ARROW_HIT, getSoundSource(), 1.0F, 1.0F);
+            this.level().playSound(null, getX(), getY(), getZ(), CompanionsSounds.SPELL_RELEASE_SPEARS.get(), getSoundSource(), 1.5F, 1.0F);
         }
 
         Vec3 oldPos = this.position();

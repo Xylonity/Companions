@@ -3,6 +3,8 @@ package dev.xylonity.companions.common.item.book.books;
 import dev.xylonity.companions.common.entity.projectile.BraceProjectile;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -42,4 +44,10 @@ public class BraceBook extends AbstractMagicBook {
 
         return super.use(level, player, hand);
     }
+
+    @Override
+    protected void playSound(Player player) {
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), CompanionsSounds.SPELL_RELEASE_BRACE.get(), player.getSoundSource(), 1F, 1.0F);
+    }
+
 }

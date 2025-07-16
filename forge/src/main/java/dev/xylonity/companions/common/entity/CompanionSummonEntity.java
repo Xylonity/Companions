@@ -35,6 +35,7 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
 
     protected CompanionSummonEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        this.noCulling = true;
     }
 
     @Override

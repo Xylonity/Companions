@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.AbstractCorneliusSummonAttackGoal;
 import dev.xylonity.companions.common.entity.summon.NetherBullfrogEntity;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 
@@ -31,7 +32,7 @@ public class NetherBullfrogSlashRightGoal extends AbstractCorneliusSummonAttackG
 
     @Override
     public boolean canUse() {
-        return super.canUse() && summon.getTarget() != null && summon.distanceTo(summon.getTarget()) < 3;
+        return super.canUse() && summon.getTarget() != null && summon.distanceToSqr(summon.getTarget()) < 4.5;
     }
 
     @Override
@@ -41,11 +42,13 @@ public class NetherBullfrogSlashRightGoal extends AbstractCorneliusSummonAttackG
 
     @Override
     protected void performAttack(LivingEntity target) {
-        for (LivingEntity e : summon.level().getEntitiesOfClass(LivingEntity.class, new AABB(summon.blockPosition()).inflate(1))) {
-            if (!Util.areEntitiesLinked(e, summon) && isEntityInFront(summon, e, 180)) {
+        for (LivingEntity e : summon.level().getEntitiesOfClass(LivingEntity.class,  summon.getBoundingBox().inflate(2.5))) {
+            if (!Util.areEntitiesLinked(e, summon) && isEntityInFront(summon, e, 220)) {
                 summon.doHurtTarget(e);
             }
         }
+
+        summon.playSound(CompanionsSounds.NETHER_BULLFROG_SLASH.get());
     }
 
     @Override

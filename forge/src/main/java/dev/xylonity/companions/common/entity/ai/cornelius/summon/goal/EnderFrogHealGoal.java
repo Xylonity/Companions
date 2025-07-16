@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.entity.ai.cornelius.summon.AbstractCorneli
 import dev.xylonity.companions.common.entity.projectile.FrogHealProjectile;
 import dev.xylonity.companions.common.entity.summon.EnderFrogEntity;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -18,6 +19,7 @@ public class EnderFrogHealGoal extends AbstractCorneliusSummonAttackGoal {
     public void start() {
         super.start();
         summon.setNoMovement(true);
+        summon.playSound(CompanionsSounds.SPELL_RELEASE_HEAL.get());
     }
 
     @Override

@@ -40,6 +40,82 @@
       }
     ]
   },
+  "scroll_sound": {
+    "sounds": [
+      {
+        "name": "companions:scroll_sound"
+      }
+    ]
+  },
+  "star_explosion": {
+    "sounds": [
+      {
+        "name": "companions:star_explosion"
+      }
+    ]
+  },
+  "mutant_teddy_flap_wings": {
+    "sounds": [
+      {
+        "name": "companions:mutant_teddy_flap_wings"
+      }
+    ]
+  },
+  "mutant_teddy_attack": {
+    "sounds": [
+      {
+        "name": "companions:mutant_teddy_attack"
+      }
+    ]
+  },
+  "mutant_teddy_hurt": {
+    "sounds": [
+      {
+        "name": "companions:mutant_teddy_hurt"
+      },
+      {
+        "name": "companions:mutant_teddy_hurt2"
+      }
+    ]
+  },
+  "mutant_teddy_idle": {
+    "sounds": [
+      {
+        "name": "companions:mutant_teddy_idle"
+      },
+      {
+        "name": "companions:mutant_teddy_idle2"
+      }
+    ]
+  },
+  "teddy_attack": {
+    "sounds": [
+      {
+        "name": "companions:teddy_attack"
+      }
+    ]
+  },
+  "teddy_auto_stab": {
+    "sounds": [
+      {
+        "name": "companions:teddy_auto_stab"
+      }
+    ]
+  },
+  "teddy_step": {
+    "sounds": [
+      {
+        "name": "companions:teddy_step"
+      }
+    ]
+  },
+  "teddy_transformation": {
+    "sounds": [
+      {
+        "name": "companions:teddy_transformation"
+      }
+    ]
+  },
   "dinamo_step": {
     "sounds": [
       {
@@ -91,6 +167,596 @@
       {
         "name": "companions:coin_clatter"
       }
+    ]
+  },
+  "antlion_death": {
+    "sounds": [
+      { "name": "companions:antlion_death" }
+    ]
+  },
+  "antlion_hurt": {
+    "sounds": [
+      { "name": "companions:antlion_hurt" }
+    ]
+  },
+  "antlion_idle": {
+    "sounds": [
+      { "name": "companions:antlion_idle" }
+    ]
+  },
+  "antlion_steps": {
+    "sounds": [
+      { "name": "companions:antlion_steps" }
+    ]
+  },
+  "dragonfly_antlion_death": {
+    "sounds": [
+      { "name": "companions:dragonfly_antlion_death" }
+    ]
+  },
+  "dragonfly_antlion_fly": {
+    "sounds": [
+      { "name": "companions:dragonfly_antlion_fly" }
+    ]
+  },
+  "dragonfly_antlion_hurt": {
+    "sounds": [
+      { "name": "companions:dragonfly_antlion_hurt" }
+    ]
+  },
+  "pupa_antlion_step": {
+    "sounds": [
+      { "name": "companions:pupa_antlion_step" }
+    ]
+  },
+
+  "tank_antlion_death": {
+    "sounds": [
+      { "name": "companions:tank_antlion_death" }
+    ]
+  },
+  "tank_antlion_hurt": {
+    "sounds": [
+      { "name": "companions:tank_antlion_hurt" }
+    ]
+  },
+  "tank_antlion_idle": {
+    "sounds": [
+      { "name": "companions:tank_antlion_idle" }
+    ]
+  },
+  "tank_antlion_sand_cannon": {
+    "sounds": [
+      { "name": "companions:tank_antlion_sand_cannon" }
+    ]
+  },
+  "tank_antlion_sand_step": {
+    "sounds": [
+      { "name": "companions:tank_antlion_sand_step" }
+    ]
+  },
+
+  "cloak_death": {
+    "sounds": [
+      { "name": "companions:cloak_death" }
+    ]
+  },
+  "cloak_hurt": {
+    "sounds": [
+      { "name": "companions:cloak_hurt" }
+    ]
+  },
+  "cloak_idle": {
+    "sounds": [
+      { "name": "companions:cloak_idle" },
+      { "name": "companions:cloak_idle2" }
+    ]
+  },
+  "cloak_step": {
+    "sounds": [
+      { "name": "companions:cloak_step" }
+    ]
+  },
+
+  "mankh_beam": {
+    "sounds": [
+      { "name": "companions:mankh_beam" }
+    ]
+  },
+  "mankh_death": {
+    "sounds": [
+      { "name": "companions:mankh_death" }
+    ]
+  },
+  "mankh_ring": {
+    "sounds": [
+      { "name": "companions:mankh_ring" }
+    ]
+  },
+  "mankh_step": {
+    "sounds": [
+      { "name": "companions:mankh_step" }
+    ]
+  },
+
+  "holiness_death": {
+    "sounds": [
+      { "name": "companions:holiness_death" }
+    ]
+  },
+  "holiness_fly_off": {
+    "sounds": [
+      { "name": "companions:holiness_fly_off" }
+    ]
+  },
+  "holiness_hit_chest": {
+    "sounds": [
+      { "name": "companions:holiness_hit_chest" }
+    ]
+  },
+  "holiness_hit_ground": {
+    "sounds": [
+      { "name": "companions:holiness_hit_ground" }
+    ]
+  },
+  "holiness_stab": {
+    "sounds": [
+      { "name": "companions:holiness_stab" }
+    ]
+  },
+  "holiness_stake": {
+    "sounds": [
+      { "name": "companions:holiness_stake" }
+    ]
+  },
+  "holiness_star_spawn": {
+    "sounds": [
+      { "name": "companions:holiness_star_spawn" }
+    ]
+  },
+
+  "pontiff_activate": {
+    "sounds": [
+      { "name": "companions:pontiff_activate" }
+    ]
+  },
+  "pontiff_area_attack": {
+    "sounds": [
+      { "name": "companions:pontiff_area_attack" }
+    ]
+  },
+  "pontiff_front_attack": {
+    "sounds": [
+      { "name": "companions:pontiff_front_attack" }
+    ]
+  },
+  "pontiff_ground_despawn": {
+    "sounds": [
+      { "name": "companions:pontiff_ground_despawn" }
+    ]
+  },
+  "pontiff_ground_hurt": {
+    "sounds": [
+      { "name": "companions:pontiff_ground_hurt" }
+    ]
+  },
+  "pontiff_ground_idle": {
+    "sounds": [
+      { "name": "companions:pontiff_ground_idle" },
+      { "name": "companions:pontiff_ground_idle2" }
+    ]
+  },
+  "pontiff_step": {
+    "sounds": [
+      { "name": "companions:pontiff_step" }
+    ]
+  },
+
+  "croissant_dragon_breath": {
+    "sounds": [
+      { "name": "companions:croissant_dragon_breath" }
+    ]
+  },
+  "croissant_dragon_cream_splat": {
+    "sounds": [
+      { "name": "companions:croissant_dragon_cream_splat" }
+    ]
+  },
+  "croissant_dragon_cream_death": {
+    "sounds": [
+      { "name": "companions:croissant_dragon_cream_death" }
+    ]
+  },
+  "croissant_dragon_cream_hurt": {
+    "sounds": [
+      { "name": "companions:croissant_dragon_cream_hurt" }
+    ]
+  },
+  "croissant_dragon_cream_idle": {
+    "sounds": [
+      { "name": "companions:croissant_dragon_cream_idle" },
+      { "name": "companions:croissant_dragon_cream_idle2" }
+    ]
+  },
+  "croissant_dragon_cream_steps": {
+    "sounds": [
+      { "name": "companions:croissant_dragon_cream_steps" }
+    ]
+  },
+  "croissant_dragon_cream_wing_flap": {
+    "sounds": [
+      { "name": "companions:croissant_dragon_cream_wing_flap" }
+    ]
+  },
+
+  "end_frog_heal": {
+    "sounds": [
+      { "name": "companions:end_frog_heal" }
+    ]
+  },
+  "froggy_attack": {
+    "sounds": [
+      { "name": "companions:froggy_attack" }
+    ]
+  },
+  "froggy_death": {
+    "sounds": [
+      { "name": "companions:froggy_death" }
+    ]
+  },
+  "froggy_hurt": {
+    "sounds": [
+      { "name": "companions:froggy_hurt" }
+    ]
+  },
+  "froggy_idle": {
+    "sounds": [
+      { "name": "companions:froggy_idle" },
+      { "name": "companions:froggy_idle2" },
+      { "name": "companions:froggy_idle3" }
+    ]
+  },
+  "froggy_jump": {
+    "sounds": [
+      { "name": "companions:froggy_jump" }
+    ]
+  },
+
+  "mid_frog_death": {
+    "sounds": [
+      { "name": "companions:mid_frog_death" }
+    ]
+  },
+  "mid_frog_idle": {
+    "sounds": [
+      { "name": "companions:mid_frog_idle" },
+      { "name": "companions:mid_frog_idle2" },
+      { "name": "companions:mid_frog_idle3" }
+    ]
+  },
+  "mid_frog_jump": {
+    "sounds": [
+      { "name": "companions:mid_frog_jump" }
+    ]
+  },
+
+  "nether_bullfrog_air_slash_end": {
+    "sounds": [
+      { "name": "companions:nether_bullfrog_air_slash_end" }
+    ]
+  },
+  "nether_bullfrog_death": {
+    "sounds": [
+      { "name": "companions:nether_bullfrog_death" }
+    ]
+  },
+  "nether_bullfrog_hurt": {
+    "sounds": [
+      { "name": "companions:nether_bullfrog_hurt" }
+    ]
+  },
+  "nether_bullfrog_idle": {
+    "sounds": [
+      { "name": "companions:nether_bullfrog_idle" },
+      { "name": "companions:nether_bullfrog_idle2" },
+      { "name": "companions:nether_bullfrog_idle3" }
+    ]
+  },
+  "nether_bullfrog_jump": {
+    "sounds": [
+      { "name": "companions:nether_bullfrog_jump" }
+    ]
+  },
+  "nether_bullfrog_slash": {
+    "sounds": [
+      { "name": "companions:nether_bullfrog_slash" }
+    ]
+  },
+
+  "small_frog_death": {
+    "sounds": [
+      { "name": "companions:small_frog_death" }
+    ]
+  },
+  "small_frog_hurt": {
+    "sounds": [
+      { "name": "companions:small_frog_hurt" }
+    ]
+  },
+  "small_frog_idle": {
+    "sounds": [
+      { "name": "companions:small_frog_idle" },
+      { "name": "companions:small_frog_idle2" }
+    ]
+  },
+  "small_frog_jump": {
+    "sounds": [
+      { "name": "companions:small_frog_jump" }
+    ]
+  },
+  "small_frog_shoot": {
+    "sounds": [
+      { "name": "companions:small_frog_shoot" }
+    ]
+  },
+
+  "spell_hit_mark": {
+    "sounds": [
+      { "name": "companions:spell_hit_mark" }
+    ]
+  },
+  "spell_release_beam": {
+    "sounds": [
+      { "name": "companions:spell_release_beam" }
+    ]
+  },
+  "spell_release_brace": {
+    "sounds": [
+      { "name": "companions:spell_release_brace" }
+    ]
+  },
+  "spell_release_dark_hole": {
+    "sounds": [
+      { "name": "companions:spell_release_dark_hole" }
+    ]
+  },
+  "spell_release_heal": {
+    "sounds": [
+      { "name": "companions:spell_release_heal" }
+    ]
+  },
+  "spell_release_ice": {
+    "sounds": [
+      { "name": "companions:spell_release_ice" }
+    ]
+  },
+  "spell_release_mark": {
+    "sounds": [
+      { "name": "companions:spell_release_mark" }
+    ]
+  },
+  "spell_release_spears": {
+    "sounds": [
+      { "name": "companions:spell_release_spears" }
+    ]
+  },
+  "spell_release_tornado": {
+    "sounds": [
+      { "name": "companions:spell_release_tornado" }
+    ]
+  },
+
+  "mage_death": {
+    "sounds": [
+      { "name": "companions:mage_death" }
+    ]
+  },
+  "mage_get_book": {
+    "sounds": [
+      { "name": "companions:mage_get_book" }
+    ]
+  },
+  "mage_hurt": {
+    "sounds": [
+      { "name": "companions:mage_hurt" }
+    ]
+  },
+  "mage_idle": {
+    "sounds": [
+      { "name": "companions:mage_idle" },
+      { "name": "companions:mage_idle2" }
+    ]
+  },
+  "mage_step": {
+    "sounds": [
+      { "name": "companions:mage_step" }
+    ]
+  },
+
+  "end_minion_death": {
+    "sounds": [
+      { "name": "companions:end_minion_death" }
+    ]
+  },
+  "end_minion_flap": {
+    "sounds": [
+      { "name": "companions:end_minion_flap" }
+    ]
+  },
+  "end_minion_hurt": {
+    "sounds": [
+      { "name": "companions:end_minion_hurt" }
+    ]
+  },
+  "end_minion_step": {
+    "sounds": [
+      { "name": "companions:end_minion_step" }
+    ]
+  },
+
+  "nether_minion_death": {
+    "sounds": [
+      { "name": "companions:nether_minion_death" }
+    ]
+  },
+  "nether_minion_hurt": {
+    "sounds": [
+      { "name": "companions:nether_minion_hurt" },
+      { "name": "companions:nether_minion_hurt2" }
+    ]
+  },
+  "nether_minion_idle": {
+    "sounds": [
+      { "name": "companions:nether_minion_idle" },
+      { "name": "companions:nether_minion_idle2" }
+    ]
+  },
+
+  "overworld_minion_death": {
+    "sounds": [
+      { "name": "companions:overworld_minion_death" }
+    ]
+  },
+  "overworld_minion_hurt": {
+    "sounds": [
+      { "name": "companions:overworld_minion_hurt" }
+    ]
+  },
+  "overworld_minion_idle": {
+    "sounds": [
+      { "name": "companions:overworld_minion_idle" },
+      { "name": "companions:overworld_minion_idle2" }
+    ]
+  },
+
+  "hostile_puppet_glove_attack": {
+    "sounds": [
+      { "name": "companions:hostile_puppet_glove_attack" }
+    ]
+  },
+  "hostile_puppet_glove_clean": {
+    "sounds": [
+      { "name": "companions:hostile_puppet_glove_clean" }
+    ]
+  },
+  "hostile_puppet_glove_loose": {
+    "sounds": [
+      { "name": "companions:hostile_puppet_glove_loose" }
+    ]
+  },
+
+  "puppet_attack_blade": {
+    "sounds": [
+      { "name": "companions:puppet_attack_blade" }
+    ]
+  },
+  "puppet_attack_canon": {
+    "sounds": [
+      { "name": "companions:puppet_attack_canon" }
+    ]
+  },
+  "puppet_attack_mutant": {
+    "sounds": [
+      { "name": "companions:puppet_attack_mutant" }
+    ]
+  },
+  "puppet_attack_whip": {
+    "sounds": [
+      { "name": "companions:puppet_attack_whip" }
+    ]
+  },
+
+  "puppet_equip_blade": {
+    "sounds": [
+      { "name": "companions:puppet_equip_blade" }
+    ]
+  },
+  "puppet_equip_canon": {
+    "sounds": [
+      { "name": "companions:puppet_equip_canon" }
+    ]
+  },
+  "puppet_equip_mutant": {
+    "sounds": [
+      { "name": "companions:puppet_equip_mutant" }
+    ]
+  },
+  "puppet_equip_whip": {
+    "sounds": [
+      { "name": "companions:puppet_equip_whip" }
+    ]
+  },
+
+  "puppet_glove_shoot": {
+    "sounds": [
+      { "name": "companions:puppet_glove_shoot" }
+    ]
+  },
+  "puppet_glove_step": {
+    "sounds": [
+      { "name": "companions:puppet_glove_step" }
+    ]
+  },
+  "puppet_hurt": {
+    "sounds": [
+      { "name": "companions:puppet_hurt" }
+    ]
+  },
+  "puppet_walk": {
+    "sounds": [
+      { "name": "companions:puppet_walk" }
+    ]
+  },
+
+  "shade_altar_charge": {
+    "sounds": [
+      { "name": "companions:shade_altar_charge" }
+    ]
+  },
+  "shade_altar_full": {
+    "sounds": [
+      { "name": "companions:shade_altar_full" }
+    ]
+  },
+  "shade_bell_summon": {
+    "sounds": [
+      { "name": "companions:shade_bell_summon" }
+    ]
+  },
+  "shade_despawn": {
+    "sounds": [
+      { "name": "companions:shade_despawn" }
+    ]
+  },
+  "shade_hurt": {
+    "sounds": [
+      { "name": "companions:shade_hurt" }
+    ]
+  },
+  "shade_idle": {
+    "sounds": [
+      { "name": "companions:shade_idle" },
+      { "name": "companions:shade_idle2" }
+    ]
+  },
+  "shade_maw_bite": {
+    "sounds": [
+      { "name": "companions:shade_maw_bite" }
+    ]
+  },
+  "shade_step": {
+    "sounds": [
+      { "name": "companions:shade_step" }
+    ]
+  },
+  "shade_sword_slash": {
+    "sounds": [
+      { "name": "companions:shade_sword_slash" }
+    ]
+  },
+  "shade_sword_spin_slash": {
+    "sounds": [
+      { "name": "companions:shade_sword_spin_slash" }
     ]
   }
 }

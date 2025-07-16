@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.ai.teddy.goal;
 import dev.xylonity.companions.common.entity.ai.teddy.AbstractTeddyAttackGoal;
 import dev.xylonity.companions.common.entity.companion.TeddyEntity;
 import dev.xylonity.companions.registry.CompanionsEffects;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -16,7 +17,7 @@ public class TeddyAttackGoal extends AbstractTeddyAttackGoal {
 
     @Override
     public boolean canUse() {
-        return super.canUse() && teddy.getTarget() != null && teddy.distanceToSqr(teddy.getTarget()) < 2.5 && teddy.getPhase() == 1;
+        return super.canUse() && teddy.getTarget() != null && teddy.distanceToSqr(teddy.getTarget()) < 4 && teddy.getPhase() == 1;
     }
 
     @Override
@@ -34,6 +35,7 @@ public class TeddyAttackGoal extends AbstractTeddyAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         if (teddy.hasLineOfSight(target)) {
+            teddy.playSound(CompanionsSounds.TEDDY_ATTACK.get());
             teddy.doHurtTarget(target);
             if (new Random().nextFloat() < 0.35f) {
                 target.addEffect(new MobEffectInstance(CompanionsEffects.VOODOO.get(), new Random().nextInt(100, 300), 0, true, true, true));

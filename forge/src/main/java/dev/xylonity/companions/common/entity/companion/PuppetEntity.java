@@ -4,20 +4,24 @@ import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
-import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetBladeAttackGoal;
-import dev.xylonity.companions.common.entity.ai.puppet.goal.PuppetCannonAttackGoal;
+import dev.xylonity.companions.common.entity.ai.puppet.goal.*;
 import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
 import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
@@ -41,6 +45,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
@@ -66,12 +71,14 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<String> ATTACK_ANIMATION_NAME = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
-    // 0 no, 1 left, 2 right (meant for animation sync)
+    // 0 none, 1 left, 2 right
     private static final EntityDataAccessor<Integer> IS_ATTACKING = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
     // 0 none, 1 left, 2 right, 3 both
     private static final EntityDataAccessor<Integer> ACTIVE_ARMS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
     // none,none -> left/right
     private static final EntityDataAccessor<String> ARM_NAMES = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
+
+    private final ItemStack[] lastStacks = new ItemStack[] { ItemStack.EMPTY.copy(), ItemStack.EMPTY.copy() };
 
     public PuppetEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -112,6 +119,10 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
         this.goalSelector.addGoal(2, new PuppetCannonAttackGoal(this, 30, 50));
         this.goalSelector.addGoal(2, new PuppetBladeAttackGoal(this, 30, 50));
+        this.goalSelector.addGoal(2, new PuppetMutantAttackGoal(this, 30, 50));
+        this.goalSelector.addGoal(2, new PuppetWhipAttackGoal(this, 30, 50));
+
+        this.goalSelector.addGoal(3, new PuppetApproachTargetGoal(this, 0.5, 0.4f, 1.25f));
 
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
 
@@ -119,12 +130,72 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
-    public String getCurrentAttackType() {
-        return this.entityData.get(CURRENT_ATTACK_TYPE);
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (source.getEntity() instanceof Player player) {
+            Optional<Vec3> h = getBoundingBox().clip(player.getEyePosition(), player.getEyePosition(1f).add(player.getLookAngle().scale(5)));
+            if (h.isPresent()) {
+                if (h.get().y - this.getBoundingBox().minY < 2) {
+                    return false;
+                }
+            }
+        }
+
+        boolean ret = super.hurt(source, amount);
+
+        if (!level().isClientSide && amount > 4.0f && hasArm(CompanionsItems.MUTANT_ARM.get()) && getTarget() != null) {
+            spawnMutantParticles(15);
+            tpOppositeSide();
+            spawnMutantParticles(15);
+        }
+
+        return ret;
     }
 
-    public void setCurrentAttackType(String attackType) {
-        this.entityData.set(CURRENT_ATTACK_TYPE, attackType);
+    private void spawnMutantParticles(int amount) {
+        for (int i = 0; i < amount; i++) {
+            double dx = (this.random.nextDouble() - 0.5) * 2.0;
+            double dy = (this.random.nextDouble() - 0.5) * 2.0;
+            double dz = (this.random.nextDouble() - 0.5) * 2.0;
+            if (this.level() instanceof ServerLevel level) {
+                level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.1);
+                if (i % 5 == 0) level.sendParticles(CompanionsParticles.TEDDY_TRANSFORMATION.get(), this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.2);
+            }
+        }
+
+    }
+
+    private void tpOppositeSide() {
+        LivingEntity target = getTarget();
+        if (target == null) return;
+
+        Vec3 pos = target.position();
+        Vec3 newPos = pos.subtract(position().x - pos.x, 0, position().z - pos.z);
+
+        if (isValidTeleportPos(newPos)) {
+            setPos(newPos.x, position().y, newPos.z);
+        }
+    }
+
+    private boolean isValidTeleportPos(Vec3 newPos) {
+        BlockPos feet = new BlockPos((int) newPos.x, (int) newPos.y, (int) newPos.z);
+        BlockPos head = new BlockPos((int) newPos.x, (int) newPos.y + 1, (int) newPos.z);
+        BlockPos floor = new BlockPos((int) newPos.x, (int) newPos.y - 1, (int) newPos.z);
+
+        boolean f1 = level().getBlockState(feet).isAir() && level().getBlockState(head).isAir();
+        boolean f2  = level().getBlockState(floor).isSolidRender(level(), floor);
+        return f1 && f2;
+    }
+
+    public boolean hasArm(Item armItem) {
+        for (int i = 0; i < this.inventory.getContainerSize(); i++) {
+            ItemStack stack = this.inventory.getItem(i);
+            if (!stack.isEmpty() && stack.getItem() == armItem) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static AttributeSupplier setAttributes() {
@@ -142,14 +213,6 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     public int getActiveArms() {
         return this.entityData.get(ACTIVE_ARMS);
-    }
-
-    public String getAttackAnimationName() {
-        return this.entityData.get(ATTACK_ANIMATION_NAME);
-    }
-
-    public void setAttackAnimationName(String s) {
-        this.entityData.set(ATTACK_ANIMATION_NAME, s);
     }
 
     public int isAttacking() {
@@ -187,20 +250,6 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     //    return super.interactAt(pPlayer, pVec, pHand);
     //}
-
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        if (pSource.getEntity() instanceof Player player) {
-            Optional<Vec3> h = getBoundingBox().clip(player.getEyePosition(), player.getEyePosition(1f).add(player.getLookAngle().scale(5)));
-            if (h.isPresent()) {
-                if (h.get().y - this.getBoundingBox().minY < 2) {
-                    return false;
-                }
-            }
-        }
-
-        return super.hurt(pSource, pAmount);
-    }
 
     @Nullable
     @Override
@@ -291,33 +340,6 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
-        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
-    }
-
-    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
-        if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttacking() != 0) {
-            event.getController().forceAnimationReset();
-            event.setAnimation(isAttacking() == 1 ? ATTACK_L : ATTACK_R);
-        }
-
-        return PlayState.CONTINUE;
-    }
-
-    private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-        if (this.getMainAction() == 0) {
-            event.setAnimation(SIT);
-        } else if (event.isMoving()) {
-            event.setAnimation(WALK);
-        } else {
-            event.setAnimation(IDLE);
-        }
-
-        return PlayState.CONTINUE;
-    }
-
-    @Override
     public void aiStep() {
         setNoMovement(isAttacking() == 1 || isAttacking() == 2);
         super.aiStep();
@@ -326,38 +348,44 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     @Override
     public void performRangedAttack(@NotNull LivingEntity target, float v) {
         if (!level().isClientSide) {
-            double maxDistance = 30.0D;
             Vec3 startPos = this.getEyePosition(1.0F);
-            Vec3 targetPos = target.getEyePosition(1.0F);
-            Vec3 direction = targetPos.subtract(startPos).normalize();
+            Vec3 direction = target.getEyePosition(1.0F).subtract(startPos).normalize();
 
-            double offset = 1.0D;
-            Vec3 spawnPos = startPos.add(direction.scale(offset));
-
-            double traveled  = 0.0;
-            double increment = 1.0D;
-            int maxSteps = (int)(maxDistance / increment);
+            double traveled = 0d;
+            double increment = 1d;
+            int maxSteps = (int)(30 / increment);
 
             for (int i = 0; i < maxSteps; i++) {
-                Vec3 piecePos = spawnPos.add(direction.scale(traveled));
+                Vec3 piecePos = startPos.add(direction).add(direction.scale(traveled));
                 traveled += increment;
 
-                BlockPos blockPos = BlockPos.containing(piecePos);
-                if (!isPassableBlock(level(), blockPos)) {
-                    spawnRayPiece(level(), this, piecePos, direction, (i == 0));
+                if (!isPassableBlock(level(), BlockPos.containing(piecePos))) {
+                    spawnRayPiece(level(), piecePos, direction, (i == 0));
                     break;
                 }
 
-                spawnRayPiece(level(), this, piecePos, direction, (i == 0));
+                spawnRayPiece(level(), piecePos, direction, (i == 0));
             }
         }
+
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return CompanionsSounds.PUPPET_HURT.get();
+    }
+
+    @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        playSound(CompanionsSounds.PUPPET_WALK.get(), 0.45f, 1f);
     }
 
     private boolean isPassableBlock(Level level, BlockPos pos) {
         return level.getBlockState(pos).getCollisionShape(level, pos).isEmpty();
     }
 
-    private void spawnRayPiece(Level pLevel, LivingEntity caster, Vec3 piecePos, Vec3 direction, boolean isFirstPiece) {
+    private void spawnRayPiece(Level pLevel, Vec3 piecePos, Vec3 direction, boolean isFirstPiece) {
         if (isFirstPiece) {
             MagicRayCircleProjectile circle = CompanionsEntities.MAGIC_RAY_PIECE_CIRCLE_PROJECTILE.get().create(pLevel);
             if (circle != null) {
@@ -386,12 +414,35 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     @Override
     public void containerChanged(@NotNull Container container) {
-        this.updateContainerEquipment();
+        for (int i = 0; i < this.inventory.getContainerSize(); i++) {
+            ItemStack now = this.inventory.getItem(i);
+            ItemStack old = lastStacks[i];
+
+            if (!ItemStack.matches(old, now)) {
+                lastStacks[i] = now.copy();
+
+                if (!now.isEmpty()) {
+                    Item item = now.getItem();
+                    if (item == CompanionsItems.CANNON_ARM.get()) {
+                        playSound(CompanionsSounds.PUPPET_EQUIP_CANON.get(), 0.75f, 1f);
+                    } else if (item == CompanionsItems.MUTANT_ARM.get()) {
+                        playSound(CompanionsSounds.PUPPET_EQUIP_MUTANT.get(), 0.75f, 1f);
+                    } else if (item == CompanionsItems.WHIP_ARM.get()) {
+                        playSound(CompanionsSounds.PUPPET_EQUIP_WHIP.get(), 0.75f, 1f);
+                    } else if (item == CompanionsItems.BLADE_ARM.get()) {
+                        playSound(CompanionsSounds.PUPPET_EQUIP_BLADE.get(), 0.75f, 1f);
+                    }
+                }
+            }
+
+        }
+
+        updateContainerEquipment();
     }
 
     protected void updateContainerEquipment() {
         if (!this.level().isClientSide) {
-            this.setFlag(4, !this.inventory.getItem(0).isEmpty());
+            this.setFlag(!this.inventory.getItem(0).isEmpty());
 
             int arms = 0;
             String leftArm = "none";
@@ -428,14 +479,15 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
             this.setActiveArms(arms);
             this.setArmNames(leftArm + "," + rightArm);
         }
+
     }
 
-    protected void setFlag(int $$0, boolean $$1) {
+    protected void setFlag(boolean b) {
         byte $$2 = this.entityData.get(DATA_ID_FLAGS);
-        if ($$1) {
-            this.entityData.set(DATA_ID_FLAGS, (byte)($$2 | $$0));
+        if (b) {
+            this.entityData.set(DATA_ID_FLAGS, (byte)($$2 | 4));
         } else {
-            this.entityData.set(DATA_ID_FLAGS, (byte)($$2 & ~$$0));
+            this.entityData.set(DATA_ID_FLAGS, (byte)($$2 & ~4));
         }
 
     }
@@ -451,6 +503,33 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
             }
 
         }
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
+        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
+    }
+
+    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
+        if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttacking() != 0) {
+            event.getController().forceAnimationReset();
+            event.setAnimation(isAttacking() == 1 ? ATTACK_R : ATTACK_L);
+        }
+
+        return PlayState.CONTINUE;
+    }
+
+    private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
+        if (this.getMainAction() == 0) {
+            event.setAnimation(SIT);
+        } else if (event.isMoving()) {
+            event.setAnimation(WALK);
+        } else {
+            event.setAnimation(IDLE);
+        }
+
+        return PlayState.CONTINUE;
     }
 
 }

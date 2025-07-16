@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.ai.puppet.glove.goal;
 import dev.xylonity.companions.common.entity.ai.puppet.glove.AbstractPuppetGloveAttackGoal;
 import dev.xylonity.companions.common.entity.companion.PuppetGloveEntity;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
 
 public class PuppetGloveAttackGoal extends AbstractPuppetGloveAttackGoal {
@@ -20,6 +21,7 @@ public class PuppetGloveAttackGoal extends AbstractPuppetGloveAttackGoal {
     public void start() {
         super.start();
         glove.setNoMovement(true);
+        glove.playSound(CompanionsSounds.PUPPET_GLOVE_SHOOT.get());
     }
 
     @Override

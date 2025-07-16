@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity;
 
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -42,6 +43,7 @@ public abstract class ShadeEntity extends CompanionEntity {
             }
         }
 
+        playSound(CompanionsSounds.SHADE_DESPAWN.get());
     }
 
     @Override

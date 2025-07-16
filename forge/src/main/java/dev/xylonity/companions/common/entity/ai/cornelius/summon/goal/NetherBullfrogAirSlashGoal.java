@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.AbstractCorneliusSummonAttackGoal;
 import dev.xylonity.companions.common.entity.summon.NetherBullfrogEntity;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,11 +61,13 @@ public class NetherBullfrogAirSlashGoal extends AbstractCorneliusSummonAttackGoa
 
     @Override
     protected void performAttack(LivingEntity target) {
-        for (LivingEntity e : summon.level().getEntitiesOfClass(LivingEntity.class, new AABB(summon.blockPosition()).inflate(1))) {
-            if (!Util.areEntitiesLinked(e, summon) && isEntityInFront(summon, e, 120)) {
-                e.hurt(summon.damageSources().mobAttack(summon), 8f);
+        for (LivingEntity e : summon.level().getEntitiesOfClass(LivingEntity.class, summon.getBoundingBox().inflate(2.5))) {
+            if (!Util.areEntitiesLinked(e, summon)) {
+                e.hurt(summon.damageSources().mobAttack(summon), 9f);
             }
         }
+
+        summon.playSound(CompanionsSounds.NETHER_BULLFROG_AIR_SLASH_END.get());
     }
 
     protected void spawnParticles() {

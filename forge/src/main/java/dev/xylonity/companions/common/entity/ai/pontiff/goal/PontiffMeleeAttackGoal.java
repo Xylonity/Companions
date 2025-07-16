@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -23,6 +24,7 @@ public class PontiffMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
     public void start() {
         super.start();
         pontiff.setNoMovement(true);
+        pontiff.playSound(CompanionsSounds.PONTIFF_FRONT_ATTACK.get());
     }
 
     @Override

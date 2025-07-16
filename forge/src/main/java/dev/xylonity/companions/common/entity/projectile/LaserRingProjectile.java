@@ -36,11 +36,11 @@ public class LaserRingProjectile extends BaseProjectile {
                     px + outer, py + 1.0, pz + outer
             );
 
-            for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, box, e -> !Util.areEntitiesLinked(this, e))) {
+            for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, box)) {
                 double dx = e.getX() - px;
                 double dz = e.getZ() - pz;
                 double dist = Math.sqrt(dx * dx + dz * dz);
-                if (dist > inner && dist <= outer) {
+                if (dist > inner && dist <= outer && getOwner() != null && !Util.areEntitiesLinked(getOwner(), e)) {
                     if (getOwner() != null && getOwner() instanceof LivingEntity owner) {
                         owner.doHurtTarget(e);
                     }

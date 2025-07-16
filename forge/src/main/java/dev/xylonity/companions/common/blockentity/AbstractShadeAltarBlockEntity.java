@@ -4,12 +4,14 @@ import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.common.entity.projectile.ShadeAltarUpgradeHaloProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -58,9 +60,21 @@ public abstract class AbstractShadeAltarBlockEntity extends BlockEntity implemen
     }
 
     public boolean addCharge() {
-        if (charges >= MAX_CHARGES) return false;
+        if (charges >= MAX_CHARGES) {
+            if (level != null) {
+                level.playSound(null, getBlockPos(), CompanionsSounds.SHADE_ALTAR_FULL.get(), SoundSource.BLOCKS);
+            }
+
+            return false;
+        }
+
         charges++;
         setChanged();
+
+        if (level != null) {
+            level.playSound(null, getBlockPos(), CompanionsSounds.SHADE_ALTAR_CHARGE.get(), SoundSource.BLOCKS);
+        }
+
         return true;
     }
 

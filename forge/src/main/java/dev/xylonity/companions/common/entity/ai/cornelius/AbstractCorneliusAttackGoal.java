@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity.ai.cornelius;
 
 import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -80,6 +81,8 @@ public abstract class AbstractCorneliusAttackGoal extends Goal {
         cornelius.setAttackType(currentAttackType);
         cornelius.setSummonedCount(cornelius.getSummonedCount() + 1);
         consumeCoins();
+
+        cornelius.playSound(CompanionsSounds.FROGGY_ATTACK.get());
     }
 
     @Override

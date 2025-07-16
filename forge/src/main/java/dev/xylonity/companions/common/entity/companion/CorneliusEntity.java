@@ -8,14 +8,17 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomHopStroll
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -142,6 +145,8 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         super.tick();
 
         if (!level().isClientSide) {
+            if (getCycleCount() == 0) playSound(CompanionsSounds.FROGGY_JUMP.get(), 0.5f, 1);
+
             if (getCycleCount() >= 12) this.setDeltaMovement(new Vec3(0, 0, 0));
 
             if (getCycleCount() >= 0) setCycleCount(getCycleCount() + 1);
@@ -149,6 +154,24 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
             if (getCycleCount() >= MAX_CYCLE_TICKS) setCycleCount(-1);
         }
 
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CompanionsSounds.FROGGY_IDLE.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return CompanionsSounds.FROGGY_HURT.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return CompanionsSounds.FROGGY_DEATH.get();
     }
 
     public static AttributeSupplier setAttributes() {

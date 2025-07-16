@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.entity.ai.shade.AbstractShadeAttackGoal;
 import dev.xylonity.companions.common.entity.companion.ShadeSwordEntity;
 import dev.xylonity.companions.common.entity.projectile.ShadeSwordImpactProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,6 +22,7 @@ public class ShadeSwordGroundAttackGoal extends AbstractShadeAttackGoal {
     public void start() {
         super.start();
         shade.setNoMovement(true);
+        shade.playSound(CompanionsSounds.SHADE_SWORD_SLASH.get());
     }
 
     @Override
@@ -61,6 +63,7 @@ public class ShadeSwordGroundAttackGoal extends AbstractShadeAttackGoal {
                 shade.level().addFreshEntity(impact);
             }
         }
+
     }
 
     @Override

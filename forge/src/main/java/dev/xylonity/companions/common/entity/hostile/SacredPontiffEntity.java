@@ -8,6 +8,7 @@ import dev.xylonity.companions.common.util.interfaces.IBossMusicProvider;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.common.api.TickScheduler;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -33,6 +34,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -93,6 +95,8 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
     private int secondPhaseAppearCounter;
 
+    private boolean hasRegisteredBossBar = false;
+
     private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
 
     private static final Set<Integer> SHAKE_TICKS = Set.of(70, 80, 93, 104, 117, 128, 159);
@@ -141,8 +145,6 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.targetSelector.addGoal(2, new PontiffNearestAttackableTargetGoal<>(this, TamableAnimal.class, true));
         this.targetSelector.addGoal(2, new PontiffNearestAttackableTargetGoal<>(this, Turtle.class, true));
     }
-
-    private boolean hasRegisteredBossBar = false;
 
     @Override
     public void tick() {
@@ -210,6 +212,21 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
         super.tick();
 
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return CompanionsSounds.PONTIFF_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CompanionsSounds.PONTIFF_IDLE.get();
+    }
+
+    @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        playSound(CompanionsSounds.PONTIFF_STEP.get(), 0.55f, 1f);
     }
 
     public static AttributeSupplier setAttributes() {
@@ -317,6 +334,8 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
             TickScheduler.scheduleServer(level(), () -> setNoMovement(false), ANIMATION_ACTIVATION_MAX_TICKS);
 
             hasBeenActivated = true;
+
+            playSound(CompanionsSounds.PONTIFF_ACTIVATE.get());
         }
 
         return super.mobInteract(pPlayer, pHand);
@@ -337,6 +356,8 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
             TickScheduler.scheduleServer(level(), () -> this.setPhase(2), ANIMATION_TRANSFORMATION_MAX_TICKS);
             TickScheduler.scheduleServer(level(), () -> this.setInvisible(true), ANIMATION_TRANSFORMATION_MAX_TICKS);
             TickScheduler.scheduleServer(level(), () -> this.bossInfo.setName(Component.translatable("entity.companions.sacred_pontiff_invisible")), ANIMATION_TRANSFORMATION_MAX_TICKS);
+
+            playSound(CompanionsSounds.PONTIFF_GROUND_DESPAWN.get());
 
             return false;
         }
@@ -366,6 +387,9 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     @Override
     protected void tickDeath() {
         ++this.deathTime;
+        if (deathTime == 1 && !level().isClientSide) {
+            playSound(CompanionsSounds.HOLINESS_DEATH.get(), 2f, 1f);
+        }
         if (this.deathTime >= ANIMATION_PHASE2_DEAD && !this.level().isClientSide() && !this.isRemoved()) {
             this.level().broadcastEntityEvent(this, (byte) 60);
 

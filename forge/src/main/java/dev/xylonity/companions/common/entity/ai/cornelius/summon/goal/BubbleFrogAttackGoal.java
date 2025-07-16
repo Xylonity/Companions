@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.entity.ai.cornelius.summon.AbstractCorneli
 import dev.xylonity.companions.common.entity.projectile.FrogEggProjectile;
 import dev.xylonity.companions.common.entity.summon.BubbleFrogEntity;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -35,6 +36,10 @@ public class BubbleFrogAttackGoal extends AbstractCorneliusSummonAttackGoal {
 
         if (attackTicks % 2 == 0 && attackTicks > 7 && attackTicks < 40 && target != null && target.isAlive()) {
             performAttack(target);
+        }
+
+        if (attackTicks == 2) {
+            summon.playSound(CompanionsSounds.SMALL_FROG_SHOOT.get());
         }
 
         attackTicks++;

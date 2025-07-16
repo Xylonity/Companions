@@ -11,6 +11,7 @@ import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +19,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -36,6 +38,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -268,6 +271,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                 this.refreshDimensions();
 
                 updateStats();
+                playSound(CompanionsSounds.TEDDY_TRANSFORMATION.get());
 
                 this.moveControl = new TeddyMoveControl(this);
             }
@@ -285,6 +289,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
         if (getPhase() == 2 && !level().isClientSide && CompanionsConfig.TEDDY_MUTANT_HEALS_OVER_TIME) {
             if (tickCount % 200 == 0) this.heal(1f);
+            if (tickCount % 15 == 0 && ((getMainAction() == 0 && getIsOnAir()) || (getMainAction() != 0))) playSound(CompanionsSounds.MUTANT_TEDDY_FLAP_WINGS.get(), 0.4f, 1f);
         }
 
     }
@@ -299,6 +304,21 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                 if (i % 5 == 0) level.sendParticles(CompanionsParticles.TEDDY_TRANSFORMATION.get(), this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.2);
             }
         }
+    }
+
+    @Override
+    protected void playHurtSound(@NotNull DamageSource pSource) {
+        if (getPhase() == 2) {
+            playSound(CompanionsSounds.MUTANT_TEDDY_HURT.get(), 0.55f, 1f);
+        }
+
+        super.playHurtSound(pSource);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return getPhase() == 2 ? CompanionsSounds.MUTANT_TEDDY_IDLE.get() : null;
     }
 
     @Override
@@ -353,7 +373,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
             level().addFreshEntity(new ItemEntity(level(), position().x, position().y, position().z, new ItemStack(CompanionsItems.MUTANT_FLESH.get(), new Random().nextInt(1, 3))));
 
-            playSound(SoundEvents.PLAYER_BURP);
+            playSound(SoundEvents.GENERIC_DRINK);
 
             return InteractionResult.SUCCESS;
         }
@@ -378,6 +398,15 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                 this.level().broadcastEntityEvent(this, (byte) 60);
                 this.remove(RemovalReason.KILLED);
             }
+        }
+    }
+
+    @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        if (getPhase() == 1) {
+            playSound(CompanionsSounds.TEDDY_STEP.get());
+        } else {
+            super.playStepSound(pPos, pState);
         }
     }
 

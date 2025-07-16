@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAtt
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.entity.projectile.HolinessNaginataProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -20,6 +21,7 @@ public class HolinessDoubleThrowAttackGoal extends AbstractSacredPontiffAttackGo
         super.start();
         pontiff.setNoMovement(true);
         pontiff.setShouldLookAtTarget(false);
+        pontiff.playSound(CompanionsSounds.HOLINESS_FLY_OFF.get());
     }
 
     @Override

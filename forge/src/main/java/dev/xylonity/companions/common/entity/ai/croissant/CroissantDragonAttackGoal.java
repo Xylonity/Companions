@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.particle.CakeCreamParticle;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerLevel;
@@ -84,6 +85,7 @@ public class CroissantDragonAttackGoal extends Goal {
         }
 
         if (tickCount >= 5) {
+            if (tickCount == 5) dragon.playSound(CompanionsSounds.CROISSANT_DRAGON_BREATH.get(), 1.5F, 1);
             Vec3 eyePos = new Vec3(dragon.getX(), dragon.getY() + dragon.getEyeHeight() * 0.2, dragon.getZ());
             Vec3 viewVector = dragon.getViewVector(1.0F).normalize();
             Vec3 spawnPos = eyePos.add(viewVector.scale(1.0));

@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.ai.antlion.tamable.AbstractAntlionA
 import dev.xylonity.companions.common.entity.companion.AntlionEntity;
 import dev.xylonity.companions.common.entity.projectile.AntlionSandProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -49,6 +50,7 @@ public class AntlionSoldierLongAttackGoal extends AbstractAntlionAttackGoal {
             antlion.level().addFreshEntity(projectile);
         }
 
+        antlion.playSound(CompanionsSounds.SOLDIER_ANTLION_SAND_CANNON.get());
     }
 
     @Override

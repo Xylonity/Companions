@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.ai.pontiff.goal;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -25,6 +26,7 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
         super.start();
         pontiff.setNoMovement(true);
         pontiff.setShouldLookAtTarget(false);
+        pontiff.playSound(CompanionsSounds.HOLINESS_HIT_GROUND.get());
     }
 
     @Override

@@ -8,8 +8,11 @@ import dev.xylonity.companions.common.entity.ai.shade.sword.ShadeSwordMoveContro
 import dev.xylonity.companions.common.entity.ai.shade.sword.goal.*;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -69,6 +72,22 @@ public class ShadeSwordEntity extends ShadeEntity {
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
+    }
+
+    @Override
+    protected void playHurtSound(@NotNull DamageSource pSource) {
+        playSound(CompanionsSounds.SHADE_HURT.get());
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CompanionsSounds.SHADE_IDLE.get();
+    }
+
+    @Override
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
+        return false;
     }
 
     public static AttributeSupplier setAttributes() {

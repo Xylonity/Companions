@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.ai.mankh.AbstractMankhAttackGoal;
 import dev.xylonity.companions.common.entity.companion.MankhEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -17,6 +18,7 @@ public class MankhChestShotAttackGoal extends AbstractMankhAttackGoal {
     public void start() {
         super.start();
         mankh.setNoMovement(true);
+        mankh.playSound(CompanionsSounds.MANKH_BEAM.get());
     }
 
     @Override

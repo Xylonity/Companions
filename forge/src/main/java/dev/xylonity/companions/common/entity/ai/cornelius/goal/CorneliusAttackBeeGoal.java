@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.ai.cornelius.goal;
 
 import dev.xylonity.companions.common.entity.ai.cornelius.AbstractCorneliusAttackGoal;
 import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -46,6 +47,7 @@ public class CorneliusAttackBeeGoal extends AbstractCorneliusAttackGoal {
         attackTicks = 0;
         started = true;
         cornelius.setAttackType(currentAttackType);
+        cornelius.playSound(CompanionsSounds.FROGGY_ATTACK.get());
     }
 
     @Override

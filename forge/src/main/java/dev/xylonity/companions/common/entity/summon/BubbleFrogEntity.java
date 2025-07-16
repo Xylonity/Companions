@@ -7,6 +7,8 @@ import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.BubbleFrog
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.SummonHopToOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsSummonHurtTargetGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
+import dev.xylonity.companions.registry.CompanionsSounds;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -69,6 +71,11 @@ public class BubbleFrogEntity extends SummonFrogEntity implements IFrogJumpUtil 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
+    }
+
+    @Override
+    protected SoundEvent jumpSound() {
+        return CompanionsSounds.MID_FROG_JUMP.get();
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {

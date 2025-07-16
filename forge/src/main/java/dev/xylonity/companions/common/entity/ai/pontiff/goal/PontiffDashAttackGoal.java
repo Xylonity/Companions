@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.ai.pontiff.goal;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +24,7 @@ public class PontiffDashAttackGoal extends AbstractSacredPontiffAttackGoal {
         super.start();
         pontiff.getNavigation().stop();
         isDashing = false;
+        pontiff.playSound(CompanionsSounds.PONTIFF_AREA_ATTACK.get());
     }
 
     @Override

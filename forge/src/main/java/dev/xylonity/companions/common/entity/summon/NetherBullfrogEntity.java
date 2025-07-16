@@ -6,6 +6,9 @@ import dev.xylonity.companions.common.entity.ai.cornelius.goal.SummonHopToTarget
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.*;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsSummonHurtTargetGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
+import dev.xylonity.companions.registry.CompanionsSounds;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -16,6 +19,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -67,6 +71,24 @@ public class NetherBullfrogEntity extends SummonFrogEntity implements IFrogJumpU
         super.tick();
     }
 
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return CompanionsSounds.NETHER_BULLFROG_HURT.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CompanionsSounds.NETHER_BULLFROG_IDLE.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return CompanionsSounds.NETHER_BULLFROG_DEATH.get();
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
@@ -87,6 +109,11 @@ public class NetherBullfrogEntity extends SummonFrogEntity implements IFrogJumpU
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
+    }
+
+    @Override
+    protected SoundEvent jumpSound() {
+        return CompanionsSounds.NETHER_BULLFROG_JUMP.get();
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {

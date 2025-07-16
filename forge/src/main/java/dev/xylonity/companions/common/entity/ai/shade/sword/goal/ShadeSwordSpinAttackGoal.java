@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.common.entity.ai.shade.AbstractShadeAttackGoal;
 import dev.xylonity.companions.common.entity.companion.ShadeSwordEntity;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
@@ -22,6 +23,7 @@ public class ShadeSwordSpinAttackGoal extends AbstractShadeAttackGoal {
         super.start();
         shade.setNoMovement(true);
         anchorY = shade.getY();
+        shade.playSound(CompanionsSounds.SHADE_SWORD_SPIN_SLASH.get());
     }
 
     @Override
@@ -69,7 +71,7 @@ public class ShadeSwordSpinAttackGoal extends AbstractShadeAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        for (Entity e : shade.level().getEntitiesOfClass(Entity.class, new AABB(shade.blockPosition()).inflate(3))) {
+        for (Entity e : shade.level().getEntitiesOfClass(Entity.class, shade.getBoundingBox().inflate(3.25))) {
             if (e instanceof LivingEntity livingEntity && shade.hasLineOfSight(livingEntity) && !Util.areEntitiesLinked(e, shade)) {
                 shade.doHurtTarget(livingEntity);
                 livingEntity.knockback(0.5f, shade.getX() - target.getX(), shade.getZ() - target.getZ());

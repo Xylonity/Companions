@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.ai.teddy.goal;
 
 import dev.xylonity.companions.common.entity.ai.teddy.AbstractTeddyAttackGoal;
 import dev.xylonity.companions.common.entity.companion.TeddyEntity;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
 
 public class MutatedTeddyAttackGoal extends AbstractTeddyAttackGoal {
@@ -32,6 +33,7 @@ public class MutatedTeddyAttackGoal extends AbstractTeddyAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         if (teddy.hasLineOfSight(target)) {
+            teddy.playSound(CompanionsSounds.MUTANT_TEDDY_ATTACK.get());
             teddy.doHurtTarget(target);
         }
 

@@ -13,7 +13,7 @@ import dev.xylonity.companions.common.entity.ai.minion.tamable.minion.MinionTorn
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsItems;
-import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -23,9 +23,11 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -37,7 +39,9 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -81,6 +85,16 @@ public class MinionEntity extends CompanionEntity {
     @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
         return new GroundNavigator(this, pLevel);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!isPhaseLocked()) {
+            updateVariantByDimension();
+        }
+
     }
 
     public static AttributeSupplier setAttributes() {
@@ -229,6 +243,52 @@ public class MinionEntity extends CompanionEntity {
             if (this.level() instanceof ServerLevel level) {
                 if (level.random.nextFloat() < 0.65f) level.sendParticles(ParticleTypes.SMOKE, this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.025);
             }
+        }
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        if (getVariant().equals(Variant.END.getName())) {
+            return CompanionsSounds.END_MINION_DEATH.get();
+        } else if (getVariant().equals(Variant.NETHER.getName())) {
+            return CompanionsSounds.NETHER_MINION_DEATH.get();
+        } else {
+            return CompanionsSounds.OVERWORLD_MINION_DEATH.get();
+        }
+
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        if (getVariant().equals(Variant.END.getName())) {
+            return CompanionsSounds.END_MINION_HURT.get();
+        } else if (getVariant().equals(Variant.NETHER.getName())) {
+            return CompanionsSounds.NETHER_MINION_HURT.get();
+        } else {
+            return CompanionsSounds.OVERWORLD_MINION_HURT.get();
+        }
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        if (getVariant().equals(Variant.END.getName())) {
+            return super.getAmbientSound();
+        } else if (getVariant().equals(Variant.NETHER.getName())) {
+            return CompanionsSounds.NETHER_MINION_IDLE.get();
+        } else {
+            return CompanionsSounds.OVERWORLD_MINION_IDLE.get();
+        }
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pPos, BlockState pState) {
+        if (getVariant().equals(Variant.END.getName())) {
+            playSound(CompanionsSounds.END_MINION_STEP.get(), 0.5f, 1f);
+        } else {
+            super.playStepSound(pPos, pState);
         }
     }
 

@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.KnightLib;
 import dev.xylonity.knightlib.registry.KnightLibParticles;
 import net.minecraft.core.particles.ParticleTypes;
@@ -158,6 +159,8 @@ public class FrogHealProjectile extends BaseProjectile {
         }
 
         if (e instanceof LivingEntity entity) entity.heal((float) CompanionsConfig.ENDER_FROG_HEAL_PROJECTILE_HEAL_AMOUNT);
+
+        playSound(CompanionsSounds.END_FROG_HEAL.get());
 
         this.discard();
     }

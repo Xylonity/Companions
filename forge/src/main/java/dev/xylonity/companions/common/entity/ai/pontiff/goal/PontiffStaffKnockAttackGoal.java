@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAtt
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.entity.projectile.PontiffFireRingProjectile;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -20,6 +21,7 @@ public class PontiffStaffKnockAttackGoal extends AbstractSacredPontiffAttackGoal
     public void start() {
         super.start();
         pontiff.setNoMovement(true);
+        pontiff.playSound(CompanionsSounds.PONTIFF_FRONT_ATTACK.get());
     }
 
     @Override
@@ -64,6 +66,7 @@ public class PontiffStaffKnockAttackGoal extends AbstractSacredPontiffAttackGoal
             }
         }
 
+        pontiff.playSound(CompanionsSounds.HOLINESS_STAB.get());
     }
 
     @Override
