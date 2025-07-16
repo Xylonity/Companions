@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -168,6 +169,21 @@ public class ShadowBellItem extends TooltipItem {
         }
 
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack pStack, @NotNull Player pPlayer, @NotNull LivingEntity pInteractionTarget, @NotNull InteractionHand pUsedHand) {
+        CompoundTag tag = pStack.getTag();
+        if (tag != null && tag.hasUUID(UUID_SHADE)) {
+            if (pInteractionTarget.getUUID().equals(tag.getUUID(UUID_SHADE)) && pInteractionTarget instanceof ShadeEntity) {
+                pInteractionTarget.discard();
+                tag.remove(UUID_SHADE);
+                pStack.setTag(tag);
+                return InteractionResult.SUCCESS;
+            }
+        }
+
+        return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
     }
 
     @Override
