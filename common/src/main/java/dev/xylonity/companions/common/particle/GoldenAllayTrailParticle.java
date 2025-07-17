@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
@@ -36,6 +37,11 @@ public class GoldenAllayTrailParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         this.setSpriteFromAge(spritesset);
+    }
+
+    @Override
+    protected int getLightColor(float f) {
+        return LightTexture.FULL_BRIGHT;
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {

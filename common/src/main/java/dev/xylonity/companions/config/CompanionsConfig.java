@@ -664,4 +664,22 @@ public final class CompanionsConfig {
     )
     public static double BLOOD_SLASH_SPEED = 0.5225d;
 
+    @ConfigEntry(
+            category = "Spawn Rates",
+            comment = "Golden allay spawnrate: [weight, minAmount, maxAmount, biomes and tags... (as many as you want)]"
+    )
+    public static String GOLDEN_ALLAY_SPAWN = "50, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
+
+    @ConfigEntry(
+            category = "Spawn Rates",
+            comment = "Cornelius spawnrate: [weight, minAmount, maxAmount, biomes and tags... (as many as you want)]"
+    )
+    public static String CORNELIUS_SPAWN = "40, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
+
+    @ConfigEntry(
+            category = "Spawn Rates",
+            comment = "Wild Antlion spawnrate: [weight, minAmount, maxAmount, biomes and tags... (as many as you want)]"
+    )
+    public static String WILD_ANTLION_SPAWN = "15, 1, 1, minecraft:desert, #forge:is_desert";
+
 }

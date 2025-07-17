@@ -1,12 +1,12 @@
 package dev.xylonity.companions;
 
+import dev.xylonity.companions.common.biome.CompanionsSpawnBiomeModifier;
 import dev.xylonity.companions.client.ClientProxy;
 import dev.xylonity.companions.common.CommonProxy;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.config.ConfigComposer;
-import dev.xylonity.knightlib.registry.KnightLibLootModifier;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
@@ -45,6 +45,7 @@ public class Companions {
         CompanionsRecipes.TYPES.register(modEventBus);
         CompanionsRecipes.SERIALIZERS.register(modEventBus);
         CompanionsEntities.ENTITY.register(modEventBus);
+        CompanionsSpawnBiomeModifier.BIOME_MODIFIER.register(modEventBus);
 
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
@@ -52,6 +53,8 @@ public class Companions {
         MOB_EFFECTS.register(modEventBus);
         PARTICLES.register(modEventBus);
         SOUNDS.register(modEventBus);
+
+        CompanionsSpawnBiomeModifier.BIOME_MODIFIER.register("companions_mob_spawns", CompanionsSpawnBiomeModifier::makeCodec);
 
         ConfigComposer.registerConfig(CompanionsConfig.class, modEventBus);
         CompanionsCommon.init();
