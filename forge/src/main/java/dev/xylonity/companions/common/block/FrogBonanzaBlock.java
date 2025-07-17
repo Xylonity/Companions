@@ -124,14 +124,17 @@ public class FrogBonanzaBlock extends Block implements EntityBlock {
             if (pPlayer.isCreative()) {
                 preventCreativeTabDestroy(pLevel, pPos, pState, pPlayer);
             } else {
-                BlockPos otherPos = pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos.above() : pPos.below();
-                BlockState otherState = pLevel.getBlockState(otherPos);
+                BlockPos oPos = pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos.above() : pPos.below();
+                BlockState oState = pLevel.getBlockState(oPos);
 
-                if (otherState.is(this)) {
-                    pLevel.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
-                    pLevel.levelEvent(pPlayer, 2001, otherPos, Block.getId(otherState));
+                if (oState.is(this)) {
+                    pLevel.setBlock(oPos, Blocks.AIR.defaultBlockState(), 35);
+                    pLevel.levelEvent(pPlayer, 2001, oPos, Block.getId(oState));
                 }
+
+                popResource(pLevel, pPos, new ItemStack(this));
             }
+
         }
 
         super.playerWillDestroy(pLevel, pPos, pState, pPlayer);

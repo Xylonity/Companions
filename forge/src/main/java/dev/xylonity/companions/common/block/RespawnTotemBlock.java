@@ -216,7 +216,6 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
         super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
     }
 
-
     public static void preventCreativeTabDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
         if (pState.getValue(HALF) == DoubleBlockHalf.UPPER) {
             BlockPos lowerPos = pPos.below();
