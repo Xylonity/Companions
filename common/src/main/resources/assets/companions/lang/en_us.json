@@ -47,8 +47,7 @@
   "hostile_puppet_glove.companions.client_message.player_wins": "You win!",
   "hostile_puppet_glove.companions.client_message.player_wins_round": "You win this round!",
 
-
-  "item.companions.angel_of_gertrude_disc.desc": "Solas Composer - Angel of Gertrude",
+  "item.companions.saint_klimt_music_disc.desc": "Solas Composer - Angel of Gertrude",
 
   "item.companions.netherite_chains": "Netherite Chains",
   "item.companions.big_bread": "Big Bread",
@@ -62,7 +61,7 @@
   "item.companions.shadow_bell": "Shadow Bell",
   "item.companions.crystallized_blood": "Crystallized Blood",
   "item.companions.needle": "Needle",
-  "item.companions.angel_of_gertrude_disc": "Angel of Gertrude Music Disc",
+  "item.companions.saint_klimt_music_disc": "Saint Klimt Music Disc",
   "item.companions.demon_flesh": "Demon Flesh",
   "item.companions.mutant_flesh": "Mutant Flesh",
   "item.companions.old_cloth": "Old Cloth",
@@ -77,6 +76,7 @@
   "item.companions.book_black_hole": "Black Hole magic book",
   "item.companions.book_naginata": "Naginata magic book",
   "item.companions.eternal_lighter": "Eternal Lighter",
+  "item.companions.antlion_fur": "Antlion Fur",
   "item.companions.wrench": "Wrench",
   "item.companions.mage_hat": "Mage Hat",
   "item.companions.mage_coat": "Mage Coat",
@@ -154,6 +154,7 @@
   "tooltip.item.companions.whip_arm": "An arm attachment for puppet.",
   "tooltip.item.companions.blade_arm": "An arm attachment for puppet.",
   "tooltip.item.companions.cannon_arm": "An arm attachment for puppet.",
+  "tooltip.item.companions.antlion_fur": "Stinks.",
   "tooltip.item.companions.hourglass_shift": "\uEA0E Press \uEA0B for more information.",
   "tooltip.item.companions.hourglass_1": "Interact with a tamed Antlion to cycle its phase.",
   "tooltip.item.companions.hourglass_2": "Interact with a Respawn Totem to activate it.",

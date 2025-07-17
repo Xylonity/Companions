@@ -14,7 +14,7 @@ public class AntlionModel extends GeoModel<AntlionEntity> {
 
     @Override
     public ResourceLocation getTextureResource(AntlionEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/antlion" + prefix(animatable) + ".png");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/antlion" + prefix(animatable) + ((animatable.hasFur() && animatable.getVariant() == 0) ? "_hair" : "") + ".png");
     }
 
     @Override

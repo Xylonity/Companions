@@ -17,7 +17,7 @@ public class PuppetRenderer extends GeoEntityRenderer<PuppetEntity> {
 
     public PuppetRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PuppetModel());
-        this.shadowRadius = 1f;
+        this.shadowRadius = 0.7f;
     }
 
     @Override

@@ -20,6 +20,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,9 +34,11 @@ import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,6 +51,8 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
+
+import java.util.function.Supplier;
 
 public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
@@ -85,6 +90,8 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     // base: 0 walk (none), 1 dig_in, 2 underground, 3 dig_out
     // adult: 0 fly (none), 1 turn, 2 fall_idle, 3 hit_ground, 4 unstuck
     private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.INT);
+    // the base form has fur once per cycle
+    private static final EntityDataAccessor<Boolean> HAS_FUR = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final int ANIMATION_BASE_DIG_IN_TICKS = 55;
     private static final int ANIMATION_BASE_DIG_OUT_TICKS = 15;
@@ -316,7 +323,8 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
         spawnVariantParticles();
         updateStats();
-        playSound(CompanionsSounds.SPELL_RELEASE_DARK_HOLE.get());
+        setHasFur(true);
+        playSound(CompanionsSounds.SPELL_RELEASE_SPEARS.get());
         if (getVariant() == 2) playSound(CompanionsSounds.ADULT_ANTLION_FLY.get());
     }
 
@@ -415,6 +423,14 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         this.entityData.set(VARIANT, variant);
     }
 
+    public boolean hasFur() {
+        return this.entityData.get(HAS_FUR);
+    }
+
+    public void setHasFur(boolean hasFur) {
+        this.entityData.set(HAS_FUR, hasFur);
+    }
+
     public int getAttackType() {
         return this.entityData.get(ATTACK_TYPE);
     }
@@ -434,6 +450,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         this.entityData.define(VARIANT, 0);
         this.entityData.define(ATTACK_TYPE, 0);
         this.entityData.define(STATE, 0);
+        this.entityData.define(HAS_FUR, true);
     }
 
     @Override
@@ -446,6 +463,18 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
+
+        if (item == Items.SHEARS && isTame() && getOwner() != null && getOwner() == player && getVariant() == 0 && hasFur()) {
+            if (level().isClientSide) return InteractionResult.SUCCESS;
+
+            this.setHasFur(false);
+            popResource(level(), blockPosition(), new ItemStack(CompanionsItems.ANTLION_FUR.get(), level().random.nextInt(1, 4)));
+
+            itemstack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+            this.level().playSound(null, this, SoundEvents.SHEEP_SHEAR, this.getSoundSource(), 1.0F, 1.0F);
+
+            return InteractionResult.SUCCESS;
+        }
 
         if (item == CompanionsItems.HOURGLASS.get() && isTame() && getOwner() != null && getOwner() == player) {
             if (level().isClientSide) return InteractionResult.SUCCESS;
@@ -481,12 +510,16 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         if (pCompound.contains("Variant")) {
             this.setVariant(pCompound.getInt("Variant"));
         }
+        if (pCompound.contains("HasFur")) {
+            this.setHasFur(pCompound.getBoolean("HasFur"));
+        }
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("Variant", getVariant());
+        pCompound.putBoolean("HasFur", hasFur());
     }
 
     @Override
@@ -555,6 +588,22 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         setDeltaMovement(vel);
     }
 
+    private static void popResource(Level pLevel, BlockPos pPos, ItemStack pStack) {
+        double d0 = EntityType.ITEM.getHeight() / 2f;
+        double d1 = pPos.getX() + 0.5;
+        double d2 = pPos.getY() + 1.5 + Mth.nextDouble(pLevel.random, -0.25, 0.25) - d0;
+        double d3 = pPos.getZ() + 0.5;
+        popResource(pLevel, () -> new ItemEntity(pLevel, d1, d2, d3, pStack, -0.25 + Math.random() * 0.25f, -0.35 + Math.random() * 0.35f, -0.25 + Math.random() * 0.25f), pStack);
+    }
+
+    private static void popResource(Level pLevel, Supplier<ItemEntity> pItemEntitySupplier, ItemStack pStack) {
+        if (!pLevel.isClientSide && !pStack.isEmpty()) {
+            ItemEntity itementity = pItemEntitySupplier.get();
+            itementity.setDefaultPickUpDelay();
+            pLevel.addFreshEntity(itementity);
+        }
+
+    }
 
     @Override
     protected void positionRider(@NotNull Entity pPassenger, @NotNull MoveFunction pCallback) {
