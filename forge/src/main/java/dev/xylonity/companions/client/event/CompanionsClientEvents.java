@@ -10,16 +10,16 @@ import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
 import dev.xylonity.companions.client.projectile.renderer.*;
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.registry.*;
+import dev.xylonity.knightlib.api.BossBarBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -28,6 +28,14 @@ public class CompanionsClientEvents {
 
     @Mod.EventBusSubscriber(modid = Companions.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class CompanionsClientModBus {
+
+        private static final ResourceLocation PONTIFF_BACKGROUND = new ResourceLocation(Companions.MOD_ID, "textures/gui/pontiff_bar_background.png");
+        private static final ResourceLocation PONTIFF_HEALTH = new ResourceLocation(Companions.MOD_ID, "textures/gui/pontiff_bar_health.png");
+        private static final ResourceLocation PONTIFF_OVERLAY = new ResourceLocation(Companions.MOD_ID, "textures/gui/pontiff_bar_overlay.png");
+
+        private static final ResourceLocation HOLINESS_BACKGROUND = new ResourceLocation(Companions.MOD_ID, "textures/gui/holiness_bar_background.png");
+        private static final ResourceLocation HOLINESS_HEALTH = new ResourceLocation(Companions.MOD_ID, "textures/gui/holiness_bar_health.png");
+        private static final ResourceLocation HOLINESS_OVERLAY = new ResourceLocation(Companions.MOD_ID, "textures/gui/holiness_bar_overlay.png");
 
         @SubscribeEvent
         public static void registerEntityRenderers(FMLClientSetupEvent event) {
@@ -120,6 +128,60 @@ public class CompanionsClientEvents {
             MenuScreens.register(CompanionsMenuTypes.CORNELIUS_CONTAINER.get(), CorneliusScreen::new);
 
             ItemBlockRenderTypes.setRenderLayer(CompanionsBlocks.ETERNAL_FIRE.get(), RenderType.cutout());
+
+            // Pontiff
+            BossBarBuilder
+                .matcher(boss -> boss.getName().getString().contains("Sacred Pontiff") && !boss.getName().getString().equalsIgnoreCase("Sacred Pontiff Invisible"))
+                .renderer((gui, boss, x, y) -> {
+                    // background
+                    gui.blit(PONTIFF_BACKGROUND, x, y + 22, 0, 0, 183, 5);
+
+                    // health
+                    int healthWidth = (int) (boss.getProgress() * 183);
+                    if (healthWidth > 0) {
+                        gui.blit(PONTIFF_HEALTH, x, y, 0, 0, healthWidth, 27);
+                    }
+
+                    // overlay
+                    gui.blit(PONTIFF_OVERLAY, x - 3, y, 0, 0, 189, 30);
+
+                    int text = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - Minecraft.getInstance().font.width(boss.getName()) / 2;
+                    // name
+                    gui.drawString(Minecraft.getInstance().font, boss.getName(), text, y, 0xFFFFFF);
+                })
+                .padding(24)
+                .hideVanillaName()
+                .register();
+
+            // Invisible
+            BossBarBuilder
+                .matcher(boss -> boss.getName().getString().contains("Sacred Pontiff Invisible"))
+                .renderer((gui, boss, x, y) -> { ;; })
+                .hideVanillaName()
+                .register();
+
+            // Holiness
+            BossBarBuilder
+                .matcher(boss -> boss.getName().getString().contains("His Holiness"))
+                .renderer((gui, boss, x, y) -> {
+                    // background
+                    gui.blit(HOLINESS_BACKGROUND, x - 2, y + 15, 0, 0, 185, 5);
+
+                    // health
+                    int healthWidth = (int) (boss.getProgress() * 185);
+                    if (healthWidth > 0) {
+                        gui.blit(HOLINESS_HEALTH, x - 2, y + 15, 0, 0, healthWidth, 28);
+                    }
+
+                    // overlay
+                    gui.blit(HOLINESS_OVERLAY, x - 23, y, 0, 0, 227, 42);
+
+                    int text = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - Minecraft.getInstance().font.width(boss.getName()) / 2;
+                    gui.drawString(Minecraft.getInstance().font, boss.getName(), text, y, 0xFFFFFF);
+                })
+                .padding(24)
+                .hideVanillaName()
+                .register();
         }
 
         @SubscribeEvent
@@ -140,7 +202,8 @@ public class CompanionsClientEvents {
             event.registerSpriteSet(CompanionsParticles.FIREWORK_TOAD.get(), FireworkToadParticle.Provider::new);
             event.registerSpriteSet(CompanionsParticles.SHADE_TRAIL.get(), ShadeTrailParticle.Provider::new);
             event.registerSpriteSet(CompanionsParticles.SHADE_SUMMON.get(), ShadeSummonParticle.Provider::new);
-            event.registerSpriteSet(CompanionsParticles.HOLINESS_STAR_TRAIL.get(), GoldenAllayTrailParticle.Provider::new);
+            event.registerSpriteSet(CompanionsParticles.HOLINESS_RED_STAR_TRAIL.get(), GoldenAllayTrailParticle.Provider::new);
+            event.registerSpriteSet(CompanionsParticles.HOLINESS_BLUE_STAR_TRAIL.get(), GoldenAllayTrailParticle.Provider::new);
             event.registerSpriteSet(CompanionsParticles.BLINK.get(), BlinkParticle.Provider::new);
             event.registerSpriteSet(CompanionsParticles.LASER_SPARK.get(), IllagerGolemSparkParticle.Provider::new);
             event.registerSpriteSet(CompanionsParticles.EMBER_POLE_EXPLOSION.get(), TeddyTransformationParticle.Provider::new);
@@ -150,29 +213,7 @@ public class CompanionsClientEvents {
 
     @Mod.EventBusSubscriber(modid = Companions.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
     public static class CompanionsClientForgeBus {
-
-        @SubscribeEvent
-        public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
-            Entity cameraEntity = event.getCamera().getEntity();
-            if (cameraEntity instanceof Player player) {
-                if (player.hasEffect(CompanionsEffects.ELECTROSHOCK.get())) {
-                    float intensity = 0.2F;
-                    double offsetX = (Math.random() - 0.5) * intensity;
-                    double offsetY = (Math.random() - 0.5) * intensity;
-                    double offsetZ = (Math.random() - 0.5) * intensity;
-                    event.getCamera().move(offsetX, offsetY, offsetZ);
-                }
-            }
-
-            if (cameraEntity instanceof Player player) {
-                CameraShakeManager.ShakeData shake = CameraShakeManager.getShake(player);
-                if (shake != null) {
-                    shake.applyToCamera(event.getCamera());
-                }
-            }
-
-        }
-
+        ;;
     }
 
 }
