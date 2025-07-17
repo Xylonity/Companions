@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:cake"
+    },
+    {
+      "item": "minecraft:cake"
+    },
+    {
+      "item": "knightlib:filled_grail"
+    },
+    {
+      "item": "minecraft:cocoa_beans"
+    }
+  ],
+  "result": {
+    "item": "companions:croissant_dragon_chocolate_armor",
+    "count": 1
+  }
+}

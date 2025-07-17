@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ccc",
+    "bfb",
+    "ccc"
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:brick"
+    },
+    "c": {
+      "item": "minecraft:copper_ingot"
+    },
+    "f": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "result": {
+    "item": "companions:soul_furnace_block",
+    "count": 1
+  }
+}

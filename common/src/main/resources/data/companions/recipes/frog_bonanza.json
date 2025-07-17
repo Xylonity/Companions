@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "sss",
+    " s ",
+    "ppp"
+  ],
+  "key": {
+    "s": {
+      "tag": "minecraft:stone_bricks"
+    },
+    "p": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "companions:frog_bonanza_block",
+    "count": 1
+  }
+}

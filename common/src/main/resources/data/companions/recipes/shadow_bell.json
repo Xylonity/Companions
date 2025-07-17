@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "bl"
+  ],
+  "key": {
+    "l": {
+      "item": "companions:crystallized_blood"
+    },
+    "b": {
+      "item": "minecraft:bell"
+    }
+  },
+  "result": {
+    "item": "companions:shadow_bell",
+    "count": 1
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "bfb",
+    " b "
+  ],
+  "key": {
+    "b": {
+      "tag": "minecraft:planks"
+    },
+    "c": {
+      "item": "companions:crystallized_blood"
+    },
+    "f": {
+      "tag": "minecraft:banners"
+    }
+  },
+  "result": {
+    "item": "companions:shade_maw_altar",
+    "count": 1
+  }
+}

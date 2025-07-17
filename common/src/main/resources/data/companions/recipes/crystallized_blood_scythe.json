@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "companions:mutant_flesh"
+    },
+    {
+      "item": "companions:mutant_flesh"
+    },
+    {
+      "item": "companions:mutant_flesh"
+    },
+    {
+      "item": "minecraft:netherite_hoe"
+    },
+    {
+      "item": "companions:crystallized_blood"
+    }
+  ],
+  "result": {
+    "item": "companions:crystallized_blood_scythe",
+    "count": 1
+  }
+}

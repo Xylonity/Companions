@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "lll",
+    "lll",
+    "l l"
+  ],
+  "key": {
+    "l": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "companions:mage_leggings",
+    "count": 1
+  }
+}

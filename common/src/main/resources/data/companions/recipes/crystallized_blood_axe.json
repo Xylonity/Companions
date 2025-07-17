@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "companions:demon_flesh"
+    },
+    {
+      "item": "companions:demon_flesh"
+    },
+    {
+      "item": "companions:demon_flesh"
+    },
+    {
+      "item": "companions:demon_flesh"
+    },
+    {
+      "item": "minecraft:netherite_axe"
+    },
+    {
+      "item": "companions:crystallized_blood"
+    }
+  ],
+  "result": {
+    "item": "companions:crystallized_blood_axe",
+    "count": 1
+  }
+}

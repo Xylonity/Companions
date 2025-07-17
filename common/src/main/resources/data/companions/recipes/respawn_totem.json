@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "companions:relic_gold"
+    },
+    {
+      "tag": "minecraft:planks"
+    },
+    {
+      "item": "minecraft:totem_of_undying"
+    },
+    {
+      "item": "companions:soul_gem"
+    },
+    {
+      "item": "companions:old_cloth"
+    }
+  ],
+  "result": {
+    "item": "companions:respawn_totem_block",
+    "count": 1
+  }
+}

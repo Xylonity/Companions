@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "sss",
+    "sps",
+    "sss"
+  ],
+  "key": {
+    "s": {
+      "item": "companions:relic_gold"
+    },
+    "p": {
+      "item": "minecraft:enchanted_book"
+    }
+  },
+  "result": {
+    "item": "companions:book_naginata",
+    "count": 1
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "companions:antlion_fur"
+    },
+    {
+      "item": "minecraft:netherite_sword"
+    },
+    {
+      "item": "companions:crystallized_blood"
+    },
+    {
+      "item": "companions:crystallized_blood"
+    }
+  ],
+  "result": {
+    "item": "companions:crystallized_blood_sword",
+    "count": 1
+  }
+}

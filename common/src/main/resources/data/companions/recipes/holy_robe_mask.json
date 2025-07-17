@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "cgc",
+    "cgc"
+  ],
+  "key": {
+    "c": {
+      "item": "companions:old_cloth"
+    },
+    "g": {
+      "item": "companions:relic_gold"
+    }
+  },
+  "result": {
+    "item": "companions:holy_robe_mask",
+    "count": 1
+  }
+}

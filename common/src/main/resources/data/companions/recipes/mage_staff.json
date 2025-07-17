@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  g",
+    " s ",
+    "s  "
+  ],
+  "key": {
+    "g": {
+      "item": "companions:soul_gem"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "companions:mage_staff",
+    "count": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "knightlib:filled_grail"
+    },
+    {
+      "item": "minecraft:netherite_leggings"
+    },
+    {
+      "item": "companions:crystallized_blood"
+    },
+    {
+      "item": "companions:crystallized_blood"
+    },
+    {
+      "item": "companions:crystallized_blood"
+    }
+  ],
+  "result": {
+    "item": "companions:crystallized_blood_leggings",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "c c",
+    " c ",
+    " c "
+  ],
+  "key": {
+    "c": {
+      "item": "companions:old_cloth"
+    }
+  },
+  "result": {
+    "item": "companions:holy_robe_coat",
+    "count": 1
+  }
+}

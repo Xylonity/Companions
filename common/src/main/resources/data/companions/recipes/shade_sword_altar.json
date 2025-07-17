@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "fs ",
+    " c ",
+    " b "
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:bone_block"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    },
+    "c": {
+      "item": "companions:crystallized_blood"
+    },
+    "f": {
+      "tag": "minecraft:banners"
+    }
+  },
+  "result": {
+    "item": "companions:shade_sword_altar",
+    "count": 1
+  }
+}
