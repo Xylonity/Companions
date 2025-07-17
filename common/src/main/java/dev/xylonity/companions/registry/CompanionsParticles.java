@@ -25,7 +25,8 @@ public class CompanionsParticles {
     public static final Supplier<SimpleParticleType> FIREWORK_TOAD = registerParticle("firework_toad", true);
     public static final Supplier<SimpleParticleType> SHADE_TRAIL = registerParticle("shade_trail", true);
     public static final Supplier<SimpleParticleType> SHADE_SUMMON = registerParticle("shade_summon", true);
-    public static final Supplier<SimpleParticleType> HOLINESS_STAR_TRAIL = registerParticle("holiness_star_trail", true);
+    public static final Supplier<SimpleParticleType> HOLINESS_RED_STAR_TRAIL = registerParticle("holiness_red_star_trail", true);
+    public static final Supplier<SimpleParticleType> HOLINESS_BLUE_STAR_TRAIL = registerParticle("holiness_blue_star_trail", true);
     public static final Supplier<SimpleParticleType> BLINK = registerParticle("blink", true);
     public static final Supplier<SimpleParticleType> LASER_SPARK = registerParticle("laser_spark", true);
     public static final Supplier<SimpleParticleType> EMBER_POLE_EXPLOSION = registerParticle("ember_pole_explosion", true);

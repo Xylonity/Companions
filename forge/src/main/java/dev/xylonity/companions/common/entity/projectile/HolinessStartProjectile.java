@@ -93,7 +93,7 @@ public class HolinessStartProjectile extends BaseProjectile {
         }
 
         if (tickCount % 8 == 0) {
-            level().addParticle(CompanionsParticles.HOLINESS_STAR_TRAIL.get(), getX(), getY() - getBbHeight() * 0.5, getZ(), 0, 0, 0);
+            level().addParticle(isRed() ? CompanionsParticles.HOLINESS_RED_STAR_TRAIL.get() : CompanionsParticles.HOLINESS_BLUE_STAR_TRAIL.get(), getX(), getY() - getBbHeight() * 0.5, getZ(), 0, 0, 0);
         }
 
         if (!this.onGround()) {
