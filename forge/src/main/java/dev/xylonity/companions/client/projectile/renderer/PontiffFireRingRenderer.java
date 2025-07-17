@@ -5,6 +5,7 @@ import dev.xylonity.companions.client.projectile.model.PontiffFireRingModel;
 import dev.xylonity.companions.client.projectile.model.ShadeAltarUpgradeHaloModel;
 import dev.xylonity.companions.common.entity.projectile.PontiffFireRingProjectile;
 import dev.xylonity.companions.common.entity.projectile.ShadeAltarUpgradeHaloProjectile;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ public class PontiffFireRingRenderer extends GeoEntityRenderer<PontiffFireRingPr
     @Override
     public void render(@NotNull PontiffFireRingProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         poseStack.scale(6f, 6f, 6f);
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, entity.isInWall() ? LightTexture.FULL_SKY : packedLight);
     }
 
 }
