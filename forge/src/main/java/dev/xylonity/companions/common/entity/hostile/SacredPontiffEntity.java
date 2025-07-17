@@ -508,7 +508,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
     @Override
     public @NotNull SoundEvent getBossMusic() {
-        return CompanionsSounds.ANGEL_OF_GERTRUDE.get();
+        return CompanionsSounds.SAINT_KLIMT.get();
     }
 
     @Override

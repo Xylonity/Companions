@@ -10,7 +10,7 @@ public class CompanionsSounds {
 
     public static void init() { ;; }
 
-    public static final Supplier<SoundEvent> ANGEL_OF_GERTRUDE = registerSound("angel_of_gertrude", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "angel_of_gertrude")));
+    public static final Supplier<SoundEvent> SAINT_KLIMT = registerSound("saint_klimt", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "saint_klimt")));
     public static final Supplier<SoundEvent> FLIP_CARD = registerSound("flip_card", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "flip_card")));
     public static final Supplier<SoundEvent> BONANZA = registerSound("bonanza", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "bonanza")));
     public static final Supplier<SoundEvent> COIN_CLATTER = registerSound("coin_clatter", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "coin_clatter")));

@@ -6,7 +6,7 @@ import dev.xylonity.knightlib.registry.KnightLibItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+
 import java.util.function.Supplier;
 
 public class CompanionsCreativeModeTabs {
@@ -42,7 +42,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.SHADOW_BELL.get());
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD.get());
                                 output.accept(CompanionsItems.NEEDLE.get());
-                                output.accept(CompanionsItems.ANGEL_OF_GERTRUDE_DISC.get());
+                                output.accept(CompanionsItems.SAINT_KLIMT_MUSIC_DISC.get());
                                 output.accept(CompanionsItems.DEMON_FLESH.get());
                                 output.accept(CompanionsItems.MUTANT_FLESH.get());
                                 output.accept(CompanionsItems.OLD_CLOTH.get());
