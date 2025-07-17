@@ -80,6 +80,10 @@ public class BlackHoleProjectile extends BaseProjectile {
 
         super.tick();
 
+        if (getTickCount() == 20) {
+            level().playSound(null, getX(), getY(), getZ(), CompanionsSounds.SPELL_RELEASE_SPEARS.get(), getSoundSource(), 1.5F, 1.0F);
+        }
+
         if (new Random().nextFloat() < 0.44 && getTickCount() < getLifetime() - 20) for (int i = 0; i < 1; i++) {
             if (this.level() instanceof ServerLevel level) {
                 double x = (Math.random() - 0.5) * 0.5;
@@ -108,10 +112,6 @@ public class BlackHoleProjectile extends BaseProjectile {
 
         if (!this.level().isClientSide && this.tickCount >= 20 && !isLocked()) {
             setLocked(true);
-        }
-
-        if (isLocked() && getTickCount() == 20) {
-            this.level().playSound(null, getX(), getY(), getZ(), CompanionsSounds.SPELL_RELEASE_SPEARS.get(), getSoundSource(), 1.5F, 1.0F);
         }
 
         Vec3 oldPos = this.position();
