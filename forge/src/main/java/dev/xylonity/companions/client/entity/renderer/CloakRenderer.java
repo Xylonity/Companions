@@ -21,6 +21,7 @@ public class CloakRenderer extends GeoEntityRenderer<CloakEntity> {
 
     public CloakRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new CloakModel());
+        this.shadowRadius = 1f;
     }
 
     @Override

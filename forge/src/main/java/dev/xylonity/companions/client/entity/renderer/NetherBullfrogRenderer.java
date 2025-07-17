@@ -11,6 +11,7 @@ public class NetherBullfrogRenderer extends GeoEntityRenderer<NetherBullfrogEnti
 
     public NetherBullfrogRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new NetherBullfrogModel());
+        this.shadowRadius = 1f;
     }
 
 }

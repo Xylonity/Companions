@@ -12,6 +12,7 @@ public class SoulMageRenderer extends GeoEntityRenderer<SoulMageEntity> {
 
     public SoulMageRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SoulMageModel());
+        this.shadowRadius = 0.6f;
     }
 
 }

@@ -9,6 +9,7 @@ public class CorneliusRenderer extends GeoEntityRenderer<CorneliusEntity> {
 
     public CorneliusRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new CorneliusModel());
+        this.shadowRadius = 0.8f;
     }
 
 }

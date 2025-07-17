@@ -12,6 +12,7 @@ public class PuppetGloveRenderer extends GeoEntityRenderer<PuppetGloveEntity> {
 
     public PuppetGloveRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PuppetGloveModel());
+        this.shadowRadius = 0.5f;
     }
 
 }

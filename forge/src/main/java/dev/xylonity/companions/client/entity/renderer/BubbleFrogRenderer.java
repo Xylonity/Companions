@@ -11,6 +11,7 @@ public class BubbleFrogRenderer extends GeoEntityRenderer<BubbleFrogEntity> {
 
     public BubbleFrogRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new BubbleFrogModel());
+        this.shadowRadius = 0.8f;
     }
 
 }

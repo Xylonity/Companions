@@ -10,6 +10,7 @@ public class SacredPontiffRenderer extends GeoEntityRenderer<SacredPontiffEntity
 
     public SacredPontiffRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SacredPontiffModel());
+        this.shadowRadius = 2f;
     }
 
     @Override

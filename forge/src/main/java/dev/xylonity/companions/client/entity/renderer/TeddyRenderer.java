@@ -19,6 +19,7 @@ public class TeddyRenderer extends GeoEntityRenderer<TeddyEntity> {
 
     public TeddyRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new TeddyModel());
+        this.shadowRadius = 0.6f;
     }
 
     @Override

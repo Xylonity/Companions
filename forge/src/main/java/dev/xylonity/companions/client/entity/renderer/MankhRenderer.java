@@ -9,6 +9,7 @@ public class MankhRenderer extends GeoEntityRenderer<MankhEntity> {
 
     public MankhRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new MankhModel());
+        this.shadowRadius = 1f;
     }
 
 }

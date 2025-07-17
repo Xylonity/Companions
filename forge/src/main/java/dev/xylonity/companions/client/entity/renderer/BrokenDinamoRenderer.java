@@ -9,6 +9,7 @@ public class BrokenDinamoRenderer extends GeoEntityRenderer<BrokenDinamoEntity> 
 
     public BrokenDinamoRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new BrokenDinamoModel());
+        this.shadowRadius = 0.7f;
     }
 
 }

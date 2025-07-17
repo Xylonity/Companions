@@ -11,6 +11,7 @@ public class EnderFrogRenderer extends GeoEntityRenderer<EnderFrogEntity> {
 
     public EnderFrogRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new EnderFrogModel());
+        this.shadowRadius = 0.6f;
     }
 
 }

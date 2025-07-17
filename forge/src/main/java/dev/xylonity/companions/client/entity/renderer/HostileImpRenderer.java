@@ -9,6 +9,7 @@ public class HostileImpRenderer extends GeoEntityRenderer<HostileImpEntity> {
 
     public HostileImpRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new HostileImpModel());
+        this.shadowRadius = 0.6f;
     }
 
 }

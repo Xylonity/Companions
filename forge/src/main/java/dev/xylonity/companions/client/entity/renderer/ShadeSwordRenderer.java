@@ -9,6 +9,7 @@ public class ShadeSwordRenderer extends GeoEntityRenderer<ShadeSwordEntity> {
 
     public ShadeSwordRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new ShadeSwordModel());
+        this.shadowRadius = 0.5f;
     }
 
     @Override

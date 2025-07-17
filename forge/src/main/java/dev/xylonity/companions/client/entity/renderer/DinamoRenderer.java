@@ -35,6 +35,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
                 totalFrames,
                 ticksPerFrame
         ));
+        this.shadowRadius = 1f;
     }
 
     public DinamoRenderer(EntityRendererProvider.Context renderManager) {

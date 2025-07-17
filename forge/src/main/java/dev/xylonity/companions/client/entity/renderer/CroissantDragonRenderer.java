@@ -17,6 +17,7 @@ public class CroissantDragonRenderer extends GeoEntityRenderer<CroissantDragonEn
 
     public CroissantDragonRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new CroissantDragonModel());
+        this.shadowRadius = 1.4f;
     }
 
     @Override

@@ -9,6 +9,7 @@ public class WildAntlionRenderer extends GeoEntityRenderer<WildAntlionEntity> {
 
     public WildAntlionRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WildAntlionModel());
+        this.shadowRadius = 0.8f;
     }
 
 }

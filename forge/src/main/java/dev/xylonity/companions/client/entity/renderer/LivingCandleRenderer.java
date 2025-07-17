@@ -12,6 +12,7 @@ public class LivingCandleRenderer extends GeoEntityRenderer<LivingCandleEntity> 
 
     public LivingCandleRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new LivingCandleModel());
+        this.shadowRadius = 0.3f;
     }
 
 }

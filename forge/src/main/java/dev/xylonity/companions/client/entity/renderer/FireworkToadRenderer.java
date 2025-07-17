@@ -12,6 +12,7 @@ public class FireworkToadRenderer extends GeoEntityRenderer<FireworkToadEntity> 
 
     public FireworkToadRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new FireworkToadModel());
+        this.shadowRadius = 0.5f;
     }
 
     @Override

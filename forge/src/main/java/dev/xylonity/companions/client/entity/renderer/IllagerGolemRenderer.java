@@ -31,6 +31,7 @@ public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> 
                 totalFrames,
                 ticksPerFrame
         ));
+        this.shadowRadius = 1f;
     }
 
     public IllagerGolemRenderer(EntityRendererProvider.Context renderManager) {

@@ -11,6 +11,7 @@ public class EmberPoleRenderer extends GeoEntityRenderer<EmberPoleEntity> {
 
     public EmberPoleRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new EmberPoleModel());
+        this.shadowRadius = 0.2f;
     }
 
 }

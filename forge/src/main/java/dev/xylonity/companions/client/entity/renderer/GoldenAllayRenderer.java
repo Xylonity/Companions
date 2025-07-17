@@ -16,6 +16,7 @@ public class GoldenAllayRenderer extends GeoEntityRenderer<GoldenAllayEntity> {
     public GoldenAllayRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new GoldenAllayModel());
         addRenderLayer(new AutoGlowingGeoLayer<>(this));
+        this.shadowRadius = 0.2f;
     }
 
     @Override

@@ -12,6 +12,7 @@ public class MinionRenderer extends GeoEntityRenderer<MinionEntity> {
 
     public MinionRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new MinionModel());
+        this.shadowRadius = 0.7f;
     }
 
 }

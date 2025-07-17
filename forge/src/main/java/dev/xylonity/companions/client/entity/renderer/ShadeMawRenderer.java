@@ -9,6 +9,7 @@ public class ShadeMawRenderer extends GeoEntityRenderer<ShadeMawEntity> {
 
     public ShadeMawRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new ShadeMawModel());
+        this.shadowRadius = 2f;
     }
 
     @Override
