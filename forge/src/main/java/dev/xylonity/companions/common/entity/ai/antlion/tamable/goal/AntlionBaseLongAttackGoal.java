@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.entity.ai.antlion.tamable.goal;
 
 import dev.xylonity.companions.common.entity.ai.antlion.tamable.AbstractAntlionAttackGoal;
 import dev.xylonity.companions.common.entity.companion.AntlionEntity;
-import dev.xylonity.knightlib.common.api.TickScheduler;
+import dev.xylonity.knightlib.api.TickScheduler;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;

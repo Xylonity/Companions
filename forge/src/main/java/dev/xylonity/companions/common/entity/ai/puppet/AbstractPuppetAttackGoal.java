@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.puppet;
 
 import dev.xylonity.companions.common.entity.companion.PuppetEntity;
-import dev.xylonity.knightlib.common.api.TickScheduler;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
