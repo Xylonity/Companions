@@ -12,6 +12,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,9 +25,12 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -199,13 +203,50 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
     private void doubleTeddy() {
         if (getLevel() != null) {
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLDEN_APPLE, new Random().nextInt(1, 4)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.FEATHER, new Random().nextInt(1, 12)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_PEARL, new Random().nextInt(1, 2)));
-            if (getLevel().getRandom().nextFloat() < 0.35f) popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_SCRAP, new Random().nextInt(1, 2)));
-            if (getLevel().getRandom().nextFloat() < 0.5f) popResource(getLevel(), getBlockPos(), new ItemStack(Items.WITHER_SKELETON_SKULL));
-            if (getLevel().getRandom().nextFloat() < 0.45f) popResource(getLevel(), getBlockPos(), new ItemStack(Items.AXOLOTL_BUCKET));
-            if (getLevel().getRandom().nextFloat() < 0.25f) popResource(getLevel(), getBlockPos(), new ItemStack(Items.MUSIC_DISC_PIGSTEP));
+            RandomSource rand = getLevel().getRandom();
+
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLDEN_APPLE, 1));
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.FEATHER, rand.nextInt(1, 5)));
+
+            if (rand.nextFloat() < 0.5f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_PEARL, 1));
+            }
+
+            if (rand.nextFloat() < 0.25f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, rand.nextInt(1, 2)));
+            }
+
+            if (rand.nextFloat() < 0.05f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_SCRAP, 1));
+            }
+
+            if (rand.nextFloat() < 0.10f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.WITHER_SKELETON_SKULL));
+            }
+
+            if (rand.nextFloat() < 0.10f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.AXOLOTL_BUCKET));
+            }
+
+            if (rand.nextFloat() < 0.05f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.MUSIC_DISC_PIGSTEP));
+            }
+
+            if (rand.nextFloat() < 0.15f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.DIAMOND, 1));
+            }
+
+            if (rand.nextFloat() < 0.20f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.EMERALD, rand.nextInt(1, 3)));
+            }
+
+            if (rand.nextFloat() < 0.10f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.EXPERIENCE_BOTTLE, rand.nextInt(1, 4)));
+            }
+
+            if (rand.nextFloat() < 0.005f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHER_STAR, 1));
+            }
 
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
@@ -261,9 +302,17 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
     private void tripleCoin()  {
         if (getLevel() != null) {
-            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.COPPER_COIN.get(), new Random().nextInt(2, 60)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.NETHER_COIN.get(), new Random().nextInt(1, 20)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.END_COIN.get(), new Random().nextInt(1, 6)));
+            RandomSource rand = getLevel().getRandom();
+
+            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.COPPER_COIN.get(), rand.nextInt(1, 20)));
+
+            if (rand.nextFloat() < 0.75f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.NETHER_COIN.get(), rand.nextInt(1, 5)));
+            }
+
+            if (rand.nextFloat() < 0.45f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.END_COIN.get(), 1));
+            }
 
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
@@ -272,21 +321,55 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
     private void tripleTeddy() {
         if (getLevel() != null) {
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, new Random().nextInt(1, 3)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLDEN_APPLE, new Random().nextInt(1, 7)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_PEARL, new Random().nextInt(1, 5)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_EYE, new Random().nextInt(1, 5)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.DIAMOND, new Random().nextInt(1, 15)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLD_INGOT, new Random().nextInt(1, 15)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.CAKE));
+            RandomSource rand = getLevel().getRandom();
 
-            if (getLevel().getRandom().nextFloat() < 0.7f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_SCRAP, new Random().nextInt(1, 2)));
-            } else {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_INGOT, new Random().nextInt(1, 3)));
+            popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLDEN_APPLE, rand.nextInt(1, 4)));
+
+            if (rand.nextFloat() < 0.8f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, rand.nextInt(1, 4)));
             }
 
-            if (getLevel().getRandom().nextFloat() < 0.5f) popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHER_STAR));
+            if (rand.nextFloat() < 0.75f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_PEARL, rand.nextInt(1, 3)));
+            }
+
+            if (rand.nextFloat() < 0.75f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_EYE, rand.nextInt(1, 3)));
+            }
+
+            if (rand.nextFloat() < 0.65f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.DIAMOND, rand.nextInt(1, 10)));
+            }
+
+            if (rand.nextFloat() < 0.85f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLD_INGOT, rand.nextInt(1, 20)));
+            }
+
+            if (rand.nextFloat() < 0.55f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.CAKE, 1));
+            }
+
+            if (rand.nextFloat() < 0.3f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_SCRAP, 1));
+            } else if (rand.nextFloat() < 0.1f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_INGOT, 1));
+            }
+
+            if (rand.nextFloat() < 0.05f) {
+                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHER_STAR, 1));
+            }
+
+            if (rand.nextFloat() < 0.15f) {
+                ItemStack book = new ItemStack(Items.ENCHANTED_BOOK);
+                EnchantedBookItem.addEnchantment(book, new EnchantmentInstance(Enchantments.FIRE_ASPECT, 2));
+                popResource(getLevel(), getBlockPos(), book);
+            }
+
+            if (rand.nextFloat() < 0.1f) {
+                ItemStack book = new ItemStack(Items.ENCHANTED_BOOK);
+                EnchantedBookItem.addEnchantment(book, new EnchantmentInstance(Enchantments.ALL_DAMAGE_PROTECTION, 4));
+                popResource(getLevel(), getBlockPos(), book);
+            }
 
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
