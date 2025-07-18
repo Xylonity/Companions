@@ -315,7 +315,7 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
             event.setAnimation(SUMMON2);
         } else if (getAttackType() == 3) {
             event.setAnimation(SUMMON3);
-        } else if (event.isMoving()) {
+        } else if (getCycleCount() >= 0) {
             event.setAnimation(WALK);
         } else {
             event.setAnimation(IDLE);

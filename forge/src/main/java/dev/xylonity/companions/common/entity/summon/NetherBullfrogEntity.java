@@ -125,7 +125,7 @@ public class NetherBullfrogEntity extends SummonFrogEntity implements IFrogJumpU
             event.setAnimation(SPIN_SLASH);
         } else if (getAttackType() == 4) {
             event.setAnimation(AIR_SLASH);
-        } else if (event.isMoving()) {
+        } else if (getCycleCount() >= 0) {
             event.setAnimation(WALK);
         } else {
             event.setAnimation(IDLE);

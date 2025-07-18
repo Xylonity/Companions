@@ -81,7 +81,7 @@ public class BubbleFrogEntity extends SummonFrogEntity implements IFrogJumpUtil 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
         if (getAttackType() == 1) {
             event.setAnimation(SHOOT);
-        } else if (event.isMoving()) {
+        } else if (getCycleCount() >= 0) {
             event.setAnimation(WALK);
         } else {
             event.setAnimation(IDLE);

@@ -153,7 +153,7 @@ public class FireworkToadEntity extends SummonFrogEntity implements IFrogJumpUti
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
         if (isFlying()) {
             event.setAnimation(FLY);
-        } else if (event.isMoving()) {
+        } else if (getCycleCount() >= 0) {
             event.setAnimation(WALK);
         } else {
             event.setAnimation(IDLE);
