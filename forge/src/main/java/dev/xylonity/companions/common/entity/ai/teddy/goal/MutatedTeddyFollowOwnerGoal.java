@@ -1,18 +1,25 @@
 package dev.xylonity.companions.common.entity.ai.teddy.goal;
 
 import dev.xylonity.companions.common.entity.companion.TeddyEntity;
+import dev.xylonity.companions.config.CompanionsConfig;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.FlyNodeEvaluator;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
 public class MutatedTeddyFollowOwnerGoal extends Goal {
+    public static final int TELEPORT_WHEN_DISTANCE_IS = CompanionsConfig.COMPANIONS_FOLLOW_OWNER_TELEPORT_DISTANCE;
 
     private final double minDistance;
     private final double startDistance;
@@ -61,6 +68,10 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
     public void tick() {
         if (this.owner == null) return;
 
+        if (this.teddy.distanceToSqr(this.owner) >= TELEPORT_WHEN_DISTANCE_IS * TELEPORT_WHEN_DISTANCE_IS) {
+            this.teleportToOwner();
+        }
+
         teddy.lookAt(this.owner, 30f, 30f);
 
         double dx = this.owner.getX() - this.teddy.getX();
@@ -95,6 +106,50 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
 
     private boolean isPathBlocked(Level level, Vec3 from, Vec3 to) {
         return level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.teddy)).getType() != HitResult.Type.MISS;
+    }
+
+    protected void teleportToOwner() {
+        BlockPos pos = this.owner.blockPosition();
+
+        for(int i = 0; i < 10; ++i) {
+            int x = this.randomIntInclusive(-3, 3);
+            int y = this.randomIntInclusive(-1, 1);
+            int z = this.randomIntInclusive(-3, 3);
+            if (this.maybeTeleportTo(pos.getX() + x, pos.getY() + y, pos.getZ() + z)) {
+                return;
+            }
+        }
+
+    }
+
+    private boolean maybeTeleportTo(int pX, int pY, int pZ) {
+        if (Math.abs(pX - this.owner.getX()) < 2.0F && Math.abs(pZ - this.owner.getZ()) < 2.0f) {
+            return false;
+        } else if (!this.canTeleportTo(new BlockPos(pX, pY, pZ))) {
+            return false;
+        } else {
+            this.teddy.moveTo(pX + 0.5F, pY, pZ + 0.5F, this.teddy.getYRot(), this.teddy.getXRot());
+            this.navigation.stop();
+            return true;
+        }
+
+    }
+
+    private boolean canTeleportTo(BlockPos pPos) {
+        if (FlyNodeEvaluator.getBlockPathTypeStatic(this.teddy.level(), pPos.mutable()) != BlockPathTypes.WALKABLE) {
+            return false;
+        } else {
+            if ( this.teddy.level().getBlockState(pPos.below()).getBlock() instanceof LeavesBlock) {
+                return false;
+            } else {
+                return teddy.level().noCollision(this.teddy, this.teddy.getBoundingBox().move(pPos.subtract(this.teddy.blockPosition())));
+            }
+        }
+
+    }
+
+    private int randomIntInclusive(int pMin, int pMax) {
+        return this.teddy.getRandom().nextInt(pMax - pMin + 1) + pMin;
     }
 
 }

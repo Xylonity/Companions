@@ -1,18 +1,24 @@
 package dev.xylonity.companions.common.entity.ai.antlion.tamable.goal;
 
 import dev.xylonity.companions.common.entity.companion.AntlionEntity;
+import dev.xylonity.companions.config.CompanionsConfig;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.FlyNodeEvaluator;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
 public class AntlionAdultFollowOwnerGoal extends Goal {
+    public static final int TELEPORT_WHEN_DISTANCE_IS = CompanionsConfig.COMPANIONS_FOLLOW_OWNER_TELEPORT_DISTANCE;
 
     private final double minDistance;
     private final double startDistance;
@@ -60,6 +66,10 @@ public class AntlionAdultFollowOwnerGoal extends Goal {
 
         if (this.owner == null) return;
 
+        if (this.antlion.distanceToSqr(this.owner) >= TELEPORT_WHEN_DISTANCE_IS * TELEPORT_WHEN_DISTANCE_IS) {
+            this.teleportToOwner();
+        }
+
         antlion.lookAt(this.owner, 30f, 30f);
 
         double dx = this.owner.getX() - this.antlion.getX();
@@ -93,6 +103,50 @@ public class AntlionAdultFollowOwnerGoal extends Goal {
 
     private boolean isPathBlocked(Level level, Vec3 from, Vec3 to) {
         return level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.antlion)).getType() != HitResult.Type.MISS;
+    }
+
+    protected void teleportToOwner() {
+        BlockPos pos = this.owner.blockPosition();
+
+        for(int i = 0; i < 10; ++i) {
+            int x = this.randomIntInclusive(-3, 3);
+            int y = this.randomIntInclusive(-1, 1);
+            int z = this.randomIntInclusive(-3, 3);
+            if (this.maybeTeleportTo(pos.getX() + x, pos.getY() + y, pos.getZ() + z)) {
+                return;
+            }
+        }
+
+    }
+
+    private boolean maybeTeleportTo(int pX, int pY, int pZ) {
+        if (Math.abs(pX - this.owner.getX()) < 2.0F && Math.abs(pZ - this.owner.getZ()) < 2.0f) {
+            return false;
+        } else if (!this.canTeleportTo(new BlockPos(pX, pY, pZ))) {
+            return false;
+        } else {
+            this.antlion.moveTo(pX + 0.5F, pY, pZ + 0.5F, this.antlion.getYRot(), this.antlion.getXRot());
+            this.navigation.stop();
+            return true;
+        }
+
+    }
+
+    private boolean canTeleportTo(BlockPos pPos) {
+        if (FlyNodeEvaluator.getBlockPathTypeStatic(this.antlion.level(), pPos.mutable()) != BlockPathTypes.WALKABLE) {
+            return false;
+        } else {
+            if ( this.antlion.level().getBlockState(pPos.below()).getBlock() instanceof LeavesBlock) {
+                return false;
+            } else {
+                return antlion.level().noCollision(this.antlion, this.antlion.getBoundingBox().move(pPos.subtract(this.antlion.blockPosition())));
+            }
+        }
+
+    }
+
+    private int randomIntInclusive(int pMin, int pMax) {
+        return this.antlion.getRandom().nextInt(pMax - pMin + 1) + pMin;
     }
 
 }

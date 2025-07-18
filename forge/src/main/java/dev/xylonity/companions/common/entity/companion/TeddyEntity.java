@@ -350,7 +350,6 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
-                player.setItemInHand(hand, new ItemStack(Items.BUCKET));
             }
 
             this.tameInteraction(player);
@@ -370,6 +369,8 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             if (level().isClientSide) return InteractionResult.SUCCESS;
 
             if (!player.getAbilities().instabuild) stack.shrink(1);
+
+            player.setItemInHand(hand, new ItemStack(Items.BUCKET));
 
             level().addFreshEntity(new ItemEntity(level(), position().x, position().y, position().z, new ItemStack(CompanionsItems.MUTANT_FLESH.get(), new Random().nextInt(1, 3))));
 
@@ -461,15 +462,15 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
 
         if (getPhase() == 1) {
-            if (this.getMainAction() == 0) {
+            if (this.getSecondPhaseCounter() != 0 && this.getSecondPhaseCounter() <= ANIMATION_TRANSFORM_MAX_TICKS) {
+                event.getController().setAnimation(TRANSFORM);
+            } else if (this.getMainAction() == 0) {
                 RawAnimation vari = getSitVariation() == 0 ? LAY : getSitVariation() == 1 ? SIT : SLEEP;
                 event.getController().setAnimation(vari);
             } else if (getAttackType() == 1) {
                 event.setAnimation(STAB);
             } else if (getAttackType() == 2) {
                 event.setAnimation(AUTO_STAB);
-            } else if (this.getSecondPhaseCounter() != 0 && this.getSecondPhaseCounter() <= ANIMATION_TRANSFORM_MAX_TICKS) {
-                event.getController().setAnimation(TRANSFORM);
             } else if (event.isMoving()) {
                 event.getController().setAnimation(WALK);
             } else {
