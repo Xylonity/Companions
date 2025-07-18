@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.blockentity;
 
+import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.projectile.RespawnTotemRingProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
@@ -18,7 +19,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -79,12 +79,14 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    public void captureNearby() {
-        if (level == null) return;
-        if (level.isClientSide) return;
+    public boolean captureNearby() {
+        if (level == null) return false;
+        if (level.isClientSide) return false;
+
+        boolean captureFlag = false;
 
         for (Entity e : level.getEntitiesOfClass(TamableAnimal.class, new AABB(worldPosition).inflate(5))) {
-            if (e.isRemoved() || e instanceof Player) continue;
+            if (e.isRemoved()) continue;
 
             CompoundTag data = new CompoundTag();
             e.save(data);
@@ -92,9 +94,11 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
 
             e.getPersistentData().putLong("RespawnTotemPos", worldPosition.asLong());
             e.getPersistentData().putString("RespawnTotemDim", level.dimension().location().toString());
+            captureFlag = true;
         }
 
         setChanged();
+        return captureFlag;
     }
 
     public int getCaptureCooldown() {
@@ -213,6 +217,13 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
                         }
 
                         t.setCharges(t.getCharges() - 1);
+
+                        if (spawned instanceof CompanionEntity c) {
+                            c.setMainAction(0, null);
+                        } else if (spawned instanceof TamableAnimal tamableAnimal) {
+                            tamableAnimal.setOrderedToSit(true);
+                        }
+
                         sv.addFreshEntity(spawned);
                     }
 
@@ -238,8 +249,11 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
                 }
             }
 
-            t.setCharges(CompanionsConfig.RESPAWN_TOTEM_CHARGES);
-            t.captureNearby();
+            // If it finds entities to capture
+            if (t.captureNearby()) {
+                t.setCharges(CompanionsConfig.RESPAWN_TOTEM_CHARGES);
+            }
+
             t.setCapturing(false);
             t.setCaptureCooldown(40);
             t.setChanged();
