@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -50,6 +51,8 @@ public class ScrollProjectile extends BaseProjectile {
                 e.moveTo(position());
                 level().addFreshEntity(e);
             }
+
+            playSound(CompanionsSounds.SCROLL_SOUND.get(), 0.75f, 1f);
         }
 
     }

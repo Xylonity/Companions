@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEffects;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,7 +32,10 @@ public class FireMarkRingProjectile extends BaseProjectile {
 
         if (!this.level().isClientSide) {
             for (LivingEntity entity : level().getEntitiesOfClass(LivingEntity.class, new AABB(getX() - RADIUS, getY() - 1, getZ() - RADIUS, getX() + RADIUS, getY() + 1, getZ() + RADIUS), e -> !Util.areEntitiesLinked(this, e))) {
-                entity.addEffect(new MobEffectInstance(CompanionsEffects.FIRE_MARK.get(), 100, 0, true, true));
+                if (!entity.hasEffect(CompanionsEffects.FIRE_MARK.get())) {
+                    entity.addEffect(new MobEffectInstance(CompanionsEffects.FIRE_MARK.get(), level().random.nextInt(100, 400), 0, true, true));
+                    entity.playSound(CompanionsSounds.SPELL_HIT_MARK.get());
+                }
             }
 
         }

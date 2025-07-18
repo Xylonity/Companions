@@ -7,9 +7,11 @@ import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -176,6 +178,10 @@ public class WrenchItem extends TooltipItem {
                     player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_established").withStyle(ChatFormatting.GREEN), true);
                 }
 
+            }
+
+            if (context != null) {
+                context.getLevel().playSound(null, context.getClickedPos(), CompanionsSounds.WRENCH_CONNECTION.get(), SoundSource.BLOCKS, 0.35f, 1);
             }
 
             firstNode = null;
