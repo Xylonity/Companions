@@ -8,8 +8,6 @@
     "IllagerGolemRaidMixin"
   ],
   "client": [
-    "ItemRendererMixin",
-    "ModelBakeryMixin"
   ],
   "server": [
   ],

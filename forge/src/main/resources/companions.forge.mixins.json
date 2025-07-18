@@ -6,7 +6,9 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "EntityRendererAccessor",
-    "LivingEntityRendererMixin"
+    "LivingEntityRendererMixin",
+    "ItemRendererMixin",
+    "ModelBakeryMixin"
   ],
   "mixins": [
     "CompanionsLevelAccessor",

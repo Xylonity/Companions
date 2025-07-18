@@ -624,14 +624,14 @@ public final class CompanionsConfig {
     @ConfigEntry(
             category = "Armoury",
             comment = "Crystallized Blood Axe cooldown",
-            min = 0, max = 1
+            min = 0, max = 10000
     )
     public static int CRYSTALLIZED_BLOOD_AXE_COOLDOWN = 200;
 
     @ConfigEntry(
             category = "Armoury",
             comment = "Crystallized Blood Sword cooldown",
-            min = 0, max = 1
+            min = 0, max = 10000
     )
     public static int CRYSTALLIZED_BLOOD_SWORD_COOLDOWN = 200;
 
