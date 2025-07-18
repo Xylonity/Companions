@@ -204,6 +204,7 @@ public class CompanionsClientEvents {
             event.registerSpriteSet(CompanionsParticles.SHADE_SUMMON.get(), ShadeSummonParticle.Provider::new);
             event.registerSpriteSet(CompanionsParticles.HOLINESS_RED_STAR_TRAIL.get(), GoldenAllayTrailParticle.Provider::new);
             event.registerSpriteSet(CompanionsParticles.HOLINESS_BLUE_STAR_TRAIL.get(), GoldenAllayTrailParticle.Provider::new);
+            event.registerSpriteSet(CompanionsParticles.RESPAWN_TOTEM.get(), GoldenAllayTrailParticle.Provider::new);
             event.registerSpriteSet(CompanionsParticles.BLINK.get(), BlinkParticle.Provider::new);
             event.registerSpriteSet(CompanionsParticles.LASER_SPARK.get(), IllagerGolemSparkParticle.Provider::new);
             event.registerSpriteSet(CompanionsParticles.EMBER_POLE_EXPLOSION.get(), TeddyTransformationParticle.Provider::new);

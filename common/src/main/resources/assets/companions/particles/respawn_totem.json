@@ -1,0 +1,10 @@
+{
+  "textures": [
+    "companions:respawn_totem_0",
+    "companions:respawn_totem_1",
+    "companions:respawn_totem_2",
+    "companions:respawn_totem_3",
+    "companions:respawn_totem_4",
+    "companions:respawn_totem_5"
+  ]
+}

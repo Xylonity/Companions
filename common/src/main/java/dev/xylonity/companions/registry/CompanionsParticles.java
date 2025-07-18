@@ -30,6 +30,7 @@ public class CompanionsParticles {
     public static final Supplier<SimpleParticleType> BLINK = registerParticle("blink", true);
     public static final Supplier<SimpleParticleType> LASER_SPARK = registerParticle("laser_spark", true);
     public static final Supplier<SimpleParticleType> EMBER_POLE_EXPLOSION = registerParticle("ember_pole_explosion", true);
+    public static final Supplier<SimpleParticleType> RESPAWN_TOTEM = registerParticle("respawn_totem", true);
 
     private static <T extends SimpleParticleType> Supplier<T> registerParticle(String id, boolean overrideLimiter) {
         return CompanionsCommon.COMMON_PLATFORM.registerParticle(id, overrideLimiter);

@@ -254,7 +254,7 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
             double dy = (new Random().nextDouble() - 0.5) * 0.5;
             double dz = (new Random().nextDouble() - 0.5) * 0.5;
             if (level instanceof ServerLevel sv) {
-                sv.sendParticles(CompanionsParticles.GOLDEN_ALLAY_TRAIL.get(), t.getBlockPos().getX() + 0.5, t.getBlockPos().getY() + 1.5 * Math.random(), t.getBlockPos().getZ() + 0.5, 1, dx, dy, dz, 0.02);
+                sv.sendParticles(CompanionsParticles.RESPAWN_TOTEM.get(), t.getBlockPos().getX() + 0.5, t.getBlockPos().getY() + 1.5 * Math.random(), t.getBlockPos().getZ() + 0.5, 1, dx, dy, dz, 0.02);
             }
         }
 
