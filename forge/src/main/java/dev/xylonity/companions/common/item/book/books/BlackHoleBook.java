@@ -2,10 +2,11 @@ package dev.xylonity.companions.common.item.book.books;
 
 import dev.xylonity.companions.common.entity.projectile.BlackHoleProjectile;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
+import dev.xylonity.companions.common.material.ArmorMaterials;
+import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -36,6 +37,8 @@ public class BlackHoleBook extends AbstractMagicBook {
                 blackHole.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.8f, 0.0F);
                 level.addFreshEntity(blackHole);
             }
+
+            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.BLACK_HOLE_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(level, player, hand);

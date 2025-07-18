@@ -47,6 +47,9 @@
   "hostile_puppet_glove.companions.client_message.player_wins": "You win!",
   "hostile_puppet_glove.companions.client_message.player_wins_round": "You win this round!",
 
+  "crystallized_blood.companions.client_message.added_charge": "A blood charge has been consumed!",
+  "crystallized_blood.companions.client_message.max_charges": "Max blood charges amount reached!",
+
   "item.companions.saint_klimt_music_disc.desc": "Solas Composer - Angel of Gertrude",
 
   "item.companions.netherite_chains": "Netherite Chains",
@@ -198,7 +201,7 @@
   "tooltip.item.companions.mage_set_desc_3": "magical damage.",
   "tooltip.item.companions.mage_set_2": "Reduction",
   "tooltip.item.companions.mage_set_desc_4": "+%1$d%% reduction per armor piece",
-  "tooltip.item.companions.mage_set_desc_5": "%1$d%% cooldown reduction on magic books",
+  "tooltip.item.companions.mage_set_desc_5": "-%1$d%% cooldown per piece on magic books",
   "tooltip.item.companions.key.holy_robe_set": " Holy Robe set",
   "tooltip.item.companions.holy_robe_set": "Divine Retribution",
   "tooltip.item.companions.holy_robe_set_desc_1": "The old robes radiate an eternal fire ",

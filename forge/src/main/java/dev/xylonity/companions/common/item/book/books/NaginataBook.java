@@ -2,7 +2,9 @@ package dev.xylonity.companions.common.item.book.books;
 
 import dev.xylonity.companions.common.entity.projectile.HolinessNaginataProjectile;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
+import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.network.chat.Component;
@@ -60,6 +62,8 @@ public class NaginataBook extends AbstractMagicBook {
             } else {
                 spawnNaginatas(player, entityHit.getEntity().position(), level);
             }
+
+            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.NAGINATA_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(level, player, hand);

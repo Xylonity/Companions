@@ -3,6 +3,9 @@ package dev.xylonity.companions.common.item.book.books;
 import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
 import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
+import dev.xylonity.companions.common.material.ArmorMaterials;
+import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.api.TickScheduler;
@@ -46,6 +49,8 @@ public class MagicRayBook extends AbstractMagicBook {
 
                 spawnRayPiece(pLevel, pPlayer, piecePos, dir, (i == 0));
             }
+
+            pPlayer.getCooldowns().addCooldown(this, (int)(CompanionsConfig.MAGIC_RAY_COOLDOWN * (1 - (Util.hasFullSetOn(pPlayer, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(pLevel, pPlayer, pUsedHand);

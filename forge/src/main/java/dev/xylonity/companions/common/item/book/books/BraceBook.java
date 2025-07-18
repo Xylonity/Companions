@@ -2,6 +2,9 @@ package dev.xylonity.companions.common.item.book.books;
 
 import dev.xylonity.companions.common.entity.projectile.BraceProjectile;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
+import dev.xylonity.companions.common.material.ArmorMaterials;
+import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.sounds.SoundEvent;
@@ -26,20 +29,24 @@ public class BraceBook extends AbstractMagicBook {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        BraceProjectile projectile = CompanionsEntities.BRACE_PROJECTILE.get().create(level);
-        if (projectile != null) {
-            Vec3 look = player.getLookAngle().normalize();
-            Vec3 eyePos = player.getEyePosition();
-            Vec3 spawnPos = eyePos.add(look.scale(0.3));
-            projectile.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
+        if (!level.isClientSide) {
+            BraceProjectile projectile = CompanionsEntities.BRACE_PROJECTILE.get().create(level);
+            if (projectile != null) {
+                Vec3 look = player.getLookAngle().normalize();
+                Vec3 eyePos = player.getEyePosition();
+                Vec3 spawnPos = eyePos.add(look.scale(0.3));
+                projectile.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
 
-            projectile.setOwner(player);
+                projectile.setOwner(player);
 
-            double speed = 0.75;
-            Vec3 initialVelocity = look.scale(speed).add(player.getDeltaMovement());
-            projectile.setDeltaMovement(initialVelocity);
+                double speed = 0.75;
+                Vec3 initialVelocity = look.scale(speed).add(player.getDeltaMovement());
+                projectile.setDeltaMovement(initialVelocity);
 
-            level.addFreshEntity(projectile);
+                level.addFreshEntity(projectile);
+            }
+
+            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.BRACE_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(level, player, hand);

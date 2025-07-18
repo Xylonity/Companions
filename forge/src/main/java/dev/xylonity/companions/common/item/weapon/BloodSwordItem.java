@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.projectile.BloodSlashProjectile;
 import dev.xylonity.companions.common.entity.projectile.HolinessStartProjectile;
 import dev.xylonity.companions.common.item.generic.GenericGeckoSwordItem;
 import dev.xylonity.companions.common.material.ItemMaterials;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -39,7 +40,7 @@ public class BloodSwordItem extends GenericGeckoSwordItem {
                 pLevel.addFreshEntity(slash);
             }
 
-            player.getCooldowns().addCooldown(this, 200);
+            player.getCooldowns().addCooldown(this, CompanionsConfig.CRYSTALLIZED_BLOOD_SWORD_COOLDOWN);
         }
 
         return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide());

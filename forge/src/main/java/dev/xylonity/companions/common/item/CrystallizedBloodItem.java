@@ -27,15 +27,15 @@ public class CrystallizedBloodItem extends TooltipItem {
             return InteractionResult.PASS;
 
         if (altar.addCharge() && ctx.getPlayer() != null) {
-            if (!ctx.getPlayer().isCreative()) {
+            if (!ctx.getPlayer().getAbilities().instabuild) {
                 ctx.getItemInHand().shrink(1);
             }
 
             if (!level.isClientSide) {
-                ctx.getPlayer().displayClientMessage(Component.translatable("item.companions.crystallized_blood.added_charge",altar.getCharges(), altar.getMaxCharges()), true);
+                ctx.getPlayer().displayClientMessage(Component.translatable("crystallized_blood.companions.client_message.added_charge",altar.getCharges(), altar.getMaxCharges()), true);
             }
         } else if (!level.isClientSide && ctx.getPlayer() != null) {
-            ctx.getPlayer().displayClientMessage(Component.translatable("item.companions.crystallized_blood.max_charges"), true);
+            ctx.getPlayer().displayClientMessage(Component.translatable("crystallized_blood.companions.client_message.max_charges"), true);
         }
 
         return InteractionResult.sidedSuccess(level.isClientSide);

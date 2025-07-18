@@ -2,6 +2,9 @@ package dev.xylonity.companions.common.item.book.books;
 
 import dev.xylonity.companions.common.entity.projectile.FireMarkRingProjectile;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
+import dev.xylonity.companions.common.material.ArmorMaterials;
+import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
@@ -60,6 +63,10 @@ public class FireMarkBook extends AbstractMagicBook {
                 fireMarkRing.setOwner(pPlayer);
                 pLevel.addFreshEntity(fireMarkRing);
             }
+        }
+
+        if (!pLevel.isClientSide) {
+            pPlayer.getCooldowns().addCooldown(this, (int)(CompanionsConfig.FIRE_MARK_COOLDOWN * (1 - (Util.hasFullSetOn(pPlayer, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(pLevel, pPlayer, pUsedHand);

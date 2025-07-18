@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.item.weapon;
 import dev.xylonity.companions.common.entity.projectile.BloodTornadoProjectile;
 import dev.xylonity.companions.common.item.generic.GenericGeckoAxeItem;
 import dev.xylonity.companions.common.material.ItemMaterials;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -43,7 +44,7 @@ public class BloodAxeItem extends GenericGeckoAxeItem {
                 }
             }
 
-            player.getCooldowns().addCooldown(this, 200);
+            player.getCooldowns().addCooldown(this, CompanionsConfig.CRYSTALLIZED_BLOOD_AXE_COOLDOWN);
         }
 
         return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide());

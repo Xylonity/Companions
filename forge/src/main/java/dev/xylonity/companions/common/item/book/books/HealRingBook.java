@@ -1,6 +1,9 @@
 package dev.xylonity.companions.common.item.book.books;
 
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
+import dev.xylonity.companions.common.material.ArmorMaterials;
+import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.sounds.SoundEvent;
@@ -27,11 +30,15 @@ public class HealRingBook extends AbstractMagicBook {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
 
-        Projectile healRing = CompanionsEntities.HEAL_RING_PROJECTILE.get().create(pLevel);
-        if (healRing != null) {
-            healRing.moveTo(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
-            healRing.setOwner(pPlayer);
-            pLevel.addFreshEntity(healRing);
+        if (!pLevel.isClientSide) {
+            Projectile healRing = CompanionsEntities.HEAL_RING_PROJECTILE.get().create(pLevel);
+            if (healRing != null) {
+                healRing.moveTo(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
+                healRing.setOwner(pPlayer);
+                pLevel.addFreshEntity(healRing);
+            }
+
+            pPlayer.getCooldowns().addCooldown(this, (int)(CompanionsConfig.HEAL_RING_COOLDOWN * (1 - (Util.hasFullSetOn(pPlayer, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(pLevel, pPlayer, pUsedHand);

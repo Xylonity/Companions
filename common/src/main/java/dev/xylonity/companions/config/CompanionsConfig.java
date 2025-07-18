@@ -517,6 +517,69 @@ public final class CompanionsConfig {
     )
     public static int SMALL_ICE_SHARD_FREEZE_TICKS = 100;
 
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Cooldown (in ticks) of the black hole magic book",
+            min = 0, max = 10000
+    )
+    public static int BLACK_HOLE_COOLDOWN = 160;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Cooldown (in ticks) of the naginata magic book",
+            min = 0, max = 10000
+    )
+    public static int NAGINATA_COOLDOWN = 140;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Cooldown (in ticks) of the brace magic book",
+            min = 0, max = 10000
+    )
+    public static int BRACE_COOLDOWN = 160;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Cooldown (in ticks) of the fire mark magic book",
+            min = 0, max = 10000
+    )
+    public static int FIRE_MARK_COOLDOWN = 140;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Cooldown (in ticks) of the heal ring magic book",
+            min = 0, max = 10000
+    )
+    public static int HEAL_RING_COOLDOWN = 200;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Cooldown (in ticks) of the ice shard magic book",
+            min = 0, max = 10000
+    )
+    public static int ICE_SHARD_COOLDOWN = 180;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Cooldown (in ticks) of the ice tornado magic book",
+            min = 0, max = 10000
+    )
+    public static int ICE_TORNADO_COOLDOWN = 200;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Cooldown (in ticks) of the magic ray magic book",
+            min = 0, max = 10000
+    )
+    public static int MAGIC_RAY_COOLDOWN = 200;
+
+    @ConfigEntry(
+            category = "Magic Books",
+            comment = "Cooldown (in ticks) of the stone spikes magic book",
+            min = 0, max = 10000
+    )
+    public static int STONE_SPIKES_COOLDOWN = 140;
+
     /**
      * ARMOURY
      */
@@ -560,6 +623,20 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Armoury",
+            comment = "Crystallized Blood Axe cooldown",
+            min = 0, max = 1
+    )
+    public static int CRYSTALLIZED_BLOOD_AXE_COOLDOWN = 200;
+
+    @ConfigEntry(
+            category = "Armoury",
+            comment = "Crystallized Blood Sword cooldown",
+            min = 0, max = 1
+    )
+    public static int CRYSTALLIZED_BLOOD_SWORD_COOLDOWN = 200;
+
+    @ConfigEntry(
+            category = "Armoury",
             comment = "Minimum health % required to activate Crystallized Blood armor effect.",
             min = 0d, max = 1d
     )
@@ -574,10 +651,10 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Armoury",
-            comment = "Cooldown reduction fraction for Mage armor when using magic books.",
+            comment = "Cooldown reduction fraction for Mage armor when using magic books. Reduction per piece.",
             min = 0d, max = 1d
     )
-    public static double MAGE_SET_COOLDOWN_REDUCTION = 0.5d;
+    public static double MAGE_SET_COOLDOWN_REDUCTION = 0.15d;
 
     @ConfigEntry(
             category = "Armoury",

@@ -2,7 +2,9 @@ package dev.xylonity.companions.common.item.book.books;
 
 import dev.xylonity.companions.common.entity.projectile.StoneSpikeProjectile;
 import dev.xylonity.companions.common.item.book.AbstractMagicBook;
+import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.api.TickScheduler;
@@ -38,6 +40,10 @@ public class StoneSpikesBook extends AbstractMagicBook {
         spawnSpikeRow(baseDir, spikes, player);
         spawnSpikeRow(Util.rotateHorizontalDirection(baseDir, -30), (int) (spikes * 0.3), player);
         spawnSpikeRow(Util.rotateHorizontalDirection(baseDir, 30), (int) (spikes * 0.3), player);
+
+        if (!level.isClientSide) {
+            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.STONE_SPIKES_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
+        }
 
         return super.use(level, player, usedHand);
     }
