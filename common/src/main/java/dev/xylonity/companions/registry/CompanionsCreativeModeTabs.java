@@ -48,28 +48,8 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.MUTANT_FLESH.get());
                                 output.accept(CompanionsItems.OLD_CLOTH.get());
                                 output.accept(CompanionsItems.RELIC_GOLD.get());
-
-                                output.accept(CompanionsItems.BOOK_ICE_SHARD.get());
-                                output.accept(CompanionsItems.BOOK_ICE_TORNADO.get());
-                                output.accept(CompanionsItems.BOOK_FIRE_MARK.get());
-                                output.accept(CompanionsItems.BOOK_BRACE.get());
-                                output.accept(CompanionsItems.BOOK_HEAL_RING.get());
-                                output.accept(CompanionsItems.BOOK_STONE_SPIKES.get());
-                                output.accept(CompanionsItems.BOOK_MAGIC_RAY.get());
-                                output.accept(CompanionsItems.BOOK_BLACK_HOLE.get());
-                                output.accept(CompanionsItems.BOOK_NAGINATA.get());
-
                                 output.accept(CompanionsItems.ETERNAL_LIGHTER.get());
                                 output.accept(CompanionsItems.WRENCH.get());
-
-                                output.accept(CompanionsItems.MAGE_HAT.get());
-                                output.accept(CompanionsItems.MAGE_COAT.get());
-                                output.accept(CompanionsItems.MAGE_LEGGINGS.get());
-                                output.accept(CompanionsItems.MAGE_STAFF.get());
-
-                                output.accept(CompanionsItems.HOLY_ROBE_MASK.get());
-                                output.accept(CompanionsItems.HOLY_ROBE_COAT.get());
-                                output.accept(CompanionsItems.HOLY_ROBE_LEGGINGS.get());
 
                                 output.accept(CompanionsBlocks.TESLA_COIL.get());
                                 output.accept(CompanionsBlocks.PLASMA_LAMP.get());
@@ -83,6 +63,25 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsBlocks.RECALL_PLATFORM.get());
                                 output.accept(CompanionsBlocks.VOLTAIC_RELAY.get());
                                 output.accept(CompanionsBlocks.FROG_BONANZA.get());
+
+                                output.accept(CompanionsItems.BOOK_ICE_SHARD.get());
+                                output.accept(CompanionsItems.BOOK_ICE_TORNADO.get());
+                                output.accept(CompanionsItems.BOOK_FIRE_MARK.get());
+                                output.accept(CompanionsItems.BOOK_BRACE.get());
+                                output.accept(CompanionsItems.BOOK_HEAL_RING.get());
+                                output.accept(CompanionsItems.BOOK_STONE_SPIKES.get());
+                                output.accept(CompanionsItems.BOOK_MAGIC_RAY.get());
+                                output.accept(CompanionsItems.BOOK_BLACK_HOLE.get());
+                                output.accept(CompanionsItems.BOOK_NAGINATA.get());
+
+                                output.accept(CompanionsItems.MAGE_HAT.get());
+                                output.accept(CompanionsItems.MAGE_COAT.get());
+                                output.accept(CompanionsItems.MAGE_LEGGINGS.get());
+                                output.accept(CompanionsItems.MAGE_STAFF.get());
+
+                                output.accept(CompanionsItems.HOLY_ROBE_MASK.get());
+                                output.accept(CompanionsItems.HOLY_ROBE_COAT.get());
+                                output.accept(CompanionsItems.HOLY_ROBE_LEGGINGS.get());
 
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_HELMET.get());
                                 output.accept(CompanionsItems.CRYSTALLIZED_BLOOD_CHESTPLATE.get());

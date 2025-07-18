@@ -682,4 +682,22 @@ public final class CompanionsConfig {
     )
     public static String WILD_ANTLION_SPAWN = "15, 1, 1, minecraft:desert, #forge:is_desert";
 
+    @ConfigEntry(
+            category = "Food",
+            comment = "Should the mutant flesh tp the player to the opposite position when looking at a target?"
+    )
+    public static boolean MUTANT_FLESH_SHOULD_TP = true;
+
+    @ConfigEntry(
+            category = "Food",
+            comment = "Should the mutant flesh hurt the player?"
+    )
+    public static boolean MUTANT_FLESH_SHOULD_HURT = true;
+
+    @ConfigEntry(
+            category = "Food",
+            comment = "Should the antlion fur set the player on fire?"
+    )
+    public static boolean ANTLION_FUR_SHOULD_FIRE = true;
+
 }
