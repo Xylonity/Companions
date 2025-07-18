@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -56,6 +55,11 @@ public class HourglassItem extends TooltipItem {
             return InteractionResult.PASS;
 
         if (!level.isClientSide && player != null) {
+            if ((ctx.getItemInHand().getMaxDamage() - ctx.getItemInHand().getDamageValue()) < 12) {
+                player.displayClientMessage(Component.translatable("hourglass.companions.client_message.required_durability"), true);
+                return InteractionResult.PASS;
+            }
+
             if (totem.getCaptureCooldown() > 0) {
                 return InteractionResult.SUCCESS;
             }
@@ -63,6 +67,7 @@ public class HourglassItem extends TooltipItem {
             totem.setCapturing(true);
             respawnTotemBlock.updateLitState(level, pos, state, true);
             level.scheduleTick(pos, respawnTotemBlock, 60);
+            ctx.getItemInHand().hurtAndBreak(12, player, p -> p.broadcastBreakEvent(ctx.getHand()));
         }
 
         return InteractionResult.sidedSuccess(level.isClientSide);

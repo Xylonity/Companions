@@ -33,6 +33,8 @@
   "wrench.companions.client_message.connection_distance": "Nodes must be within %1$d blocks of each other to connect.",
   "wrench.companions.client_message.max_chain_connections": "Maximum chain distance achieved. Use a Voltaic Relay to lengthen the connections.",
 
+  "hourglass.companions.client_message.required_durability": "Requires full durability for use.",
+
   "voltaic_pillar.companions.client_message.wrong_amount": "The amount of pillars on both columns must be the same.",
 
   "shadow_bell.companions.client_message.couldnt_find": "Couldn't find the linked altar.",

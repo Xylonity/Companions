@@ -479,6 +479,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         if (item == CompanionsItems.HOURGLASS.get() && isTame() && getOwner() != null && getOwner() == player) {
             if (level().isClientSide) return InteractionResult.SUCCESS;
 
+            itemstack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
             this.cycleVariant();
 
             return InteractionResult.SUCCESS;
