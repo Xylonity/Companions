@@ -19,7 +19,7 @@ public class CompanionsLootModifierGenerator extends GlobalLootModifierProvider 
 
     @Override
     protected void start() {
-        LootItemCondition condition = LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(CompanionsTags.DEMON_FLESH_DROP.get()).build()).build();
+        LootItemCondition condition = LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(CompanionsTags.DEMON_FLESH_DROP).build()).build();
 
         add("demon_flesh_hostiles", new CompanionsAddItemModifier(
                 new LootItemCondition[]{condition},
