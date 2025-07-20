@@ -6,9 +6,11 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.behaviour.DefaultAttackBehaviour;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoAttackBehaviour;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
+import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
@@ -29,9 +31,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -45,13 +45,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DinamoEntity extends CompanionEntity implements GeoEntity {
     private final TeslaConnectionManager connectionManager;
@@ -267,6 +268,11 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         this.entityData.set(ATTACK_ACTIVE, active);
     }
 
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
+    }
+
     public int getAnimationStartTick() {
         return this.entityData.get(ANIMATION_START_TICK);
     }
@@ -336,15 +342,15 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(ACTIVE, false);
-        builder.define(CYCLE_COUNTER, 0);
-        builder.define(ANIMATION_START_TICK, 0);
-        builder.define(ATTACK_ACTIVE, true);
-        builder.define(ATTACK_CYCLE_COUNTER, 0);
-        builder.define(SHOULD_ATTACK, true);
-        builder.define(TARGET_IDS, "");
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ACTIVE, false);
+        this.entityData.define(CYCLE_COUNTER, 0);
+        this.entityData.define(ANIMATION_START_TICK, 0);
+        this.entityData.define(ATTACK_ACTIVE, true);
+        this.entityData.define(ATTACK_CYCLE_COUNTER, 0);
+        this.entityData.define(SHOULD_ATTACK, true);
+        this.entityData.define(TARGET_IDS, "");
     }
 
     @Override

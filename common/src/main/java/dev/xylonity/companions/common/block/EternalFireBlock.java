@@ -1,22 +1,19 @@
 package dev.xylonity.companions.common.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 public class EternalFireBlock extends BaseFireBlock {
-    public static final MapCodec<EternalFireBlock> CODEC = simpleCodec(EternalFireBlock::new);
-
     public EternalFireBlock(Properties properties) {
         super(properties, 2f);
     }
@@ -31,11 +28,6 @@ public class EternalFireBlock extends BaseFireBlock {
 
     protected boolean canBurn(@NotNull BlockState state) {
         return true;
-    }
-
-    @Override
-    protected MapCodec<? extends BaseFireBlock> codec() {
-        return CODEC;
     }
 
     @Override

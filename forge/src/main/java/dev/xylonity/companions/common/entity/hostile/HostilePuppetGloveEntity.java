@@ -27,9 +27,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -268,11 +272,11 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(IS_PLAYING, false);
-        builder.define(GLOVE_MOVE, -1);
-        builder.define(BROOM_PHASE, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(IS_PLAYING, false);
+        this.entityData.define(GLOVE_MOVE, -1);
+        this.entityData.define(BROOM_PHASE, 0);
     }
 
     private void setIsPlaying(boolean playing) {

@@ -4,7 +4,6 @@ import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.tesla.behaviour.DefaultAttackBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
@@ -23,10 +22,10 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.util.RenderUtil;
+import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.UUID;
 
@@ -89,7 +88,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     public TeslaConnectionManager.ConnectionNode asConnectionNode() {
         ResourceLocation dimension = getLevel() != null
                 ? getLevel().dimension().location()
-                : ResourceLocation.withDefaultNamespace("overworld");
+                : new ResourceLocation("overworld");
         return TeslaConnectionManager.ConnectionNode.forBlock(getBlockPos(), dimension);
     }
 
@@ -100,8 +99,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
         tag.getList("OutgoingConnections", 10).forEach(t -> {
             TeslaConnectionManager.getInstance().addConnection(asConnectionNode(), TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t), true);
         });
@@ -118,8 +117,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
         ListTag outgoing = new ListTag();
         connectionManager.getOutgoing(asConnectionNode()).forEach(node -> {
             outgoing.add(node.serialize());
@@ -146,7 +145,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     @Override
     public double getTick(Object o) {
-        return RenderUtil.getCurrentTick();
+        return RenderUtils.getCurrentTick();
     }
 
     @Nullable
@@ -164,8 +163,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider holders) {
-        super.handleUpdateTag(tag, holders);
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
         this.tickCount = tag.getInt("TickCount");
         this.isActive = tag.getBoolean("IsActive");
         this.distance = tag.getInt("Distance");
@@ -175,8 +174,8 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        CompoundTag tag = super.getUpdateTag(provider);
+    public @NotNull CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
         tag.putInt("TickCount", this.tickCount);
         tag.putBoolean("IsActive", this.isActive);
         tag.putInt("Distance", this.distance);

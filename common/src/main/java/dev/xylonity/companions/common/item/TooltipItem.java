@@ -42,12 +42,12 @@ public class TooltipItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag flag) {
         if (!tooltipName().isEmpty() && !tooltipName().isBlank()) {
-            tooltipComponents.add(Component.translatable("tooltip.item.companions." + tooltipName()).withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
+            components.add(Component.translatable("tooltip.item.companions." + tooltipName()).withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
         }
 
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHoverText(itemStack, level, components, flag);
     }
 
     protected String tooltipName() {

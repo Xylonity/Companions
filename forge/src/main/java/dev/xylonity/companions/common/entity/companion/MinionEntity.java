@@ -42,8 +42,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.function.Supplier;
 
@@ -305,12 +307,12 @@ public class MinionEntity extends CompanionEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(VARIANT, Variant.NETHER.getName());
-        builder.define(IS_LOCKED, false);
-        builder.define(IS_FLYING, false);
-        builder.define(ATTACK_TYPE, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(VARIANT, Variant.NETHER.getName());
+        this.entityData.define(IS_LOCKED, false);
+        this.entityData.define(IS_FLYING, false);
+        this.entityData.define(ATTACK_TYPE, 0);
     }
 
     @Override

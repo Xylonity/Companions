@@ -11,12 +11,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.util.RenderUtil;
+import software.bernie.geckolib.util.RenderUtils;
 
 public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -65,7 +69,7 @@ public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEnti
 
     @Override
     public double getTick(Object o) {
-        return RenderUtil.getCurrentTick();
+        return RenderUtils.getCurrentTick();
     }
 
     @Override

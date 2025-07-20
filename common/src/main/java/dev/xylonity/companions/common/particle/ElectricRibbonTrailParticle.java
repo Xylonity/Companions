@@ -7,7 +7,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ElectricRibbonTrailParticle extends BaseRibbonTrailParticle {
 
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/particle/trail.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(CompanionsCommon.MOD_ID, "textures/particle/trail.png");
 
     private final double amp;
     private final long seed;

@@ -26,7 +26,7 @@ public class CroissantDragonAttackGoal extends Goal {
 
     public CroissantDragonAttackGoal(CroissantDragonEntity dragon) {
         this.dragon = dragon;
-        this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
+        this.setFlags(EnumSet.of(Goal.Flag.LOOK, Goal.Flag.MOVE));
     }
 
     @Override

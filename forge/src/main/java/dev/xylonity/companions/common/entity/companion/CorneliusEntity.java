@@ -10,8 +10,6 @@ import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -42,10 +40,15 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 public class CorneliusEntity extends CompanionEntity implements ContainerListener, IFrogJumpUtil {
 
@@ -185,13 +188,13 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_ID_FLAGS, (byte) 0);
-        builder.define(CAN_ATTACK, true);
-        builder.define(ATTACK_TYPE, 0);
-        builder.define(SUMMONED_COUNT, 0);
-        builder.define(CYCLE_COUNTER, -1);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_ID_FLAGS, (byte) 0);
+        this.entityData.define(CAN_ATTACK, true);
+        this.entityData.define(ATTACK_TYPE, 0);
+        this.entityData.define(SUMMONED_COUNT, 0);
+        this.entityData.define(CYCLE_COUNTER, -1);
     }
 
     public int getAttackType() {
@@ -219,19 +222,22 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            player.openMenu(new MenuProvider() {
-                @Override
-                public Component getDisplayName() {
-                    return CorneliusEntity.this.getName();
-                }
+            NetworkHooks.openScreen(
+                    (ServerPlayer) player, new MenuProvider() {
+                        @Override
+                        public @NotNull Component getDisplayName() {
+                            return CorneliusEntity.this.getName();
+                        }
 
-                @Override
-                public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                    return new CorneliusContainerMenu(i, inventory, CorneliusEntity.this);
-                }
-            });
+                        @Override
+                        public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
+                            return new CorneliusContainerMenu(id, playerInv, CorneliusEntity.this);
+                        }
+                    },
+                    buf -> buf.writeInt(this.getId())
+            );
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.get(), 0.5F, 1.0F);
+            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
             return InteractionResult.SUCCESS;
         }
 
@@ -245,7 +251,7 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.inventory.fromTag(pCompound.getList("Inventory", 10), level().registryAccess());
+        this.inventory.fromTag(pCompound.getList("Inventory", 10));
         if (pCompound.contains("SummonedCount")) {
             this.setSummonedCount(pCompound.getInt("SummonedCount"));
         }
@@ -254,7 +260,7 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.put("Inventory", this.inventory.createTag(level().registryAccess()));
+        pCompound.put("Inventory", this.inventory.createTag());
         pCompound.putInt("SummonedCount", this.getSummonedCount());
     }
 
@@ -278,7 +284,7 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         if (this.inventory != null) {
             for(int i = 0; i < this.inventory.getContainerSize(); i++) {
                 ItemStack itemStack = this.inventory.getItem(i);
-                if (!itemStack.isEmpty()) {
+                if (!itemStack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemStack)) {
                     this.spawnAtLocation(itemStack);
                 }
             }

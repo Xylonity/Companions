@@ -51,7 +51,7 @@ public class BloodAxeItem extends GenericGeckoAxeItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable("tooltip.icon.companions.star").append(Component
                 .translatable("tooltip.item.companions.key.blood_weapon")
                 .withStyle(ChatFormatting.YELLOW)));
@@ -93,7 +93,7 @@ public class BloodAxeItem extends GenericGeckoAxeItem {
                         )
         );
 
-        super.appendHoverText(stack, context, pTooltipComponents, flag);
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
 }

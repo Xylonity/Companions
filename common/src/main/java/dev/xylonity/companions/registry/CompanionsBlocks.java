@@ -165,7 +165,7 @@ public class CompanionsBlocks {
                         .noOcclusion(), BlockType.FROG_BONANZA, BlockItem.GENERIC);
 
         ETERNAL_FIRE = registerBlock("eternal_fire",
-                BlockBehaviour.Properties.ofFullCopy(Blocks.FIRE), BlockType.ETERNAL_FIRE, BlockItem.GENERIC);
+                BlockBehaviour.Properties.copy(Blocks.FIRE), BlockType.ETERNAL_FIRE, BlockItem.GENERIC);
     }
 
     private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType, BlockItem blockItem) {

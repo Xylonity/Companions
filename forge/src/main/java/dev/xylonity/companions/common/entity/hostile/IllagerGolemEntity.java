@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -36,9 +35,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -84,11 +87,6 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
-    }
-
-    @Override
-    public void applyRaidBuffs(ServerLevel serverLevel, int i, boolean b) {
-
     }
 
     public static AttributeSupplier setAttributes() {
@@ -146,6 +144,11 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
 
     public void setTickCount(int tick) {
         this.entityData.set(TICKCOUNT, tick);
+    }
+
+    @Override
+    public void applyRaidBuffs(int i, boolean b) {
+
     }
 
     @Override
@@ -250,12 +253,12 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(ACTIVE, false);
-        builder.define(ANIMATION_START_TICK, 0);
-        builder.define(TEST_TIMER, 0);
-        builder.define(TICKCOUNT, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ACTIVE, false);
+        this.entityData.define(ANIMATION_START_TICK, 0);
+        this.entityData.define(TEST_TIMER, 0);
+        this.entityData.define(TICKCOUNT, 0);
     }
 
     @Override

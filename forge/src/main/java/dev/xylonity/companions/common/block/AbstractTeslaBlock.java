@@ -1,6 +1,8 @@
 package dev.xylonity.companions.common.block;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
+import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
+import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

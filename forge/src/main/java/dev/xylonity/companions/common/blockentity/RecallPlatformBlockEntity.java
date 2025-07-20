@@ -1,15 +1,16 @@
 package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.behaviour.lamp.LampPulseBehaviour;
 import dev.xylonity.companions.common.tesla.behaviour.platform.RecallPlatformPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -79,8 +80,9 @@ public class RecallPlatformBlockEntity extends AbstractTeslaBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
+
         ListTag list = new ListTag();
         for (BlockPos p : partnerPositions) {
             CompoundTag t = new CompoundTag();
@@ -95,8 +97,8 @@ public class RecallPlatformBlockEntity extends AbstractTeslaBlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
 
         partnerPositions.clear();
         if (tag.contains("Partners", Tag.TAG_LIST)) {
@@ -112,13 +114,11 @@ public class RecallPlatformBlockEntity extends AbstractTeslaBlockEntity {
         cooldown = tag.getInt("Cooldown");
     }
 
-    @Override
-    public @NotNull Vec3 electricalChargeOriginOffset() {
+    @Override public @NotNull Vec3 electricalChargeOriginOffset() {
         return Vec3.ZERO;
     }
 
-    @Override
-    public @NotNull Vec3 electricalChargeEndOffset() {
+    @Override public @NotNull Vec3 electricalChargeEndOffset() {
         return new Vec3(0, .5, 0);
     }
 

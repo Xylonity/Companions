@@ -6,7 +6,6 @@ import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -56,26 +55,26 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
         this.setIsTop(tag.getBoolean("IsTop"));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("IsTop", this.isTop());
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider holders) {
-        super.handleUpdateTag(tag, holders);
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
         this.setIsTop(tag.getBoolean("IsTop"));
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        CompoundTag tag = super.getUpdateTag(provider);
+    public @NotNull CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
         tag.putBoolean("IsTop", this.isTop());
         return tag;
     }

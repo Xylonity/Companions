@@ -1,7 +1,9 @@
 package dev.xylonity.companions.client.blockentity.renderer;
 
 import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.client.blockentity.model.CroissantEggModel;
 import dev.xylonity.companions.client.blockentity.model.EmptyPuppetModel;
+import dev.xylonity.companions.common.blockentity.CroissantEggBlockEntity;
 import dev.xylonity.companions.common.blockentity.EmptyPuppetBlockEntity;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +18,7 @@ public class EmptyPuppetRenderer extends GeoBlockRenderer<EmptyPuppetBlockEntity
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull EmptyPuppetBlockEntity animatable) {
-        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/block/empty_puppet_block.png");
+        return new ResourceLocation(Companions.MOD_ID, "textures/block/empty_puppet_block.png");
     }
 
 }

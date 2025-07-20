@@ -6,15 +6,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -123,7 +119,7 @@ public class FrogBonanzaBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public BlockState playerWillDestroy(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @NotNull Player pPlayer) {
+    public void playerWillDestroy(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @NotNull Player pPlayer) {
         if (!pLevel.isClientSide) {
             if (pPlayer.isCreative()) {
                 preventCreativeTabDestroy(pLevel, pPos, pState, pPlayer);
@@ -141,7 +137,7 @@ public class FrogBonanzaBlock extends Block implements EntityBlock {
 
         }
 
-        return super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
+        super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
     }
 
     public static void preventCreativeTabDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
@@ -157,12 +153,12 @@ public class FrogBonanzaBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (getMultiblockBlockEntity(level, pos, state) instanceof FrogBonanzaBlockEntity bonanza) {
-            return bonanza.interact(player, hand);
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (getMultiblockBlockEntity(pLevel, pPos, pState) instanceof FrogBonanzaBlockEntity bonanza) {
+            return bonanza.interact(pPlayer, pHand);
         }
 
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
     @Override

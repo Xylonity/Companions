@@ -4,13 +4,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.FireMarkModel;
+import dev.xylonity.companions.client.projectile.model.TornadoModel;
 import dev.xylonity.companions.common.entity.projectile.FireMarkProjectile;
+import dev.xylonity.companions.common.entity.projectile.TornadoProjectile;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -25,7 +28,7 @@ public class FireMarkRenderer extends GeoEntityRenderer<FireMarkProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull FireMarkProjectile animatable) {
-        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/fire_mark.png");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/fire_mark.png");
     }
 
     @Override

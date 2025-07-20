@@ -36,9 +36,9 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecipe> {
 
-    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "shade_altar_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_altar_interaction");
     public static final RecipeType<ShadeAltarRecipe> TYPE = new RecipeType<>(UID, ShadeAltarRecipe.class);
-    public static final ResourceLocation SHADOW = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private ShadeMawAltarBlockEntity cachedBlockEntity;
     private ShadeAltarUpgradeHaloProjectile cachedEntity;
@@ -82,7 +82,7 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ShadeAltarRecipe rec, @NotNull IFocusGroup focuses) {
         this.cachedEntity = null;
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
     private ShadeMawAltarBlockEntity getOrCreateBlockEntity() {
@@ -180,7 +180,7 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
             float partialTicks = (float)((System.currentTimeMillis() - lastUpdateTime) / 50.0);
             blockRenderer.render(blockEntity, partialTicks, pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
-            blockRenderer.render(blockEntity, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
+            blockRenderer.render(blockEntity, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         }
 
         pose.popPose();
@@ -195,7 +195,7 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
             pose.mulPose(Axis.YP.rotationDegrees(45f));
             pose.mulPose(Axis.ZP.rotationDegrees(180f));
 
-            entityRenderer.render(entity, 0, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
+            entityRenderer.render(entity, 0, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
 
             pose.popPose();
         }

@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
+import java.util.Random;
 
 public abstract class AbstractPuppetAttackGoal extends Goal {
     protected final PuppetEntity puppet;

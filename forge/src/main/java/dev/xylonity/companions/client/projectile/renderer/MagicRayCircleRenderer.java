@@ -4,7 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.MagicRayCircleModel;
+import dev.xylonity.companions.client.projectile.model.MagicRayPieceModel;
 import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
+import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -24,7 +26,7 @@ public class MagicRayCircleRenderer extends GeoEntityRenderer<MagicRayCircleProj
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull MagicRayCircleProjectile animatable) {
-        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/magic_ray_circle.png");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/magic_ray_circle.png");
     }
 
     @Override

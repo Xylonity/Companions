@@ -4,13 +4,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.BraceModel;
+import dev.xylonity.companions.client.projectile.model.HealRingModel;
 import dev.xylonity.companions.common.entity.projectile.BraceProjectile;
+import dev.xylonity.companions.common.entity.projectile.HealRingProjectile;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.projectile.ItemSupplier;
+import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -23,7 +28,7 @@ public class BraceRenderer extends GeoEntityRenderer<BraceProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull BraceProjectile animatable) {
-        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/brace.png");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/brace.png");
     }
 
     @Override

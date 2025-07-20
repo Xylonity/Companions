@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity.ai.minion.hostile;
 
 import dev.xylonity.companions.common.entity.hostile.HostileImpEntity;
+import dev.xylonity.companions.common.entity.hostile.WildAntlionEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 

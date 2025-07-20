@@ -37,7 +37,7 @@ public class CompanionsEntityRespawnTracker {
         if (mcServer == null) return;
 
         // We search for the original level the respawn totem is at
-        ServerLevel totemLevel = mcServer.getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(dimId)));
+        ServerLevel totemLevel = mcServer.getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimId)));
         if (totemLevel == null) return;
 
         // Now we check if the totem exists in that position

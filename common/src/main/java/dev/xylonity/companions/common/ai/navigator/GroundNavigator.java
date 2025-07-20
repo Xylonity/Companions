@@ -98,7 +98,7 @@ public class GroundNavigator extends GroundPathNavigation {
 
                 if (shapeHeight > 0 && shapeHeight <= 1.0D) {
                     BlockPos abovePos = frontPos.above();
-                    PathType aboveType = this.nodeEvaluator.getPathType(new PathfindingContext(this.level, this.mob), abovePos.getX(), abovePos.getY(), abovePos.getZ());
+                    BlockPathTypes aboveType = this.nodeEvaluator.getBlockPathType(this.level, abovePos.getX(), abovePos.getY(), abovePos.getZ(), this.mob);
                     float malus = this.mob.getPathfindingMalus(aboveType);
 
                     if (malus >= 0.0F && malus < 8.0F) {
@@ -261,7 +261,7 @@ public class GroundNavigator extends GroundPathNavigation {
             Boolean isPathfindable = cache.getIfPresent(immutablePos);
             if (isPathfindable == null) {
                 BlockState blockState = this.level.getBlockState(pos);
-                isPathfindable = blockState.isSolidRender(this.level, pos) || blockState.isAir();
+                isPathfindable = blockState.isPathfindable(this.level, pos, PathComputationType.LAND);
                 cache.put(immutablePos, isPathfindable);
             }
 
@@ -269,12 +269,15 @@ public class GroundNavigator extends GroundPathNavigation {
                 return false;
 
             // Also rejects if the block's path type is not okie dokie
-            PathType pathType = this.nodeEvaluator.getPathType(new PathfindingContext(this.level, this.mob), currentX, currentY, currentZ);
+            BlockPathTypes pathType = this.nodeEvaluator.getBlockPathType(this.level, currentX, currentY, currentZ, this.mob);
             float malus = this.mob.getPathfindingMalus(pathType);
 
-            if (malus < 0.0F || malus >= 8.0F || pathType == PathType.DAMAGE_FIRE || pathType == PathType.DANGER_FIRE || pathType == PathType.DAMAGE_OTHER) {
+            if (malus < 0.0F
+                    || malus >= 8.0F
+                    || pathType == BlockPathTypes.DAMAGE_FIRE
+                    || pathType == BlockPathTypes.DANGER_FIRE
+                    || pathType == BlockPathTypes.DAMAGE_OTHER)
                 return false;
-            }
 
         }
 

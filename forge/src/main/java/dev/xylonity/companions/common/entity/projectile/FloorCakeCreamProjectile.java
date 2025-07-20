@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -15,7 +16,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -84,10 +87,10 @@ public class FloorCakeCreamProjectile extends BaseProjectile implements GeoEntit
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(SIZE, 1.2f);
-        builder.define(ARMOR_NAME, "default");
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(SIZE, 1.2f);
+        this.entityData.define(ARMOR_NAME, "default");
     }
 
     public float getSize() {

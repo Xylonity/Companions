@@ -3,24 +3,20 @@ package dev.xylonity.companions.platform;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.block.*;
 import dev.xylonity.companions.common.item.*;
-import dev.xylonity.companions.common.item.armor.BloodArmorItem;
-import dev.xylonity.companions.common.item.armor.GeckoBloodArmorItem;
-import dev.xylonity.companions.common.item.armor.GeckoHolyRobeArmorItem;
-import dev.xylonity.companions.common.item.armor.GeckoMageArmorItem;
+import dev.xylonity.companions.common.item.armor.*;
+import dev.xylonity.companions.common.item.generic.*;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.companions.common.item.book.books.*;
-import dev.xylonity.companions.common.item.generic.GenericGeckoItem;
 import dev.xylonity.companions.common.item.weapon.BloodAxeItem;
 import dev.xylonity.companions.common.item.weapon.BloodScytheItem;
 import dev.xylonity.companions.common.item.weapon.BloodSwordItem;
+import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.registry.CompanionsArmorMaterials;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
@@ -28,10 +24,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.registries.RegistryObject;
@@ -130,20 +123,19 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     }
 
     @Override
-    public <T extends Item> Supplier<T> registerArmorItem(String id, CompanionsItems.ArmorMaterial armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
+    public <T extends Item> Supplier<T> registerArmorItem(String id, ArmorMaterials armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
         if (isGeckoArmor) {
             return switch (armorMaterial) {
-                case BLOOD -> (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(Holder.direct(CompanionsArmorMaterials.CRYSTALLIZED_BLOOD.get()), armorType, new Item.Properties(), id));
-                case MAGE -> (Supplier<T>) registerItem(id, () -> new GeckoMageArmorItem(Holder.direct(CompanionsArmorMaterials.MAGE.get()), armorType, new Item.Properties(), id));
-                case HOLY_ROBE -> (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(Holder.direct(CompanionsArmorMaterials.HOLY_ROBE.get()), armorType, new Item.Properties(), id));
+                case CRYSTALLIZED_BLOOD -> (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+                case MAGE -> (Supplier<T>) registerItem(id, () -> new GeckoMageArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+                case HOLY_ROBE -> (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(armorMaterial, armorType, new Item.Properties(), id));
             };
         } else {
             return switch (armorMaterial) {
-                case BLOOD -> (Supplier<T>) registerItem(id, () -> new BloodArmorItem(Holder.direct(CompanionsArmorMaterials.CRYSTALLIZED_BLOOD.get()), armorType, new Item.Properties()));
-                default -> (Supplier<T>) registerItem(id, () -> new ArmorItem(Holder.direct(CompanionsArmorMaterials.CRYSTALLIZED_BLOOD.get()), armorType, new Item.Properties()));
+                case CRYSTALLIZED_BLOOD -> (Supplier<T>) registerItem(id, () -> new BloodArmorItem(armorMaterial, armorType, new Item.Properties()));
+                default -> (Supplier<T>) registerItem(id, () -> new ArmorItem(armorMaterial, armorType, new Item.Properties()));
             };
         }
-
     }
 
     @Override
@@ -180,9 +172,8 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     }
 
     @Override
-    public <T extends MobEffect> Supplier<Holder<T>> registerEffect(String id, Supplier<T> factory) {
-        RegistryObject<T> reg = Companions.MOB_EFFECTS.register(id, factory);
-        return () -> reg.getHolder().orElseThrow(() -> new IllegalStateException("[COMPANIONS!] Effect " + id + " not registered!"));
+    public <T extends MobEffect> Supplier<T> registerEffect(String id, Supplier<T> effect) {
+        return Companions.MOB_EFFECTS.register(id, effect);
     }
 
     @Override

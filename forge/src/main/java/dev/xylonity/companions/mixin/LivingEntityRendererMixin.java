@@ -3,15 +3,13 @@ package dev.xylonity.companions.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.common.entity.CompanionEntity;
-import dev.xylonity.companions.common.util.PhantomVisibility;
 import dev.xylonity.companions.common.util.interfaces.IPhantomEffectEntity;
+import dev.xylonity.companions.common.util.PhantomVisibility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -61,46 +59,28 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
         this.companions$currentEntity = pEntity;
     }
 
-    @Redirect(
-            method = "render(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
-            )
-    )
-    private void companions$redirectRenderToBuffer(
-            LivingEntityRenderer<LivingEntity, EntityModel<LivingEntity>> instance,
-            LivingEntity livingEntity,
-            float entityYaw,
-            float partialTicks,
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
-            int packedLight
-    ) {
-        if (livingEntity instanceof IPhantomEffectEntity e && e.isPhantomEffectActive()) {
+    @Redirect(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V"))
+    private void companions$redirectRenderToBuffer(EntityModel<T> model, PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        if (companions$currentEntity instanceof IPhantomEffectEntity e && e.isPhantomEffectActive()) {
             Player player = Minecraft.getInstance().player;
             if (player != null) {
-                ResourceLocation tex = instance.getTextureLocation(livingEntity);
-                switch (companions$getPhantomVisibility(livingEntity, player)) {
-                    case TRANSLUCENT -> {
-                        VertexConsumer vc = bufferSource.getBuffer(RenderType.entityTranslucent(tex));
-                        instance.getModel().renderToBuffer(poseStack, vc, packedLight, OverlayTexture.NO_OVERLAY);
-                    }
-                    case INVISIBLE -> {
+                switch (companions$getPhantomVisibility(companions$currentEntity, player)) {
+                    case TRANSLUCENT:
+                        model.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, 0.35f);
+                        break;
+                    case INVISIBLE:
                         return;
-                    }
-                    case NORMAL -> {
-                        VertexConsumer vc = bufferSource.getBuffer(instance.getModel().renderType(tex));
-                        instance.getModel().renderToBuffer(poseStack, vc, packedLight, OverlayTexture.NO_OVERLAY);
-                    }
+                    case NORMAL:
+                        model.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+                        break;
                 }
-                return;
+
             }
+        } else {
+            model.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
         }
-        instance.render(livingEntity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
+
     }
-
-
 
     @Unique
     private PhantomVisibility companions$getPhantomVisibility(LivingEntity entity, Player player) {

@@ -3,8 +3,8 @@ package dev.xylonity.companions.common.particle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;

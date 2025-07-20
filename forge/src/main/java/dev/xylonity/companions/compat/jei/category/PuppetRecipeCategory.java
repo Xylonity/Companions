@@ -31,10 +31,10 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRecipe> {
-    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "puppet_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "puppet_interaction");
     public static final RecipeType<EmptyPuppetRecipe> TYPE = new RecipeType<>(UID, EmptyPuppetRecipe.class);
 
-    public static final ResourceLocation SHADOW = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
@@ -76,7 +76,7 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
     public void setRecipe(IRecipeLayoutBuilder builder, EmptyPuppetRecipe rec, @NotNull IFocusGroup focuses) {
         this.cachedEntity = null;
         this.cachedEntity2 = null;
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addItemStack(rec.input);
     }
 
     private PuppetGloveEntity getOrCreateEntity() {
@@ -160,7 +160,7 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
 
             dragonRenderer1.render(dragon1, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
         } catch (Exception e) {
-            dragonRenderer1.render(dragon1, 0f, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
+            dragonRenderer1.render(dragon1, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
         }
 
         pose.popPose();
@@ -188,7 +188,7 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
 
             dragonRenderer2.render(dragon2, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
         } catch (Exception e) {
-            dragonRenderer2.render(dragon2, 0f, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
+            dragonRenderer2.render(dragon2, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
         }
 
         pose.popPose();

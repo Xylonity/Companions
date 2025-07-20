@@ -1,12 +1,12 @@
 package dev.xylonity.companions.common.entity.ai.generic;
 
+import java.util.EnumSet;
+
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.util.Util;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-
-import java.util.EnumSet;
 
 public class CompanionsHurtTargetGoal extends TargetGoal {
     private final CompanionEntity tameAnimal;

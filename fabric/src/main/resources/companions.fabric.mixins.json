@@ -1,0 +1,26 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "dev.xylonity.companions.mixin",
+    "refmap": "${mod_id}.refmap.json",
+    "compatibilityLevel": "JAVA_17",
+    "client": [
+        "EntityRendererAccessor",
+        "ItemRendererMixin",
+        "LivingEntityRendererMixin",
+        "ModelBakeryMixin"
+    ],
+    "mixins": [
+        "CompanionsLevelAccessor",
+        "CompanionsProjectileAccessor",
+        "LivingEntityMixin",
+        "MobMixin",
+        "PlayerMixin"
+    ],
+    "server": [
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+  }
+  

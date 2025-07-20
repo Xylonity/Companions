@@ -3,7 +3,9 @@ package dev.xylonity.companions.client.projectile.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.IceShardBigModel;
+import dev.xylonity.companions.client.projectile.model.IceShardSmallModel;
 import dev.xylonity.companions.common.entity.projectile.BigIceShardProjectile;
+import dev.xylonity.companions.common.entity.projectile.SmallIceShardProjectile;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
@@ -12,6 +14,9 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 public class IceShardBigRenderer extends GeoEntityRenderer<BigIceShardProjectile> {
 
     public IceShardBigRenderer(EntityRendererProvider.Context renderManager) {
@@ -20,7 +25,7 @@ public class IceShardBigRenderer extends GeoEntityRenderer<BigIceShardProjectile
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull BigIceShardProjectile animatable) {
-        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/ice_shard_big.png");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/ice_shard_big.png");
     }
 
     @Override

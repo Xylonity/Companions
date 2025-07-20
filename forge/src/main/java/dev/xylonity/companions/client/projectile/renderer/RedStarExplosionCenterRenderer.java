@@ -2,14 +2,21 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.client.projectile.model.BraceModel;
 import dev.xylonity.companions.client.projectile.model.RedStarExplosionCenterModel;
+import dev.xylonity.companions.common.entity.projectile.BraceProjectile;
+import dev.xylonity.companions.common.entity.projectile.RedStarExplosion;
 import dev.xylonity.companions.common.entity.projectile.RedStarExplosionCenter;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class RedStarExplosionCenterRenderer extends GeoEntityRenderer<RedStarExplosionCenter> {

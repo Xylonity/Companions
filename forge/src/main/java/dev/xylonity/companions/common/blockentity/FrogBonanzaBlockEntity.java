@@ -5,9 +5,9 @@ import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -16,7 +16,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.MobSpawnType;
@@ -39,14 +38,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.util.RenderUtil;
+import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.Map;
 import java.util.Random;
@@ -361,11 +360,15 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             }
 
             if (rand.nextFloat() < 0.15f) {
-                popResource(getLevel(), getBlockPos(), EnchantedBookItem.createForEnchantment(new EnchantmentInstance(Enchantments.FIRE_ASPECT.getOrThrow(level), 2)));
+                ItemStack book = new ItemStack(Items.ENCHANTED_BOOK);
+                EnchantedBookItem.addEnchantment(book, new EnchantmentInstance(Enchantments.FIRE_ASPECT, 2));
+                popResource(getLevel(), getBlockPos(), book);
             }
 
             if (rand.nextFloat() < 0.1f) {
-                popResource(getLevel(), getBlockPos(), EnchantedBookItem.createForEnchantment(new EnchantmentInstance(Enchantments.PROTECTION.getOrThrow(level), 2)));
+                ItemStack book = new ItemStack(Items.ENCHANTED_BOOK);
+                EnchantedBookItem.addEnchantment(book, new EnchantmentInstance(Enchantments.ALL_DAMAGE_PROTECTION, 4));
+                popResource(getLevel(), getBlockPos(), book);
             }
 
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
@@ -408,8 +411,8 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("SpinStart", this.spinStartTick);
         tag.putInt("TickCount", this.tickCount);
         tag.put(TAG_ROT, Util.floatsToList(rotation));
@@ -420,8 +423,8 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
         this.spinStartTick = tag.getInt("SpinStart");
         this.tickCount = tag.getInt("TickCount");
         Util.listToFloats(tag.getList(TAG_ROT, Tag.TAG_FLOAT), this.rotation);
@@ -437,8 +440,8 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        return saveWithoutMetadata(provider);
+    public @NotNull CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
     }
 
     private void sync() {
@@ -447,12 +450,12 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
     }
 
-    public ItemInteractionResult interact(Player player, InteractionHand hand) {
-        if (level == null) return ItemInteractionResult.FAIL;
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        if (level == null) return InteractionResult.PASS;
 
-        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
+        if (level.isClientSide) return InteractionResult.SUCCESS;
 
-        if (spinStartTick >= 0) return ItemInteractionResult.FAIL;
+        if (spinStartTick >= 0) return InteractionResult.PASS;
 
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
@@ -465,7 +468,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             } else if (item == CompanionsBlocks.END_COIN.get().asItem()) {
                 spinsRemaining = 5;
             } else {
-                return ItemInteractionResult.FAIL;
+                return InteractionResult.PASS;
             }
 
             if (!player.getAbilities().instabuild) stack.shrink(1);
@@ -475,7 +478,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
             level.playSound(null, getBlockPos(), CompanionsSounds.COIN_CLATTER.get(), SoundSource.BLOCKS, 1f, 1f);
 
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         spinsRemaining--;
@@ -485,12 +488,12 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
         level.playSound(null, getBlockPos(), CompanionsSounds.BONANZA.get(), SoundSource.BLOCKS, 0.35f, 1f);
 
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
     public double getTick(Object o) {
-        return RenderUtil.getCurrentTick();
+        return RenderUtils.getCurrentTick();
     }
 
     @Override

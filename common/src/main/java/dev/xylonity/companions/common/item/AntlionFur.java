@@ -18,7 +18,7 @@ public class AntlionFur extends TooltipItem {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity entity) {
         ItemStack ret = super.finishUsingItem(stack, level, entity);
 
-        entity.setRemainingFireTicks(level.random.nextInt(2, 12) * 20);
+        entity.setSecondsOnFire(level.random.nextInt(2, 12));
 
         if (level.random.nextFloat() < 0.25 && CompanionsConfig.ANTLION_FUR_SHOULD_FIRE) {
             if (!entity.hasEffect(MobEffects.DAMAGE_BOOST)) {

@@ -30,8 +30,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -43,12 +42,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.Random;
 
@@ -238,13 +235,13 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(PHASE, 1);
-        builder.define(SECOND_PHASE_COUNTER, 0);
-        builder.define(ATTACK_TYPE, 0);
-        builder.define(IS_ON_AIR, false);
-        builder.define(TELEPORTED, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(PHASE, 1);
+        this.entityData.define(SECOND_PHASE_COUNTER, 0);
+        this.entityData.define(ATTACK_TYPE, 0);
+        this.entityData.define(IS_ON_AIR, false);
+        this.entityData.define(TELEPORTED, false);
     }
 
     @Override
@@ -337,7 +334,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     }
 
     @Override
-    protected EntityDimensions getDefaultDimensions(Pose pPose) {
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         return getPhase() == 1 ? super.getDimensions(pPose) : EntityDimensions.scalable(1F, 2F);
     }
 

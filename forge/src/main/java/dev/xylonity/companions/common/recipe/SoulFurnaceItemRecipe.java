@@ -1,16 +1,11 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.google.gson.JsonObject;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.xylonity.knightlib.KnightLib;
 import dev.xylonity.knightlib.common.recipe.GreatChaliceRecipe;
-import dev.xylonity.knightlib.common.recipe.input.GenericRecipeInput;
-import net.minecraft.core.HolderLookup;
+import dev.xylonity.knightlib.registry.KnightLibItems;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
@@ -20,35 +15,36 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record SoulFurnaceItemRecipe(ItemStack input, ItemStack output) implements Recipe<GenericRecipeInput> {
+public record SoulFurnaceItemRecipe(ItemStack input, ItemStack output) implements Recipe<SimpleContainer> {
 
-    private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(KnightLib.MOD_ID, "great_chalice_interaction");
+    private static final ResourceLocation ID = new ResourceLocation(KnightLib.MOD_ID, "great_chalice_interaction");
 
-    public static final RecipeSerializer<SoulFurnaceItemRecipe> SERIALIZER = new Serializer();
-    public static final RecipeType<SoulFurnaceItemRecipe> RECIPE_TYPE = new Type();
+    public static final RecipeSerializer<GreatChaliceRecipe> SERIALIZER = new Serializer();
+    public static final RecipeType<GreatChaliceRecipe> RECIPE_TYPE = new Type();
 
     @Override
-    public boolean matches(GenericRecipeInput genericRecipeInput, Level level) {
-        return ItemStack.isSameItem(genericRecipeInput.getItem(0), input);
+    public boolean matches(SimpleContainer inv, @NotNull Level lvl) {
+        return ItemStack.isSameItem(inv.getItem(0), input);
     }
 
     @Override
-    public ItemStack assemble(GenericRecipeInput genericRecipeInput, HolderLookup.Provider provider) {
-        return output.copy();
-    }
-
-    public static ResourceLocation getID() {
-        return ID;
-    }
-
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
+    public @NotNull ItemStack assemble(@NotNull SimpleContainer inv, @NotNull RegistryAccess reg) {
         return output.copy();
     }
 
     @Override
     public boolean canCraftInDimensions(int w, int h) {
         return true;
+    }
+
+    @Override
+    public @NotNull ItemStack getResultItem(@NotNull RegistryAccess reg) {
+        return output.copy();
+    }
+
+    @Override
+    public @NotNull ResourceLocation getId() {
+        return ID;
     }
 
     @Override
@@ -61,7 +57,7 @@ public record SoulFurnaceItemRecipe(ItemStack input, ItemStack output) implement
         return RECIPE_TYPE;
     }
 
-    public static final class Type implements RecipeType<SoulFurnaceItemRecipe> {
+    public static final class Type implements RecipeType<GreatChaliceRecipe> {
 
         @Override
         public String toString() {
@@ -70,30 +66,19 @@ public record SoulFurnaceItemRecipe(ItemStack input, ItemStack output) implement
 
     }
 
-    public static final class Serializer implements RecipeSerializer<SoulFurnaceItemRecipe> {
-        public static final MapCodec<SoulFurnaceItemRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                i -> i.group(
-                        ItemStack.CODEC.fieldOf("ingredient").forGetter(SoulFurnaceItemRecipe::input),
-                        ItemStack.CODEC.fieldOf("result").forGetter(SoulFurnaceItemRecipe::output)
-                ).apply(i, SoulFurnaceItemRecipe::new)
-        );
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, SoulFurnaceItemRecipe> STREAM_CODEC =
-                StreamCodec.composite(
-                        ItemStack.STREAM_CODEC, SoulFurnaceItemRecipe::input,
-                        ItemStack.STREAM_CODEC, SoulFurnaceItemRecipe::output,
-                        SoulFurnaceItemRecipe::new
-                );
-
+    public static final class Serializer implements RecipeSerializer<GreatChaliceRecipe> {
         @Override
-        public MapCodec<SoulFurnaceItemRecipe> codec() {
-            return CODEC;
+        public @NotNull GreatChaliceRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
+            return new GreatChaliceRecipe();
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, SoulFurnaceItemRecipe> streamCodec() {
-            return STREAM_CODEC;
+        public GreatChaliceRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
+            return new GreatChaliceRecipe();
         }
+
+        @Override
+        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull GreatChaliceRecipe rec) { ;; }
     }
 
 }

@@ -10,6 +10,7 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.api.TickScheduler;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,9 +20,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -42,8 +41,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 public class CroissantDragonEntity extends CompanionEntity {
     public SimpleContainer inventory;
@@ -180,13 +183,13 @@ public class CroissantDragonEntity extends CompanionEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(IS_ATTACKING, false);
-        builder.define(ARMOR_NAME, "default");
-        builder.define(EATEN_AMOUNT, 0);
-        builder.define(HAS_BEEN_EATEN, false);
-        builder.define(MILK_AMOUNT, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(IS_ATTACKING, false);
+        this.entityData.define(ARMOR_NAME, "default");
+        this.entityData.define(EATEN_AMOUNT, 0);
+        this.entityData.define(HAS_BEEN_EATEN, false);
+        this.entityData.define(MILK_AMOUNT, 0);
     }
 
     @Override

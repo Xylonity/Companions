@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.mixin.CompanionsProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;

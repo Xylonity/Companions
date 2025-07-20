@@ -16,7 +16,6 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -32,8 +31,8 @@ import java.util.stream.Stream;
 
 public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerMenu> {
 
-    private static final ResourceLocation TEX_TOP = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/cornelius_gui_top.png");
-    private static final ResourceLocation TEX_BOTTOM = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/cornelius_gui_bottom.png");
+    private static final ResourceLocation TEX_TOP = new ResourceLocation(Companions.MOD_ID, "textures/gui/cornelius_gui_top.png");
+    private static final ResourceLocation TEX_BOTTOM = new ResourceLocation(Companions.MOD_ID, "textures/gui/cornelius_gui_bottom.png");
 
     private static final int ANIM_TICKS = 8;
     private static final int DEAL_INTERVAL_TICKS = 6;
@@ -112,17 +111,14 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         );
     }
 
-
-
-
     @Override
     protected void init(){
         super.init();
 
-        btnHit = addRenderableWidget(new ImageButtonWrapper(
+        btnHit = addRenderableWidget(new ImageButton(
                         generalMarginLeft() + 80,
                         generalMarginTop() + PLAYER_Y + 100,
-                        43, 29, 0, 227, 256, 256, TEX_TOP, b->
+                        43, 29, 0, 227, TEX_TOP, b->
         {
             int c = 0;
             for (int i = 3; i <= 5; i++) {
@@ -156,10 +152,10 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
         });
 
-        btnStand = addRenderableWidget(new ImageButtonWrapper(
+        btnStand = addRenderableWidget(new ImageButton(
                 generalMarginLeft() + 119,
                 generalMarginTop() + PLAYER_Y + 100,
-                43,29,0,227, 256, 256, TEX_TOP, b-> onStand())
+                43,29,0,227, TEX_TOP, b-> onStand())
         {
 
             @Override
@@ -635,10 +631,10 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
     }
 
     @Override
-    public void render(@NotNull GuiGraphics g, int mx, int my, float pt) {
+    public void render(@NotNull GuiGraphics g,int mx,int my,float pt){
         updateHoveredCard(mx, my, pt);
 
-        renderBackground(g, mx, my, pt);
+        renderBackground(g);
 
         super.render(g, mx, my, pt);
 
@@ -800,23 +796,6 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
         }
 
-    }
-
-    public static class ImageButtonWrapper extends Button {
-        private final ResourceLocation atlas;
-        private final int u, v, texWidth, texHeight;
-
-        public ImageButtonWrapper(int x, int y, int width, int height, int u, int v, int texWidth, int texHeight, ResourceLocation atlas, OnPress onPress) {
-            super(x, y, width, height, CommonComponents.EMPTY, onPress, DEFAULT_NARRATION);
-            this.u = u; this.v = v;
-            this.texWidth = texWidth; this.texHeight = texHeight;
-            this.atlas = atlas;
-        }
-
-        @Override
-        public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
-            gui.blit(atlas, getX(), getY(), u, v, width, height, texWidth, texHeight);
-        }
     }
 
 }

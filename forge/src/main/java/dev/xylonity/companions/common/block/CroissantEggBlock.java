@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.block;
 
 import dev.xylonity.companions.common.blockentity.CroissantEggBlockEntity;
+import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

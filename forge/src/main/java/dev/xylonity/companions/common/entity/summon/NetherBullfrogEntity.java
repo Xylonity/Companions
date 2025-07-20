@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.entity.summon;
 
-import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.SummonFrogEntity;
+import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.ai.cornelius.goal.SummonHopToTargetGoal;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.*;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsSummonHurtTargetGoal;
@@ -20,8 +20,12 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 public class NetherBullfrogEntity extends SummonFrogEntity implements IFrogJumpUtil {
 
@@ -55,6 +59,11 @@ public class NetherBullfrogEntity extends SummonFrogEntity implements IFrogJumpU
     @Override
     public void setCanAttack(boolean canAttack) {
 
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
     }
 
     @Override

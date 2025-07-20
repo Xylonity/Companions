@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.summon.NetherBullfrogEntity;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
 
 public class NetherBullfrogSlashRightGoal extends AbstractCorneliusSummonAttackGoal {
 

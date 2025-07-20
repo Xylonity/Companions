@@ -7,7 +7,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +45,7 @@ public class EternalLighter extends Item {
                 ItemStack stack = context.getItemInHand();
                 if (player instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, placePos, stack);
-                    stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
+                    stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(context.getHand()));
                 }
 
                 return InteractionResult.sidedSuccess(level.isClientSide());
@@ -62,7 +61,7 @@ public class EternalLighter extends Item {
 
             ItemStack stack = context.getItemInHand();
             if (player != null) {
-                stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
+                stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(context.getHand()));
             }
 
             return InteractionResult.sidedSuccess(level.isClientSide());

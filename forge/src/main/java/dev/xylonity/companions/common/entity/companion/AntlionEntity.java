@@ -45,9 +45,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.function.Supplier;
 
@@ -442,12 +445,12 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(VARIANT, 0);
-        builder.define(ATTACK_TYPE, 0);
-        builder.define(STATE, 0);
-        builder.define(HAS_FUR, true);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(VARIANT, 0);
+        this.entityData.define(ATTACK_TYPE, 0);
+        this.entityData.define(STATE, 0);
+        this.entityData.define(HAS_FUR, true);
     }
 
     @Override
@@ -467,7 +470,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
             this.setHasFur(false);
             popResource(level(), blockPosition(), new ItemStack(CompanionsItems.ANTLION_FUR.get(), level().random.nextInt(1, 4)));
 
-            itemstack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+            itemstack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
             this.level().playSound(null, this, SoundEvents.SHEEP_SHEAR, this.getSoundSource(), 1.0F, 1.0F);
 
             return InteractionResult.SUCCESS;
@@ -476,7 +479,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         if (item == CompanionsItems.HOURGLASS.get() && isTame() && getOwner() != null && getOwner() == player) {
             if (level().isClientSide) return InteractionResult.SUCCESS;
 
-            itemstack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+            itemstack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
             this.cycleVariant();
 
             return InteractionResult.SUCCESS;
@@ -511,11 +514,6 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         if (pCompound.contains("HasFur")) {
             this.setHasFur(pCompound.getBoolean("HasFur"));
         }
-    }
-
-    @Override
-    public boolean isFood(@NotNull ItemStack itemStack) {
-        return false;
     }
 
     @Override
@@ -611,7 +609,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     @Override
     protected void positionRider(@NotNull Entity pPassenger, @NotNull MoveFunction pCallback) {
         if (this.hasPassenger(pPassenger)) {
-            double baseY = this.getY();
+            double baseY = this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset();
             pCallback.accept(pPassenger, this.getX(), baseY, this.getZ());
         }
     }

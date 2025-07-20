@@ -1,16 +1,11 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.google.gson.JsonObject;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.registry.CompanionsBlocks;
-import dev.xylonity.knightlib.common.recipe.input.GenericRecipeInput;
-import net.minecraft.core.HolderLookup;
+import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
@@ -20,20 +15,22 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record EmptyPuppetRecipe(ItemStack input) implements Recipe<GenericRecipeInput> {
+public final class EmptyPuppetRecipe implements Recipe<SimpleContainer> {
 
-    private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "empty_puppet_interaction");
+    private static final ResourceLocation ID = new ResourceLocation(Companions.MOD_ID, "empty_puppet_interaction");
 
     public static final RecipeSerializer<EmptyPuppetRecipe> SERIALIZER = new Serializer();
     public static final RecipeType<EmptyPuppetRecipe> RECIPE_TYPE = new Type();
 
+    public final ItemStack input = new ItemStack(CompanionsBlocks.EMPTY_PUPPET.get());
+
     @Override
-    public boolean matches(GenericRecipeInput genericRecipeInput, Level level) {
-        return ItemStack.isSameItem(genericRecipeInput.getItem(0), input);
+    public boolean matches(SimpleContainer inv, @NotNull Level lvl) {
+        return ItemStack.isSameItem(inv.getItem(0), input);
     }
 
     @Override
-    public ItemStack assemble(GenericRecipeInput genericRecipeInput, HolderLookup.Provider provider) {
+    public @NotNull ItemStack assemble(@NotNull SimpleContainer inv, @NotNull RegistryAccess reg) {
         return ItemStack.EMPTY;
     }
 
@@ -42,13 +39,14 @@ public record EmptyPuppetRecipe(ItemStack input) implements Recipe<GenericRecipe
         return true;
     }
 
-    public static ResourceLocation getID() {
-        return ID;
+    @Override
+    public @NotNull ItemStack getResultItem(@NotNull RegistryAccess reg) {
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
-        return ItemStack.EMPTY;
+    public @NotNull ResourceLocation getId() {
+        return ID;
     }
 
     @Override
@@ -71,27 +69,18 @@ public record EmptyPuppetRecipe(ItemStack input) implements Recipe<GenericRecipe
     }
 
     public static final class Serializer implements RecipeSerializer<EmptyPuppetRecipe> {
-        public static final MapCodec<EmptyPuppetRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                i -> i.group(
-                        ItemStack.CODEC.fieldOf("ingredient").forGetter(EmptyPuppetRecipe::input)
-                ).apply(i, EmptyPuppetRecipe::new)
-        );
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, EmptyPuppetRecipe> STREAM_CODEC =
-                StreamCodec.composite(
-                        ItemStack.STREAM_CODEC, EmptyPuppetRecipe::input,
-                        EmptyPuppetRecipe::new
-                );
-
         @Override
-        public MapCodec<EmptyPuppetRecipe> codec() {
-            return CODEC;
+        public @NotNull EmptyPuppetRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
+            return new EmptyPuppetRecipe();
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, EmptyPuppetRecipe> streamCodec() {
-            return STREAM_CODEC;
+        public EmptyPuppetRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
+            return new EmptyPuppetRecipe();
         }
+
+        @Override
+        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull EmptyPuppetRecipe rec) { ;; }
     }
 
 }

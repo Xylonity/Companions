@@ -15,7 +15,6 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -32,10 +31,13 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
@@ -318,7 +320,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
         if (stack.getItem() == CompanionsItems.WRENCH.get()) {
             if (level().isClientSide) return InteractionResult.SUCCESS;
 
-            if (!pPlayer.getAbilities().instabuild) stack.hurtAndBreak(1, pPlayer, LivingEntity.getSlotForHand(pHand));
+            if (!pPlayer.getAbilities().instabuild) stack.hurtAndBreak(1, pPlayer, p -> p.broadcastBreakEvent(pHand));
 
             cycleState();
 
@@ -335,8 +337,13 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
     }
 
     @Override
-    protected EntityDimensions getDefaultDimensions(Pose pPose) {
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         return getState() != 2 ? super.getDimensions(pPose) : EntityDimensions.scalable(1F, 1F);
+    }
+
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
     }
 
     public int getState() {
@@ -360,11 +367,11 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(STATE, 0);
-        builder.define(LIFETIME, -1);
-        builder.define(OWNER_UUID, Optional.empty());
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(STATE, 0);
+        this.entityData.define(LIFETIME, -1);
+        this.entityData.define(OWNER_UUID, Optional.empty());
     }
 
     @Override

@@ -10,8 +10,9 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.FlyNodeEvaluator;
-import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -135,7 +136,7 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
     }
 
     private boolean canTeleportTo(BlockPos pPos) {
-        if (FlyNodeEvaluator.getPathTypeStatic(this.teddy, pPos.mutable()) != PathType.WALKABLE) {
+        if (FlyNodeEvaluator.getBlockPathTypeStatic(this.teddy.level(), pPos.mutable()) != BlockPathTypes.WALKABLE) {
             return false;
         } else {
             if ( this.teddy.level().getBlockState(pPos.below()).getBlock() instanceof LeavesBlock) {

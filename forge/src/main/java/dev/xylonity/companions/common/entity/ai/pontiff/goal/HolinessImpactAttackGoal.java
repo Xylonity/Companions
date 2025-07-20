@@ -13,8 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
 

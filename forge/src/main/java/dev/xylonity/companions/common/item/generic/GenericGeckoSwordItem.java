@@ -7,9 +7,10 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.function.Consumer;
 
@@ -19,7 +20,7 @@ public class GenericGeckoSwordItem extends SwordItem implements GeoItem {
     private final String resourceKey;
 
     public GenericGeckoSwordItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
-        super(material, properties);
+        super(material, (int) extraDamage, extraSpeed, properties);
         this.resourceKey = resourceKey;
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }

@@ -4,7 +4,9 @@ import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
+import dev.xylonity.knightlib.KnightLib;
 import dev.xylonity.knightlib.registry.KnightLibParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -22,8 +24,12 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 import javax.annotation.Nullable;
 
@@ -157,6 +163,11 @@ public class FrogHealProjectile extends BaseProjectile {
         playSound(CompanionsSounds.END_FROG_HEAL.get());
 
         this.discard();
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
     }
 
     @Override

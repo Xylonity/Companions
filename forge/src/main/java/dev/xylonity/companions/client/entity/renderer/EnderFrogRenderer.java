@@ -1,7 +1,9 @@
 package dev.xylonity.companions.client.entity.renderer;
 
 import dev.xylonity.companions.client.entity.model.EnderFrogModel;
+import dev.xylonity.companions.client.entity.model.FireworkToadModel;
 import dev.xylonity.companions.common.entity.summon.EnderFrogEntity;
+import dev.xylonity.companions.common.entity.summon.FireworkToadEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 

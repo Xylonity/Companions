@@ -6,7 +6,6 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -24,9 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
@@ -122,8 +120,8 @@ public abstract class AbstractShadeAltarBlockEntity extends BlockEntity implemen
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("Charges", charges);
         tag.putInt("PrevCharges", prevCharges);
 
@@ -135,8 +133,8 @@ public abstract class AbstractShadeAltarBlockEntity extends BlockEntity implemen
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
         charges = tag.getInt("Charges");
         prevCharges = tag.getInt("PrevCharges");
         if (tag.hasUUID("ActiveShadeUUID")) {
@@ -147,8 +145,8 @@ public abstract class AbstractShadeAltarBlockEntity extends BlockEntity implemen
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider holders) {
-        super.handleUpdateTag(tag, holders);
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
         this.charges = tag.getInt("Charges");
         this.prevCharges = tag.getInt("PrevCharges");
         if (tag.hasUUID("ActiveShadeUUID")) {
@@ -159,8 +157,8 @@ public abstract class AbstractShadeAltarBlockEntity extends BlockEntity implemen
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        CompoundTag tag = super.getUpdateTag(provider);
+    public @NotNull CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
         tag.putInt("Charges", getCharges());
         tag.putInt("PrevCharges", prevCharges);
         if (activeShadeUUID != null) {

@@ -5,7 +5,6 @@ import dev.xylonity.companions.common.container.SoulFurnaceContainerMenu;
 import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.common.blockentity.GreatChaliceBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -37,10 +36,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.util.RenderUtil;
+import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -260,13 +259,13 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        return this.saveWithoutMetadata(provider);
+    public @NotNull CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
         this.charges = tag.getInt("Charges");
         this.currentProgress = tag.getInt("Progress");
         this.processingTime = tag.getInt("ProcessingTime");
@@ -279,12 +278,12 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
         }
 
         this.items = NonNullList.withSize(2, ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(tag, this.items, provider);
+        ContainerHelper.loadAllItems(tag, this.items);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("Charges", this.charges);
         tag.putInt("Progress", this.currentProgress);
         tag.putInt("ProcessingTime", this.processingTime);
@@ -296,7 +295,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
             tag.putInt("CurrentRecipeIndex", -1);
         }
 
-        ContainerHelper.saveAllItems(tag, this.items, provider);
+        ContainerHelper.saveAllItems(tag, this.items);
     }
 
     public NonNullList<ItemStack> getItems() {
@@ -344,7 +343,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
 
     @Override
     public double getTick(Object o) {
-        return RenderUtil.getCurrentTick();
+        return RenderUtils.getCurrentTick();
     }
 
     @Override

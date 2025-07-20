@@ -2,6 +2,9 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
+import dev.xylonity.companions.common.util.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -11,10 +14,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,12 +44,12 @@ public class FireRayPieceProjectile extends BaseProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(INDEX, 0);
-        builder.define(PARENT_UUID, Optional.empty());
-        builder.define(YAW, 0f);
-        builder.define(PITCH, 0f);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(INDEX, 0);
+        entityData.define(PARENT_UUID, Optional.empty());
+        entityData.define(YAW, 0f);
+        entityData.define(PITCH, 0f);
     }
 
     @Override
@@ -90,7 +99,7 @@ public class FireRayPieceProjectile extends BaseProjectile {
             List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.25), e -> !e.equals(getOwner()));
 
             if (!entities.isEmpty()) {
-                LivingEntity victim = entities.getFirst();
+                LivingEntity victim = entities.get(0);
                 victim.hurt(this.damageSources().indirectMagic(this, getOwner()), 0.1F);
             }
         }

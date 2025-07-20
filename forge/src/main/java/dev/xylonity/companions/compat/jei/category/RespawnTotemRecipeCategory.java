@@ -35,9 +35,9 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class RespawnTotemRecipeCategory implements IRecipeCategory<HourglassRecipe> {
 
-    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "respawn_totem_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "respawn_totem_interaction");
     public static final RecipeType<HourglassRecipe> TYPE = new RecipeType<>(UID, HourglassRecipe.class);
-    public static final ResourceLocation SHADOW = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private RespawnTotemBlockEntity cachedBlockEntity;
     private RespawnTotemRingProjectile cachedEntity;
@@ -79,7 +79,7 @@ public class RespawnTotemRecipeCategory implements IRecipeCategory<HourglassReci
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, HourglassRecipe rec, @NotNull IFocusGroup focuses) {
         this.cachedEntity = null;
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
     private RespawnTotemBlockEntity getOrCreateBlockEntity() {
@@ -167,7 +167,7 @@ public class RespawnTotemRecipeCategory implements IRecipeCategory<HourglassReci
             float partialTicks = (float)((System.currentTimeMillis() - lastUpdateTime) / 50.0);
             blockRenderer.render(blockEntity, partialTicks, pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
-            blockRenderer.render(blockEntity, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
+            blockRenderer.render(blockEntity, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         }
 
         pose.popPose();
@@ -182,7 +182,7 @@ public class RespawnTotemRecipeCategory implements IRecipeCategory<HourglassReci
             pose.mulPose(Axis.YP.rotationDegrees(45f));
             pose.mulPose(Axis.ZP.rotationDegrees(180f));
 
-            entityRenderer.render(entity, 0, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
+            entityRenderer.render(entity, 0, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
 
             pose.popPose();
         }

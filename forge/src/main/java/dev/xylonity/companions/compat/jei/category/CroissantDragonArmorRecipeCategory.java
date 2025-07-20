@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
 import dev.xylonity.companions.common.recipe.CroissantDragonArmorRecipe;
+import dev.xylonity.companions.common.recipe.CroissantEggRecipe;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import mezz.jei.api.constants.VanillaTypes;
@@ -30,10 +31,10 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class CroissantDragonArmorRecipeCategory implements IRecipeCategory<CroissantDragonArmorRecipe> {
-    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "croissant_dragon_armor_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "croissant_dragon_armor_interaction");
     public static final RecipeType<CroissantDragonArmorRecipe> TYPE = new RecipeType<>(UID, CroissantDragonArmorRecipe.class);
 
-    public static final ResourceLocation SHADOW = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
@@ -175,7 +176,7 @@ public final class CroissantDragonArmorRecipeCategory implements IRecipeCategory
 
             dragonRenderer1.render(dragon1, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
         } catch (Exception e) {
-            dragonRenderer1.render(dragon1, 0f, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
+            dragonRenderer1.render(dragon1, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
         }
 
         pose.popPose();
@@ -203,7 +204,7 @@ public final class CroissantDragonArmorRecipeCategory implements IRecipeCategory
 
             dragonRenderer2.render(dragon2, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
         } catch (Exception e) {
-            dragonRenderer2.render(dragon2, 0f, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
+            dragonRenderer2.render(dragon2, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
         }
 
         pose.popPose();

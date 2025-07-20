@@ -1,11 +1,11 @@
 package dev.xylonity.companions.config;
 
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.core.Holder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +38,10 @@ public class SpawnConfig {
         for (int i = 3; i < parts.length; i++) {
             String part = parts[i];
             if (part.startsWith("#")) {
-                ResourceLocation tagId = ResourceLocation.parse(part.substring(1));
+                ResourceLocation tagId = new ResourceLocation(part.substring(1));
                 tagList.add(TagKey.create(Registries.BIOME, tagId));
             } else {
-                biomeList.add(ResourceLocation.parse(part));
+                biomeList.add(new ResourceLocation(part));
             }
         }
 

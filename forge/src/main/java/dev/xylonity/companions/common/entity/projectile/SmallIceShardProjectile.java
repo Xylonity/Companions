@@ -6,10 +6,7 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity {
@@ -214,11 +211,6 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
 
     @Override
     protected @NotNull ItemStack getPickupItem() {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    protected ItemStack getDefaultPickupItem() {
         return ItemStack.EMPTY;
     }
 

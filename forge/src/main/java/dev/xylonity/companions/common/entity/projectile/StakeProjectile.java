@@ -8,13 +8,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class StakeProjectile extends AbstractArrow implements GeoEntity {
@@ -29,7 +31,7 @@ public class StakeProjectile extends AbstractArrow implements GeoEntity {
     }
 
     public StakeProjectile(Level pLevel, LivingEntity pShooter) {
-        super(CompanionsEntities.STAKE_PROJECTILE.get(), pShooter, pLevel, ItemStack.EMPTY, null);
+        super(CompanionsEntities.STAKE_PROJECTILE.get(), pShooter, pLevel);
         this.noPhysics = false;
     }
 
@@ -80,12 +82,12 @@ public class StakeProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
-        return ItemStack.EMPTY;
+    protected void defineSynchedData() {
+        super.defineSynchedData();
     }
 
     @Override
-    protected ItemStack getDefaultPickupItem() {
+    protected @NotNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
