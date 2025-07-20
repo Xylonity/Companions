@@ -21,11 +21,11 @@ public class SoulFurnaceRenderer extends GeoBlockRenderer<SoulFurnaceBlockEntity
         if (animatable.getLevel() != null) {
             BlockState state = animatable.getLevel().getBlockState(animatable.getBlockPos());
             if (state.hasProperty(SoulFurnaceBlock.LIT) && state.getValue(SoulFurnaceBlock.LIT)) {
-                return new ResourceLocation(Companions.MOD_ID, "textures/block/soul_furnace_on_block.png");
+                return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/block/soul_furnace_on_block.png");
             }
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/soul_furnace_block.png");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/block/soul_furnace_block.png");
     }
 
 }

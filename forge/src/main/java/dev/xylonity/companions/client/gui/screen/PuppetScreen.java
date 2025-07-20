@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PuppetScreen extends AbstractContainerScreen<PuppetContainerMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/gui/puppet_gui.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/puppet_gui.png");
 
     public PuppetScreen(PuppetContainerMenu container, Inventory inv, Component title) {
         super(container, inv, title);
@@ -32,7 +32,7 @@ public class PuppetScreen extends AbstractContainerScreen<PuppetContainerMenu> {
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }

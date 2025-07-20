@@ -11,7 +11,7 @@ public class SoulFurnaceModel extends GeoModel<SoulFurnaceBlockEntity> {
 
     @Override
     public ResourceLocation getModelResource(SoulFurnaceBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/soul_furnace_block.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/soul_furnace_block.geo.json");
     }
 
     @Override
@@ -19,16 +19,16 @@ public class SoulFurnaceModel extends GeoModel<SoulFurnaceBlockEntity> {
         if (animatable.getLevel() != null) {
             BlockState state = animatable.getLevel().getBlockState(animatable.getBlockPos());
             if (state.hasProperty(SoulFurnaceBlock.LIT) && state.getValue(SoulFurnaceBlock.LIT)) {
-                return new ResourceLocation(Companions.MOD_ID, "textures/block/soul_furnace_on_block.png");
+                return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/block/soul_furnace_on_block.png");
             }
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/soul_furnace_block.png");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/block/soul_furnace_block.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(SoulFurnaceBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "animations/generic.animation.json");
     }
 
 }

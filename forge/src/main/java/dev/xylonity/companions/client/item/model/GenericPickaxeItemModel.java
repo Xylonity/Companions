@@ -15,17 +15,17 @@ public class GenericPickaxeItemModel extends GeoModel<GenericGeckoPickaxeItem> {
 
     @Override
     public ResourceLocation getModelResource(GenericGeckoPickaxeItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/" + resourceKey + ".geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/" + resourceKey + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(GenericGeckoPickaxeItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/item/" + resourceKey + ".png");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/item/" + resourceKey + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(GenericGeckoPickaxeItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "animations/generic.animation.json");
     }
 
 }

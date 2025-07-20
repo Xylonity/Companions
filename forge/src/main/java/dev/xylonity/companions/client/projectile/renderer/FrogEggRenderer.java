@@ -1,9 +1,7 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import dev.xylonity.companions.client.projectile.model.FrogEggModel;
-import dev.xylonity.companions.client.projectile.model.LaserModel;
 import dev.xylonity.companions.common.entity.projectile.FrogEggProjectile;
-import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

@@ -2,18 +2,11 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.FireRayPieceModel;
-import dev.xylonity.companions.client.projectile.model.MagicRayPieceModel;
 import dev.xylonity.companions.common.entity.projectile.FireRayPieceProjectile;
-import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class FireRayPieceRenderer extends GeoEntityRenderer<FireRayPieceProjectile> {

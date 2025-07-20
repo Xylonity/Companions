@@ -13,17 +13,17 @@ public class TeddyModel extends GeoModel<TeddyEntity> {
 
     @Override
     public ResourceLocation getModelResource(TeddyEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/" + prefix(animatable) +"teddy.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/" + prefix(animatable) +"teddy.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(TeddyEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/" + prefix(animatable) + "teddy.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/" + prefix(animatable) + "teddy.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(TeddyEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/" + prefix(animatable) + "teddy.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/" + prefix(animatable) + "teddy.animation.json");
     }
 
 }

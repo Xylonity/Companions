@@ -5,10 +5,11 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.entity.model.DinamoModel;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
+import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -31,7 +32,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
     public DinamoRenderer(EntityRendererProvider.Context renderManager, int totalFrames, int ticksPerFrame) {
         super(renderManager, new DinamoModel());
         addRenderLayer(new ElectricConnectionLayer(this,
-                new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"),
+                ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/misc/electric_arch.png"),
                 totalFrames,
                 ticksPerFrame
         ));
@@ -151,20 +152,19 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
 
             int[] indices = {0, 1, 2, 3, 3, 2, 1, 0};
             for (int i : indices) {
-                produceVertex(vertexConsumer, positionMatrix, normalMatrix, light, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
+                produceVertex(vertexConsumer, positionMatrix, poseStack, light, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
             }
         }
 
         private record VertexCoordinates(float x, float y, float z, float u, float v) { ;; }
 
-        private void produceVertex(VertexConsumer vertexConsumer, Matrix4f positionMatrix, Matrix3f normalMatrix, int light, float x, float y, float z, float textureU, float textureV) {
-            vertexConsumer.vertex(positionMatrix, x, y, z)
-                    .color(255, 255, 255, 255)
-                    .uv(textureU, textureV)
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .uv2(light)
-                    .normal(normalMatrix, 0.0F, 1.0F, 0.0F)
-                    .endVertex();
+        private void produceVertex(VertexConsumer vertexConsumer, Matrix4f positionMatrix, PoseStack poseStack, int light, float x, float y, float z, float textureU, float textureV) {
+            vertexConsumer.addVertex(positionMatrix, x, y, z)
+                    .setColor(255, 255, 255, 255)
+                    .setUv(textureU, textureV)
+                    .setOverlay(OverlayTexture.NO_OVERLAY)
+                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
         }
 
     }

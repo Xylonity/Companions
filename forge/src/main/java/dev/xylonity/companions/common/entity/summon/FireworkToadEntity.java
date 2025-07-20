@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
-import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.entity.SummonFrogEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.FireworkToadGoal;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.SummonHopToOwnerGoal;
@@ -27,12 +26,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
 
 public class FireworkToadEntity extends SummonFrogEntity implements IFrogJumpUtil {
 
@@ -54,10 +49,10 @@ public class FireworkToadEntity extends SummonFrogEntity implements IFrogJumpUti
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(PARABOLA_CENTER, new Vector3f(0F, 0F, 0F));
-        this.entityData.define(FLY_ENABLED, false);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(PARABOLA_CENTER, new Vector3f(0F, 0F, 0F));
+        builder.define(FLY_ENABLED, false);
     }
 
     public void setParabolaCenter(Vec3 center) {

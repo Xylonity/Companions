@@ -47,7 +47,7 @@ public class BloodSwordItem extends GenericGeckoSwordItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag flag) {
         pTooltipComponents.add(Component.translatable("tooltip.icon.companions.star").append(Component
                 .translatable("tooltip.item.companions.key.blood_weapon")
                 .withStyle(ChatFormatting.YELLOW)));
@@ -89,7 +89,7 @@ public class BloodSwordItem extends GenericGeckoSwordItem {
                         )
         );
 
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        super.appendHoverText(stack, context, pTooltipComponents, flag);
     }
 
 }

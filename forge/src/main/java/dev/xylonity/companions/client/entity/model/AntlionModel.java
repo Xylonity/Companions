@@ -9,17 +9,17 @@ public class AntlionModel extends GeoModel<AntlionEntity> {
 
     @Override
     public ResourceLocation getModelResource(AntlionEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/antlion" + prefix(animatable) + ".geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/antlion" + prefix(animatable) + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(AntlionEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/antlion" + prefix(animatable) + ((animatable.hasFur() && animatable.getVariant() == 0) ? "_hair" : "") + ".png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/antlion" + prefix(animatable) + ((animatable.hasFur() && animatable.getVariant() == 0) ? "_hair" : "") + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(AntlionEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/antlion" + prefix(animatable) + ".animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/antlion" + prefix(animatable) + ".animation.json");
     }
 
     private String prefix(AntlionEntity animatable) {

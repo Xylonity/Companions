@@ -9,7 +9,7 @@ public class RedStarExplosionModel extends GeoModel<RedStarExplosion> {
 
     @Override
     public ResourceLocation getModelResource(RedStarExplosion animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/red_star_explosion.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/red_star_explosion.geo.json");
     }
 
     @Override
@@ -18,12 +18,12 @@ public class RedStarExplosionModel extends GeoModel<RedStarExplosion> {
         int perTick = 1;
 
         int frameIndex = (animatable.tickCount / perTick) % frames;
-        return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/red_star_explosion_center_%d.png", frameIndex));
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, String.format("textures/entity/red_star_explosion_center_%d.png", frameIndex));
     }
 
     @Override
     public ResourceLocation getAnimationResource(RedStarExplosion animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "animations/generic.animation.json");
     }
 
 }

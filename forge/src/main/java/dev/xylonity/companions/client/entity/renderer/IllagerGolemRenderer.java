@@ -1,10 +1,11 @@
 package dev.xylonity.companions.client.entity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.entity.model.IllagerGolemModel;
 import dev.xylonity.companions.common.entity.hostile.IllagerGolemEntity;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -13,21 +14,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 
 public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> {
 
     public IllagerGolemRenderer(EntityRendererProvider.Context renderManager, int totalFrames, int ticksPerFrame) {
         super(renderManager, new IllagerGolemModel());
         addRenderLayer(new ElectricConnectionLayer(this,
-                new ResourceLocation(Companions.MOD_ID, "textures/misc/illager_golem_electric_arch.png"),
+                ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/misc/illager_golem_electric_arch.png"),
                 totalFrames,
                 ticksPerFrame
         ));
@@ -119,20 +118,19 @@ public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> 
 
             int[] indices = {0, 1, 2, 3, 3, 2, 1, 0};
             for (int i : indices) {
-                produceVertex(vertexConsumer, positionMatrix, normalMatrix, light, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
+                produceVertex(vertexConsumer, positionMatrix, poseStack, light, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
             }
         }
 
         private record VertexCoordinates(float x, float y, float z, float u, float v) { ;; }
 
-        private void produceVertex(VertexConsumer vertexConsumer, Matrix4f positionMatrix, Matrix3f normalMatrix, int light, float x, float y, float z, float textureU, float textureV) {
-            vertexConsumer.vertex(positionMatrix, x, y, z)
-                    .color(255, 255, 255, 255)
-                    .uv(textureU, textureV)
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .uv2(light)
-                    .normal(normalMatrix, 0.0F, 1.0F, 0.0F)
-                    .endVertex();
+        private void produceVertex(VertexConsumer vertexConsumer, Matrix4f positionMatrix, PoseStack poseStack, int light, float x, float y, float z, float textureU, float textureV) {
+            vertexConsumer.addVertex(positionMatrix, x, y, z)
+                    .setColor(255, 255, 255, 255)
+                    .setUv(textureU, textureV)
+                    .setOverlay(OverlayTexture.NO_OVERLAY)
+                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
         }
 
     }

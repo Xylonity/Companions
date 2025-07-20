@@ -18,7 +18,7 @@ public class StakeRenderer extends GeoEntityRenderer<StakeProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull StakeProjectile animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stake.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/stake.png");
     }
 
     @Override

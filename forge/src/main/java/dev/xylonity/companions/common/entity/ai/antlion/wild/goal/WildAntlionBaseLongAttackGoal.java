@@ -1,8 +1,6 @@
 package dev.xylonity.companions.common.entity.ai.antlion.wild.goal;
 
-import dev.xylonity.companions.common.entity.ai.antlion.tamable.AbstractAntlionAttackGoal;
 import dev.xylonity.companions.common.entity.ai.antlion.wild.AbstractWildAntlionAttackGoal;
-import dev.xylonity.companions.common.entity.companion.AntlionEntity;
 import dev.xylonity.companions.common.entity.hostile.WildAntlionEntity;
 import dev.xylonity.knightlib.api.TickScheduler;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -93,7 +91,7 @@ public class WildAntlionBaseLongAttackGoal extends AbstractWildAntlionAttackGoal
 
         if (isHit) {
             TickScheduler.scheduleServer(serverLevel, () -> antlion.doHurtTarget(target), steps / TICK_DELAY_DIVISOR);
-            if (antlion.level().random.nextFloat() < 0.35f) TickScheduler.scheduleServer(serverLevel, () -> target.setSecondsOnFire(new Random().nextInt(1, 3)), steps / TICK_DELAY_DIVISOR);
+            if (antlion.level().random.nextFloat() < 0.35f) TickScheduler.scheduleServer(serverLevel, () -> target.setRemainingFireTicks(new Random().nextInt(1, 3) * 20), steps / TICK_DELAY_DIVISOR);
         }
 
     }

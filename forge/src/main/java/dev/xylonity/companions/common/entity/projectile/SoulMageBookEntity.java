@@ -13,13 +13,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class SoulMageBookEntity extends Projectile implements GeoEntity {
@@ -57,13 +53,13 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(TARGET_RED, 255);
-        this.entityData.define(TARGET_GREEN, 255);
-        this.entityData.define(TARGET_BLUE, 255);
-        this.entityData.define(CURRENT_RED, 255.0f);
-        this.entityData.define(CURRENT_GREEN, 255.0f);
-        this.entityData.define(CURRENT_BLUE, 255.0f);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(TARGET_RED, 255);
+        builder.define(TARGET_GREEN, 255);
+        builder.define(TARGET_BLUE, 255);
+        builder.define(CURRENT_RED, 255.0f);
+        builder.define(CURRENT_GREEN, 255.0f);
+        builder.define(CURRENT_BLUE, 255.0f);
     }
 
     public float getCurrentRed() {

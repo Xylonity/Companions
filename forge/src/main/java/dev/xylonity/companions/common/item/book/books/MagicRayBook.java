@@ -11,7 +11,6 @@ import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.api.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;

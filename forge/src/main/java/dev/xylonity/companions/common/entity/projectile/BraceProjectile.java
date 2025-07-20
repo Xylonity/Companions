@@ -8,12 +8,18 @@ import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -94,7 +100,7 @@ public class BraceProjectile extends BaseProjectile {
 
         // Hurts the trigger entity and caches its id so the projectile doesn't attack it again and continues bouncing
         target.hurt(damageSources().thrown(this, getOwner()), (float) CompanionsConfig.BRACE_PROJECTILE_DAMAGE);
-        target.setSecondsOnFire(random.nextInt(1, 10));
+        target.setRemainingFireTicks(random.nextInt(1, 10) * 20);
         hitEntities.add(target.getId());
         entityBounces++;
 
@@ -206,21 +212,11 @@ public class BraceProjectile extends BaseProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-    }
-
-    @Override
     public void playerTouch(@NotNull Player player) { ;; }
 
     @Override
     protected int baseLifetime() {
         return 200;
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return super.getAddEntityPacket();
     }
 
 }

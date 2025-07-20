@@ -8,6 +8,7 @@ import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.api.IBossMusicProvider;
 import dev.xylonity.knightlib.api.TickScheduler;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,7 +23,10 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -36,12 +40,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -108,7 +110,6 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.noCulling = true;
         this.isTransforming = false;
         this.setNoMovement(true);
-        this.setMaxUpStep(1f);
         this.bossInfo.setCreateWorldFog(true);
         this.secondPhaseAppearCounter = 0;
     }
@@ -235,6 +236,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.45f)
+                .add(Attributes.STEP_HEIGHT, 1f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
 
@@ -401,19 +403,19 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ACTIVATION_PHASE, 0);
-        this.entityData.define(PHASE, 1);
-        this.entityData.define(ATTACK_TYPE, 0);
-        this.entityData.define(SHOULD_SEARCH_TARGET, true);
-        this.entityData.define(APPEAR_ANIMATION, false);
-        this.entityData.define(SHOULD_ATTACK, true);
-        this.entityData.define(SHOULD_LOOK_AT_TARGET, true);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ACTIVATION_PHASE, 0);
+        builder.define(PHASE, 1);
+        builder.define(ATTACK_TYPE, 0);
+        builder.define(SHOULD_SEARCH_TARGET, true);
+        builder.define(APPEAR_ANIMATION, false);
+        builder.define(SHOULD_ATTACK, true);
+        builder.define(SHOULD_LOOK_AT_TARGET, true);
     }
 
     @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+    protected EntityDimensions getDefaultDimensions(Pose pPose) {
         return getPhase() == 1 ? super.getDimensions(pPose) : EntityDimensions.scalable(1F, 2F);
     }
 

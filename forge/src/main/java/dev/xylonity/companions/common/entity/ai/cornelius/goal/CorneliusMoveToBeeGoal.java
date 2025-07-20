@@ -1,8 +1,8 @@
 package dev.xylonity.companions.common.entity.ai.cornelius.goal;
 
 import dev.xylonity.companions.common.entity.CompanionEntity;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Bee;
 
 import java.util.EnumSet;

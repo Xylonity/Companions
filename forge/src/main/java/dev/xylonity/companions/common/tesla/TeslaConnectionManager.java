@@ -380,7 +380,7 @@ public class TeslaConnectionManager {
         }
 
         public static ConnectionNode deserialize(CompoundTag tag) {
-            ResourceLocation dimension = new ResourceLocation(tag.getString("Dimension"));
+            ResourceLocation dimension = ResourceLocation.parse(tag.getString("Dimension"));
 
             if (tag.getString("Type").equals("entity")) {
                 return forEntity(tag.getUUID("UUID"), dimension);

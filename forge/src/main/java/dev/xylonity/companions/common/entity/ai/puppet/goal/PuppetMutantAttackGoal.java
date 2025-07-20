@@ -5,11 +5,10 @@ import dev.xylonity.companions.common.entity.companion.PuppetEntity;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Random;
 
 public class PuppetMutantAttackGoal extends AbstractPuppetAttackGoal {
 

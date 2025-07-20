@@ -15,6 +15,7 @@ public class FireworkToadRenderer extends GeoEntityRenderer<FireworkToadEntity> 
         this.shadowRadius = 0.5f;
     }
 
+
     @Override
     protected void applyRotations(FireworkToadEntity tamable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
         Vec3 center = tamable.getParabolaCenter();

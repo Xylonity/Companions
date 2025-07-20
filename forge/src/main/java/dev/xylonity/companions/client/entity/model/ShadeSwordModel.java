@@ -9,21 +9,21 @@ public class ShadeSwordModel extends GeoModel<ShadeSwordEntity> {
 
     @Override
     public ResourceLocation getModelResource(ShadeSwordEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/shade_sword.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/shade_sword.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(ShadeSwordEntity animatable) {
         if (animatable.isBlood()) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/shade_sword_blood.png");
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/shade_sword_blood.png");
         }
 
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/shade_sword.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/shade_sword.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(ShadeSwordEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/shade_sword.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/shade_sword.animation.json");
     }
 
 }

@@ -12,7 +12,9 @@ public class CompanionsCommon {
     public static final String MOD_ID = "companions";
     public static final Logger LOGGER = LoggerFactory.getLogger("Companions!");
 
-    public static final CompanionsPlatform COMMON_PLATFORM = ServiceLoader.load(CompanionsPlatform.class).findFirst().orElseThrow();
+    public static final CompanionsPlatform COMMON_PLATFORM = ServiceLoader.load(CompanionsPlatform.class)
+            .findFirst()
+            .orElseThrow(() -> new NullPointerException("Failed to load service"));
 
     public static void init() {
         CompanionsItems.init();

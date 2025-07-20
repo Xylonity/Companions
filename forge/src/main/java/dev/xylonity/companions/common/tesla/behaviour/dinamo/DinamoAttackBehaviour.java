@@ -7,6 +7,7 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;

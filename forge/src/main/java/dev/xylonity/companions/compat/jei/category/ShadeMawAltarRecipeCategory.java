@@ -34,10 +34,10 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class ShadeMawAltarRecipeCategory implements IRecipeCategory<ShadeMawAltarRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_maw_altar_interaction");
+    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "shade_maw_altar_interaction");
     public static final RecipeType<ShadeMawAltarRecipe> TYPE = new RecipeType<>(UID, ShadeMawAltarRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
@@ -77,7 +77,7 @@ public final class ShadeMawAltarRecipeCategory implements IRecipeCategory<ShadeM
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ShadeMawAltarRecipe rec, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
     }
 
     private ShadeMawAltarBlockEntity getOrCreateBlockEntity() {
@@ -162,7 +162,7 @@ public final class ShadeMawAltarRecipeCategory implements IRecipeCategory<ShadeM
 
             renderer.render(be, partialTicks, pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
-            renderer.render(be, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
+            renderer.render(be, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         }
 
         pose.popPose();
@@ -190,7 +190,7 @@ public final class ShadeMawAltarRecipeCategory implements IRecipeCategory<ShadeM
 
             mawRenderer.render(maw, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
         } catch (Exception e) {
-            mawRenderer.render(maw, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
+            mawRenderer.render(maw, 0f, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
         }
 
         pose.popPose();

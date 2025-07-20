@@ -34,10 +34,10 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class CroissantEggRecipeCategory implements IRecipeCategory<CroissantEggRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "croissant_egg_interaction");
+    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "croissant_egg_interaction");
     public static final RecipeType<CroissantEggRecipe> TYPE = new RecipeType<>(UID, CroissantEggRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
@@ -77,7 +77,7 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CroissantEggRecipe rec, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addItemStack(rec.input);
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addItemStack(rec.input());
     }
 
     private CroissantEggBlockEntity getOrCreateBlockEntity() {
@@ -163,7 +163,7 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
 
             renderer.render(be, partialTicks, pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
-            renderer.render(be, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
+            renderer.render(be, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         }
 
         pose.popPose();
@@ -191,7 +191,7 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
 
             mawRenderer.render(maw, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
         } catch (Exception e) {
-            mawRenderer.render(maw, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
+            mawRenderer.render(maw, 0f, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
         }
 
         pose.popPose();

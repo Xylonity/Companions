@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionSummonFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -9,7 +10,10 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
@@ -20,12 +24,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
 
 import java.util.List;
 
@@ -62,7 +62,7 @@ public class LivingCandleEntity extends CompanionSummonEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FollowOwnerGoal(this, 0.6D, 2.0F, 50.0F, false));
+        this.goalSelector.addGoal(1, new CompanionSummonFollowOwnerGoal(this, 0.6D, 2.0F, 50.0F, false));
         this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.6D));
     }
 
@@ -126,7 +126,7 @@ public class LivingCandleEntity extends CompanionSummonEntity {
                 this.setOwnerUUID(closestMage.getUUID());
                 closestMage.setCandleCount(closestMage.getCandleCount() + 1);
                 closestMage.candles.add(this);
-                this.setTame(true);
+                this.setTame(true, false);
             }
 
         }

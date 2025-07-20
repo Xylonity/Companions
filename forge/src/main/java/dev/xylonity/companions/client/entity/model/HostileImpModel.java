@@ -9,21 +9,21 @@ public class HostileImpModel extends GeoModel<HostileImpEntity> {
 
     @Override
     public ResourceLocation getModelResource(HostileImpEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/hostile_imp.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/hostile_imp.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(HostileImpEntity animatable) {
         if (animatable.isAngry()) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/imp.png");
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/imp.png");
         }
 
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/imp_hostile1.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/imp_hostile1.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(HostileImpEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/imp.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/imp.animation.json");
     }
 
 }

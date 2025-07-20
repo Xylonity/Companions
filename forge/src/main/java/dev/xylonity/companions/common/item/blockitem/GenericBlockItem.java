@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -67,9 +67,9 @@ public class GenericBlockItem extends BlockItem implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltip, @NotNull TooltipFlag pFlag) {
-        pTooltip.add(Component.translatable("tooltip.block.companions."+ name).withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> components, @NotNull TooltipFlag flag) {
+        components.add(Component.translatable("tooltip.block.companions."+ name).withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
+        super.appendHoverText(stack, context, components, flag);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class CroissantEggRenderer extends GeoBlockRenderer<CroissantEggBlockEnti
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull CroissantEggBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/croissant_egg_block.png");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/block/croissant_egg_block.png");
     }
 
 }

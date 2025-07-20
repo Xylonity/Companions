@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class SoulFurnaceScreen extends AbstractContainerScreen<SoulFurnaceContainerMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/gui/soul_furnace_gui.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/soul_furnace_gui.png");
 
     private static final int FRAME_WIDTH = 10;
     private static final int FRAME_HEIGHT = 9;
@@ -90,7 +90,7 @@ public class SoulFurnaceScreen extends AbstractContainerScreen<SoulFurnaceContai
 
     @Override
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics);
+        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }

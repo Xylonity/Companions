@@ -20,18 +20,20 @@ public class FrogBonanzaRenderer extends GeoBlockRenderer<FrogBonanzaBlockEntity
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, FrogBonanzaBlockEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, FrogBonanzaBlockEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+
         for (int i = 0; i < 3; i++) {
             final int idx = i; // my guy i doesn't want to be referenced directly
             this.model.getBone(WHEELS[i]).ifPresent(b -> b.setRotX(b.getRotX() + Util.degToRad(animatable.getWheelRotation(idx))));
         }
 
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
 
         for (int i = 0; i < 3; i++) {
             final int idx = i;
             this.model.getBone(WHEELS[i]).ifPresent(b -> b.setRotX(b.getRotX() - Util.degToRad(animatable.getWheelRotation(idx))));
         }
+
     }
 
 }

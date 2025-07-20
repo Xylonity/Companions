@@ -27,12 +27,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -149,7 +145,7 @@ public class HolinessStartProjectile extends BaseProjectile {
             }
         } else {
             for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+                Companions.PROXY.shakePlayerCamera(player, 20, 0.1f, 0.1f, 0.1f, 10);
             }
         }
 
@@ -191,7 +187,7 @@ public class HolinessStartProjectile extends BaseProjectile {
             if (!Util.areEntitiesLinked(e, this)) {
                 e.hurt(this.damageSources().magic(), 7f);
                 if (isRed()) {
-                    e.setSecondsOnFire(new Random().nextInt(2, 10));
+                    e.setRemainingFireTicks(new Random().nextInt(2, 10) * 20);
                 } else {
                     e.setTicksFrozen(e.getTicksFrozen() + new Random().nextInt(60, 200));
                 }
@@ -219,9 +215,9 @@ public class HolinessStartProjectile extends BaseProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(RED, false);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(RED, false);
     }
 
     @Override

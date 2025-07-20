@@ -2,9 +2,7 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.client.projectile.model.BloodTornadoModel;
-import dev.xylonity.companions.client.projectile.model.TornadoModel;
 import dev.xylonity.companions.common.entity.projectile.BloodTornadoProjectile;
-import dev.xylonity.companions.common.entity.projectile.TornadoProjectile;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

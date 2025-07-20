@@ -46,7 +46,7 @@ public class WildAntlionBaseAttackGoal extends AbstractWildAntlionAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         antlion.doHurtTarget(target);
-        if (antlion.level().random.nextFloat() < 0.45f) target.setSecondsOnFire(new Random().nextInt(1, 3));
+        if (antlion.level().random.nextFloat() < 0.45f) target.setRemainingFireTicks(new Random().nextInt(1, 3) * 20);
     }
 
     @Override

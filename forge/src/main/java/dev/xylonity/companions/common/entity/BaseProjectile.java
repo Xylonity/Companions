@@ -9,8 +9,8 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public abstract class BaseProjectile extends Projectile implements GeoEntity {
@@ -30,8 +30,8 @@ public abstract class BaseProjectile extends Projectile implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(LIFETIME, baseLifetime());
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        builder.define(LIFETIME, baseLifetime());
     }
 
     public int getLifetime() {

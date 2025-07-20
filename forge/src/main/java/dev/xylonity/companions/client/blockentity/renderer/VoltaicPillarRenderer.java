@@ -9,14 +9,13 @@ import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEntity> implements ITeslaUtil {
 
     public VoltaicPillarRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new VoltaicPillarModel());
-        addRenderLayer(new StaticElectricConnectionLayer<>(this, new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch_wall.png"), totalFrames, ticksPerFrame));
+        addRenderLayer(new StaticElectricConnectionLayer<>(this, ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/misc/electric_arch_wall.png"), totalFrames, ticksPerFrame));
     }
 
     public VoltaicPillarRenderer(BlockEntityRendererProvider.Context renderManager) {

@@ -45,7 +45,7 @@ public class LaserRingProjectile extends BaseProjectile {
                         owner.doHurtTarget(e);
                     }
 
-                    e.setSecondsOnFire(level().getRandom().nextInt(1, 15));
+                    e.setRemainingFireTicks(level().getRandom().nextInt(1, 15) * 20);
                 }
             }
         }

@@ -8,6 +8,8 @@ import dev.xylonity.companions.datagen.CompanionsLootModifierGenerator;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.entity.SpawnPlacementType;
+import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -55,9 +57,9 @@ public class CompanionsServerEvents {
 
         @SubscribeEvent
         public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
-            event.register(CompanionsEntities.GOLDEN_ALLAY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GoldenAllayEntity::checkGoldenAllaySpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-            event.register(CompanionsEntities.WILD_ANTLION.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WildAntlionEntity::checkMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-            event.register(CompanionsEntities.CORNELIUS.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, CorneliusEntity::checkCorneliusSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(CompanionsEntities.GOLDEN_ALLAY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GoldenAllayEntity::checkGoldenAllaySpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(CompanionsEntities.WILD_ANTLION.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WildAntlionEntity::checkMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(CompanionsEntities.CORNELIUS.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, CorneliusEntity::checkCorneliusSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         }
 
         @SubscribeEvent
@@ -65,7 +67,7 @@ public class CompanionsServerEvents {
             DataGenerator generator = event.getGenerator();
             PackOutput packOutput = generator.getPackOutput();
 
-            generator.addProvider(event.includeServer(), new CompanionsLootModifierGenerator(packOutput));
+            generator.addProvider(event.includeServer(), new CompanionsLootModifierGenerator(packOutput, event.getLookupProvider()));
         }
 
     }

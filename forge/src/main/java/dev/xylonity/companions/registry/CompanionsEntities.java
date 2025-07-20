@@ -177,7 +177,7 @@ public class CompanionsEntities {
                 }
             }
 
-            return builder.build(new ResourceLocation(Companions.MOD_ID, name).toString());
+            return builder.build(ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, name).toString());
         });
     }
 

@@ -32,7 +32,7 @@ public class BloodScytheItem extends GenericGeckoPickaxeItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag flag) {
         pTooltipComponents.add(Component.translatable("tooltip.icon.companions.star").append(Component
                 .translatable("tooltip.item.companions.key.blood_weapon")
                 .withStyle(ChatFormatting.YELLOW)));
@@ -40,8 +40,8 @@ public class BloodScytheItem extends GenericGeckoPickaxeItem {
         pTooltipComponents.add(
                 Component.literal(" ")
                         .append(Component
-                            .translatable("tooltip.item.companions.key.abilities")
-                            .withStyle(ChatFormatting.DARK_GRAY))
+                                .translatable("tooltip.item.companions.key.abilities")
+                                .withStyle(ChatFormatting.DARK_GRAY))
         );
 
         pTooltipComponents.add(
@@ -54,13 +54,13 @@ public class BloodScytheItem extends GenericGeckoPickaxeItem {
 
         pTooltipComponents.add(
                 Component.literal("   ")
-                    .append(Component
-                        .translatable("tooltip.item.companions.crystallized_blood_scythe_desc", (int) (CompanionsConfig.CRYSTALLIZED_BLOOD_SCYTHE_LIFE_STEAL * 100))
-                        .withStyle(ChatFormatting.RED)
-                    )
+                        .append(Component
+                                .translatable("tooltip.item.companions.crystallized_blood_scythe_desc", (int) (CompanionsConfig.CRYSTALLIZED_BLOOD_SCYTHE_LIFE_STEAL * 100))
+                                .withStyle(ChatFormatting.RED)
+                        )
         );
 
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        super.appendHoverText(stack, context, pTooltipComponents, flag);
     }
 
 }

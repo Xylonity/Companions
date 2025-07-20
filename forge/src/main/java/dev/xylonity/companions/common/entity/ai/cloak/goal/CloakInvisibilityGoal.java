@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.ai.cloak.goal;
 import dev.xylonity.companions.common.entity.ai.cloak.AbstractCloakAttackGoal;
 import dev.xylonity.companions.common.entity.companion.CloakEntity;
 import dev.xylonity.companions.registry.CompanionsEffects;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;

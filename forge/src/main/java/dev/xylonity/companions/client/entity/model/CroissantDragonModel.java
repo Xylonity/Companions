@@ -11,21 +11,21 @@ public class CroissantDragonModel extends GeoModel<CroissantDragonEntity> {
 
     @Override
     public ResourceLocation getModelResource(CroissantDragonEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/croissant_dragon.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/croissant_dragon.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(CroissantDragonEntity animatable) {
         if (animatable.isAttacking()) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, TPATH + animatable.getArmorName() + "_attack.png");
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, TPATH + animatable.getArmorName() + "_attack.png");
         } else {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, TPATH + animatable.getArmorName() + ".png");
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, TPATH + animatable.getArmorName() + ".png");
         }
     }
 
     @Override
     public ResourceLocation getAnimationResource(CroissantDragonEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/croissant_dragon.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/croissant_dragon.animation.json");
     }
 
 }

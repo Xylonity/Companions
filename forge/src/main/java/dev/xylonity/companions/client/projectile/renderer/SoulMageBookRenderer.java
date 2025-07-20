@@ -31,11 +31,11 @@ public class SoulMageBookRenderer extends GeoEntityRenderer<SoulMageBookEntity> 
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull SoulMageBookEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/soul_mage_book.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/soul_mage_book.png");
     }
 
     static class SoulMageBookGlowLayer extends GeoRenderLayer<SoulMageBookEntity> {
-        private static final ResourceLocation EMB_TEXTURE = new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/soul_mage_book_glow.png");
+        private static final ResourceLocation EMB_TEXTURE = ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/soul_mage_book_glow.png");
 
         public SoulMageBookGlowLayer(GeoRenderer<SoulMageBookEntity> entityRenderer) {
             super(entityRenderer);
@@ -45,13 +45,16 @@ public class SoulMageBookRenderer extends GeoEntityRenderer<SoulMageBookEntity> 
         public void render(PoseStack poseStack, SoulMageBookEntity entity, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
             RenderType glowRenderType = RenderType.entityTranslucent(EMB_TEXTURE);
 
-            float r = entity.getCurrentRed() / 255.0f;
-            float g = entity.getCurrentGreen() / 255.0f;
-            float b = entity.getCurrentBlue() / 255.0f;
+            int red = (int) entity.getCurrentRed();
+            int green = (int) entity.getCurrentGreen();
+            int blue = (int) entity.getCurrentBlue();
+            int alpha = 255;
+
+            int colour = (alpha << 24) | (red << 16) | (green << 8) | blue;
 
             VertexConsumer glowBuffer = bufferSource.getBuffer(glowRenderType);
 
-            getRenderer().reRender(bakedModel, poseStack, bufferSource, entity, glowRenderType, glowBuffer, partialTick, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1.0f);
+            getRenderer().reRender(bakedModel, poseStack, bufferSource, entity, glowRenderType, glowBuffer, partialTick, packedLight, OverlayTexture.NO_OVERLAY, colour);
         }
     }
 

@@ -118,13 +118,13 @@ public abstract class ShadeEntity extends CompanionEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ATTACK_TYPE, 0);
-        this.entityData.define(SHOULD_LOOK_AT_TARGET, true);
-        this.entityData.define(IS_BLOOD, false);
-        this.entityData.define(IS_SPAWNING, true);
-        this.entityData.define(LIFETIME, getMaxLifetime());
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ATTACK_TYPE, 0);
+        builder.define(SHOULD_LOOK_AT_TARGET, true);
+        builder.define(IS_BLOOD, false);
+        builder.define(IS_SPAWNING, true);
+        builder.define(LIFETIME, getMaxLifetime());
     }
 
     public abstract int getMaxLifetime();

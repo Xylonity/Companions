@@ -23,7 +23,7 @@ public class FireMarkRingRenderer extends GeoEntityRenderer<FireMarkRingProjecti
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull FireMarkRingProjectile animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/fire_mark_ring.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/fire_mark_ring.png");
     }
 
     @Override

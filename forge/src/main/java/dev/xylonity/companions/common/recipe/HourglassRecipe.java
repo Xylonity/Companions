@@ -1,10 +1,16 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.knightlib.common.recipe.input.GenericRecipeInput;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
@@ -14,22 +20,20 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public final class HourglassRecipe implements Recipe<SimpleContainer> {
+public record HourglassRecipe(ItemStack input) implements Recipe<GenericRecipeInput> {
 
-    private static final ResourceLocation ID = new ResourceLocation(Companions.MOD_ID, "hourglass_interaction");
+    private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "hourglass_interaction");
 
     public static final RecipeSerializer<HourglassRecipe> SERIALIZER = new Serializer();
     public static final RecipeType<HourglassRecipe> RECIPE_TYPE = new Type();
 
-    public final ItemStack input = new ItemStack(CompanionsItems.HOURGLASS.get());
-
     @Override
-    public boolean matches(SimpleContainer inv, @NotNull Level lvl) {
-        return ItemStack.isSameItem(inv.getItem(0), input);
+    public boolean matches(GenericRecipeInput genericRecipeInput, Level level) {
+        return ItemStack.isSameItem(genericRecipeInput.getItem(0), input);
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull SimpleContainer inv, @NotNull RegistryAccess reg) {
+    public ItemStack assemble(GenericRecipeInput genericRecipeInput, HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
@@ -39,12 +43,11 @@ public final class HourglassRecipe implements Recipe<SimpleContainer> {
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(@NotNull RegistryAccess reg) {
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
-    @Override
-    public @NotNull ResourceLocation getId() {
+    public static ResourceLocation getID() {
         return ID;
     }
 
@@ -68,18 +71,27 @@ public final class HourglassRecipe implements Recipe<SimpleContainer> {
     }
 
     public static final class Serializer implements RecipeSerializer<HourglassRecipe> {
+        public static final MapCodec<HourglassRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                i -> i.group(
+                        ItemStack.CODEC.fieldOf("ingredient").forGetter(HourglassRecipe::input)
+                ).apply(i, HourglassRecipe::new)
+        );
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, HourglassRecipe> STREAM_CODEC =
+                StreamCodec.composite(
+                        ItemStack.STREAM_CODEC, HourglassRecipe::input,
+                        HourglassRecipe::new
+                );
+
         @Override
-        public @NotNull HourglassRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
-            return new HourglassRecipe();
+        public MapCodec<HourglassRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public HourglassRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
-            return new HourglassRecipe();
+        public StreamCodec<RegistryFriendlyByteBuf, HourglassRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
-
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull HourglassRecipe rec) { ;; }
     }
 
 }

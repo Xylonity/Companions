@@ -1,12 +1,12 @@
 package dev.xylonity.companions.common.entity.companion;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
+import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.mage.goal.*;
-import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -21,7 +21,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -36,17 +38,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class SoulMageEntity extends CompanionEntity implements ContainerListener {
     public SimpleContainer inventory;
@@ -198,15 +197,15 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(SIT_VARIATION, 0);
-        this.entityData.define(IS_ATTACKING, false);
-        this.entityData.define(DATA_ID_FLAGS, (byte)0);
-        this.entityData.define(ATTACK_ANIMATION_NAME, "");
-        this.entityData.define(CANDLE_COUNT, 0);
-        this.entityData.define(BOOK_ID, -1);
-        this.entityData.define(CURRENT_ATTACK_TYPE, "NONE");
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(SIT_VARIATION, 0);
+        builder.define(IS_ATTACKING, false);
+        builder.define(DATA_ID_FLAGS, (byte)0);
+        builder.define(ATTACK_ANIMATION_NAME, "");
+        builder.define(CANDLE_COUNT, 0);
+        builder.define(BOOK_ID, -1);
+        builder.define(CURRENT_ATTACK_TYPE, "NONE");
     }
 
     @Nullable
@@ -221,22 +220,19 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
         if (level().isClientSide) return InteractionResult.SUCCESS;
 
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            NetworkHooks.openScreen(
-                    (ServerPlayer) player, new MenuProvider() {
-                        @Override
-                        public @NotNull Component getDisplayName() {
-                            return SoulMageEntity.this.getName();
-                        }
+            player.openMenu(new MenuProvider() {
+                @Override
+                public Component getDisplayName() {
+                    return SoulMageEntity.this.getName();
+                }
 
-                        @Override
-                        public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
-                            return new SoulMageContainerMenu(id, playerInv, SoulMageEntity.this);
-                        }
-                    },
-                    buf -> buf.writeInt(this.getId())
-            );
+                @Override
+                public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                    return new SoulMageContainerMenu(i, inventory, SoulMageEntity.this);
+                }
+            });
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.get(), 0.5F, 1.0F);
 
             return InteractionResult.SUCCESS;
         }
@@ -251,7 +247,7 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.inventory.fromTag(pCompound.getList("Inventory", 10));
+        this.inventory.fromTag(pCompound.getList("Inventory", 10), level().registryAccess());
         if (pCompound.contains("BookEntityId")) {
             this.entityData.set(BOOK_ID, pCompound.getInt("BookEntityId"));
         }
@@ -261,7 +257,7 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.put("Inventory", this.inventory.createTag());
+        pCompound.put("Inventory", this.inventory.createTag(level().registryAccess()));
         pCompound.putInt("BookId", getBookId());
     }
 
@@ -362,7 +358,7 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
         if (this.inventory != null) {
             for(int i = 0; i < this.inventory.getContainerSize(); i++) {
                 ItemStack itemStack = this.inventory.getItem(i);
-                if (!itemStack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemStack)) {
+                if (!itemStack.isEmpty()) {
                     this.spawnAtLocation(itemStack);
                 }
             }

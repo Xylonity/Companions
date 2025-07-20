@@ -2,11 +2,8 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.client.projectile.model.FireMarkRingModel;
 import dev.xylonity.companions.client.projectile.model.StoneSpikeModel;
-import dev.xylonity.companions.common.entity.projectile.FireMarkRingProjectile;
 import dev.xylonity.companions.common.entity.projectile.StoneSpikeProjectile;
-import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -27,13 +24,13 @@ public class StoneSpikeRenderer extends GeoEntityRenderer<StoneSpikeProjectile> 
         int remaining = l - animatable.tickCount;
 
         return switch (remaining) {
-            case 12, 11 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike1.png");
-            case 10, 9 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike2.png");
-            case 8, 7 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike3.png");
-            case 6, 5 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike4.png");
-            case 4, 3 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike5.png");
-            case 2, 1 -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike6.png");
-            default -> new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/stone_spike0.png");
+            case 12, 11 -> ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/stone_spike1.png");
+            case 10, 9 -> ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/stone_spike2.png");
+            case 8, 7 -> ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/stone_spike3.png");
+            case 6, 5 -> ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/stone_spike4.png");
+            case 4, 3 -> ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/stone_spike5.png");
+            case 2, 1 -> ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/stone_spike6.png");
+            default -> ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/stone_spike0.png");
         };
     }
 

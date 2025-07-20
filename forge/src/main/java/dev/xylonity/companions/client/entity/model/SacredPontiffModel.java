@@ -8,9 +8,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -19,10 +19,10 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
     @Override
     public ResourceLocation getModelResource(SacredPontiffEntity animatable) {
         if (animatable.getPhase() == 2) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/his_holiness.geo.json");
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/his_holiness.geo.json");
         }
 
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/sacred_pontiff.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/sacred_pontiff.geo.json");
     }
 
     @Override
@@ -33,27 +33,27 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
                 int perTick = 10;
 
                 int frameIndex = (animatable.deathTime / perTick) % frames;
-                return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/his_holiness_petrification%d.png", frameIndex));
+                return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, String.format("textures/entity/his_holiness_petrification%d.png", frameIndex));
             }
 
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/his_holiness.png");
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/his_holiness.png");
         }
 
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/sacred_pontiff.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/sacred_pontiff.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(SacredPontiffEntity animatable) {
         if (animatable.getPhase() == 2) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/his_holiness.animation.json");
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/his_holiness.animation.json");
         }
 
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/sacred_pontiff.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/sacred_pontiff.animation.json");
     }
 
     @Override
     public void setCustomAnimations(SacredPontiffEntity animatable, long instanceId, AnimationState<SacredPontiffEntity> animationState) {
-        CoreGeoBone head = getAnimationProcessor().getBone("head");
+        GeoBone head = getAnimationProcessor().getBone("head");
 
         if (head != null) {
             EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
@@ -79,8 +79,8 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
         float dot = (float)(diff.x * lateral.x + diff.z * lateral.z);
         dot = Mth.clamp(dot, -1f, 1f);
 
-        CoreGeoBone leftEyeBone = this.getAnimationProcessor().getBone("left_eye");
-        CoreGeoBone rightEyeBone = this.getAnimationProcessor().getBone("right_eye");
+        GeoBone leftEyeBone = this.getAnimationProcessor().getBone("left_eye");
+        GeoBone rightEyeBone = this.getAnimationProcessor().getBone("right_eye");
 
         float baseLeftEyeX = -0.0f;
         float baseRightEyeX = 0.0f;

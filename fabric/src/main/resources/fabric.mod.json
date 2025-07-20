@@ -1,6 +1,6 @@
 {
     "schemaVersion": 1,
-    "id": "companions",
+    "id": "${mod_id}",
     "version": "${version}",
     "name": "${mod_name}",
     "description": "${description}",
@@ -12,32 +12,22 @@
         "sources": "https://github.com/FabricMC/fabric-example-mod"
     },
     "license": "${license}",
-    "icon": "assets/companions/textures/item/croissant_item.png",
+    "icon": "${mod_id}.png",
     "environment": "*",
     "entrypoints": {
         "main": [
-          "dev.xylonity.companions.Companions"
-        ],
-        "client": [
-            "dev.xylonity.companions.Companions"
-        ],
-        "jei_mod_plugin": [
-            "dev.xylonity.companions.compat.jei.CompanionsPlugin"
-        ],
-        "fabric-datagen": [
-            "dev.xylonity.companions.datagen.CompanionsLootModifierGenerator"
+            "com.example.examplemod.ExampleMod"
         ]
     },
     "mixins": [
-        "companions.mixins.json",
-        "companions.fabric.mixins.json"
+        "${mod_id}.mixins.json",
+        "${mod_id}.fabric.mixins.json"
     ],
     "depends": {
-        "fabricloader": ">=0.14",
-        "fabric": "*",
-        "minecraft": "~${minecraft_version}",
-        "java": ">=17",
-        "knightlib": ">=1.3.0"
+        "fabricloader": ">=${fabric_loader_version}",
+        "fabric-api": "*",
+        "minecraft": "${minecraft_version}",
+        "java": ">=${java_version}"
     },
     "suggests": {
         "another-mod": "*"

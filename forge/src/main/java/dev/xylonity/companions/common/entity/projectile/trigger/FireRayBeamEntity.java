@@ -16,11 +16,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.util.RenderUtils;
+import software.bernie.geckolib.util.RenderUtil;
 
 import java.util.UUID;
 
@@ -64,15 +64,15 @@ public class FireRayBeamEntity extends Entity implements GeoAnimatable {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(ORIGIN_X, 0.0F);
-        this.entityData.define(ORIGIN_Y, 0.0F);
-        this.entityData.define(ORIGIN_Z, 0.0F);
-        this.entityData.define(START_YAW, 0.0F);
-        this.entityData.define(ROT_TICKS,  0);
-        this.entityData.define(MAX_PIECES, 0);
-        this.entityData.define(SEPARATION, 0.0F);
-        this.entityData.define(START_PITCH, 0f);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(ORIGIN_X, 0.0F);
+        builder.define(ORIGIN_Y, 0.0F);
+        builder.define(ORIGIN_Z, 0.0F);
+        builder.define(START_YAW, 0.0F);
+        builder.define(ROT_TICKS,  0);
+        builder.define(MAX_PIECES, 0);
+        builder.define(SEPARATION, 0.0F);
+        builder.define(START_PITCH, 0f);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class FireRayBeamEntity extends Entity implements GeoAnimatable {
 
     @Override
     public double getTick(Object o) {
-        return RenderUtils.getCurrentTick();
+        return RenderUtil.getCurrentTick();
     }
 
 }

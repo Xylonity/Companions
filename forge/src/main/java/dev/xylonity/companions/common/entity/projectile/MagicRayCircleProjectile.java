@@ -13,11 +13,6 @@ public class MagicRayCircleProjectile extends MagicRayPieceProjectile implements
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-    }
-
-    @Override
     protected int baseLifetime() {
         return 22;
     }

@@ -7,10 +7,9 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 
 import java.util.function.Consumer;
 
@@ -20,7 +19,7 @@ public class GenericGeckoAxeItem extends AxeItem implements GeoItem {
     private final String resourceKey;
 
     public GenericGeckoAxeItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
-        super(material, extraDamage, extraSpeed, properties);
+        super(material, properties);
         this.resourceKey = resourceKey;
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }

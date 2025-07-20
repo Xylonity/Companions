@@ -12,7 +12,6 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 public class CakeCreamTriggerProjectile extends GenericTriggerProjectile {
@@ -44,9 +43,9 @@ public class CakeCreamTriggerProjectile extends GenericTriggerProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ARMOR_NAME, "default");
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ARMOR_NAME, "default");
     }
 
     @Override

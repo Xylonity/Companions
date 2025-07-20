@@ -2,7 +2,6 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.FloorCakeCreamModel;
 import dev.xylonity.companions.common.entity.projectile.FloorCakeCreamProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -34,7 +33,11 @@ public class FloorCakeCreamRenderer extends GeoEntityRenderer<FloorCakeCreamProj
         RenderType renderType = RenderType.entityTranslucent(getTextureLocation(entity));
         VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
 
-        reRender(model, poseStack, bufferSource, entity, renderType, vertexConsumer, partialTick, packedLight, getPackedOverlay(entity, 0), 1.0F, 1.0F, 1.0F, alpha(entity));
+        int a = Math.round(alpha(entity) * 255);
+        int rgb = 0x00FFFFFF;
+        int colour = (a << 24) | rgb;
+
+        reRender(model, poseStack, bufferSource, entity, renderType, vertexConsumer, partialTick, packedLight, getPackedOverlay(entity, 0, partialTick), colour);
     }
 
     private float alpha(FloorCakeCreamProjectile entity) {

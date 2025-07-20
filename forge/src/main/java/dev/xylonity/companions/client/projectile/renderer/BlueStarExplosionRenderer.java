@@ -2,9 +2,7 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.client.projectile.model.BlueStarExplosionModel;
-import dev.xylonity.companions.client.projectile.model.RedStarExplosionModel;
 import dev.xylonity.companions.common.entity.projectile.BlueStarExplosion;
-import dev.xylonity.companions.common.entity.projectile.RedStarExplosion;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

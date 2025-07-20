@@ -1,8 +1,8 @@
 package dev.xylonity.companions;
 
-import dev.xylonity.companions.common.biome.CompanionsSpawnBiomeModifier;
 import dev.xylonity.companions.client.ClientProxy;
 import dev.xylonity.companions.common.CommonProxy;
+import dev.xylonity.companions.common.biome.CompanionsSpawnBiomeModifier;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.*;
@@ -19,7 +19,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod(CompanionsCommon.MOD_ID)
 public class Companions {
@@ -28,16 +27,16 @@ public class Companions {
 
     public static final IProxy PROXY = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CompanionsCommon.MOD_ID);
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Companions.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, CompanionsCommon.MOD_ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, Companions.MOD_ID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Companions.MOD_ID);
-    public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Companions.MOD_ID);
-    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Companions.MOD_ID);
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Companions.MOD_ID);
+    public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, Companions.MOD_ID);
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(Registries.PARTICLE_TYPE, Companions.MOD_ID);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, Companions.MOD_ID);
 
-    public Companions() {
+    public Companions(FMLJavaModLoadingContext context) {
 
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus modEventBus = context.getModEventBus();
 
         CompanionsLootModifier.LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
         CompanionsBlockEntities.BLOCK_ENTITY.register(modEventBus);

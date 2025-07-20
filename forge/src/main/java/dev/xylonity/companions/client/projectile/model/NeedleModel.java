@@ -10,17 +10,17 @@ public class NeedleModel extends GeoModel<NeedleProjectile> {
 
     @Override
     public ResourceLocation getModelResource(NeedleProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/needle.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/needle.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(NeedleProjectile animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/needle.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/needle.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(NeedleProjectile animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/needle.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/needle.animation.json");
     }
 
 }

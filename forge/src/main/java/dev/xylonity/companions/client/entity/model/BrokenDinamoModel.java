@@ -7,29 +7,28 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
 
 public class BrokenDinamoModel extends GeoModel<BrokenDinamoEntity> {
 
     @Override
     public ResourceLocation getModelResource(BrokenDinamoEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/broken_dinamo.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/broken_dinamo.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BrokenDinamoEntity animatable) {
         if (animatable.getState() >= 4) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/dinamo.png");
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/dinamo.png");
         }
 
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/illager_golem.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/illager_golem.png");
     }
 
     @Override
     public void setCustomAnimations(BrokenDinamoEntity animatable, long instanceId, AnimationState<BrokenDinamoEntity> animationState) {
-
         Entity camera = Minecraft.getInstance().getCameraEntity();
         if (camera == null) return;
 
@@ -54,8 +53,8 @@ public class BrokenDinamoModel extends GeoModel<BrokenDinamoEntity> {
         float dot = (float)(diff.x * lateral.x + diff.z * lateral.z);
         dot = Mth.clamp(dot, -1f, 1f);
 
-        CoreGeoBone leftEyeBone = this.getAnimationProcessor().getBone("left_eye");
-        CoreGeoBone rightEyeBone = this.getAnimationProcessor().getBone("right_eye");
+        GeoBone leftEyeBone = this.getAnimationProcessor().getBone("left_eye");
+        GeoBone rightEyeBone = this.getAnimationProcessor().getBone("right_eye");
 
         float baseLeftEyeX = -0.0f;
         float baseRightEyeX = 0.0f;
@@ -73,7 +72,7 @@ public class BrokenDinamoModel extends GeoModel<BrokenDinamoEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(BrokenDinamoEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/illager_golem.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/illager_golem.animation.json");
     }
 
 }

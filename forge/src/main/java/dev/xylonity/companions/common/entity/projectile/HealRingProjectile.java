@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.knightlib.registry.KnightLibParticles;
 import net.minecraft.core.particles.ParticleTypes;
@@ -12,18 +11,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
 
 public class HealRingProjectile extends BaseProjectile implements GeoEntity {
     private final RawAnimation HEAL = RawAnimation.begin().thenPlay("heal");

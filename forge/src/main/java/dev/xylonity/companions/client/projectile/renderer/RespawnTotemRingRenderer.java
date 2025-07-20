@@ -2,9 +2,7 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.client.projectile.model.RespawnTotemRingModel;
-import dev.xylonity.companions.client.projectile.model.ShadeAltarUpgradeHaloModel;
 import dev.xylonity.companions.common.entity.projectile.RespawnTotemRingProjectile;
-import dev.xylonity.companions.common.entity.projectile.ShadeAltarUpgradeHaloProjectile;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

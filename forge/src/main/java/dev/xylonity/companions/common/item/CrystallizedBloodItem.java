@@ -3,7 +3,6 @@ package dev.xylonity.companions.common.item;
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;

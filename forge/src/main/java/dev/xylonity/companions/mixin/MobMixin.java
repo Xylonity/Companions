@@ -1,6 +1,7 @@
 package dev.xylonity.companions.mixin;
 
 import dev.xylonity.companions.registry.CompanionsEffects;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import org.spongepowered.asm.mixin.Mixin;

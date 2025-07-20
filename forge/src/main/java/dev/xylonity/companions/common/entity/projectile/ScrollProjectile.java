@@ -11,12 +11,9 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -47,7 +44,7 @@ public class ScrollProjectile extends BaseProjectile {
             if (e != null && getOwnerUUID() != null) {
                 e.setOwnerUUID(getOwnerUUID());
                 e.setSecondOwnerUUID(getSecondOwnerUUID());
-                e.setTame(true);
+                e.setTame(true, false);
                 e.moveTo(position());
                 level().addFreshEntity(e);
             }
@@ -96,11 +93,11 @@ public class ScrollProjectile extends BaseProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ENTITY_TO_SPAWN, 0);
-        this.entityData.define(OWNER_UUID, Optional.empty());
-        this.entityData.define(SECOND_OWNER_UUID, Optional.empty());
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ENTITY_TO_SPAWN, 0);
+        builder.define(OWNER_UUID, Optional.empty());
+        builder.define(SECOND_OWNER_UUID, Optional.empty());
     }
 
     public void setEntityToSpawn(int id) {

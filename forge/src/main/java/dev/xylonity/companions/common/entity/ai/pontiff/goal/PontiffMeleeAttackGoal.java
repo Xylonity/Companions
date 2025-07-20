@@ -3,16 +3,11 @@ package dev.xylonity.companions.common.entity.ai.pontiff.goal;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
-import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-
-import java.util.Random;
 
 public class PontiffMeleeAttackGoal extends AbstractSacredPontiffAttackGoal {
 

@@ -2,7 +2,6 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.client.projectile.model.NeedleModel;
-import dev.xylonity.companions.common.entity.projectile.HolinessNaginataProjectile;
 import dev.xylonity.companions.common.entity.projectile.NeedleProjectile;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;

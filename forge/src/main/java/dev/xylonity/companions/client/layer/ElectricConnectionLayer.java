@@ -154,20 +154,19 @@ public class ElectricConnectionLayer<T extends AbstractTeslaBlockEntity> extends
 
         int[] ids = {0, 1, 2, 3, 3, 2, 1, 0};
         for (int i : ids) {
-            produceVertex(vertexConsumer, positionMatrix, normalMatrix, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
+            produceVertex(vertexConsumer, positionMatrix, poseStack, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
         }
     }
 
     private record VertexCoordinates(float x, float y, float z, float u, float v) { ;; }
 
-    private void produceVertex(VertexConsumer vertexConsumer, Matrix4f positionMatrix, Matrix3f normalMatrix, float x, float y, float z, float textureU, float textureV) {
-        vertexConsumer.vertex(positionMatrix, x, y, z)
-                .color(255, 255, 255, 255)
-                .uv(textureU, textureV)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(LightTexture.FULL_BRIGHT)
-                .normal(normalMatrix, 0.0F, 1.0F, 0.0F)
-                .endVertex();
+    private void produceVertex(VertexConsumer vertexConsumer, Matrix4f positionMatrix, PoseStack pose, float x, float y, float z, float textureU, float textureV) {
+        vertexConsumer.addVertex(positionMatrix, x, y, z)
+                .setColor(255, 255, 255, 255)
+                .setUv(textureU, textureV)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(LightTexture.FULL_BRIGHT)
+                .setNormal(pose.last(), 0.0F, 1.0F, 0.0F);
     }
 
 }

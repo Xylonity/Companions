@@ -15,7 +15,7 @@ public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEnti
 
     public VoltaicRelayRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new VoltaicRelayModel());
-        addRenderLayer(new ElectricConnectionLayer<>(this, new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"), totalFrames, ticksPerFrame));
+        addRenderLayer(new ElectricConnectionLayer<>(this, ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/misc/electric_arch.png"), totalFrames, ticksPerFrame));
     }
 
     public VoltaicRelayRenderer(BlockEntityRendererProvider.Context renderManager) {

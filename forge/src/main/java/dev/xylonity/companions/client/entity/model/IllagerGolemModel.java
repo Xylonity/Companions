@@ -7,28 +7,27 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
 
 public class IllagerGolemModel extends GeoModel<IllagerGolemEntity> {
 
     @Override
     public ResourceLocation getModelResource(IllagerGolemEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/illager_golem.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/illager_golem.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(IllagerGolemEntity animatable) {
         if (animatable.isActive())
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/illager_golem_charge.png");
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/illager_golem_charge.png");
 
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/illager_golem.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/illager_golem.png");
     }
 
     @Override
     public void setCustomAnimations(IllagerGolemEntity animatable, long instanceId, AnimationState<IllagerGolemEntity> animationState) {
-
         Entity camera = Minecraft.getInstance().getCameraEntity();
         if (camera == null) return;
 
@@ -47,8 +46,8 @@ public class IllagerGolemModel extends GeoModel<IllagerGolemEntity> {
         float dot = (float)(diff.x * lateral.x + diff.z * lateral.z);
         dot = Mth.clamp(dot, -1f, 1f);
 
-        CoreGeoBone leftEyeBone = this.getAnimationProcessor().getBone("left_eye");
-        CoreGeoBone rightEyeBone = this.getAnimationProcessor().getBone("right_eye");
+        GeoBone leftEyeBone = this.getAnimationProcessor().getBone("left_eye");
+        GeoBone rightEyeBone = this.getAnimationProcessor().getBone("right_eye");
 
         float baseLeftEyeX = -0.0f;
         float baseRightEyeX = 0.0f;
@@ -66,7 +65,7 @@ public class IllagerGolemModel extends GeoModel<IllagerGolemEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(IllagerGolemEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/illager_golem.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/illager_golem.animation.json");
     }
 
 }

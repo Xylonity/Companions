@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SoulMageScreen extends AbstractContainerScreen<SoulMageContainerMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/gui/soul_mage_gui.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/soul_mage_gui.png");
 
     public SoulMageScreen(SoulMageContainerMenu container, Inventory inv, Component title) {
         super(container, inv, title);
@@ -32,7 +32,7 @@ public class SoulMageScreen extends AbstractContainerScreen<SoulMageContainerMen
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }

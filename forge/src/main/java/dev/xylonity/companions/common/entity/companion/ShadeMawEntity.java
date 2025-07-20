@@ -33,12 +33,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
 
 public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping {
 
@@ -64,7 +61,6 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
         super(pEntityType, pLevel);
         this.hasSpawned = false;
         this.noCulling = true;
-        this.setMaxUpStep(1.1F);
         this.setBoundingBox(makeBoundingBox());
     }
 
@@ -108,6 +104,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
                 .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.SHADOW_MAW_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.45f)
+                .add(Attributes.STEP_HEIGHT, 1.1f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
 
@@ -335,7 +332,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
     @Override
     protected void positionRider(@NotNull Entity pPassenger, @NotNull MoveFunction pCallback) {
         if (this.hasPassenger(pPassenger)) {
-            double baseY = this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset();
+            double baseY = this.getY();
 
             if (isInAnyFluid()) {
                 baseY -= 1.35;

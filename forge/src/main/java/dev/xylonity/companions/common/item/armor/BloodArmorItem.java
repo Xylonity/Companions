@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.item.armor;
 import dev.xylonity.companions.common.item.TooltipArmorItem;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class BloodArmorItem extends TooltipArmorItem {
 
-    public BloodArmorItem(ArmorMaterial armorMaterial, Type type, Properties properties) {
+    public BloodArmorItem(Holder<ArmorMaterial> armorMaterial, Type type, Properties properties) {
         super(armorMaterial, type, properties);
     }
 
@@ -25,7 +26,7 @@ public class BloodArmorItem extends TooltipArmorItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag flag) {
         pTooltipComponents.add(Component.translatable("tooltip.icon.companions.star").append(Component
                 .translatable("tooltip.item.companions.key.blood_set")
                 .withStyle(ChatFormatting.YELLOW)));
@@ -85,7 +86,7 @@ public class BloodArmorItem extends TooltipArmorItem {
                         )
         );
 
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        super.appendHoverText(stack, context, pTooltipComponents, flag);
     }
 
 }

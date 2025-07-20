@@ -1,26 +1,18 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.client.projectile.model.BraceModel;
 import dev.xylonity.companions.client.projectile.model.MagicRayPieceModel;
-import dev.xylonity.companions.common.entity.projectile.BraceProjectile;
 import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
-import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 public class MagicRayPieceRenderer extends GeoEntityRenderer<MagicRayPieceProjectile> {
 
@@ -30,7 +22,7 @@ public class MagicRayPieceRenderer extends GeoEntityRenderer<MagicRayPieceProjec
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull MagicRayPieceProjectile animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/magic_ray_piece.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/magic_ray_piece.png");
     }
 
     @Override

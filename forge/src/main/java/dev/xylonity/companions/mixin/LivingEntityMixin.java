@@ -2,6 +2,7 @@ package dev.xylonity.companions.mixin;
 
 import dev.xylonity.companions.common.util.interfaces.IPhantomEffectEntity;
 import dev.xylonity.companions.registry.CompanionsEffects;
+import net.minecraft.core.Holder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -32,8 +33,8 @@ public abstract class LivingEntityMixin implements IPhantomEffectEntity {
     }
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    private void companions$definePhantomFlag(CallbackInfo ci) {
-        ((LivingEntity) (Object) this).getEntityData().define(companions$PHANTOM_FLAG, false);
+    private void companions$definePhantomFlag(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(companions$PHANTOM_FLAG, false);
     }
 
     @Override

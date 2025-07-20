@@ -9,17 +9,17 @@ public class WildAntlionModel extends GeoModel<WildAntlionEntity> {
 
     @Override
     public ResourceLocation getModelResource(WildAntlionEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/wild_antlion.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/wild_antlion.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WildAntlionEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/wild_antlion.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/wild_antlion.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(WildAntlionEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/wild_antlion.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/wild_antlion.animation.json");
     }
 
 }

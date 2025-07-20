@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -122,20 +123,19 @@ public class StaticElectricConnectionLayer<T extends AbstractTeslaBlockEntity> e
 
         int[] indices = {0, 1, 2, 3, 3, 2, 1, 0};
         for (int i : indices) {
-            produceVertex(vertexConsumer, positionMatrix, normalMatrix, light, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
+            produceVertex(vertexConsumer, positionMatrix, poseStack, light, vertices[i].x, vertices[i].y, vertices[i].z, vertices[i].u, vertices[i].v);
         }
     }
 
     private record VertexCoordinates(float x, float y, float z, float u, float v) { ;; }
 
-    private void produceVertex(VertexConsumer vertexConsumer, Matrix4f positionMatrix, Matrix3f normalMatrix, int light, float x, float y, float z, float textureU, float textureV) {
-        vertexConsumer.vertex(positionMatrix, x, y, z)
-                .color(255, 255, 255, 255)
-                .uv(textureU, textureV)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(normalMatrix, 0.0F, 1.0F, 0.0F)
-                .endVertex();
+    private void produceVertex(VertexConsumer vertexConsumer, Matrix4f positionMatrix, PoseStack poseStack, int light, float x, float y, float z, float textureU, float textureV) {
+        vertexConsumer.addVertex(positionMatrix, x, y, z)
+                .setColor(255, 255, 255, 255)
+                .setUv(textureU, textureV)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(LightTexture.FULL_BRIGHT)
+                .setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
     }
 
 }

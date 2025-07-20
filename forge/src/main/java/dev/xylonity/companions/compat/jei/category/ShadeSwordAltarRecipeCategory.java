@@ -34,10 +34,10 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class ShadeSwordAltarRecipeCategory implements IRecipeCategory<ShadeSwordAltarRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_sword_altar_interaction");
+    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "shade_sword_altar_interaction");
     public static final RecipeType<ShadeSwordAltarRecipe> TYPE = new RecipeType<>(UID, ShadeSwordAltarRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
@@ -80,7 +80,7 @@ public final class ShadeSwordAltarRecipeCategory implements IRecipeCategory<Shad
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ShadeSwordAltarRecipe rec, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
     }
 
     private ShadeSwordAltarBlockEntity getOrCreateBlockEntity() {
@@ -180,7 +180,7 @@ public final class ShadeSwordAltarRecipeCategory implements IRecipeCategory<Shad
 
             renderer.render(be, partialTicks, pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
-            renderer.render(be, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
+            renderer.render(be, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         }
 
         pose.popPose();
@@ -204,9 +204,9 @@ public final class ShadeSwordAltarRecipeCategory implements IRecipeCategory<Shad
         RenderSystem.setupGui3DDiffuseLighting(up2, front2);
 
         try {
-            swordRenderer.render(sword, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
+            swordRenderer.render(sword, 0f, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
         } catch (Exception e) {
-            swordRenderer.render(sword, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
+            swordRenderer.render(sword, 0f, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
         }
 
         pose.popPose();

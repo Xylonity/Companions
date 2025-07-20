@@ -3,10 +3,10 @@ package dev.xylonity.companions.common.entity.ai.cornelius.summon.goal;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.AbstractCorneliusSummonAttackGoal;
 import dev.xylonity.companions.common.entity.summon.FireworkToadEntity;
-
 import dev.xylonity.companions.common.util.Util;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -174,7 +174,7 @@ public class FireworkToadGoal extends AbstractCorneliusSummonAttackGoal {
         fwTag.put("Explosions", expls);
 
         ItemStack stack = new ItemStack(Items.FIREWORK_ROCKET);
-        stack.addTagElement("Fireworks", fwTag);
+        //stack.addTagElement("Fireworks", fwTag);
 
         FireworkRocketEntity rocket = new FireworkRocketEntity(world, where.x, where.y, where.z, stack);
 

@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.event;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEffects;
+import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;

@@ -15,7 +15,7 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> im
 
     public TeslaCoilRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new TeslaCoilModel());
-        addRenderLayer(new ElectricConnectionLayer<>(this, new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"), totalFrames, ticksPerFrame));
+        addRenderLayer(new ElectricConnectionLayer<>(this, ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/misc/electric_arch.png"), totalFrames, ticksPerFrame));
     }
 
     public TeslaCoilRenderer(BlockEntityRendererProvider.Context renderManager) {

@@ -9,7 +9,7 @@ public class ShadeAltarUpgradeHaloModel extends GeoModel<ShadeAltarUpgradeHaloPr
 
     @Override
     public ResourceLocation getModelResource(ShadeAltarUpgradeHaloProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/shade_altar_upgrade_halo.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/shade_altar_upgrade_halo.geo.json");
     }
 
     @Override
@@ -18,12 +18,12 @@ public class ShadeAltarUpgradeHaloModel extends GeoModel<ShadeAltarUpgradeHaloPr
         int perTick = 2;
 
         int frameIndex = (animatable.tickCount / perTick) % frames;
-        return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/shade_altar_upgrade_halo_%d.png", frameIndex));
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, String.format("textures/entity/shade_altar_upgrade_halo_%d.png", frameIndex));
     }
 
     @Override
     public ResourceLocation getAnimationResource(ShadeAltarUpgradeHaloProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/shade_altar_upgrade_halo.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "animations/shade_altar_upgrade_halo.animation.json");
     }
 
 }

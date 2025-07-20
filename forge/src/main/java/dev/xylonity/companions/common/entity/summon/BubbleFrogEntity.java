@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
-import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.entity.SummonFrogEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.BubbleFrogAttackGoal;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.SummonHopToOwnerGoal;
@@ -16,14 +15,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
 
 public class BubbleFrogEntity extends SummonFrogEntity implements IFrogJumpUtil {
 

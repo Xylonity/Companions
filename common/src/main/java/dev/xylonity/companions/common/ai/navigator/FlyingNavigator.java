@@ -163,7 +163,7 @@ public class FlyingNavigator extends FlyingPathNavigation {
             Boolean isPathfindable = this.cache.getIfPresent(immutablePos);
             if (isPathfindable == null) {
                 BlockState blockState = this.level.getBlockState(pos);
-                isPathfindable = blockState.isPathfindable(this.level, pos, PathComputationType.AIR);
+                isPathfindable = blockState.isSolidRender(this.level, pos) || blockState.isAir();
                 this.cache.put(immutablePos, isPathfindable);
             }
 
@@ -171,10 +171,10 @@ public class FlyingNavigator extends FlyingPathNavigation {
                 return false;
             }
 
-            BlockPathTypes pathType = this.nodeEvaluator.getBlockPathType(this.level, currentX, currentY, currentZ, this.mob);
+            PathType pathType = this.nodeEvaluator.getPathType(new PathfindingContext(this.level, this.mob), currentX, currentY, currentZ);
             float malus = this.mob.getPathfindingMalus(pathType);
 
-            if (malus < 0.0F || malus >= 8.0F || pathType == BlockPathTypes.DAMAGE_FIRE || pathType == BlockPathTypes.DANGER_FIRE || pathType == BlockPathTypes.DAMAGE_OTHER) {
+            if (malus < 0.0F || malus >= 8.0F || pathType == PathType.DAMAGE_FIRE || pathType == PathType.DANGER_FIRE || pathType == PathType.DAMAGE_OTHER) {
                 return false;
             }
         }

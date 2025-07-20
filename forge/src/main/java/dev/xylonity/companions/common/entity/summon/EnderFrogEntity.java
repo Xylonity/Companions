@@ -2,7 +2,9 @@ package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
-import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.*;
+import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.EnderFrogFollowOwnerGoal;
+import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.EnderFrogHealGoal;
+import dev.xylonity.companions.common.entity.ai.cornelius.summon.goal.EnderFrogLevitateGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsSummonHurtTargetGoal;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.sounds.SoundEvent;
@@ -17,12 +19,8 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
 
 public class EnderFrogEntity extends CompanionSummonEntity {
 

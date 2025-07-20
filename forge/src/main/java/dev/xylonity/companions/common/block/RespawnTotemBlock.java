@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,11 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -120,14 +117,14 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand hand, BlockHitResult hitResult) {
 
-        if (pLevel.isClientSide) return InteractionResult.SUCCESS;
+        if (pLevel.isClientSide) return ItemInteractionResult.SUCCESS;
 
-        ItemStack held = pPlayer.getItemInHand(pHand);
+        ItemStack held = pPlayer.getItemInHand(hand);
 
         if (!held.is(CompanionsItems.ETERNAL_LIGHTER.get())) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.FAIL;
         }
 
         BlockPos lowerPos = pState.getValue(HALF) == DoubleBlockHalf.LOWER ? pPos : pPos.below();
@@ -176,8 +173,7 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
 
         pLevel.playSound(null, lowerPos, SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.BLOCKS, 1F, 1F);
 
-        return InteractionResult.SUCCESS;
-
+        return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, hand, hitResult);
     }
 
     @Override
@@ -195,7 +191,7 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void playerWillDestroy(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @NotNull Player pPlayer) {
+    public BlockState playerWillDestroy(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @NotNull Player pPlayer) {
         if (!pLevel.isClientSide) {
             if (pPlayer.isCreative()) {
                 preventCreativeTabDestroy(pLevel, pPos, pState, pPlayer);
@@ -213,7 +209,7 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
 
         }
 
-        super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
+        return super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
     }
 
     public static void preventCreativeTabDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {

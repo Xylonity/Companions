@@ -6,7 +6,6 @@ import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.companion.AntlionEntity;
 import dev.xylonity.companions.common.recipe.HourglassRecipe;
-import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import mezz.jei.api.constants.VanillaTypes;
@@ -30,9 +29,9 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class AntlionRecipeCategory implements IRecipeCategory<HourglassRecipe> {
 
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "antlion_interaction");
+    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "antlion_interaction");
     public static final RecipeType<HourglassRecipe> TYPE = new RecipeType<>(UID, HourglassRecipe.class);
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private AntlionEntity cachedEntity;
 
@@ -72,7 +71,7 @@ public class AntlionRecipeCategory implements IRecipeCategory<HourglassRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, HourglassRecipe rec, @NotNull IFocusGroup focuses) {
         this.cachedEntity = null;
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
     }
 
     private AntlionEntity getOrCreateEntity() {
@@ -130,7 +129,7 @@ public class AntlionRecipeCategory implements IRecipeCategory<HourglassRecipe> {
             pose.mulPose(Axis.YP.rotationDegrees(45f));
             pose.mulPose(Axis.ZP.rotationDegrees(180f));
 
-            entityRenderer.render(entity, 0, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
+            entityRenderer.render(entity, 0, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
 
             pose.popPose();
         }

@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.entity.ai.puppet.goal;
 
 import dev.xylonity.companions.common.entity.ai.puppet.AbstractPuppetAttackGoal;
 import dev.xylonity.companions.common.entity.companion.PuppetEntity;
-import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.effect.MobEffectInstance;

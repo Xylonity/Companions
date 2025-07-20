@@ -1,6 +1,18 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "companions:item/mage_staff_icon"
+  "parent": "minecraft:item/handheld",
+  "loader": "forge:separate_transforms",
+  "base": {
+    "parent": "companions:item/mage_staff_3d"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "companions:item/mage_staff_2d"
+    },
+    "ground": {
+      "parent": "companions:item/mage_staff_2d"
+    },
+    "fixed": {
+      "parent": "companions:item/mage_staff_2d"
+    }
   }
 }

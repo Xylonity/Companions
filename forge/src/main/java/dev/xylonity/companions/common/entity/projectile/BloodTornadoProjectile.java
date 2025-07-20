@@ -20,12 +20,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 
 import java.util.Random;
 
@@ -45,13 +43,13 @@ public class BloodTornadoProjectile extends BaseProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(GROUNDY, 0f);
-        this.entityData.define(STARTX, 0f);
-        this.entityData.define(STARTZ, 0f);
-        this.entityData.define(TICKS, 0);
-        this.entityData.define(ALPHA, Float.NaN);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(GROUNDY, 0f);
+        builder.define(STARTX, 0f);
+        builder.define(STARTZ, 0f);
+        builder.define(TICKS, 0);
+        builder.define(ALPHA, Float.NaN);
     }
 
     public float getGroundY() {

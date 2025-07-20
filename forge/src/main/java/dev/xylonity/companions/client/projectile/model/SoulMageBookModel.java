@@ -5,8 +5,8 @@ import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.companions.common.entity.projectile.SoulMageBookEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
 
 public class SoulMageBookModel extends GeoModel<SoulMageBookEntity> {
@@ -14,19 +14,19 @@ public class SoulMageBookModel extends GeoModel<SoulMageBookEntity> {
 
     @Override
     public ResourceLocation getModelResource(SoulMageBookEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/soul_mage_book.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/soul_mage_book.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SoulMageBookEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/soul_mage_book.png");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/entity/soul_mage_book.png");
     }
 
     @Override
     public void setCustomAnimations(SoulMageBookEntity animatable, long instanceId, AnimationState<SoulMageBookEntity> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
 
-        CoreGeoBone mainB = this.getAnimationProcessor().getBone("book2");
+        GeoBone mainB = this.getAnimationProcessor().getBone("book2");
         if (mainB == null) return;
 
         float targetYaw = 0F;
@@ -53,6 +53,6 @@ public class SoulMageBookModel extends GeoModel<SoulMageBookEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(SoulMageBookEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/soul_mage_book.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "animations/soul_mage_book.animation.json");
     }
 }

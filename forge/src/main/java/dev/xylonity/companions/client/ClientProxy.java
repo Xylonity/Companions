@@ -112,7 +112,7 @@ public class ClientProxy implements IProxy {
         if (laser.target != null) {
             Vec3 start = laser.position();
             Vec3 targetPos = laser.target.getEyePosition();
-            ClipContext ctx = new ClipContext(start, targetPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null);
+            ClipContext ctx = new ClipContext(start, targetPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, laser);
             BlockHitResult hit = laser.level().clip(ctx);
             Vec3 end = (hit.getType() == BlockHitResult.Type.BLOCK && !laser.level().getBlockState(hit.getBlockPos()).getCollisionShape(laser.level(), hit.getBlockPos()).isEmpty()) ? hit.getLocation() : targetPos;
             ClientLevel cl = (ClientLevel) laser.level();

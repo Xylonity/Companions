@@ -19,7 +19,7 @@ public class GenericTriggerProjectileRenderer extends GeoEntityRenderer<GenericT
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull GenericTriggerProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/generic.png");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/entity/generic.png");
     }
 
     @Override

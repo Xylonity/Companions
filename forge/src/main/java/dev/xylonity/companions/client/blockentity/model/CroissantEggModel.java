@@ -9,17 +9,17 @@ public class CroissantEggModel extends GeoModel<CroissantEggBlockEntity> {
 
     @Override
     public ResourceLocation getModelResource(CroissantEggBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/croissant_egg_block.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/croissant_egg_block.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(CroissantEggBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/croissant_egg_block.png");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/block/croissant_egg_block.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(CroissantEggBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/croissant_egg_block.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "animations/croissant_egg_block.animation.json");
     }
 
 }

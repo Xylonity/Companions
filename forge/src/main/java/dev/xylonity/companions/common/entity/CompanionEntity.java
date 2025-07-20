@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -103,11 +103,11 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(MAIN_ACTION, 1);
-        this.entityData.define(NO_MOVEMENT, false);
-        this.entityData.define(SIT_VARIATION, 0);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(MAIN_ACTION, 1);
+        builder.define(NO_MOVEMENT, false);
+        builder.define(SIT_VARIATION, 0);
     }
 
     public void setMainAction(int action, @Nullable Player player) {
@@ -260,7 +260,13 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     protected abstract boolean shouldKeepChunkLoaded();
 
     @Override
-    public boolean canChangeDimensions() {
+    public boolean canChangeDimensions(@NotNull Level level1, @NotNull Level level2) {
         return true;
     }
+
+    @Override
+    public boolean isFood(@NotNull ItemStack itemStack) {
+        return false;
+    }
+
 }

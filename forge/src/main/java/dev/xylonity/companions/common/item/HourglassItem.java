@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -30,15 +31,15 @@ public class HourglassItem extends TooltipItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         if (Screen.hasShiftDown()) {
-            components.add(Component.translatable("tooltip.item.companions.hourglass_1").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
-            components.add(Component.translatable("tooltip.item.companions.hourglass_2").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+            tooltipComponents.add(Component.translatable("tooltip.item.companions.hourglass_1").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+            tooltipComponents.add(Component.translatable("tooltip.item.companions.hourglass_2").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         } else {
-            components.add(Component.translatable("tooltip.item.companions.hourglass_shift"));
+            tooltipComponents.add(Component.translatable("tooltip.item.companions.hourglass_shift"));
         }
 
-        super.appendHoverText(itemStack, level, components, flag);
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class HourglassItem extends TooltipItem {
             totem.setCapturing(true);
             respawnTotemBlock.updateLitState(level, pos, state, true);
             level.scheduleTick(pos, respawnTotemBlock, 60);
-            ctx.getItemInHand().hurtAndBreak(12, player, p -> p.broadcastBreakEvent(ctx.getHand()));
+            ctx.getItemInHand().hurtAndBreak(12, player, LivingEntity.getSlotForHand(ctx.getHand()));
         }
 
         return InteractionResult.sidedSuccess(level.isClientSide);

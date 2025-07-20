@@ -9,17 +9,17 @@ public class LivingCandleModel extends GeoModel<LivingCandleEntity> {
 
     @Override
     public ResourceLocation getModelResource(LivingCandleEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/living_candle.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/living_candle.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(LivingCandleEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/living_candle" + animatable.tickCount / 3 % 5 + ".png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/living_candle" + animatable.tickCount / 3 % 5 + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(LivingCandleEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/living_candle.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/living_candle.animation.json");
     }
 
 }

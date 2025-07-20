@@ -20,7 +20,7 @@ import java.util.List;
 @JeiPlugin
 public final class CompanionsPlugin implements IModPlugin {
 
-    private static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "jei_plugin");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "jei_plugin");
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -43,14 +43,30 @@ public final class CompanionsPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration reg) {
-        reg.addRecipes(ShadeMawAltarRecipeCategory.TYPE, List.of(new ShadeMawAltarRecipe()));
-        reg.addRecipes(ShadeSwordAltarRecipeCategory.TYPE, List.of(new ShadeSwordAltarRecipe()));
-        reg.addRecipes(CroissantEggRecipeCategory.TYPE, List.of(new CroissantEggRecipe()));
-        reg.addRecipes(ShadeAltarRecipeCategory.TYPE, List.of(new ShadeAltarRecipe()));
-        reg.addRecipes(RespawnTotemRecipeCategory.TYPE, List.of(new HourglassRecipe()));
-        reg.addRecipes(AntlionRecipeCategory.TYPE, List.of(new HourglassRecipe()));
-        reg.addRecipes(PuppetRecipeCategory.TYPE, List.of(new EmptyPuppetRecipe()));
-        reg.addRecipes(SoulFurnaceEntityRecipeCategory.TYPE, List.of(new SoulFurnaceEntityRecipe()));
+        reg.addRecipes(ShadeMawAltarRecipeCategory.TYPE, List.of(new ShadeMawAltarRecipe(
+                new ItemStack(CompanionsItems.SHADOW_BELL.get())
+        )));
+        reg.addRecipes(ShadeSwordAltarRecipeCategory.TYPE, List.of(new ShadeSwordAltarRecipe(
+                new ItemStack(CompanionsItems.SHADOW_BELL.get())
+        )));
+        reg.addRecipes(CroissantEggRecipeCategory.TYPE, List.of(new CroissantEggRecipe(
+                new ItemStack(CompanionsBlocks.CROISSANT_EGG.get())
+        )));
+        reg.addRecipes(ShadeAltarRecipeCategory.TYPE, List.of(new ShadeAltarRecipe(
+                new ItemStack(CompanionsItems.CRYSTALLIZED_BLOOD.get())
+        )));
+        reg.addRecipes(RespawnTotemRecipeCategory.TYPE, List.of(new HourglassRecipe(
+                new ItemStack(CompanionsItems.HOURGLASS.get())
+        )));
+        reg.addRecipes(AntlionRecipeCategory.TYPE, List.of(new HourglassRecipe(
+                new ItemStack(CompanionsItems.HOURGLASS.get())
+        )));
+        reg.addRecipes(PuppetRecipeCategory.TYPE, List.of(new EmptyPuppetRecipe(
+                new ItemStack(CompanionsBlocks.EMPTY_PUPPET.get())
+        )));
+        reg.addRecipes(SoulFurnaceEntityRecipeCategory.TYPE, List.of(new SoulFurnaceEntityRecipe(
+                new ItemStack(Items.CANDLE)
+        )));
         reg.addRecipes(SoulFurnaceItemRecipeCategory.TYPE, List.of(
                 new SoulFurnaceItemRecipe(new ItemStack(Items.ROTTEN_FLESH), new ItemStack(CompanionsItems.CRYSTALLIZED_BLOOD.get())),
                 new SoulFurnaceItemRecipe(new ItemStack(Items.DIAMOND), new ItemStack(CompanionsItems.SOUL_GEM.get())),

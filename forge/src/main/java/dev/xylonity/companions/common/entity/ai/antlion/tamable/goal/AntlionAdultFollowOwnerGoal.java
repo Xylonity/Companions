@@ -10,8 +10,8 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.FlyNodeEvaluator;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -133,7 +133,7 @@ public class AntlionAdultFollowOwnerGoal extends Goal {
     }
 
     private boolean canTeleportTo(BlockPos pPos) {
-        if (FlyNodeEvaluator.getBlockPathTypeStatic(this.antlion.level(), pPos.mutable()) != BlockPathTypes.WALKABLE) {
+        if (FlyNodeEvaluator.getPathTypeStatic(this.antlion, pPos.mutable()) != PathType.WALKABLE) {
             return false;
         } else {
             if ( this.antlion.level().getBlockState(pPos.below()).getBlock() instanceof LeavesBlock) {

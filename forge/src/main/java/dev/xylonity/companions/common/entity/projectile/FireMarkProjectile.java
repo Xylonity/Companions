@@ -1,6 +1,8 @@
 package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.registry.CompanionsEffects;
+import net.minecraft.core.Holder;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -9,13 +11,10 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class FireMarkProjectile extends Projectile implements GeoEntity {
@@ -26,6 +25,11 @@ public class FireMarkProjectile extends Projectile implements GeoEntity {
     public FireMarkProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.noPhysics = true;
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
     }
 
     @Override
@@ -53,9 +57,6 @@ public class FireMarkProjectile extends Projectile implements GeoEntity {
             this.move(MoverType.SELF, velocity);
         }
     }
-
-    @Override
-    protected void defineSynchedData() { ;; }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

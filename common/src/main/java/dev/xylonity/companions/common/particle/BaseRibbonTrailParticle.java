@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 
 public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(CompanionsCommon.MOD_ID, "textures/particle/trail.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/particle/trail.png");
 
     protected final float radius;
     protected final float height;

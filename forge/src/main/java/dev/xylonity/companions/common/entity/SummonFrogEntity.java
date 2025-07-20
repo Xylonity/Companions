@@ -4,12 +4,12 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animation.AnimatableManager;
 
 public abstract class SummonFrogEntity extends CompanionSummonEntity {
 
@@ -30,9 +30,9 @@ public abstract class SummonFrogEntity extends CompanionSummonEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CYCLE_COUNTER, -1);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(CYCLE_COUNTER, -1);
     }
 
     @Override

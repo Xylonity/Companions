@@ -9,17 +9,17 @@ public class SoulMageModel extends GeoModel<SoulMageEntity> {
 
     @Override
     public ResourceLocation getModelResource(SoulMageEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/soul_mage.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/soul_mage.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SoulMageEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/soul_mage.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/soul_mage.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(SoulMageEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/soul_mage.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/soul_mage.animation.json");
     }
 
 }

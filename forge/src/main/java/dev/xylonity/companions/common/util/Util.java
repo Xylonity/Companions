@@ -2,10 +2,10 @@ package dev.xylonity.companions.common.util;
 
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
-import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.mixin.CompanionsLevelAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
@@ -15,6 +15,8 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -197,7 +199,7 @@ public class Util {
     /**
      * Checks how many pieces of an armor set are equipped
      */
-    public static int hasFullSetOn(Player player, ArmorMaterials material) {
+    public static int hasFullSetOn(Player player, Holder<ArmorMaterial> material) {
         int amount = 0;
         for (ItemStack armorStack : player.getInventory().armor) {
             if (!armorStack.isEmpty() && armorStack.getItem() instanceof ArmorItem armorItem) {

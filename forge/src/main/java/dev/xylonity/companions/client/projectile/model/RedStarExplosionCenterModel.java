@@ -1,7 +1,6 @@
 package dev.xylonity.companions.client.projectile.model;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.common.entity.projectile.BraceProjectile;
 import dev.xylonity.companions.common.entity.projectile.RedStarExplosionCenter;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
@@ -10,7 +9,7 @@ public class RedStarExplosionCenterModel extends GeoModel<RedStarExplosionCenter
 
     @Override
     public ResourceLocation getModelResource(RedStarExplosionCenter animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/red_star_explosion_center.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/red_star_explosion_center.geo.json");
     }
 
     @Override
@@ -19,12 +18,12 @@ public class RedStarExplosionCenterModel extends GeoModel<RedStarExplosionCenter
         int perTick = 1;
 
         int frameIndex = (animatable.tickCount / perTick) % frames;
-        return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/red_star_explosion_center_%d.png", frameIndex));
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, String.format("textures/entity/red_star_explosion_center_%d.png", frameIndex));
     }
 
     @Override
     public ResourceLocation getAnimationResource(RedStarExplosionCenter animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "animations/generic.animation.json");
     }
 
 }

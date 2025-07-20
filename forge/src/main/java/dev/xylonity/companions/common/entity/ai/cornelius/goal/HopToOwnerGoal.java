@@ -5,7 +5,7 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal
 import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 
 public class HopToOwnerGoal<T extends CompanionEntity & IFrogJumpUtil> extends CompanionFollowOwnerGoal {
 
@@ -36,14 +36,14 @@ public class HopToOwnerGoal<T extends CompanionEntity & IFrogJumpUtil> extends C
 
     public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.tamable.getPathfindingMalus(BlockPathTypes.WATER);
+        this.oldWaterCost = this.tamable.getPathfindingMalus(PathType.WATER);
         ((IFrogJumpUtil) tamable).setCanAttack(false);
     }
 
     public void stop() {
         this.owner = null;
         this.navigation.stop();
-        this.tamable.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
+        this.tamable.setPathfindingMalus(PathType.WATER, this.oldWaterCost);
         ((IFrogJumpUtil) tamable).setCanAttack(true);
     }
 

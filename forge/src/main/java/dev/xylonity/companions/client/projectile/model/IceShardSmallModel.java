@@ -9,17 +9,17 @@ public class IceShardSmallModel extends GeoModel<SmallIceShardProjectile> {
 
     @Override
     public ResourceLocation getModelResource(SmallIceShardProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/ice_shard_small.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/ice_shard_small.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SmallIceShardProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/ice_shard_small.png");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/entity/ice_shard_small.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(SmallIceShardProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/ice_shard_small.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "animations/ice_shard_small.animation.json");
     }
 
 }

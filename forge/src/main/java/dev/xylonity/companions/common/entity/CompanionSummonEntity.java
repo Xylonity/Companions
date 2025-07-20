@@ -13,11 +13,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
@@ -81,7 +82,7 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
             this.setOwnerUUID(cache);
             this.setSecondOwnerUUID(null);
             this.entityData.set(MAIN_ACTION, 0);
-            this.setTame(true);
+            this.setTame(true, false);
         }
     }
 
@@ -162,11 +163,16 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
         return super.mobInteract(pPlayer, pHand);
     }
 
+    @Override
+    public boolean isFood(ItemStack itemStack) {
+        return false;
+    }
+
     private void cycleOwners() {
         UUID cache = getOwnerUUID();
         this.setOwnerUUID(getSecondOwnerUUID());
         this.setSecondOwnerUUID(cache);
-        this.setTame(true);
+        this.setTame(true, false);
     }
 
     public int getMainAction() {
@@ -222,12 +228,12 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ATTACK_TYPE, 0);
-        this.entityData.define(MAIN_ACTION, 0);
-        this.entityData.define(NO_MOVEMENT, false);
-        this.entityData.define(SECOND_OWNER_UUID, Optional.empty());
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ATTACK_TYPE, 0);
+        builder.define(MAIN_ACTION, 0);
+        builder.define(NO_MOVEMENT, false);
+        builder.define(SECOND_OWNER_UUID, Optional.empty());
     }
 
     public boolean isNoMovement() {

@@ -15,17 +15,17 @@ public class GenericArmorItemModel  extends GeoModel<GenericGeckoArmorItem> {
 
     @Override
     public ResourceLocation getModelResource(GenericGeckoArmorItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/" + resourceKey + ".geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/" + resourceKey + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(GenericGeckoArmorItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/armor/" + resourceKey + ".png");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/armor/" + resourceKey + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(GenericGeckoArmorItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "animations/generic.animation.json");
     }
 
 }

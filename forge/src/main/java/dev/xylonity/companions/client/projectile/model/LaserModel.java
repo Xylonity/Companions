@@ -9,17 +9,17 @@ public class LaserModel extends GeoModel<LaserTriggerProjectile> {
 
     @Override
     public ResourceLocation getModelResource(LaserTriggerProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/generic.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/generic.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(LaserTriggerProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/generic.png");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/entity/generic.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(LaserTriggerProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "animations/generic.animation.json");
     }
 
 }

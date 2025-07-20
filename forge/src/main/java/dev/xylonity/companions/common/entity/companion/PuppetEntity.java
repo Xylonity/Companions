@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.companion;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.goal.*;
 import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
@@ -48,15 +49,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
 
 import java.util.Optional;
 
@@ -124,7 +120,7 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
         this.goalSelector.addGoal(3, new PuppetApproachTargetGoal(this, 0.5, 0.4f, 1.25f));
 
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(4, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
@@ -232,14 +228,14 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(IS_ATTACKING, 0);
-        this.entityData.define(DATA_ID_FLAGS, (byte)0);
-        this.entityData.define(ATTACK_ANIMATION_NAME, "");
-        this.entityData.define(ACTIVE_ARMS, 0);
-        this.entityData.define(CURRENT_ATTACK_TYPE, "NONE");
-        this.entityData.define(ARM_NAMES, "none,none");
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(IS_ATTACKING, 0);
+        builder.define(DATA_ID_FLAGS, (byte)0);
+        builder.define(ATTACK_ANIMATION_NAME, "");
+        builder.define(ACTIVE_ARMS, 0);
+        builder.define(CURRENT_ATTACK_TYPE, "NONE");
+        builder.define(ARM_NAMES, "none,none");
     }
 
     //@Override
@@ -262,21 +258,19 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
         ItemStack itemstack = player.getItemInHand(hand);
 
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            NetworkHooks.openScreen(
-                    (ServerPlayer) player, new MenuProvider() {
-                        @Override
-                        public @NotNull Component getDisplayName() {
-                            return PuppetEntity.this.getName();
-                        }
+            player.openMenu(new MenuProvider() {
+                @Override
+                public Component getDisplayName() {
+                    return PuppetEntity.this.getName();
+                }
 
-                        @Override
-                        public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
-                            return new PuppetContainerMenu(id, playerInv, PuppetEntity.this);
-                        }
-                    },
-                    buf -> buf.writeInt(this.getId())
-            );
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+                @Override
+                public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                    return new PuppetContainerMenu(i, inventory, PuppetEntity.this);
+                }
+            });
+
+            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.get(), 0.5F, 1.0F);
             return InteractionResult.SUCCESS;
         }
 
@@ -314,14 +308,14 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.inventory.fromTag(pCompound.getList("Inventory", 10));
+        this.inventory.fromTag(pCompound.getList("Inventory", 10), level().registryAccess());
         this.updateContainerEquipment();
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.put("Inventory", this.inventory.createTag());
+        pCompound.put("Inventory", this.inventory.createTag(level().registryAccess()));
     }
 
     @Override
@@ -497,7 +491,7 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
         if (this.inventory != null) {
             for(int i = 0; i < this.inventory.getContainerSize(); i++) {
                 ItemStack itemStack = this.inventory.getItem(i);
-                if (!itemStack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemStack)) {
+                if (!itemStack.isEmpty()) {
                     this.spawnAtLocation(itemStack);
                 }
             }

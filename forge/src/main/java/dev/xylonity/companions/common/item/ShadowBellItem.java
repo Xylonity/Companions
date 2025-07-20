@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -44,13 +46,15 @@ public class ShadowBellItem extends TooltipItem {
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        CompoundTag t = stack.getTag();
+        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag t = customData.copyTag();
         return t != null && t.contains(BELL_CURR) && t.contains(BELL_MAX);
     }
 
     @Override
     public int getBarWidth(@NotNull ItemStack stack) {
-        CompoundTag t = stack.getTag();
+        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag t = customData.copyTag();
         int curr = t != null ? t.getInt(BELL_CURR) : 0;
         int max = t != null ? t.getInt(BELL_MAX) : 1;
         return Math.round((float) curr * 13f / (float) max);
@@ -66,12 +70,13 @@ public class ShadowBellItem extends TooltipItem {
     public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity, int pSlotId, boolean pIsSelected) {
         if (!(pEntity instanceof Player)) return;
         if (pLevel.isClientSide) return;
-        CompoundTag tag = pStack.getTag();
+        CustomData customData = pStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = customData.copyTag();
         if (tag == null || !tag.contains(ST_DIM)) return;
 
         ServerLevel altarLevel = null;
         if (pLevel.getServer() != null) {
-            ServerLevel maybe = pLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString(ST_DIM))));
+            ServerLevel maybe = pLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString(ST_DIM))));
             if (maybe instanceof ServerLevel) altarLevel = maybe;
         }
 
@@ -90,40 +95,40 @@ public class ShadowBellItem extends TooltipItem {
         if (tag.getInt(BELL_CURR) != altar.getCharges() || tag.getInt(BELL_MAX) != altar.getMaxCharges()) {
             tag.putInt(BELL_CURR, altar.getCharges());
             tag.putInt(BELL_MAX,  altar.getMaxCharges());
-            pStack.setTag(tag);
+            pStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         }
 
         String currName = altarLevel.getBlockState(pos).getBlock().getName().getString();
         if (!currName.equals(tag.getString(ALTAR_NAME))) {
             tag.putString(ALTAR_NAME, currName);
-            pStack.setTag(tag);
+            pStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         }
 
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
-        CompoundTag t = stack.getTag();
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag t = customData.copyTag();
         if (t == null || !t.contains(ST_DIM) || !t.contains(ST_X) ||!t.contains(ST_Y) || !t.contains(ST_Z)) {
-            tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.default").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+            tooltipComponents.add(Component.translatable("tooltip.item.companions.shadow_bell.default").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
             return;
         }
 
         if (t.contains(BELL_CURR) && t.contains(ALTAR_NAME)) {
-            tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.linked_to", t.getString(ALTAR_NAME)));
-            tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.charges_remaining", t.getInt(BELL_CURR)));
+            tooltipComponents.add(Component.translatable("tooltip.item.companions.shadow_bell.linked_to", t.getString(ALTAR_NAME)));
+            tooltipComponents.add(Component.translatable("tooltip.item.companions.shadow_bell.charges_remaining", t.getInt(BELL_CURR)));
 
             if (t.hasUUID(UUID_SHADE)) {
                 Entity e = CompanionsEntityTracker.getEntityByUUID(t.getUUID(UUID_SHADE));
                 if (e instanceof ShadeEntity shade) {
-                    tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.lifetime", shade.getLifetime() / 20));
+                    tooltipComponents.add(Component.translatable("tooltip.item.companions.shadow_bell.lifetime", shade.getLifetime() / 20));
                 } else {
                     t.remove(UUID_SHADE);
-                    stack.setTag(t);
+                    stack.set(DataComponents.CUSTOM_DATA, CustomData.of(t));
                 }
             }
         }
-
     }
 
     @Override
@@ -154,7 +159,8 @@ public class ShadowBellItem extends TooltipItem {
             return InteractionResult.FAIL;
         }
 
-        CompoundTag tag = stack.getOrCreateTag();
+        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = customData.copyTag();
         tag.putString(ST_DIM, world.dimension().location().toString());
         tag.putInt(ST_X, pos.getX());
         tag.putInt(ST_Y, pos.getY());
@@ -162,7 +168,7 @@ public class ShadowBellItem extends TooltipItem {
         tag.putInt(BELL_CURR, altar.getCharges());
         tag.putInt(BELL_MAX, altar.getMaxCharges());
         tag.putString(ALTAR_NAME, world.getBlockState(pos).getBlock().getName().getString());
-        stack.setTag(tag);
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
 
         if (ctx.getPlayer() != null) {
             ctx.getPlayer().displayClientMessage(Component.translatable("shadow_bell.companions.client_message.altar_saved"), true);
@@ -173,12 +179,13 @@ public class ShadowBellItem extends TooltipItem {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack pStack, @NotNull Player pPlayer, @NotNull LivingEntity pInteractionTarget, @NotNull InteractionHand pUsedHand) {
-        CompoundTag tag = pStack.getTag();
+        CustomData customData = pStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = customData.copyTag();
         if (tag != null && tag.hasUUID(UUID_SHADE)) {
             if (pInteractionTarget.getUUID().equals(tag.getUUID(UUID_SHADE)) && pInteractionTarget instanceof ShadeEntity) {
                 pInteractionTarget.discard();
                 tag.remove(UUID_SHADE);
-                pStack.setTag(tag);
+                pStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
                 return InteractionResult.SUCCESS;
             }
         }
@@ -189,7 +196,8 @@ public class ShadowBellItem extends TooltipItem {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        CompoundTag tag = stack.getTag();
+        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = customData.copyTag();
         if (pLevel.isClientSide) {
             return InteractionResultHolder.success(stack);
         }
@@ -197,7 +205,7 @@ public class ShadowBellItem extends TooltipItem {
             return InteractionResultHolder.pass(stack);
         }
 
-        ServerLevel world = pLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString(ST_DIM))));
+        ServerLevel world = pLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString(ST_DIM))));
         if (world == null) {
             pPlayer.displayClientMessage(Component.translatable("shadow_bell.companions.client_message.couldnt_find"), true);
 
@@ -226,13 +234,13 @@ public class ShadowBellItem extends TooltipItem {
             ShadeEntity entity = altar.spawnShade(pPlayer.level(), pPlayer, pUsedHand);
             if (entity != null) {
                 tag.putUUID(UUID_SHADE, entity.getUUID());
-                stack.setTag(tag);
+                stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
             }
 
             if (altar.consumeCharge()) {
                 altar.sync();
                 tag.putInt(BELL_CURR, altar.getCharges());
-                stack.setTag(tag);
+                stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
             } else {
                 pPlayer.displayClientMessage(Component.translatable("shadow_bell.companions.client_message.no_charges"), true);
                 clearLink(stack);
@@ -248,7 +256,8 @@ public class ShadowBellItem extends TooltipItem {
     }
 
     private void clearLink(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = customData.copyTag();
 
         if (tag == null) return;
 
@@ -260,7 +269,7 @@ public class ShadowBellItem extends TooltipItem {
         tag.remove(BELL_MAX);
         tag.remove(UUID_SHADE);
         tag.remove(ALTAR_NAME);
-        stack.setTag(tag);
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
 
 }

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.common.block.SoulFurnaceBlock;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
 import dev.xylonity.companions.common.recipe.SoulFurnaceItemRecipe;
 import dev.xylonity.companions.registry.CompanionsBlocks;
@@ -26,17 +25,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public final class SoulFurnaceItemRecipeCategory implements IRecipeCategory<SoulFurnaceItemRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "soul_furnace_item_interaction");
+    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "soul_furnace_item_interaction");
     public static final RecipeType<SoulFurnaceItemRecipe> TYPE = new RecipeType<>(UID, SoulFurnaceItemRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
@@ -147,7 +145,7 @@ public final class SoulFurnaceItemRecipeCategory implements IRecipeCategory<Soul
 
             renderer.render(be, partialTicks, pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
-            renderer.render(be, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
+            renderer.render(be, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         }
 
         pose.popPose();

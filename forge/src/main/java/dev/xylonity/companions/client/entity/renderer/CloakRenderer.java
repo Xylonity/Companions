@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.client.entity.model.CloakModel;
 import dev.xylonity.companions.common.entity.companion.CloakEntity;
-import dev.xylonity.companions.common.util.interfaces.IPhantomEffectEntity;
 import dev.xylonity.companions.common.util.PhantomVisibility;
+import dev.xylonity.companions.common.util.interfaces.IPhantomEffectEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -62,22 +62,33 @@ public class CloakRenderer extends GeoEntityRenderer<CloakEntity> {
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, CloakEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack poseStack, CloakEntity animatable, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+
+        int a = (colour >> 24) & 0xFF;
+        int r = (colour >> 16) & 0xFF;
+        int g = (colour >> 8)  & 0xFF;
+        int b =  colour & 0xFF;
+
         if (animatable instanceof IPhantomEffectEntity phantomEntity && phantomEntity.isPhantomEffectActive()) {
             Player player = Minecraft.getInstance().player;
+
+
 
             if (player != null) {
                 PhantomVisibility visibility = getPhantomVisibility(animatable, player);
 
                 if (visibility == PhantomVisibility.TRANSLUCENT) {
-                    alpha = 0.35f;
+
+                    a = Math.round(0.35f * 255);
                 } else if (visibility == PhantomVisibility.INVISIBLE) {
                     return;
                 }
             }
         }
 
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        int colour2 = (a << 24) | (r << 16) | (g << 8) | b;
+
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour2);
     }
 
     private PhantomVisibility getPhantomVisibility(CloakEntity entity, Player clientPlayer) {

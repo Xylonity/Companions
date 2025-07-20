@@ -28,12 +28,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.*;
 
 import java.util.Random;
 
@@ -77,9 +73,9 @@ public class EmberPoleEntity extends CompanionSummonEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(IS_EXPLODING, false);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(IS_EXPLODING, false);
     }
 
     @Override
@@ -127,7 +123,7 @@ public class EmberPoleEntity extends CompanionSummonEntity {
             for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, new AABB(blockPosition()).inflate(3))) {
                 if (!Util.areEntitiesLinked(e, this)) {
                     this.doHurtTarget(e);
-                    if (new Random().nextFloat() < 0.75) e.setSecondsOnFire(new Random().nextInt(3, 10));
+                    if (new Random().nextFloat() < 0.75) e.setRemainingFireTicks(new Random().nextInt(3, 10) * 20);
                 }
             }
         }

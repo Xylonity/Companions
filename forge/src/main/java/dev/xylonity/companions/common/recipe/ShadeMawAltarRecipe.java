@@ -1,51 +1,55 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.knightlib.common.recipe.input.GenericRecipeInput;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public final class ShadeMawAltarRecipe implements Recipe<SimpleContainer> {
+public record ShadeMawAltarRecipe(ItemStack input) implements Recipe<GenericRecipeInput> {
 
-    private static final ResourceLocation ID = new ResourceLocation(Companions.MOD_ID, "shade_maw_altar_interaction");
+    private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "shade_maw_altar_interaction");
 
     public static final RecipeSerializer<ShadeMawAltarRecipe> SERIALIZER = new Serializer();
     public static final RecipeType<ShadeMawAltarRecipe> RECIPE_TYPE = new Type();
 
-    public final ItemStack input = new ItemStack(CompanionsItems.SHADOW_BELL.get());
-
     @Override
-    public boolean matches(SimpleContainer inv, @NotNull Level lvl) {
-        return ItemStack.isSameItem(inv.getItem(0), input);
+    public boolean matches(GenericRecipeInput genericRecipeInput, Level level) {
+        return ItemStack.isSameItem(genericRecipeInput.getItem(0), input);
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull SimpleContainer inv, @NotNull RegistryAccess reg) {
+    public ItemStack assemble(GenericRecipeInput genericRecipeInput, HolderLookup.Provider provider) {
+        return ItemStack.EMPTY;
+    }
+
+    public static ResourceLocation getID() {
+        return ID;
+    }
+
+    @Override
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
     @Override
     public boolean canCraftInDimensions(int w, int h) {
         return true;
-    }
-
-    @Override
-    public @NotNull ItemStack getResultItem(@NotNull RegistryAccess reg) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public @NotNull ResourceLocation getId() {
-        return ID;
     }
 
     @Override
@@ -68,18 +72,27 @@ public final class ShadeMawAltarRecipe implements Recipe<SimpleContainer> {
     }
 
     public static final class Serializer implements RecipeSerializer<ShadeMawAltarRecipe> {
+        public static final MapCodec<ShadeMawAltarRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                i -> i.group(
+                        ItemStack.CODEC.fieldOf("ingredient").forGetter(ShadeMawAltarRecipe::input)
+                ).apply(i, ShadeMawAltarRecipe::new)
+        );
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, ShadeMawAltarRecipe> STREAM_CODEC =
+                StreamCodec.composite(
+                        ItemStack.STREAM_CODEC, ShadeMawAltarRecipe::input,
+                        ShadeMawAltarRecipe::new
+                );
+
         @Override
-        public @NotNull ShadeMawAltarRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
-            return new ShadeMawAltarRecipe();
+        public MapCodec<ShadeMawAltarRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public ShadeMawAltarRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
-            return new ShadeMawAltarRecipe();
+        public StreamCodec<RegistryFriendlyByteBuf, ShadeMawAltarRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
-
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull ShadeMawAltarRecipe rec) { ;; }
     }
 
 }

@@ -18,7 +18,7 @@ public class IceShardSmallRenderer extends GeoEntityRenderer<SmallIceShardProjec
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull SmallIceShardProjectile animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/ice_shard_small.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/ice_shard_small.png");
     }
 
     @Override
