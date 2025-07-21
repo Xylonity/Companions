@@ -22,6 +22,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 public class CompanionsClientEvents {
@@ -122,11 +123,6 @@ public class CompanionsClientEvents {
             BlockEntityRenderers.register(CompanionsBlockEntities.VOLTAIC_RELAY.get(), VoltaicRelayRenderer::new);
             BlockEntityRenderers.register(CompanionsBlockEntities.FROG_BONANZA.get(), FrogBonanzaRenderer::new);
 
-            //MenuScreens.register(CompanionsMenuTypes.SOUL_FURNACE.get(), SoulFurnaceScreen::new);
-            //MenuScreens.register(CompanionsMenuTypes.SOUL_MAGE_CONTAINER.get(), SoulMageScreen::new);
-            //MenuScreens.register(CompanionsMenuTypes.PUPPET_CONTAINER.get(), PuppetScreen::new);
-            //MenuScreens.register(CompanionsMenuTypes.CORNELIUS_CONTAINER.get(), CorneliusScreen::new);
-
             ItemBlockRenderTypes.setRenderLayer(CompanionsBlocks.ETERNAL_FIRE.get(), RenderType.cutout());
 
             // Pontiff
@@ -182,6 +178,14 @@ public class CompanionsClientEvents {
                 .padding(24)
                 .hideVanillaName()
                 .register();
+        }
+
+        @SubscribeEvent
+        public static void registerMenus(RegisterMenuScreensEvent event) {
+            event.register(CompanionsMenuTypes.SOUL_FURNACE.get(), SoulFurnaceScreen::new);
+            event.register(CompanionsMenuTypes.SOUL_MAGE_CONTAINER.get(), SoulMageScreen::new);
+            event.register(CompanionsMenuTypes.PUPPET_CONTAINER.get(), PuppetScreen::new);
+            event.register(CompanionsMenuTypes.CORNELIUS_CONTAINER.get(), CorneliusScreen::new);
         }
 
         @SubscribeEvent

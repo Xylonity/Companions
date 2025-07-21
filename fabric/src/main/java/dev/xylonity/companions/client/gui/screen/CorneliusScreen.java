@@ -772,7 +772,11 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
             }
 
-            if (arrived) return true;
+            if (arrived) {
+                prevX = x;
+                prevY = y;
+                return true;
+            }
 
             prevX = x;
             prevY = y;
@@ -780,7 +784,10 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
             y += (targetY - y) * s;
 
             if (Math.abs(x-targetX) < 0.5f && Math.abs(y - targetY) < 0.5f){
-                x = targetX; y = targetY;
+                x = targetX;
+                y = targetY;
+                prevX = targetX;
+                prevY = targetY;
                 arrived = true;
             }
 
