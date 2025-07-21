@@ -1,14 +1,18 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.client.projectile.model.HolinessStarModel;
 import dev.xylonity.companions.common.entity.projectile.HolinessStartProjectile;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class HolinessStarRenderer extends GeoEntityRenderer<HolinessStartProjectile> {
@@ -18,13 +22,13 @@ public class HolinessStarRenderer extends GeoEntityRenderer<HolinessStartProject
     }
 
     @Override
-    public void render(@NotNull HolinessStartProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void actuallyRender(PoseStack poseStack, HolinessStartProjectile animatable, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         poseStack.scale(2.5f, 2.5f, 2.5f);
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
     @Override
-    protected void applyRotations(HolinessStartProjectile animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
+    protected void applyRotations(HolinessStartProjectile animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         double pivotY = animatable.getBbHeight() / 2.0;
 
         poseStack.translate(0, pivotY, 0);
@@ -35,7 +39,7 @@ public class HolinessStarRenderer extends GeoEntityRenderer<HolinessStartProject
 
         poseStack.translate(0, -pivotY, 0);
 
-        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 
 }

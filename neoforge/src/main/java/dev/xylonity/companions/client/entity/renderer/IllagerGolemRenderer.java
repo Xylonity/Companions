@@ -75,8 +75,6 @@ public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> 
             return frame;
         }
 
-        // Original idea of the layer embedded in the entity renderer to force the rendering of a singular "electric arch" towards a certain target by mim1q
-        // https://github.com/mim1q/MineCells/blob/1.20.x/src/main/java/com/github/mim1q/minecells/client/render/ProtectorEntityRenderer.java
         private void renderConnection(MultiBufferSource bufferSource, PoseStack poseStack, Vec3 p0, Vec3 p1, int frame, int light) {
             VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
             Matrix4f positionMatrix = poseStack.last().pose();

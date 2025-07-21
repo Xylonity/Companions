@@ -34,12 +34,11 @@ public class FireMarkRenderer extends GeoEntityRenderer<FireMarkProjectile> {
     }
 
     @Override
-    protected void applyRotations(FireMarkProjectile entity, PoseStack poseStack,
-                                  float ageInTicks, float rotationYaw, float partialTicks) {
+    protected void applyRotations(FireMarkProjectile animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
         if (camera != null) {
-            double dx = camera.getPosition().x - entity.getX();
-            double dz = camera.getPosition().z - entity.getZ();
+            double dx = camera.getPosition().x - animatable.getX();
+            double dz = camera.getPosition().z - animatable.getZ();
 
             if (Math.abs(dx) < 1e-4 && Math.abs(dz) < 1e-4) {
                 dx = 0;
@@ -50,7 +49,7 @@ public class FireMarkRenderer extends GeoEntityRenderer<FireMarkProjectile> {
             float yawCorrection = 0.0F;
             desiredYaw += yawCorrection;
 
-            double dy = camera.getPosition().y - entity.getY();
+            double dy = camera.getPosition().y - animatable.getY();
             double horizontalDist = Math.sqrt(dx * dx + dz * dz);
             float rawPitch = (float) Math.toDegrees(Math.atan2(dy, horizontalDist));
             float pitchFactor = 0.5F;
@@ -62,7 +61,8 @@ public class FireMarkRenderer extends GeoEntityRenderer<FireMarkProjectile> {
             poseStack.mulPose(Axis.YP.rotationDegrees(desiredYaw));
             poseStack.mulPose(Axis.XP.rotationDegrees(desiredPitch));
         }
-        super.applyRotations(entity, poseStack, ageInTicks, rotationYaw, partialTicks);
+
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 
 }

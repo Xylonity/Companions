@@ -24,10 +24,10 @@ public class IceShardBigRenderer extends GeoEntityRenderer<BigIceShardProjectile
     }
 
     @Override
-    protected void applyRotations(BigIceShardProjectile entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
-        Vec3 velocity = entity.getDeltaMovement();
+    protected void applyRotations(BigIceShardProjectile animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+        Vec3 velocity = animatable.getDeltaMovement();
         if (velocity.lengthSqr() < 1.0E-7) {
-            super.applyRotations(entity, poseStack, ageInTicks, rotationYaw, partialTicks);
+            super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
             return;
         }
 
@@ -51,7 +51,7 @@ public class IceShardBigRenderer extends GeoEntityRenderer<BigIceShardProjectile
 
         poseStack.mulPose(rotationQuat);
 
-        super.applyRotations(entity, poseStack, ageInTicks, rotationYaw, partialTicks);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 
 }

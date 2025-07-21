@@ -22,12 +22,12 @@ public class IceShardSmallRenderer extends GeoEntityRenderer<SmallIceShardProjec
     }
 
     @Override
-    protected void applyRotations(SmallIceShardProjectile entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
+    protected void applyRotations(SmallIceShardProjectile animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         Quaternionf interpolated = new Quaternionf();
-        entity.getPrevRotation().slerp(entity.getCurrentRotation(), partialTicks, interpolated);
+        animatable.getPrevRotation().slerp(animatable.getCurrentRotation(), partialTick, interpolated);
         poseStack.mulPose(interpolated);
 
-        super.applyRotations(entity, poseStack, ageInTicks, rotationYaw, partialTicks);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 
 }

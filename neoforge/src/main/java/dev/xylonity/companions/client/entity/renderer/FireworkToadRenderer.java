@@ -15,21 +15,19 @@ public class FireworkToadRenderer extends GeoEntityRenderer<FireworkToadEntity> 
         this.shadowRadius = 0.5f;
     }
 
-
     @Override
-    protected void applyRotations(FireworkToadEntity tamable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
-        Vec3 center = tamable.getParabolaCenter();
+    protected void applyRotations(FireworkToadEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+        Vec3 center = animatable.getParabolaCenter();
         if (center != null) {
-            Vec3 look = center.subtract(tamable.position()).normalize();
+            Vec3 look = center.subtract(animatable.position()).normalize();
 
-            poseStack.translate(0.0, tamable.getBbHeight() / 2.0f, 0.0);
+            poseStack.translate(0.0, animatable.getBbHeight() / 2.0f, 0.0);
             poseStack.mulPose(Axis.YP.rotationDegrees((float) (Math.toDegrees(Math.atan2(look.z, look.x)) - 90.0)));
-            poseStack.mulPose(Axis.XP.rotationDegrees((float)(-Math.toDegrees(Math.atan2(look.y, Math.sqrt(look.x*look.x + look.z*look.z))))));
-            poseStack.translate(0.0, -tamable.getBbHeight() / 2.0f, 0.0);
+            poseStack.mulPose(Axis.XP.rotationDegrees((float) (-Math.toDegrees(Math.atan2(look.y, Math.sqrt(look.x * look.x + look.z * look.z))))));
+            poseStack.translate(0.0, -animatable.getBbHeight() / 2.0f, 0.0);
         } else {
-            super.applyRotations(tamable, poseStack, ageInTicks, rotationYaw, partialTicks);
+            super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
         }
-
     }
 
 }

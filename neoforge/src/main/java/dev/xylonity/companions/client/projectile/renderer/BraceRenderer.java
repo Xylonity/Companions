@@ -1,6 +1,7 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.BraceModel;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class BraceRenderer extends GeoEntityRenderer<BraceProjectile> {
@@ -32,7 +34,7 @@ public class BraceRenderer extends GeoEntityRenderer<BraceProjectile> {
     }
 
     @Override
-    protected void applyRotations(BraceProjectile animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
+    protected void applyRotations(BraceProjectile animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         double pivotY = animatable.getBbHeight() / 2.0;
 
         poseStack.translate(0, pivotY, 0);
@@ -45,13 +47,13 @@ public class BraceRenderer extends GeoEntityRenderer<BraceProjectile> {
 
         poseStack.translate(0, -pivotY, 0);
 
-        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 
     @Override
-    public void render(BraceProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void actuallyRender(PoseStack poseStack, BraceProjectile animatable, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         poseStack.scale(0.75f, 0.75f, 0.75f);
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, 15728880);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
 }

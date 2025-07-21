@@ -1,6 +1,7 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.StoneSpikeModel;
 import dev.xylonity.companions.common.entity.projectile.StoneSpikeProjectile;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class StoneSpikeRenderer extends GeoEntityRenderer<StoneSpikeProjectile> {
@@ -40,8 +42,9 @@ public class StoneSpikeRenderer extends GeoEntityRenderer<StoneSpikeProjectile> 
     }
 
     @Override
-    public void render(StoneSpikeProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void actuallyRender(PoseStack poseStack, StoneSpikeProjectile animatable, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         poseStack.scale(1.3F, 1.3F, 1.3F);
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
+
 }

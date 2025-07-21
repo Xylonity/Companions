@@ -31,21 +31,13 @@ public class MagicRayPieceRenderer extends GeoEntityRenderer<MagicRayPieceProjec
     }
 
     @Override
-    public void render(MagicRayPieceProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        poseStack.pushPose();
-
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-
-        poseStack.popPose();
-    }
-
-    @Override
-    protected void applyRotations(MagicRayPieceProjectile entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
-        super.applyRotations(entity, poseStack, ageInTicks, rotationYaw, partialTick);
-        float yaw = Mth.rotLerp(partialTick, entity.getYaw(), entity.getYaw());
-        float pitch = Mth.lerp(partialTick, entity.getPitch(), entity.getPitch());
+    protected void applyRotations(MagicRayPieceProjectile animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
+        float yaw = Mth.rotLerp(partialTick, animatable.getYaw(), animatable.getYaw());
+        float pitch = Mth.lerp(partialTick, animatable.getPitch(), animatable.getPitch());
 
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
         poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
     }
+
 }

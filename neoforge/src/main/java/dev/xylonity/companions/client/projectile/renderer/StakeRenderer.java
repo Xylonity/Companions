@@ -22,17 +22,10 @@ public class StakeRenderer extends GeoEntityRenderer<StakeProjectile> {
     }
 
     @Override
-    protected void applyRotations(StakeProjectile entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
+    protected void applyRotations(StakeProjectile animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         Quaternionf interpolated = new Quaternionf();
-        entity.getPrevRotation().slerp(entity.getCurrentRotation(), partialTicks, interpolated);
+        animatable.getPrevRotation().slerp(animatable.getCurrentRotation(), partialTick, interpolated);
         poseStack.mulPose(interpolated);
     }
-
-    //@Override
-    //public void render(StakeProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-    //    poseStack.pushPose();
-    //    super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-    //    poseStack.popPose();
-    //}
 
 }
