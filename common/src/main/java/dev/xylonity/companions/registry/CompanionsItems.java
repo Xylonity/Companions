@@ -5,11 +5,12 @@ import dev.xylonity.companions.common.item.*;
 import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SwordItem;
 
 import java.util.function.Supplier;
 
@@ -25,7 +26,7 @@ public class CompanionsItems {
     public static final Supplier<Item> BLADE_ARM = registerItem("blade_arm", () -> new PuppetArm(new Item.Properties().stacksTo(1), "blade_arm"));
     public static final Supplier<Item> MUTANT_ARM = registerItem("mutant_arm", () -> new PuppetArm(new Item.Properties().stacksTo(1), "mutant_arm"));
     public static final Supplier<Item> NETHERITE_DAGGER = registerItem("netherite_dagger", () -> new SwordItem(ItemMaterials.NETHERITE_DAGGER, (new Item.Properties()).fireResistant()));
-    public static final Supplier<Item> SAINT_KLIMT_MUSIC_DISC = registerItem("saint_klimt_music_disc", () -> new Item(new Item.Properties().stacksTo(1).jukeboxPlayable(ResourceKey.create(Registries.JUKEBOX_SONG, ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "saint_klimt")))));
+    public static final Supplier<Item> SAINT_KLIMT_MUSIC_DISC = registerMusicDisc("saint_klimt_music_disc",7, CompanionsSounds.SAINT_KLIMT, new Item.Properties().stacksTo(1), 5800);
     public static final Supplier<Item> MUTANT_FLESH = registerItem("mutant_flesh", () -> new MutantFlesh(new Item.Properties().food((new FoodProperties.Builder()).nutrition(5).saturationModifier(0.3F).build()), "mutant_flesh"));
     public static final Supplier<Item> ANTLION_FUR = registerItem("antlion_fur", () -> new AntlionFur(new Item.Properties().food((new FoodProperties.Builder()).nutrition(4).saturationModifier(0.4F).build()), "antlion_fur"));
     public static final Supplier<Item> DEMON_FLESH = registerItem("demon_flesh", () -> new TooltipItem(new Item.Properties().food((new FoodProperties.Builder()).nutrition(10).saturationModifier(0.6F).build()), "demon_flesh"));
@@ -53,19 +54,19 @@ public class CompanionsItems {
     public static final Supplier<Item> CRYSTALLIZED_BLOOD = registerSpecificItem("crystallized_blood", new Item.Properties(), ItemType.CRYSTALLIZED_BLOOD);
     public static final Supplier<Item> NEEDLE = registerSpecificItem("needle", new Item.Properties(), ItemType.NEEDLE);
 
-    public static final Supplier<Item> MAGE_HAT = registerArmorItem("mage_hat", ArmorMaterial.MAGE, ArmorItem.Type.HELMET, true);
-    public static final Supplier<Item> MAGE_COAT = registerArmorItem("mage_coat", ArmorMaterial.MAGE, ArmorItem.Type.CHESTPLATE, true);
-    public static final Supplier<Item> MAGE_LEGGINGS = registerArmorItem("mage_leggings", ArmorMaterial.MAGE, ArmorItem.Type.LEGGINGS, true);
+    public static final Supplier<Item> MAGE_HAT = registerArmorItem("mage_hat", ArmorMaterials.MAGE, ArmorItem.Type.HELMET, true);
+    public static final Supplier<Item> MAGE_COAT = registerArmorItem("mage_coat", ArmorMaterials.MAGE, ArmorItem.Type.CHESTPLATE, true);
+    public static final Supplier<Item> MAGE_LEGGINGS = registerArmorItem("mage_leggings", ArmorMaterials.MAGE, ArmorItem.Type.LEGGINGS, true);
     public static final Supplier<Item> MAGE_STAFF = registerSpecificItem("mage_staff", new Item.Properties().stacksTo(1), ItemType.GENERIC);
 
-    public static final Supplier<Item> HOLY_ROBE_MASK = registerArmorItem("holy_robe_mask", ArmorMaterial.HOLY_ROBE, ArmorItem.Type.HELMET, true);
-    public static final Supplier<Item> HOLY_ROBE_COAT = registerArmorItem("holy_robe_coat", ArmorMaterial.HOLY_ROBE, ArmorItem.Type.CHESTPLATE, true);
-    public static final Supplier<Item> HOLY_ROBE_LEGGINGS = registerArmorItem("holy_robe_leggings", ArmorMaterial.HOLY_ROBE, ArmorItem.Type.LEGGINGS, true);
+    public static final Supplier<Item> HOLY_ROBE_MASK = registerArmorItem("holy_robe_mask", ArmorMaterials.HOLY_ROBE, ArmorItem.Type.HELMET, true);
+    public static final Supplier<Item> HOLY_ROBE_COAT = registerArmorItem("holy_robe_coat", ArmorMaterials.HOLY_ROBE, ArmorItem.Type.CHESTPLATE, true);
+    public static final Supplier<Item> HOLY_ROBE_LEGGINGS = registerArmorItem("holy_robe_leggings", ArmorMaterials.HOLY_ROBE, ArmorItem.Type.LEGGINGS, true);
 
-    public static final Supplier<Item> CRYSTALLIZED_BLOOD_HELMET = registerArmorItem("crystallized_blood_helmet", ArmorMaterial.BLOOD, ArmorItem.Type.HELMET, true);
-    public static final Supplier<Item> CRYSTALLIZED_BLOOD_CHESTPLATE = registerArmorItem("crystallized_blood_chestplate", ArmorMaterial.BLOOD, ArmorItem.Type.CHESTPLATE, false);
-    public static final Supplier<Item> CRYSTALLIZED_BLOOD_LEGGINGS = registerArmorItem("crystallized_blood_leggings", ArmorMaterial.BLOOD, ArmorItem.Type.LEGGINGS, false);
-    public static final Supplier<Item> CRYSTALLIZED_BLOOD_BOOTS = registerArmorItem("crystallized_blood_boots", ArmorMaterial.BLOOD, ArmorItem.Type.BOOTS, false);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_HELMET = registerArmorItem("crystallized_blood_helmet", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.HELMET, true);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_CHESTPLATE = registerArmorItem("crystallized_blood_chestplate", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.CHESTPLATE, false);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_LEGGINGS = registerArmorItem("crystallized_blood_leggings", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.LEGGINGS, false);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_BOOTS = registerArmorItem("crystallized_blood_boots", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.BOOTS, false);
     public static final Supplier<Item> CRYSTALLIZED_BLOOD_SWORD = registerSpecificItem("crystallized_blood_sword", new Item.Properties(), ItemType.BLOOD_SWORD, ItemMaterials.CRYSTALLIZED_BLOOD, 3f, -2.4F);
     public static final Supplier<Item> CRYSTALLIZED_BLOOD_SCYTHE = registerSpecificItem("crystallized_blood_scythe", new Item.Properties(), ItemType.BLOOD_PICKAXE, ItemMaterials.CRYSTALLIZED_BLOOD, 1f, -2.8F);
     public static final Supplier<Item> CRYSTALLIZED_BLOOD_AXE = registerSpecificItem("crystallized_blood_axe", new Item.Properties(), ItemType.BLOOD_AXE, ItemMaterials.CRYSTALLIZED_BLOOD, 5f, -3.0F);
@@ -82,12 +83,16 @@ public class CompanionsItems {
         return CompanionsCommon.COMMON_PLATFORM.registerSpecificItem(id, properties, itemType, material, extraDamage, extraSpeed);
     }
 
-    private static <T extends Item> Supplier<T> registerArmorItem(String id, ArmorMaterial armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
+    private static <T extends Item> Supplier<T> registerArmorItem(String id, Holder<ArmorMaterial> armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
         return CompanionsCommon.COMMON_PLATFORM.registerArmorItem(id, armorMaterial, armorType, isGeckoArmor);
     }
 
     private static <T extends Item> Supplier<T> registerMagicBook(String id, Item.Properties properties, MagicType magicType) {
         return CompanionsCommon.COMMON_PLATFORM.registerMagicBook(id, properties, magicType);
+    }
+
+    private static <T extends Item> Supplier<T> registerMusicDisc(String id, int signal, Supplier<SoundEvent> soundEvent, Item.Properties properties, int length) {
+        return CompanionsCommon.COMMON_PLATFORM.registerMusicDisc(id, signal, soundEvent, properties, length);
     }
 
     public enum MagicType {
@@ -100,12 +105,6 @@ public class CompanionsItems {
         BLACK_HOLE,
         NAGINATA,
         MAGIC_RAY
-    }
-
-    public enum ArmorMaterial {
-        MAGE,
-        HOLY_ROBE,
-        BLOOD
     }
 
     public enum ItemType {

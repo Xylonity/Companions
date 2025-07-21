@@ -1,5 +1,6 @@
 package dev.xylonity.companions;
 
+import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.platform.CompanionsPlatform;
 import dev.xylonity.companions.registry.*;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ public class CompanionsCommon {
             .orElseThrow(() -> new NullPointerException("Failed to load service"));
 
     public static void init() {
+        ArmorMaterials.init();
         CompanionsItems.init();
         CompanionsBlocks.init();
         CompanionsCreativeModeTabs.init();

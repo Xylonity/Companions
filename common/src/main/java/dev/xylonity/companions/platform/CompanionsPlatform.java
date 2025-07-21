@@ -25,13 +25,15 @@ public interface CompanionsPlatform {
     <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item);
     <T extends Item> Supplier<T> registerSpecificItem(String id, Item.Properties properties, CompanionsItems.ItemType itemType);
     <T extends Item> Supplier<T> registerSpecificItem(String id, Item.Properties properties, CompanionsItems.ItemType itemType, ItemMaterials material, float extraDamage, float extraSpeed);
+    <T extends Item> Supplier<T> registerMusicDisc(String id, int signal, Supplier<SoundEvent> soundEvent, Item.Properties properties, int length);
     <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, CompanionsBlocks.BlockType blockType, CompanionsBlocks.BlockItem blockItem);
-    <T extends Item> Supplier<T> registerArmorItem(String id, CompanionsItems.ArmorMaterial armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor);
+    <T extends Item> Supplier<T> registerArmorItem(String id, Holder<ArmorMaterial> armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor);
     <T extends Item> Supplier<T> registerMagicBook(String id, Item.Properties properties, CompanionsItems.MagicType magicType);
-    <T extends MobEffect> Supplier<Holder<T>> registerEffect(String id, Supplier<T> item);
+    <T extends MobEffect> Holder<T> registerEffect(String id, Supplier<T> item);
     <T extends ParticleType<?>> Supplier<T> registerParticle(String id, boolean overrideLimiter);
     <T extends SoundEvent> Supplier<T> registerSound(String id, Supplier<T> sound);
     <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(String id, Supplier<T> tab);
+    <T extends ArmorMaterial> Holder<T> registerArmorMaterial(String id, Supplier<T> armorMaterial);
 
     CreativeModeTab.Builder creativeTabBuilder();
     <T extends Raider> EntityType<T> getIllagerGolemEntity();

@@ -52,7 +52,7 @@ public class MutantFlesh extends TooltipItem {
         }
 
         if (level.random.nextFloat() < 0.25f) {
-            entity.addEffect(new MobEffectInstance(CompanionsEffects.VOODOO.get(), level.random.nextInt(100, 600), 0, true, true, true));
+            entity.addEffect(new MobEffectInstance(CompanionsEffects.VOODOO, level.random.nextInt(100, 600), 0, true, true, true));
         }
 
         if (level.random.nextFloat() < 0.75 && CompanionsConfig.MUTANT_FLESH_SHOULD_HURT) {

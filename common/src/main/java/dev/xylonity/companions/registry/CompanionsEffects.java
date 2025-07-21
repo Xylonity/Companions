@@ -14,12 +14,12 @@ public class CompanionsEffects {
 
     public static void init() { ;; }
 
-    public static final Supplier<Holder<MobEffect>> FIRE_MARK = registerEffect("fire_mark", FireMarkEffect::new);
-    public static final Supplier<Holder<MobEffect>> ELECTROSHOCK = registerEffect("electroshock", ElectroshockEffect::new);
-    public static final Supplier<Holder<MobEffect>> VOODOO = registerEffect("voodoo", VoodooEffect::new);
-    public static final Supplier<Holder<MobEffect>> PHANTOM = registerEffect("phantom", PhantomEffect::new);
+    public static final Holder<MobEffect> FIRE_MARK = registerEffect("fire_mark", FireMarkEffect::new);
+    public static final Holder<MobEffect> ELECTROSHOCK = registerEffect("electroshock", ElectroshockEffect::new);
+    public static final Holder<MobEffect> VOODOO = registerEffect("voodoo", VoodooEffect::new);
+    public static final Holder<MobEffect> PHANTOM = registerEffect("phantom", PhantomEffect::new);
 
-    private static <T extends MobEffect> Supplier<Holder<T>> registerEffect(String id, Supplier<T> effect) {
+    private static <T extends MobEffect> Holder<T> registerEffect(String id, Supplier<T> effect) {
         return CompanionsCommon.COMMON_PLATFORM.registerEffect(id, effect);
     }
 

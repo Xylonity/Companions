@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.xylonity.companions.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "CompanionsLevelAccessor",
+    "CompanionsProjectileAccessor",
+    "MobMixin"
+  ],
+  "client": [
+    "EntityRendererAccessor",
+    "LivingEntityRendererMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
