@@ -30,7 +30,7 @@ public class IceTornadoBook extends AbstractMagicBook {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
 
         if (!pLevel.isClientSide) {
-            TornadoProjectile tornadoProjectile = CompanionsEntities.TORNADO_PROJECTILE.get().create(pLevel);
+            TornadoProjectile tornadoProjectile = CompanionsEntities.TORNADO_PROJECTILE.create(pLevel);
             if (tornadoProjectile != null) {
                 Vec3 look = pPlayer.getLookAngle();
                 Vec3 hLook = new Vec3(look.x, 0, look.z).normalize();

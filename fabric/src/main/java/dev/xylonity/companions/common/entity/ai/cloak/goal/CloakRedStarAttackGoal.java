@@ -54,7 +54,7 @@ public class CloakRedStarAttackGoal extends AbstractCloakAttackGoal {
         Vec3 spawnPos = cloak.position().add(0, cloak.getBbHeight() * 0.5, 0);
         Vec3 vel = targetPos.subtract(spawnPos).normalize().normalize().scale(HolinessStartProjectile.SPEED);
 
-        HolinessStartProjectile star = CompanionsEntities.HOLINESS_STAR.get().create(cloak.level());
+        HolinessStartProjectile star = CompanionsEntities.HOLINESS_STAR.create(cloak.level());
         if (star != null) {
             star.setOwner(cloak);
             star.setTarget(target);

@@ -33,7 +33,7 @@ public class IceShardBook extends AbstractMagicBook {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player player, @NotNull InteractionHand pUsedHand) {
 
         if (!pLevel.isClientSide) {
-            BigIceShardProjectile projectile = CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.get().create(pLevel);
+            BigIceShardProjectile projectile = CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.create(pLevel);
             if (projectile != null) {
                 Vec3 forward = player.getLookAngle().normalize();
 

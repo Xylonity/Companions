@@ -10,22 +10,14 @@ import net.minecraft.world.level.Level;
 
 public final class CompanionsCommonEvents {
     public static void init() {
-        ServerLivingEntityEvents.ALLOW_DAMAGE.register((LivingEntity entity,
-                                                        DamageSource source,
-                                                        float amount) -> {
-            if (entity.hasEffect(CompanionsEffects.FIRE_MARK.get())
-                    && (source.is(DamageTypes.ON_FIRE) || source.is(DamageTypes.IN_FIRE))) {
-                entity.level().explode(
-                        entity,
-                        entity.getX(),
-                        entity.getY(),
-                        entity.getZ(),
-                        (float) CompanionsConfig.FIRE_MARK_EFFECT_RADIUS,
-                        Level.ExplosionInteraction.MOB
-                );
-                entity.removeEffect(CompanionsEffects.FIRE_MARK.get());
+        ServerLivingEntityEvents.ALLOW_DAMAGE.register((LivingEntity entity, DamageSource source, float amount) -> {
+            if (entity.hasEffect(CompanionsEffects.FIRE_MARK) && (source.is(DamageTypes.ON_FIRE) || source.is(DamageTypes.IN_FIRE))) {
+                entity.level().explode(entity, entity.getX(), entity.getY(), entity.getZ(), (float) CompanionsConfig.FIRE_MARK_EFFECT_RADIUS, Level.ExplosionInteraction.MOB);
+                entity.removeEffect(CompanionsEffects.FIRE_MARK);
             }
+
             return true;
         });
     }
+
 }

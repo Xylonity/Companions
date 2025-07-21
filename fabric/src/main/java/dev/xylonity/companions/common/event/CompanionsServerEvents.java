@@ -43,7 +43,7 @@ public final class CompanionsServerEvents {
 
             if (!entity.getType().is(CompanionsTags.DEMON_FLESH_DROP)) return;
 
-            String file = entity.getType().getDefaultLootTable().getPath().substring("entities/".length());
+            String file = entity.getType().getDefaultLootTable().location().getPath().substring("entities/".length());
             if (!world.getServer().getResourceManager().listResources("loot_tables/entities", id -> id.getPath().equals(file + ".json")).isEmpty()) {
                 return;
             }

@@ -52,7 +52,7 @@ public class BubbleFrogAttackGoal extends AbstractCorneliusSummonAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        FrogEggProjectile projectile = CompanionsEntities.FROG_EGG_PROJECTILE.get().create(summon.level());
+        FrogEggProjectile projectile = CompanionsEntities.FROG_EGG_PROJECTILE.create(summon.level());
         if (projectile != null) {
             Vec3 basePos = summon.position().add(0, 0.5 + Math.random() * 0.4, 0);
             Vec3 targetPos = target.position().add(0, target.getEyeHeight(), 0);

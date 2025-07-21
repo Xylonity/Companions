@@ -33,7 +33,7 @@ public class AntlionSoldierLongAttackGoal extends AbstractAntlionAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        AntlionSandProjectile projectile = CompanionsEntities.ANTLION_SAND_PROJECTILE.get().create(antlion.level());
+        AntlionSandProjectile projectile = CompanionsEntities.ANTLION_SAND_PROJECTILE.create(antlion.level());
         if (projectile != null) {
             Vec3 basePos = antlion.position().add(0, antlion.getBbHeight() * 0.5f, 0);
             Vec3 targetPos = target.position().add(0, target.getEyeHeight(), 0);

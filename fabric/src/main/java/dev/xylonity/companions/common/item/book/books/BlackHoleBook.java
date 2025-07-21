@@ -29,7 +29,7 @@ public class BlackHoleBook extends AbstractMagicBook {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (!level.isClientSide) {
-            BlackHoleProjectile blackHole = CompanionsEntities.BLACK_HOLE_PROJECTILE.get().create(level);
+            BlackHoleProjectile blackHole = CompanionsEntities.BLACK_HOLE_PROJECTILE.create(level);
             if (blackHole != null) {
                 Vec3 spawnPos = player.getEyePosition(1.0F).add(player.getLookAngle().scale(0.5D)).add(0, 0.0D, 0);
                 blackHole.setPos(spawnPos.x, spawnPos.y, spawnPos.z);

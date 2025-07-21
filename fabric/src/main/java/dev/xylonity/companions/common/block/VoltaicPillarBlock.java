@@ -49,13 +49,13 @@ public class VoltaicPillarBlock extends AbstractTeslaBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.VOLTAIC_PILLAR.get().create(pos, state);
+        return CompanionsBlockEntities.VOLTAIC_PILLAR.create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.VOLTAIC_PILLAR.get() ? VoltaicPillarBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.VOLTAIC_PILLAR ? VoltaicPillarBlockEntity::tick : null;
     }
 
     @Override

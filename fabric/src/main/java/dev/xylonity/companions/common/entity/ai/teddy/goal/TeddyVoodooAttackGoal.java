@@ -86,7 +86,7 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
                     double y = (e.getBoundingBox().minY + e.getBbHeight() * 0.75) + teddy.getRandom().nextDouble() * e.getBbHeight() * 0.5 + 1.0;
                     double z = e.getZ() + Math.sin(angle) * radius;
 
-                    NeedleProjectile needle = CompanionsEntities.NEEDLE_PROJECTILE.get().create(teddy.level());
+                    NeedleProjectile needle = CompanionsEntities.NEEDLE_PROJECTILE.create(teddy.level());
                     if (needle != null) {
                         needle.setOwner(teddy);
                         needle.moveTo(new Vec3(x, y, z));

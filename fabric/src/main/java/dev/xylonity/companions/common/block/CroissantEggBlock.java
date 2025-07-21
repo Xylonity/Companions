@@ -65,13 +65,13 @@ public class CroissantEggBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.CROISSANT_EGG.get().create(pos, state);
+        return CompanionsBlockEntities.CROISSANT_EGG.create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.CROISSANT_EGG.get() ? CroissantEggBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.CROISSANT_EGG ? CroissantEggBlockEntity::tick : null;
     }
 
 }

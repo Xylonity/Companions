@@ -83,13 +83,13 @@ public class HostileImpEntity extends HostileEntity {
 
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return HostileEntity.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 35)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class HostileImpEntity extends HostileEntity {
             setAngry(true);
             failureParticles();
 
-            ShadeAltarUpgradeHaloProjectile halo = CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.get().create(level());
+            ShadeAltarUpgradeHaloProjectile halo = CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.create(level());
             if (halo != null) {
                 halo.moveTo(position());
                 level().addFreshEntity(halo);
@@ -182,7 +182,7 @@ public class HostileImpEntity extends HostileEntity {
     }
 
     private void tameImp(Player player) {
-        MinionEntity minion = CompanionsEntities.MINION.get().create(level());
+        MinionEntity minion = CompanionsEntities.MINION.create(level());
         if (minion != null) {
             minion.moveTo(position());
             minion.tameInteraction(player);

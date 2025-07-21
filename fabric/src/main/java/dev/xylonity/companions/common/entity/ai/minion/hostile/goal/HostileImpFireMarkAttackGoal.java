@@ -26,7 +26,7 @@ public class HostileImpFireMarkAttackGoal extends AbstractHostileImpAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        FireMarkRingProjectile fireMarkRing = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get().create(imp.level());
+        FireMarkRingProjectile fireMarkRing = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.create(imp.level());
         if (fireMarkRing != null) {
             fireMarkRing.moveTo(target.getX(), target.getY(), target.getZ());
             fireMarkRing.setOwner(imp);

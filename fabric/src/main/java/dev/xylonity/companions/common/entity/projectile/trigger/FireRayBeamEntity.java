@@ -47,7 +47,7 @@ public class FireRayBeamEntity extends Entity implements GeoAnimatable {
     }
 
     public FireRayBeamEntity(ServerLevel lvl, Vec3 origin, float yaw0, float pitch0, int rotTicks, int maxPieces, float sep, SacredPontiffEntity entity) {
-        this(CompanionsEntities.FIRE_RAY_BEAM_ENTITY.get(), lvl);
+        this(CompanionsEntities.FIRE_RAY_BEAM_ENTITY, lvl);
         setPos(origin.x, origin.y, origin.z);
         entityData.set(ORIGIN_X, (float) origin.x);
         entityData.set(ORIGIN_Y, (float) origin.y);
@@ -88,7 +88,7 @@ public class FireRayBeamEntity extends Entity implements GeoAnimatable {
     private void spawnPieces(ServerLevel level, SacredPontiffEntity entity) {
         int maxPieces = entityData.get(MAX_PIECES);
         for (int i = 0; i < maxPieces; i++) {
-            FireRayPieceProjectile piece = CompanionsEntities.FIRE_RAY_PIECE_PROJECTILE.get().create(level);
+            FireRayPieceProjectile piece = CompanionsEntities.FIRE_RAY_PIECE_PROJECTILE.create(level);
             if (piece != null) {
                 piece.initAsChild(this, i);
                 piece.setOwner(entity);

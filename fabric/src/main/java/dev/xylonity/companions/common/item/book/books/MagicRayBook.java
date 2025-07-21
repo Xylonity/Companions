@@ -66,7 +66,7 @@ public class MagicRayBook extends AbstractMagicBook {
 
     private void spawnRayPiece(Level pLevel, Player pPlayer, Vec3 piecePos, Vec3 lookVec, boolean isFirstPiece) {
         if (isFirstPiece) {
-            MagicRayCircleProjectile circle = CompanionsEntities.MAGIC_RAY_PIECE_CIRCLE_PROJECTILE.get().create(pLevel);
+            MagicRayCircleProjectile circle = CompanionsEntities.MAGIC_RAY_PIECE_CIRCLE_PROJECTILE.create(pLevel);
             if (circle != null) {
                 circle.setPos(piecePos.x, piecePos.y, piecePos.z);
                 circle.setOwner(pPlayer);
@@ -74,7 +74,7 @@ public class MagicRayBook extends AbstractMagicBook {
                 pLevel.addFreshEntity(circle);
             }
         } else {
-            MagicRayPieceProjectile ray = CompanionsEntities.MAGIC_RAY_PIECE_PROJECTILE.get().create(pLevel);
+            MagicRayPieceProjectile ray = CompanionsEntities.MAGIC_RAY_PIECE_PROJECTILE.create(pLevel);
             if (ray != null) {
                 ray.setPos(piecePos.x, piecePos.y, piecePos.z);
                 rotateProjectile(ray, lookVec);

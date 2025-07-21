@@ -89,13 +89,13 @@ public class PuppetGloveEntity extends CompanionEntity {
         playSound(CompanionsSounds.PUPPET_GLOVE_STEP.get());
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, CompanionsConfig.PUPPET_GLOVE_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.PUPPET_GLOVE_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class PuppetGloveEntity extends CompanionEntity {
     }
 
     private void tameGlove(LivingEntity player) {
-        PuppetEntity puppet = CompanionsEntities.PUPPET.get().create(level());
+        PuppetEntity puppet = CompanionsEntities.PUPPET.create(level());
         if (puppet != null) {
             puppet.moveTo(position());
 

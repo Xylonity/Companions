@@ -82,7 +82,7 @@ public class EnderFrogHealGoal extends AbstractCorneliusSummonAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity owner) {
-        FrogHealProjectile projectile = CompanionsEntities.FROG_HEAL_PROJECTILE.get().create(summon.level());
+        FrogHealProjectile projectile = CompanionsEntities.FROG_HEAL_PROJECTILE.create(summon.level());
         if (projectile != null) {
             Vec3 targetPos = owner.position().add(0, owner.getEyeHeight(), 0);
             Vec3 spawnPos = summon.position().add(0, summon.getBbHeight() * 1.25, 0);

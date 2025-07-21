@@ -46,14 +46,14 @@ public class EnderFrogLevitateGoal extends AbstractCorneliusSummonAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        FrogLevitateProjectile projectile = CompanionsEntities.FROG_LEVITATE_PROJECTILE.get().create(summon.level());
+        FrogLevitateProjectile projectile = CompanionsEntities.FROG_LEVITATE_PROJECTILE.create(summon.level());
         if (projectile != null) {
             spawnProjectile(projectile, target, 1.2f);
         }
     }
 
     protected void performAttack2(LivingEntity target) {
-        FrogLevitateProjectile projectile = CompanionsEntities.FROG_LEVITATE_PROJECTILE.get().create(summon.level());
+        FrogLevitateProjectile projectile = CompanionsEntities.FROG_LEVITATE_PROJECTILE.create(summon.level());
         if (projectile != null) {
             spawnProjectile(projectile, target, -1.2f);
         }

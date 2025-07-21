@@ -29,7 +29,7 @@ public class HealRingBook extends AbstractMagicBook {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
 
         if (!pLevel.isClientSide) {
-            Projectile healRing = CompanionsEntities.HEAL_RING_PROJECTILE.get().create(pLevel);
+            Projectile healRing = CompanionsEntities.HEAL_RING_PROJECTILE.create(pLevel);
             if (healRing != null) {
                 healRing.moveTo(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
                 healRing.setOwner(pPlayer);

@@ -18,7 +18,7 @@ public class CorneliusNetherBullfrogGoal extends AbstractCorneliusAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         BlockPos spawnPos = findPosAroundTarget();
-        ScrollProjectile scroll = CompanionsEntities.SCROLL.get().create(cornelius.level());
+        ScrollProjectile scroll = CompanionsEntities.SCROLL.create(cornelius.level());
         if (scroll != null) {
             scroll.setPos(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
 

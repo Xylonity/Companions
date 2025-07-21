@@ -175,13 +175,13 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         setTeleported(true);
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return CompanionEntity.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, CompanionsConfig.TEDDY_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.TEDDY_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     private void updateStats() {

@@ -675,7 +675,7 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
     @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        if ((pKeyCode == Minecraft.getInstance().options.keyInventory.getKey().getValue() || pKeyCode == GLFW.GLFW_KEY_ESCAPE) && phase != Phase.WAITING_PLAY) {
+        if ((pKeyCode == Minecraft.getInstance().options.keyInventory.getDefaultKey().getValue() || pKeyCode == GLFW.GLFW_KEY_ESCAPE) && phase != Phase.WAITING_PLAY) {
             return true;
         }
 

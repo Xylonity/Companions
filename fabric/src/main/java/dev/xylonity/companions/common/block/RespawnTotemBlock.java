@@ -134,9 +134,9 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
         CompanionEntity entity;
 
         if (pLevel.random.nextBoolean()) {
-            entity = CompanionsEntities.MANKH.get().create(pLevel);
+            entity = CompanionsEntities.MANKH.create(pLevel);
         } else {
-            entity = CompanionsEntities.CLOAK.get().create(pLevel);
+            entity = CompanionsEntities.CLOAK.create(pLevel);
         }
 
         if (entity != null) {
@@ -241,13 +241,13 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? CompanionsBlockEntities.RESPAWN_TOTEM.get().create(pos, state) : null;
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? CompanionsBlockEntities.RESPAWN_TOTEM.create(pos, state) : null;
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pState.getValue(HALF) == DoubleBlockHalf.LOWER && pBlockEntityType == CompanionsBlockEntities.RESPAWN_TOTEM.get() ? RespawnTotemBlockEntity::tick : null;
+        return pState.getValue(HALF) == DoubleBlockHalf.LOWER && pBlockEntityType == CompanionsBlockEntities.RESPAWN_TOTEM ? RespawnTotemBlockEntity::tick : null;
     }
 
     @Nullable

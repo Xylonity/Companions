@@ -196,13 +196,13 @@ public class WildAntlionEntity extends HostileEntity implements PlayerRideable {
         this.targetSelector.addGoal(1, new WildAntlionNearestAttackableTarget<>(this, Player.class, true));
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return HostileEntity.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 50)
                 .add(Attributes.ATTACK_DAMAGE, 7f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     public int getAttackType() {
@@ -276,7 +276,7 @@ public class WildAntlionEntity extends HostileEntity implements PlayerRideable {
     private boolean tameAntlion(Player player) {
         if (level().random.nextFloat() < 0.55f) {
 
-            AntlionEntity antlion = CompanionsEntities.ANTLION.get().create(level());
+            AntlionEntity antlion = CompanionsEntities.ANTLION.create(level());
             if (antlion != null) {
                 antlion.moveTo(position());
                 antlion.tameInteraction(player);

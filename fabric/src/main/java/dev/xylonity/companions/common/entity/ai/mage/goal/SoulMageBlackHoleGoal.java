@@ -17,7 +17,7 @@ public class SoulMageBlackHoleGoal extends AbstractSoulMageAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        BlackHoleProjectile blackHole = CompanionsEntities.BLACK_HOLE_PROJECTILE.get().create(soulMage.level());
+        BlackHoleProjectile blackHole = CompanionsEntities.BLACK_HOLE_PROJECTILE.create(soulMage.level());
         if (blackHole != null) {
             Vec3 spawnPos = soulMage.getEyePosition(1f).add(soulMage.getLookAngle().scale(0.5D));
             blackHole.setPos(spawnPos.x, spawnPos.y, spawnPos.z);

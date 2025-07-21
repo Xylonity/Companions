@@ -30,7 +30,7 @@ public class CakeCreamTriggerProjectile extends GenericTriggerProjectile {
             this.setDeltaMovement(motion.x * 0.98, motion.y - 0.015f, motion.z * 0.98);
             this.move(MoverType.SELF, this.getDeltaMovement());
         } else {
-            FloorCakeCreamProjectile cream = CompanionsEntities.FLOOR_CAKE_CREAM.get().create(level());
+            FloorCakeCreamProjectile cream = CompanionsEntities.FLOOR_CAKE_CREAM.create(level());
             if (cream != null) {
                 cream.moveTo(getX(), getY(), getZ());
                 cream.setArmorName(getArmorName());

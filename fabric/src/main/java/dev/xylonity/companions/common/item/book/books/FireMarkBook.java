@@ -45,7 +45,7 @@ public class FireMarkBook extends AbstractMagicBook {
             double distance = eyePos.distanceTo(Vec3.atCenterOf(targetPos));
 
             if (distance <= dist) {
-                FireMarkRingProjectile fireMarkRing = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get().create(pLevel);
+                FireMarkRingProjectile fireMarkRing = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.create(pLevel);
                 if (fireMarkRing != null) {
                     fireMarkRing.moveTo(targetPos.getX() + 0.5, targetPos.getY() + 1.0, targetPos.getZ() + 0.5);
                     fireMarkRing.setOwner(pPlayer);
@@ -56,7 +56,7 @@ public class FireMarkBook extends AbstractMagicBook {
         }
 
         if (!spawnFlag) {
-            FireMarkRingProjectile fireMarkRing = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get().create(pLevel);
+            FireMarkRingProjectile fireMarkRing = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.create(pLevel);
             if (fireMarkRing != null) {
                 fireMarkRing.moveTo(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
                 fireMarkRing.setOwner(pPlayer);

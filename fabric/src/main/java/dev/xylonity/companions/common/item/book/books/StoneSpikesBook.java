@@ -56,7 +56,7 @@ public class StoneSpikesBook extends AbstractMagicBook {
             Vec3 pos = player.position().add(direction.scale(1.5 + i * 1.5));
             int y = player.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, new BlockPos((int) pos.x, 0, (int) pos.z)).getY();
 
-            StoneSpikeProjectile spike = CompanionsEntities.STONE_SPIKE_PROJECTILE.get().create(player.level());
+            StoneSpikeProjectile spike = CompanionsEntities.STONE_SPIKE_PROJECTILE.create(player.level());
             if (spike != null) {
                 spike.moveTo(pos.x, Util.findValidSpawnPos(new BlockPos((int) pos.x, y, (int) pos.z), player.level()).getY(), pos.z, player.getYRot(), 0.0F);
                 spike.setOwner(player);

@@ -34,7 +34,7 @@ public class SoulMageStoneSpikesGoal extends AbstractSoulMageAttackGoal {
             Vec3 pos = soulMage.position().add(direction.scale(1.5 + i * 1.5));
             int y = soulMage.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, new BlockPos((int) pos.x, 0, (int) pos.z)).getY();
 
-            StoneSpikeProjectile spike = CompanionsEntities.STONE_SPIKE_PROJECTILE.get().create(soulMage.level());
+            StoneSpikeProjectile spike = CompanionsEntities.STONE_SPIKE_PROJECTILE.create(soulMage.level());
             if (spike != null) {
                 spike.moveTo(pos.x, Util.findValidSpawnPos(new BlockPos((int) pos.x, y, (int) pos.z), soulMage.level()).getY(), pos.z, soulMage.getYRot(), 0.0F);
                 spike.setOwner(soulMage);

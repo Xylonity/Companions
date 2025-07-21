@@ -64,14 +64,13 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
         super(pEntityType, pLevel);
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return Monster.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 160)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0)
-                .build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     @Override
@@ -173,7 +172,7 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
 
                     TickScheduler.scheduleServer(level(), () -> {
 
-                        PuppetGloveEntity glove = CompanionsEntities.PUPPET_GLOVE.get().create(level());
+                        PuppetGloveEntity glove = CompanionsEntities.PUPPET_GLOVE.create(level());
                         if (glove != null) {
                             for (int i = 0; i < 50; i++) {
                                 double dx = (this.random.nextDouble() - 0.5) * 2.0;

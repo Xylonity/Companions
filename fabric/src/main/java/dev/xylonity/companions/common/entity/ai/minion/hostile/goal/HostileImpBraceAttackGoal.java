@@ -47,7 +47,7 @@ public class HostileImpBraceAttackGoal extends AbstractHostileImpAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         if (imp.getTarget() != null) {
-            BraceProjectile projectile = CompanionsEntities.BRACE_PROJECTILE.get().create(imp.level());
+            BraceProjectile projectile = CompanionsEntities.BRACE_PROJECTILE.create(imp.level());
             if (projectile != null) {
                 Vec3 spawnPos = imp.getEyePosition().add(imp.getLookAngle().scale(0.6));
                 projectile.setPos(spawnPos.x, spawnPos.y, spawnPos.z);

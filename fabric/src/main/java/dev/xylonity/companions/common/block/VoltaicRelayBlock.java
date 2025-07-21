@@ -101,13 +101,13 @@ public class VoltaicRelayBlock extends AbstractTeslaBlock implements EntityBlock
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.VOLTAIC_RELAY.get().create(pos, state);
+        return CompanionsBlockEntities.VOLTAIC_RELAY.create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.VOLTAIC_RELAY.get() ? VoltaicRelayBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.VOLTAIC_RELAY ? VoltaicRelayBlockEntity::tick : null;
     }
 
 }

@@ -92,7 +92,7 @@ public class BigIceShardProjectile extends AbstractArrow implements GeoEntity {
 
                 // Generates small ice shards
                 for (int i = 0; i < 5; i++) {
-                    SmallIceShardProjectile shard = CompanionsEntities.SMALL_ICE_SHARD_PROJECTILE.get().create(level());
+                    SmallIceShardProjectile shard = CompanionsEntities.SMALL_ICE_SHARD_PROJECTILE.create(level());
 
                     if (shard != null) {
                         shard.moveTo(getX(), getY(), getZ());

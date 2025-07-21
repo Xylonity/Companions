@@ -57,7 +57,7 @@ public class GargoyleHealAttackGoal extends AbstractMinionAttackGoal {
     @Override
     protected void performAttack(LivingEntity owner) {
         if (minion.getOwner() != null) {
-            Projectile healRing = CompanionsEntities.HEAL_RING_PROJECTILE.get().create(minion.getOwner().level());
+            Projectile healRing = CompanionsEntities.HEAL_RING_PROJECTILE.create(minion.getOwner().level());
             if (healRing != null) {
                 healRing.moveTo(owner.getX(), owner.getY(), owner.getZ());
                 healRing.setOwner(owner);

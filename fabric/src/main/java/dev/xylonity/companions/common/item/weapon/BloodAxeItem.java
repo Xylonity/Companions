@@ -30,7 +30,7 @@ public class BloodAxeItem extends GenericGeckoAxeItem {
             for (int i = 0; i < 4; i++) {
                 double angleRad = Math.toRadians(player.getYRot() + i * 90);
 
-                BloodTornadoProjectile tornado = CompanionsEntities.BLOOD_TORNADO_PROJECTILE.get().create(pLevel);
+                BloodTornadoProjectile tornado = CompanionsEntities.BLOOD_TORNADO_PROJECTILE.create(pLevel);
                 if (tornado != null) {
                     tornado.setPos(player.getX(), player.getY() + player.getBbHeight() * 0.4f, player.getZ());
 

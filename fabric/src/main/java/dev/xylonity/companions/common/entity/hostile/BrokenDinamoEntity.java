@@ -68,13 +68,13 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
     @Override
     protected void registerGoals() { ;; }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return Monster.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 50)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     public UUID getOwnerUUID() {
@@ -154,7 +154,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
 
     private void tameDinamo(Entity e) {
         if (e instanceof Player player) {
-            DinamoEntity dinamo = CompanionsEntities.DINAMO.get().create(level());
+            DinamoEntity dinamo = CompanionsEntities.DINAMO.create(level());
             if (dinamo != null) {
                 dinamo.moveTo(position());
                 dinamo.tameInteraction(player);

@@ -403,13 +403,13 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return CompanionEntity.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 60)
                 .add(Attributes.ATTACK_DAMAGE, 6f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     public int getVariant() {

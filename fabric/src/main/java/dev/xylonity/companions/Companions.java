@@ -44,7 +44,6 @@ public class Companions implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
         PROXY = new ClientProxy();
         CompanionsClientEvents.init();
     }

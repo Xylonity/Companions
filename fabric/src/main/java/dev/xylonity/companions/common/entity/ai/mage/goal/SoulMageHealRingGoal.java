@@ -28,7 +28,7 @@ public class SoulMageHealRingGoal extends AbstractSoulMageAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         if (soulMage.getOwner() != null) {
-            Projectile ring = CompanionsEntities.HEAL_RING_PROJECTILE.get().create(soulMage.level());
+            Projectile ring = CompanionsEntities.HEAL_RING_PROJECTILE.create(soulMage.level());
             if (ring != null) {
                 ring.moveTo(soulMage.getOwner().getX(), soulMage.getOwner().getY(), soulMage.getOwner().getZ());
                 ring.setOwner(soulMage.getOwner());

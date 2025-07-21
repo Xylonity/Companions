@@ -57,7 +57,7 @@ public class MankhRingAttackGoal extends AbstractMankhAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        LaserRingProjectile ring = CompanionsEntities.LASER_RING.get().create(mankh.level());
+        LaserRingProjectile ring = CompanionsEntities.LASER_RING.create(mankh.level());
         if (ring != null) {
             ring.setPos(mankh.position().x, mankh.position().y + 0.15, mankh.position().z);
             ring.setOwner(mankh);

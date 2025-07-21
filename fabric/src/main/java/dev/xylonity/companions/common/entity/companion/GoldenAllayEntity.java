@@ -121,7 +121,7 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
 
             if (transformationCounter == TRANSFORMATION_ANIMATION_TICKS) {
 
-                SoulMageEntity mage = CompanionsEntities.SOUL_MAGE.get().create(level());
+                SoulMageEntity mage = CompanionsEntities.SOUL_MAGE.create(level());
                 if (mage != null) {
                     mage.moveTo(position());
 
@@ -133,7 +133,7 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
 
                     level().addFreshEntity(mage);
 
-                    SoulMageBookEntity book = CompanionsEntities.SOUL_MAGE_BOOK.get().create(level());
+                    SoulMageBookEntity book = CompanionsEntities.SOUL_MAGE_BOOK.create(level());
                     if (book != null) {
                         book.moveTo(position());
                         book.setOwner(mage);
@@ -165,13 +165,13 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
 
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return Monster.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 15d)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     @Override

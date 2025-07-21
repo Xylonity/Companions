@@ -98,14 +98,14 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return Animal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, CompanionsConfig.SHADOW_MAW_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.SHADOW_MAW_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.45f)
                 .add(Attributes.STEP_HEIGHT, 1.1f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     @Override
@@ -220,7 +220,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
                 setDeltaMovement(getDeltaMovement().multiply(0, 1, 0));
             }
 
-            if (isInFluidType()) {
+            if (isInAnyFluid()) {
                 float speed = (float) getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.6F;
                 Vec3 lookDir = rider.getLookAngle().normalize();
                 Vec3 motion = lookDir.scale(speed * forward);

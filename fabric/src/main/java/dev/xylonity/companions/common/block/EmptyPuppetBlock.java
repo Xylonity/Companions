@@ -54,7 +54,7 @@ public class EmptyPuppetBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.EMPTY_PUPPET.get().create(pos, state);
+        return CompanionsBlockEntities.EMPTY_PUPPET.create(pos, state);
     }
 
 }

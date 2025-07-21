@@ -77,13 +77,13 @@ public class TeslaCoilBlock extends AbstractTeslaBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.TESLA_COIL.get().create(pos, state);
+        return CompanionsBlockEntities.TESLA_COIL.create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.TESLA_COIL.get() ? TeslaCoilBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.TESLA_COIL ? TeslaCoilBlockEntity::tick : null;
     }
 
 }

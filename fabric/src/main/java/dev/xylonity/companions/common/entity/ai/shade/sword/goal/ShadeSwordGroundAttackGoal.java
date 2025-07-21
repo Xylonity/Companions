@@ -50,7 +50,7 @@ public class ShadeSwordGroundAttackGoal extends AbstractShadeAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         for (Direction dir : Direction.Plane.HORIZONTAL) {
-            ShadeSwordImpactProjectile impact = CompanionsEntities.SHADE_SWORD_IMPACT_PROJECTILE.get().create(shade.level());
+            ShadeSwordImpactProjectile impact = CompanionsEntities.SHADE_SWORD_IMPACT_PROJECTILE.create(shade.level());
             if (impact != null) {
                 BlockPos base = shade.blockPosition().relative(dir);
 

@@ -24,14 +24,14 @@ public class CompanionsMenuTypes {
     public static final MenuType<SoulFurnaceContainerMenu> SOUL_FURNACE =
             Registry.register(
                     BuiltInRegistries.MENU,
-                    ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "cornelius_container_menu"),
+                    ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "soul_furnace_container_menu"),
                     new ExtendedScreenHandlerType<>(SoulFurnaceContainerMenu::new, BlockPos.STREAM_CODEC)
             );
 
     public static final MenuType<SoulMageContainerMenu> SOUL_MAGE_CONTAINER =
             Registry.register(
                     BuiltInRegistries.MENU,
-                    ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "cornelius_container_menu"),
+                    ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "soul_mage_container_menu"),
                     new ExtendedScreenHandlerType<>(
                             (syncId, inv, entityId) -> {
                                 SoulMageEntity e = (SoulMageEntity) inv.player.level().getEntity(entityId);

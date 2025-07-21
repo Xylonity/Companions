@@ -58,13 +58,13 @@ public class ShadeSwordAltarBlock extends AbstractShadeAltarBlock implements Ent
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.SHADE_SWORD_ALTAR.get().create(pos, state);
+        return CompanionsBlockEntities.SHADE_SWORD_ALTAR.create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.SHADE_SWORD_ALTAR.get() ? ShadeSwordAltarBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.SHADE_SWORD_ALTAR ? ShadeSwordAltarBlockEntity::tick : null;
     }
 
 }

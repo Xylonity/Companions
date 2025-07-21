@@ -13,6 +13,7 @@ import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +22,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
@@ -190,13 +192,13 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
         return false;
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return Animal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, CompanionsConfig.PUPPET_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.PUPPET_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     public void setActiveArms(int candleCount) {
@@ -254,7 +256,12 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
         ItemStack itemstack = player.getItemInHand(hand);
 
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            player.openMenu(new MenuProvider() {
+            player.openMenu(new ExtendedScreenHandlerFactory<>() {
+                @Override
+                public Object getScreenOpeningData(ServerPlayer serverPlayer) {
+                    return PuppetEntity.this.getId();
+                }
+
                 @Override
                 public Component getDisplayName() {
                     return PuppetEntity.this.getName();
@@ -376,14 +383,14 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     private void spawnRayPiece(Level pLevel, Vec3 piecePos, Vec3 direction, boolean isFirstPiece) {
         if (isFirstPiece) {
-            MagicRayCircleProjectile circle = CompanionsEntities.MAGIC_RAY_PIECE_CIRCLE_PROJECTILE.get().create(pLevel);
+            MagicRayCircleProjectile circle = CompanionsEntities.MAGIC_RAY_PIECE_CIRCLE_PROJECTILE.create(pLevel);
             if (circle != null) {
                 circle.setPos(piecePos.x, piecePos.y, piecePos.z);
                 setProjectileRotation(circle, direction);
                 pLevel.addFreshEntity(circle);
             }
         } else {
-            MagicRayPieceProjectile rayPiece = CompanionsEntities.MAGIC_RAY_PIECE_PROJECTILE.get().create(pLevel);
+            MagicRayPieceProjectile rayPiece = CompanionsEntities.MAGIC_RAY_PIECE_PROJECTILE.create(pLevel);
             if (rayPiece != null) {
                 rayPiece.setPos(piecePos.x, piecePos.y, piecePos.z);
                 setProjectileRotation(rayPiece, direction);

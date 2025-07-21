@@ -10,12 +10,14 @@ import dev.xylonity.companions.common.entity.ai.mage.goal.*;
 import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsSounds;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
@@ -148,13 +150,13 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
         this.entityData.set(CURRENT_ATTACK_TYPE, attackType);
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return Animal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, CompanionsConfig.SOUL_MAGE_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     public void setCandleCount(int candleCount) {
@@ -213,7 +215,13 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
         if (level().isClientSide) return InteractionResult.SUCCESS;
 
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            player.openMenu(new MenuProvider() {
+            player.openMenu(new ExtendedScreenHandlerFactory<Integer>() {
+
+                @Override
+                public Integer getScreenOpeningData(ServerPlayer serverPlayer) {
+                    return SoulMageEntity.this.getId();
+                }
+
                 @Override
                 public Component getDisplayName() {
                     return SoulMageEntity.this.getName();

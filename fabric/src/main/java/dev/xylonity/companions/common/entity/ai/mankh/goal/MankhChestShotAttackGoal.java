@@ -53,7 +53,7 @@ public class MankhChestShotAttackGoal extends AbstractMankhAttackGoal {
     protected void performAttack(LivingEntity target) {
         Vec3 dir = target.getEyePosition().subtract(mankh.getEyePosition()).normalize();
 
-        LaserTriggerProjectile laser = CompanionsEntities.LASER_PROJECTILE.get().create(mankh.level());
+        LaserTriggerProjectile laser = CompanionsEntities.LASER_PROJECTILE.create(mankh.level());
         if (laser != null) {
             Vec3 spawn = mankh.position().add(0, mankh.getBbHeight() * 0.5, 0).add(dir.scale(0.05));
 

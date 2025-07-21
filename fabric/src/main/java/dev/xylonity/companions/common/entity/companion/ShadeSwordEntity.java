@@ -87,13 +87,13 @@ public class ShadeSwordEntity extends ShadeEntity {
         return false;
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return Animal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, CompanionsConfig.SHADOW_SWORD_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.SHADOW_SWORD_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     @Override

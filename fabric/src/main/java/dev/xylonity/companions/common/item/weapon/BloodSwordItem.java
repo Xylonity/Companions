@@ -29,7 +29,7 @@ public class BloodSwordItem extends GenericGeckoSwordItem {
     public @NotNull InteractionResultHolder<ItemStack> use(Level pLevel, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!pLevel.isClientSide) {
-            BloodSlashProjectile slash = CompanionsEntities.BLOOD_SLASH_PROJECTILE.get().create(pLevel);
+            BloodSlashProjectile slash = CompanionsEntities.BLOOD_SLASH_PROJECTILE.create(pLevel);
             if (slash != null) {
                 Vec3 spawnPos = player.position().add(0, player.getEyeHeight(), 0);
                 slash.setOwner(player);

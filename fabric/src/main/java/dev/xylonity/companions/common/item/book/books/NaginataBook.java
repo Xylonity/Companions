@@ -95,7 +95,7 @@ public class NaginataBook extends AbstractMagicBook {
     }
 
     private void spawnNaginata(Player player, Vec3 spawnPos, Vec3 targetPos, Level level, double speed) {
-        HolinessNaginataProjectile naginata = CompanionsEntities.HOLINESS_NAGINATA.get().create(level);
+        HolinessNaginataProjectile naginata = CompanionsEntities.HOLINESS_NAGINATA.create(level);
         if (naginata != null) {
             naginata.setOwner(player);
             naginata.setPos(spawnPos.x, spawnPos.y, spawnPos.z);

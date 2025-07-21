@@ -29,7 +29,7 @@ public class BraceBook extends AbstractMagicBook {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (!level.isClientSide) {
-            BraceProjectile projectile = CompanionsEntities.BRACE_PROJECTILE.get().create(level);
+            BraceProjectile projectile = CompanionsEntities.BRACE_PROJECTILE.create(level);
             if (projectile != null) {
                 Vec3 look = player.getLookAngle().normalize();
                 Vec3 eyePos = player.getEyePosition();

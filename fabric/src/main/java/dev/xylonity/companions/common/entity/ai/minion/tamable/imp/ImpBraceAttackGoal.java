@@ -47,7 +47,7 @@ public class ImpBraceAttackGoal extends AbstractMinionAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         if (minion.getOwner() != null) {
-            BraceProjectile projectile = CompanionsEntities.BRACE_PROJECTILE.get().create(minion.level());
+            BraceProjectile projectile = CompanionsEntities.BRACE_PROJECTILE.create(minion.level());
             if (projectile != null) {
                 Vec3 spawnPos = minion.getEyePosition().add(minion.getLookAngle().scale(0.6));
                 projectile.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
