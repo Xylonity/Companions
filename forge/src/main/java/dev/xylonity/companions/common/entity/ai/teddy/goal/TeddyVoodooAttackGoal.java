@@ -26,7 +26,7 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
 
     @Override
     public boolean canUse() {
-        this.list = teddy.level().getEntitiesOfClass(LivingEntity.class, new AABB(teddy.blockPosition()).inflate(20), e -> e.hasEffect(CompanionsEffects.VOODOO.get()) && !Util.areEntitiesLinked(e, teddy));
+        this.list = teddy.level().getEntitiesOfClass(LivingEntity.class, new AABB(teddy.blockPosition()).inflate(20), e -> e.hasEffect(CompanionsEffects.VOODOO) && !Util.areEntitiesLinked(e, teddy));
         if (list.isEmpty()) return false;
         if (teddy.getPhase() == 2) return false;
         if (this.phase() != teddy.getPhase()) return false;
@@ -77,7 +77,7 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
     protected void performAttack(LivingEntity unused) {
         for (LivingEntity e : list) {
             if (!Util.areEntitiesLinked(e, teddy)) {
-                e.removeEffect(CompanionsEffects.VOODOO.get());
+                e.removeEffect(CompanionsEffects.VOODOO);
 
                 for (int i = 0; i < 2; i++) {
                     double radius = 4 + teddy.getRandom().nextDouble();

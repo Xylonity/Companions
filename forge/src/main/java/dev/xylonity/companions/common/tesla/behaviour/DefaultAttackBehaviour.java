@@ -63,7 +63,7 @@ public class DefaultAttackBehaviour implements ITeslaNodeBehaviour {
                 if (level instanceof ServerLevel sv && module.getOwnerUUID() != null) {
                     if (!Util.areEntitiesLinked(sv.getEntity(module.getOwnerUUID()), victim)) {
                         victim.hurt(victim.level().damageSources().lightningBolt(), (float) CompanionsConfig.ELECTRICITY_DAMAGE);
-                        victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0, false, true, true));
+                        victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK, 50, 0, false, true, true));
                     }
                 }
             }

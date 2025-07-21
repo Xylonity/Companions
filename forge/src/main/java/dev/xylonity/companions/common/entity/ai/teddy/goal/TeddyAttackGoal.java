@@ -39,7 +39,7 @@ public class TeddyAttackGoal extends AbstractTeddyAttackGoal {
             teddy.playSound(CompanionsSounds.TEDDY_ATTACK.get());
             teddy.doHurtTarget(target);
             if (new Random().nextFloat() < 0.35f) {
-                target.addEffect(new MobEffectInstance(CompanionsEffects.VOODOO.get(), new Random().nextInt(100, 300), 0, true, true, true));
+                target.addEffect(new MobEffectInstance(CompanionsEffects.VOODOO, new Random().nextInt(100, 300), 0, true, true, true));
             }
         }
 

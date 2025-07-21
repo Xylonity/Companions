@@ -20,7 +20,7 @@ public class PuppetMutantAttackGoal extends AbstractPuppetAttackGoal {
     protected void performAttack(LivingEntity target) {
         if (target != null) {
             puppet.doHurtTarget(target);
-            target.addEffect(new MobEffectInstance(CompanionsEffects.VOODOO.get(), puppet.getRandom().nextInt(100, 300), 0, true, true, true));
+            target.addEffect(new MobEffectInstance(CompanionsEffects.VOODOO, puppet.getRandom().nextInt(100, 300), 0, true, true, true));
         }
 
     }

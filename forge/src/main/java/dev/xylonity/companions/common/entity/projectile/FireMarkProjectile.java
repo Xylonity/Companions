@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.registry.CompanionsEffects;
-import net.minecraft.core.Holder;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -10,9 +9,8 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -40,7 +38,7 @@ public class FireMarkProjectile extends Projectile implements GeoEntity {
 
         if (owner == null) this.remove(RemovalReason.DISCARDED);
 
-        if (!level().isClientSide && owner != null && !((LivingEntity) owner).hasEffect(CompanionsEffects.FIRE_MARK.get())) this.remove(RemovalReason.DISCARDED);
+        if (!level().isClientSide && owner != null && !((LivingEntity) owner).hasEffect(CompanionsEffects.FIRE_MARK)) this.remove(RemovalReason.DISCARDED);
 
         if (owner != null && !owner.isRemoved()) {
             Vec3 targetPos = new Vec3(owner.getX(), owner.getY() + owner.getBbHeight() + 0.5, owner.getZ());

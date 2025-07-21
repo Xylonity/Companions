@@ -56,7 +56,7 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
                         if (target.distanceToSqr(target) <= 64) {
                             target.hurt(dinamo.damageSources().lightningBolt(), (float) CompanionsConfig.ELECTRICITY_DAMAGE);
                             if (target.getRandom().nextFloat() < 0.4f) {
-                                target.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0, false, true, true));
+                                target.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK, 50, 0, false, true, true));
                             }
 
                         }

@@ -15,7 +15,7 @@ public class MobMixin {
     @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
     private void companions$setTarget(LivingEntity pTarget, CallbackInfo ci) {
         if (pTarget == null) return;
-        if (pTarget.hasEffect(CompanionsEffects.PHANTOM.get())) {
+        if (pTarget.hasEffect(CompanionsEffects.PHANTOM)) {
             ci.cancel();
         }
 

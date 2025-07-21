@@ -17,9 +17,9 @@ public class CompanionsCommonEvents {
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.hasEffect(CompanionsEffects.FIRE_MARK.get()) && (event.getSource().is(DamageTypes.ON_FIRE) || event.getSource().is(DamageTypes.IN_FIRE))) {
+        if (entity.hasEffect(CompanionsEffects.FIRE_MARK) && (event.getSource().is(DamageTypes.ON_FIRE) || event.getSource().is(DamageTypes.IN_FIRE))) {
             entity.level().explode(entity, entity.getX(), entity.getY(), entity.getZ(), (float) CompanionsConfig.FIRE_MARK_EFFECT_RADIUS, Level.ExplosionInteraction.MOB);
-            entity.removeEffect(CompanionsEffects.FIRE_MARK.get());
+            entity.removeEffect(CompanionsEffects.FIRE_MARK);
         }
     }
 

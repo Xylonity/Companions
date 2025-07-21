@@ -33,7 +33,7 @@ public class CloakInvisibilityGoal extends AbstractCloakAttackGoal {
         if (cloak.getAttackType() != 0) return false;
         if (cloak.getMainAction() != 1) return false;
         if (cloak.getOwner() == null) return false;
-        if (cloak.getOwner().hasEffect(CompanionsEffects.PHANTOM.get())) return false;
+        if (cloak.getOwner().hasEffect(CompanionsEffects.PHANTOM)) return false;
 
         if (nextUseTick < 0) {
             nextUseTick = cloak.tickCount + minCooldown + cloak.getRandom().nextInt(maxCooldown - minCooldown + 1);
@@ -60,8 +60,8 @@ public class CloakInvisibilityGoal extends AbstractCloakAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         if (cloak.getOwner() != null) {
-            cloak.getOwner().addEffect(new MobEffectInstance(CompanionsEffects.PHANTOM.get(), 600, 0, false, true, true));
-            cloak.addEffect(new MobEffectInstance(CompanionsEffects.PHANTOM.get(), 600, 0, false, true, true));
+            cloak.getOwner().addEffect(new MobEffectInstance(CompanionsEffects.PHANTOM, 600, 0, false, true, true));
+            cloak.addEffect(new MobEffectInstance(CompanionsEffects.PHANTOM, 600, 0, false, true, true));
             spawnParticles(cloak.getOwner().position(), cloak.getOwner().getBbHeight());
             spawnParticles(cloak.position(), cloak.getBbHeight());
         }

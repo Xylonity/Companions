@@ -24,7 +24,7 @@ public abstract class LivingEntityMixin implements IPhantomEffectEntity {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void syncPhantomFlag(CallbackInfo ci) {
-        boolean curr = ((LivingEntity)(Object) this).hasEffect(CompanionsEffects.PHANTOM.get());
+        boolean curr = ((LivingEntity)(Object) this).hasEffect(CompanionsEffects.PHANTOM);
 
         if (curr != companions$lastPhantomState) {
             ((LivingEntity) (Object) this).getEntityData().set(companions$PHANTOM_FLAG, curr);

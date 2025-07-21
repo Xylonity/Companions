@@ -14,15 +14,18 @@ import dev.xylonity.companions.common.item.generic.GenericGeckoItem;
 import dev.xylonity.companions.common.item.weapon.BloodAxeItem;
 import dev.xylonity.companions.common.item.weapon.BloodScytheItem;
 import dev.xylonity.companions.common.item.weapon.BloodSwordItem;
+import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.registry.CompanionsArmorMaterials;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
@@ -88,6 +91,11 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
         return registerSpecificItem(id, properties, itemType);
     }
 
+    @Override
+    public <T extends Item> Supplier<T> registerMusicDisc(String id, int signal, Supplier<SoundEvent> soundEvent, Item.Properties properties, int length) {
+        return (Supplier<T>) registerItem(id, () -> new Item(properties.jukeboxPlayable(ResourceKey.create(Registries.JUKEBOX_SONG, ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "saint_klimt")))));
+    }
+
     private float extra(int idx, float fallback) {
         String[] parts = CompanionsConfig.CRYSTALLIZED_BLOOD_WEAPON_STATS.trim().split("\\s*,\\s*");
         float ret = fallback;
@@ -130,18 +138,21 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     }
 
     @Override
-    public <T extends Item> Supplier<T> registerArmorItem(String id, CompanionsItems.ArmorMaterial armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
+    public <T extends Item> Supplier<T> registerArmorItem(String id, Holder<ArmorMaterial> armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
         if (isGeckoArmor) {
-            return switch (armorMaterial) {
-                case BLOOD -> (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(Holder.direct(CompanionsArmorMaterials.CRYSTALLIZED_BLOOD.get()), armorType, new Item.Properties(), id));
-                case MAGE -> (Supplier<T>) registerItem(id, () -> new GeckoMageArmorItem(Holder.direct(CompanionsArmorMaterials.MAGE.get()), armorType, new Item.Properties(), id));
-                case HOLY_ROBE -> (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(Holder.direct(CompanionsArmorMaterials.HOLY_ROBE.get()), armorType, new Item.Properties(), id));
-            };
+            if (armorMaterial == ArmorMaterials.CRYSTALLIZED_BLOOD) {
+                return (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+            } else if (armorMaterial == ArmorMaterials.MAGE) {
+                return (Supplier<T>) registerItem(id, () -> new GeckoMageArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+            } else { // HOLY_ROBE
+                return (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+            }
         } else {
-            return switch (armorMaterial) {
-                case BLOOD -> (Supplier<T>) registerItem(id, () -> new BloodArmorItem(Holder.direct(CompanionsArmorMaterials.CRYSTALLIZED_BLOOD.get()), armorType, new Item.Properties()));
-                default -> (Supplier<T>) registerItem(id, () -> new ArmorItem(Holder.direct(CompanionsArmorMaterials.CRYSTALLIZED_BLOOD.get()), armorType, new Item.Properties()));
-            };
+            if (armorMaterial == ArmorMaterials.CRYSTALLIZED_BLOOD) {
+                return (Supplier<T>) registerItem(id, () -> new BloodArmorItem(armorMaterial, armorType, new Item.Properties()));
+            } else {
+                return (Supplier<T>) registerItem(id, () -> new ArmorItem(armorMaterial, armorType, new Item.Properties()));
+            }
         }
 
     }
@@ -180,9 +191,8 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     }
 
     @Override
-    public <T extends MobEffect> Supplier<Holder<T>> registerEffect(String id, Supplier<T> factory) {
-        RegistryObject<T> reg = Companions.MOB_EFFECTS.register(id, factory);
-        return () -> reg.getHolder().orElseThrow(() -> new IllegalStateException("[COMPANIONS!] Effect " + id + " not registered!"));
+    public <T extends MobEffect> Holder<T> registerEffect(String id, Supplier<T> effect) {
+        return Companions.MOB_EFFECTS.register(id, effect).getHolder().orElseThrow();
     }
 
     @Override
@@ -198,6 +208,12 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     @Override
     public <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(String id, Supplier<T> tab) {
         return Companions.CREATIVE_TABS.register(id, tab);
+    }
+
+    @Override
+    public <T extends ArmorMaterial> Holder<T> registerArmorMaterial(String id, Supplier<T> armorMaterial) {
+        Companions.ARMOR_MATERIALS.register(id, armorMaterial);
+        return Holder.direct(armorMaterial.get());
     }
 
     @Override

@@ -8,9 +8,11 @@ import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.config.ConfigComposer;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -33,6 +35,7 @@ public class Companions {
     public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, Companions.MOD_ID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(Registries.PARTICLE_TYPE, Companions.MOD_ID);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, Companions.MOD_ID);
+    public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, Companions.MOD_ID);
 
     public Companions(FMLJavaModLoadingContext context) {
 
@@ -46,6 +49,7 @@ public class Companions {
         CompanionsEntities.ENTITY.register(modEventBus);
         CompanionsSpawnBiomeModifier.BIOME_MODIFIER.register(modEventBus);
 
+        ARMOR_MATERIALS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
