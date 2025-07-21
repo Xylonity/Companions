@@ -2,7 +2,36 @@ plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
 }
+
+repositories {
+    maven {
+        name = "Xylonity's vault"
+        url = "https://raw.githubusercontent.com/Xylonity/maven-centralish/main/maven/"
+    }
+    maven {
+        url "https://cursemaven.com"
+    }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
+    maven {
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
+}
+
 dependencies {
+    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:4.7.6"
+
+    modImplementation "dev.xylonity.knightlib:knightlib-fabric-${minecraft_version}:${knightlib_version}"
+
+    compileOnly "mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}"
+    modImplementation "mezz.jei:jei-${minecraft_version}-fabric:${jei_version}"
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.layered {
         officialMojangMappings()

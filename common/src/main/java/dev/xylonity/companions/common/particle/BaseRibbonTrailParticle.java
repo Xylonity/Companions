@@ -7,8 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
-
 public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/particle/trail.png");
@@ -69,7 +67,6 @@ public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
         return getTarget() != null ? getTarget().position().add(0, getTarget().getBbHeight() * 0.5, 0) : new Vec3(x, y, z);
     }
 
-    @Nullable
     private Entity getTarget() {
         return targetId == -1 ? null : level.getEntity(targetId);
     }
