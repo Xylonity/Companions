@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
@@ -214,20 +215,22 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
 
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            player.openMenu(new MenuProvider() {
-                @Override
-                public Component getDisplayName() {
-                    return CorneliusEntity.this.getName();
-                }
+        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!this.level().isClientSide && player instanceof ServerPlayer sp) {
+                sp.openMenu(new MenuProvider() {
+                    @Override
+                    public Component getDisplayName() {
+                        return CorneliusEntity.this.getName();
+                    }
 
-                @Override
-                public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                    return new CorneliusContainerMenu(i, inventory, CorneliusEntity.this);
-                }
-            });
+                    @Override
+                    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                        return new CorneliusContainerMenu(i, inventory, CorneliusEntity.this);
+                    }
+                }, buf -> buf.writeInt(this.getId()));
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.5F, 1.0F);
+            }
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.5F, 1.0F);
             return InteractionResult.SUCCESS;
         }
 

@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.extensions.IPlayerExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +47,8 @@ public class SoulFurnaceBlock extends Block implements EntityBlock {
         return SHAPE_N;
     }
 
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
@@ -56,9 +58,9 @@ public class SoulFurnaceBlock extends Block implements EntityBlock {
     }
 
     protected void openContainer(Level pLevel, BlockPos pPos, Player pPlayer) {
-        BlockEntity $$3 = pLevel.getBlockEntity(pPos);
-        if ($$3 instanceof SoulFurnaceBlockEntity soulFurnaceBlockEntity) {
-            pPlayer.openMenu(soulFurnaceBlockEntity);
+        BlockEntity be = pLevel.getBlockEntity(pPos);
+        if (be instanceof SoulFurnaceBlockEntity soulFurnaceBlockEntity) {
+            pPlayer.openMenu(soulFurnaceBlockEntity, buf -> buf.writeBlockPos(pPos));
         }
 
     }

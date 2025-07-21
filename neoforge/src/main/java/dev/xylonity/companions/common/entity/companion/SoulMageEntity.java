@@ -212,20 +212,22 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
 
         if (level().isClientSide) return InteractionResult.SUCCESS;
 
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            player.openMenu(new MenuProvider() {
-                @Override
-                public Component getDisplayName() {
-                    return SoulMageEntity.this.getName();
-                }
+        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!this.level().isClientSide) {
+                player.openMenu(new MenuProvider() {
+                    @Override
+                    public Component getDisplayName() {
+                        return SoulMageEntity.this.getName();
+                    }
 
-                @Override
-                public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                    return new SoulMageContainerMenu(i, inventory, SoulMageEntity.this);
-                }
-            });
+                    @Override
+                    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                        return new SoulMageContainerMenu(i, inventory, SoulMageEntity.this);
+                    }
+                }, buf -> buf.writeInt(this.getId()));
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.5F, 1.0F);
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.5F, 1.0F);
+            }
 
             return InteractionResult.SUCCESS;
         }

@@ -255,52 +255,32 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
 
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            player.openMenu(new ExtendedScreenHandlerFactory<>() {
-                @Override
-                public Object getScreenOpeningData(ServerPlayer serverPlayer) {
-                    return PuppetEntity.this.getId();
-                }
+        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!this.level().isClientSide) {
+                player.openMenu(new ExtendedScreenHandlerFactory<>() {
+                    @Override
+                    public Object getScreenOpeningData(ServerPlayer serverPlayer) {
+                        return PuppetEntity.this.getId();
+                    }
 
-                @Override
-                public Component getDisplayName() {
-                    return PuppetEntity.this.getName();
-                }
+                    @Override
+                    public Component getDisplayName() {
+                        return PuppetEntity.this.getName();
+                    }
 
-                @Override
-                public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                    return new PuppetContainerMenu(i, inventory, PuppetEntity.this);
-                }
-            });
+                    @Override
+                    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                        return new PuppetContainerMenu(i, inventory, PuppetEntity.this);
+                    }
+                });
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.5F, 1.0F);
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.5F, 1.0F);
+            }
+
             return InteractionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == Items.APPLE && !isTame()) {
-            if (this.level().isClientSide) {
-                return InteractionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().instabuild) itemstack.shrink(1);
-
-                if (!this.level().isClientSide) {
-                    tameInteraction(player);
-                }
-
-                setSitVariation(getRandom().nextInt(0, 3));
-                return InteractionResult.SUCCESS;
-            }
-        }
-
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if (itemstack.getItem() == Items.APPLE && this.getHealth() < this.getMaxHealth()) {
-                this.heal(16.0F);
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-            } else {
-                defaultMainActionInteraction(player);
-            }
+        if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
         }
 
