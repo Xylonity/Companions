@@ -18,8 +18,8 @@ public class GenericGeckoSwordItem extends SwordItem implements GeoItem {
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private final String resourceKey;
 
-    public GenericGeckoSwordItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
-        super(material, properties);
+    public GenericGeckoSwordItem(Properties properties, String resourceKey, ItemMaterials itemMaterial) {
+        super(itemMaterial, properties);
         this.resourceKey = resourceKey;
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }

@@ -23,11 +23,11 @@ public final class ArmorMaterials {
     public static final Holder<ArmorMaterial> HOLY_ROBE = register("holy_robe", CompanionsConfig.HOLY_ROBE_SET_STATS, Items.DIAMOND, SoundEvents.ARMOR_EQUIP_DIAMOND);
     public static final Holder<ArmorMaterial> CRYSTALLIZED_BLOOD = register("crystallized_blood", CompanionsConfig.CRYSTALLIZED_BLOOD_SET_STATS, Items.DIAMOND, SoundEvents.ARMOR_EQUIP_DIAMOND);
 
-    private static Holder<ArmorMaterial> register(String name, String statsCsv, ItemLike repairItem, Holder<SoundEvent> equipSound) {
-        String[] parts = statsCsv.trim().split("\\s*,\\s*");
+    private static Holder<ArmorMaterial> register(String name, String entry, ItemLike repairItem, Holder<SoundEvent> equipSound) {
+        String[] parts = entry.trim().split("\\s*,\\s*");
 
         if (parts.length != 7) {
-            throw new IllegalArgumentException("[Companions!] Invalid armor stats: " + statsCsv);
+            throw new IllegalArgumentException("[Companions!] Invalid armor stats: " + entry);
         }
 
         EnumMap<ArmorItem.Type, Integer> defense = new EnumMap<>(ArmorItem.Type.class);

@@ -14,8 +14,8 @@ import java.util.List;
 
 public class BloodScytheItem extends GenericGeckoPickaxeItem {
 
-    public BloodScytheItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
-        super(properties, resourceKey, material, extraDamage, extraSpeed);
+    public BloodScytheItem(Properties properties, String resourceKey, ItemMaterials material) {
+        super(properties, resourceKey, material);
     }
 
     @Override

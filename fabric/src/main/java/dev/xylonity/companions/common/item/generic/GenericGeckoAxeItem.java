@@ -19,7 +19,7 @@ public class GenericGeckoAxeItem extends AxeItem implements GeoItem {
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private final String resourceKey;
 
-    public GenericGeckoAxeItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
+    public GenericGeckoAxeItem(Properties properties, String resourceKey, ItemMaterials material) {
         super(material, properties);
         this.resourceKey = resourceKey;
         SingletonGeoAnimatable.registerSyncedAnimatable(this);

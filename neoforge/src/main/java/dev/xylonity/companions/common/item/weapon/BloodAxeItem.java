@@ -19,8 +19,8 @@ import java.util.List;
 
 public class BloodAxeItem extends GenericGeckoAxeItem {
 
-    public BloodAxeItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
-        super(properties, resourceKey, material, extraDamage, extraSpeed);
+    public BloodAxeItem(Properties properties, String resourceKey, ItemMaterials material) {
+        super(properties, resourceKey, material);
     }
 
     @Override

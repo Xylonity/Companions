@@ -34,10 +34,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -85,13 +82,13 @@ public class CompanionsFabricPlatform implements CompanionsPlatform {
     public <T extends Item> Supplier<T> registerSpecificItem(String id, Item.Properties properties, CompanionsItems.ItemType itemType, ItemMaterials material, float extraDamage, float extraSpeed) {
         switch (itemType) {
             case BLOOD_SWORD -> {
-                return (Supplier<T>) registerItem(id, () -> new BloodSwordItem(properties, id, material, extra(8, extraDamage), extra(11, extraSpeed)));
+                return (Supplier<T>) registerItem(id, () -> new BloodSwordItem(properties.fireResistant().attributes(SwordItem.createAttributes( material, (int) extra(8, extraDamage), extra(11, extraSpeed))), id, material));
             }
             case BLOOD_AXE -> {
-                return (Supplier<T>) registerItem(id, () -> new BloodAxeItem(properties, id, material, extra(6, extraDamage), extra(9, extraSpeed)));
+                return (Supplier<T>) registerItem(id, () -> new BloodAxeItem(properties.fireResistant().attributes(AxeItem.createAttributes(material, extra(6, extraDamage), extra(9, extraSpeed))), id, material));
             }
             case BLOOD_PICKAXE -> {
-                return (Supplier<T>) registerItem(id, () -> new BloodScytheItem(properties, id, material, extra(7, extraDamage), extra(10, extraSpeed)));
+                return (Supplier<T>) registerItem(id, () -> new BloodScytheItem(properties.fireResistant().attributes(PickaxeItem.createAttributes(material, extra(7, extraDamage), extra(10, extraSpeed))), id, material));
             }
         }
 
@@ -143,20 +140,25 @@ public class CompanionsFabricPlatform implements CompanionsPlatform {
     public <T extends Item> Supplier<T> registerArmorItem(String id, Holder<ArmorMaterial> armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
         if (isGeckoArmor) {
             if (armorMaterial == ArmorMaterials.CRYSTALLIZED_BLOOD) {
-                return (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+                return (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(armorMaterial, armorType, new Item.Properties().durability(getDurabilityMultiplier(CompanionsConfig.CRYSTALLIZED_BLOOD_SET_STATS)), id));
             } else if (armorMaterial == ArmorMaterials.MAGE) {
-                return (Supplier<T>) registerItem(id, () -> new GeckoMageArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+                return (Supplier<T>) registerItem(id, () -> new GeckoMageArmorItem(armorMaterial, armorType, new Item.Properties().durability(getDurabilityMultiplier(CompanionsConfig.MAGE_SET_STATS)), id));
             } else { // HOLY_ROBE
-                return (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+                return (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(armorMaterial, armorType, new Item.Properties().durability(getDurabilityMultiplier(CompanionsConfig.HOLY_ROBE_SET_STATS)), id));
             }
         } else {
             if (armorMaterial == ArmorMaterials.CRYSTALLIZED_BLOOD) {
-                return (Supplier<T>) registerItem(id, () -> new BloodArmorItem(armorMaterial, armorType, new Item.Properties()));
+                return (Supplier<T>) registerItem(id, () -> new BloodArmorItem(armorMaterial, armorType, new Item.Properties().durability(getDurabilityMultiplier(CompanionsConfig.CRYSTALLIZED_BLOOD_SET_STATS))));
             } else {
-                return (Supplier<T>) registerItem(id, () -> new ArmorItem(armorMaterial, armorType, new Item.Properties()));
+                return (Supplier<T>) registerItem(id, () -> new ArmorItem(armorMaterial, armorType, new Item.Properties().durability(35)));
             }
         }
 
+    }
+
+    private int getDurabilityMultiplier(String configEntry) {
+        String[] parts = configEntry.trim().split("\\s*,\\s*");
+        return Integer.parseInt(parts[6]);
     }
 
     @Override

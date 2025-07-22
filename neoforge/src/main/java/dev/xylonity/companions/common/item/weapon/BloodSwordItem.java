@@ -21,8 +21,8 @@ import java.util.List;
 
 public class BloodSwordItem extends GenericGeckoSwordItem {
 
-    public BloodSwordItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
-        super(properties, resourceKey, material, extraDamage, extraSpeed);
+    public BloodSwordItem(Properties properties, String resourceKey, ItemMaterials itemMaterial) {
+        super(properties, resourceKey, itemMaterial);
     }
 
     @Override
