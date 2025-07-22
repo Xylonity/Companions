@@ -52,13 +52,13 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
     private static final int CARD_W = 24;
     private static final int CARD_H = 36;
     private static final int V_BACK = 144;
-    private static final int PLAYER_Y = 14;
-    private static final int DEALER_Y = -40;
+    private static final int PLAYER_Y = 13;
+    private static final int DEALER_Y = -41;
     private static final int START_Y = -50;
     private static final int SPACING_PLAYER = -10;
     private static final int SPACING_DEALER = -14;
-    private static final int MARGIN_PLAYER = 77 - (CARD_W + SPACING_PLAYER);
-    private static final int MARGIN_DEALER = 58;
+    private static final int MARGIN_PLAYER = 93 - (CARD_W + SPACING_PLAYER);
+    private static final int MARGIN_DEALER = 74;
 
     // hover card tilt data
     private static final float HOVER_SCALE = 1.25f;
@@ -77,6 +77,8 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
     public CorneliusScreen(CorneliusContainerMenu container, Inventory inv, Component title) {
         super(container, inv, title);
+        this.imageHeight = 216;
+        this.imageWidth = 208;
     }
 
     private int generalMarginLeft(){
@@ -119,9 +121,9 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         super.init();
 
         btnHit = addRenderableWidget(new ImageButtonWrapper(
-                        generalMarginLeft() + 80,
-                        generalMarginTop() + PLAYER_Y + 100,
-                        43, 29, 0, 227, 256, 256, TEX_TOP, b->
+                generalMarginLeft() + 96,
+                generalMarginTop() + PLAYER_Y + 100,
+                43, 29, 0, 227, 256, 256, TEX_TOP, b->
         {
             int c = 0;
             for (int i = 3; i <= 5; i++) {
@@ -156,7 +158,7 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         });
 
         btnStand = addRenderableWidget(new ImageButtonWrapper(
-                generalMarginLeft() + 119,
+                generalMarginLeft() + 135,
                 generalMarginTop() + PLAYER_Y + 100,
                 43,29,0,227, 256, 256, TEX_TOP, b-> onStand())
         {
@@ -675,9 +677,9 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
     @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        if ((pKeyCode == Minecraft.getInstance().options.keyInventory.getDefaultKey().getValue() || pKeyCode == GLFW.GLFW_KEY_ESCAPE) && phase != Phase.WAITING_PLAY) {
-            return true;
-        }
+        //if ((pKeyCode == Minecraft.getInstance().options.keyInventory.getKey().getValue() || pKeyCode == GLFW.GLFW_KEY_ESCAPE) && phase != Phase.WAITING_PLAY) {
+        //    return true;
+        //}
 
         return super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }

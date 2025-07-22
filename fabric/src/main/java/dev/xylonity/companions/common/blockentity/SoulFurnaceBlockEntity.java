@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.block.SoulFurnaceBlock;
 import dev.xylonity.companions.common.container.SoulFurnaceContainerMenu;
 import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.common.blockentity.GreatChaliceBlockEntity;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -14,6 +15,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -45,7 +47,7 @@ import software.bernie.geckolib.util.RenderUtil;
 import java.util.List;
 import java.util.Random;
 
-public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntity, MenuProvider, Container {
+public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntity, Container, ExtendedScreenHandlerFactory<BlockPos> {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -304,45 +306,6 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     @Override
-    public @NotNull Component getDisplayName() {
-        return Component.literal("Soul Furnace");
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player player) {
-        return new SoulFurnaceContainerMenu(id, inventory, this, new ContainerData() {
-            @Override
-            public int get(int index) {
-                return switch (index) {
-                    case 0 -> charges;
-                    case 1 -> currentProgress;
-                    case 2 -> processingTime;
-                    default -> 0;
-                };
-            }
-            @Override
-            public void set(int index, int value) {
-                switch (index) {
-                    case 0:
-                        charges = value;
-                        break;
-                    case 1:
-                        currentProgress = value;
-                        break;
-                    case 2:
-                        processingTime = value;
-                        break;
-                }
-            }
-            @Override
-            public int getCount() {
-                return 3;
-            }
-        });
-    }
-
-    @Override
     public double getTick(Object o) {
         return RenderUtil.getCurrentTick();
     }
@@ -424,6 +387,50 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
 
     public boolean isLit() {
         return isLit;
+    }
+
+    @Override
+    public BlockPos getScreenOpeningData(ServerPlayer serverPlayer) {
+        return getBlockPos();
+    }
+
+    @Override
+    public @NotNull Component getDisplayName() {
+        return Component.literal("Soul Furnace");
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player player) {
+        return new SoulFurnaceContainerMenu(id, inventory, this, new ContainerData() {
+            @Override
+            public int get(int index) {
+                return switch (index) {
+                    case 0 -> charges;
+                    case 1 -> currentProgress;
+                    case 2 -> processingTime;
+                    default -> 0;
+                };
+            }
+            @Override
+            public void set(int index, int value) {
+                switch (index) {
+                    case 0:
+                        charges = value;
+                        break;
+                    case 1:
+                        currentProgress = value;
+                        break;
+                    case 2:
+                        processingTime = value;
+                        break;
+                }
+            }
+            @Override
+            public int getCount() {
+                return 3;
+            }
+        });
     }
 
     public record SoulFurnaceRecipe(Item input, Item output, int requiredCharges, int processTime, EntityType<?> entityType, Block block) { ;; }

@@ -236,7 +236,7 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
 
                 this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.5F, 1.0F);
             }
-            
+
             return InteractionResult.SUCCESS;
         }
 

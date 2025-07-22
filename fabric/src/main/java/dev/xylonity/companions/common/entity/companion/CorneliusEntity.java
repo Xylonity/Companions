@@ -8,6 +8,7 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomHopStroll
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
@@ -45,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.*;
 
-public class CorneliusEntity extends CompanionEntity implements ContainerListener, IFrogJumpUtil {
+public class CorneliusEntity extends CompanionEntity implements ContainerListener, IFrogJumpUtil, ExtendedScreenHandlerFactory<Integer> {
 
     public SimpleContainer inventory;
 
@@ -217,24 +218,14 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            player.openMenu(new ExtendedScreenHandlerFactory<>() {
-                @Override
-                public Integer getScreenOpeningData(ServerPlayer serverPlayer) {
-                    return CorneliusEntity.this.getId();
-                }
-
-                @Override
-                public Component getDisplayName() {
-                    return CorneliusEntity.this.getName();
-                }
-
-                @Override
-                public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                    return new CorneliusContainerMenu(i, inventory, CorneliusEntity.this);
-                }
-            });
+            if (player instanceof ServerPlayer sv) sv.openMenu(this);
 
             this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.5F, 1.0F);
+            return InteractionResult.SUCCESS;
+        }
+
+        if (!isTame() && player.getItemInHand(hand).is(CompanionsBlocks.COPPER_COIN.get().asItem())) {
+            tameInteraction(player);
             return InteractionResult.SUCCESS;
         }
 
@@ -319,6 +310,22 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         }
 
         return PlayState.CONTINUE;
+    }
+
+    @Override
+    public Integer getScreenOpeningData(ServerPlayer serverPlayer) {
+        return getId();
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return new CorneliusContainerMenu(i, inventory, this);
+    }
+
+    @Override
+    public @NotNull Component getDisplayName() {
+        return super.getName();
     }
 
 }
