@@ -412,7 +412,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
     @Override
     protected EntityDimensions getDefaultDimensions(Pose pPose) {
-        return getPhase() == 1 ? super.getDimensions(pPose) : EntityDimensions.scalable(1F, 2F);
+        return getPhase() == 1 ? super.getDefaultDimensions(pPose) : EntityDimensions.scalable(1F, 2F);
     }
 
     @Override
