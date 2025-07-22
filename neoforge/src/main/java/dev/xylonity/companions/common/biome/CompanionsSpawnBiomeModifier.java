@@ -4,8 +4,6 @@ import com.mojang.serialization.MapCodec;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.registry.CompanionsSpawns;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
@@ -13,8 +11,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Supplier;
 
 public class CompanionsSpawnBiomeModifier implements BiomeModifier {
 
@@ -36,7 +32,6 @@ public class CompanionsSpawnBiomeModifier implements BiomeModifier {
         return SERIALIZER.get();
     }
 
-    // 3) Constructor del codec (sin datos adicionales)
     public static MapCodec<CompanionsSpawnBiomeModifier> makeCodec() {
         return MapCodec.unit(CompanionsSpawnBiomeModifier::new);
     }
