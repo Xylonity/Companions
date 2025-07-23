@@ -35,7 +35,7 @@ public class PontiffRotatingFireRayGoal extends AbstractSacredPontiffAttackGoal 
         super.tick();
 
         if (attackTicks >= 21 && attackTicks <= 150 && attackTicks % 20 == 0) {
-            PontiffFireRingProjectile ring = CompanionsEntities.PONTIFF_FIRE_RING.get().create(pontiff.level());
+            PontiffFireRingProjectile ring = CompanionsEntities.PONTIFF_FIRE_RING.create(pontiff.level());
             if (ring != null) {
                 ring.setOwner(pontiff);
                 ring.moveTo(pontiff.getX(), pontiff.getY(), pontiff.getZ());

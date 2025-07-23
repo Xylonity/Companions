@@ -72,7 +72,7 @@ public class HolinessDoubleThrowAttackGoal extends AbstractSacredPontiffAttackGo
         Vec3 spawnPos = basePos.add(perpen.scale(side));
         Vec3 aimDir = targetPos.subtract(spawnPos).normalize();
 
-        HolinessNaginataProjectile naginata = CompanionsEntities.HOLINESS_NAGINATA.get().create(pontiff.level());
+        HolinessNaginataProjectile naginata = CompanionsEntities.HOLINESS_NAGINATA.create(pontiff.level());
         if (naginata != null) {
             naginata.setOwner(pontiff);
             naginata.setPos(spawnPos.x, spawnPos.y, spawnPos.z);

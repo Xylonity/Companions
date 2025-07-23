@@ -52,7 +52,7 @@ public class HolinessStarAttackGoal extends AbstractSacredPontiffAttackGoal {
             Vec3 spawnPos = basePos.add(perpen.scale(side));
             Vec3 vel = targetPos.subtract(spawnPos).normalize().add(perpen.scale(side * 0.3)).normalize().scale(HolinessStartProjectile.SPEED);
 
-            HolinessStartProjectile star = CompanionsEntities.HOLINESS_STAR.get().create(pontiff.level());
+            HolinessStartProjectile star = CompanionsEntities.HOLINESS_STAR.create(pontiff.level());
             if (star != null) {
                 star.setOwner(pontiff);
                 star.setTarget(target);
