@@ -23,7 +23,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -89,6 +92,8 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
     private boolean hasRegisteredBossBar = false;
 
+    private int impactAttackCounter;
+
     private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
 
     private static final Set<Integer> SHAKE_TICKS = Set.of(70, 80, 93, 104, 117, 128, 159);
@@ -99,6 +104,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.setNoMovement(true);
         this.setMaxUpStep(1f);
         this.bossInfo.setCreateWorldFog(true);
+        this.impactAttackCounter = 0;
     }
 
     @Override
@@ -118,7 +124,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.goalSelector.addGoal(1, new HolinessMeleeAttackGoal(this, 40, 100));
         this.goalSelector.addGoal(1, new HolinessStakeAttackGoal(this, 60, 140));
         this.goalSelector.addGoal(1, new HolinessDoubleThrowAttackGoal(this, 200, 700));
-        this.goalSelector.addGoal(1, new HolinessImpactAttackGoal(this, 160, 800));
+        this.goalSelector.addGoal(1, new HolinessImpactAttackGoal(this, 160, 600));
         this.goalSelector.addGoal(1, new HolinessStarAttackGoal(this, 200, 500));
 
         this.goalSelector.addGoal(2, new PontiffStrafeAroundTargetGoal(this, 0.5, 10));
@@ -171,6 +177,22 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
                 }
             }
 
+        }
+
+        System.out.println("state: " + getState());
+
+        // Impact attack camera shaking
+        if (level().isClientSide && getState() == 6 && getAttackType() == 4) {
+
+            if (impactAttackCounter == 35) {
+                for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(40))) {
+                    Companions.PROXY.shakePlayerCamera(player, 40, 0.1f, 0.1f, 0.1f, 10);
+                }
+            }
+
+            impactAttackCounter++;
+
+            if (impactAttackCounter >= 64) impactAttackCounter = 0;
         }
 
         super.tick();
