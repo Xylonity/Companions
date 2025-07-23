@@ -12,7 +12,10 @@ import dev.xylonity.companions.common.entity.summon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -20,6 +23,7 @@ import net.minecraftforge.registries.RegistryObject;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class CompanionsEntities {
 
@@ -96,6 +100,18 @@ public class CompanionsEntities {
     public static final RegistryObject<EntityType<CakeCreamTriggerProjectile>> CAKE_CREAM_TRIGGER_PROJECTILE;
     public static final RegistryObject<EntityType<FireRayBeamEntity>> FIRE_RAY_BEAM_ENTITY;
 
+    public static final RegistryObject<Item> CORNELIUS_SPAWN_EGG;
+    public static final RegistryObject<Item> TEDDY_SPAWN_EGG;
+    public static final RegistryObject<Item> WILD_ANTLION_SPAWN_EGG;
+    public static final RegistryObject<Item> BROKEN_DINAMO_SPAWN_EGG;
+    public static final RegistryObject<Item> HOSTILE_IMP_SPAWN_EGG;
+    public static final RegistryObject<Item> GOLDEN_ALLAY_SPAWN_EGG;
+    public static final RegistryObject<Item> CROISSANT_DRAGON_SPAWN_EGG;
+    public static final RegistryObject<Item> SACRED_PONTIFF_SPAWN_EGG;
+    public static final RegistryObject<Item> LIVING_CANDLE_SPAWN_EGG;
+    public static final RegistryObject<Item> ILLAGER_GOLEM_SPAWN_EGG;
+    public static final RegistryObject<Item> HOSTILE_PUPPET_GLOVE_SPAWN_EGG;
+
     static {
         CORNELIUS = register("cornelius", CorneliusEntity::new, MobCategory.CREATURE, 1f, 1f, null);
         TEDDY = register("teddy", TeddyEntity::new, MobCategory.CREATURE, 0.9f, 0.9f, null);
@@ -167,6 +183,18 @@ public class CompanionsEntities {
         GENERIC_TRIGGER_PROJECTILE = register("generic_trigger_projectile", GenericTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         CAKE_CREAM_TRIGGER_PROJECTILE = register("cake_cream_trigger_projectile", CakeCreamTriggerProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
         FIRE_RAY_BEAM_ENTITY = register("fire_ray_beam_entity", FireRayBeamEntity::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+
+        CORNELIUS_SPAWN_EGG = registerSpawnEggItem("cornelius_spawn_egg", CompanionsEntities.CORNELIUS, 0x92b475, 0x57565c);
+        TEDDY_SPAWN_EGG = registerSpawnEggItem("teddy_spawn_egg", CompanionsEntities.TEDDY, 0x765b47, 0xa475b1);
+        WILD_ANTLION_SPAWN_EGG = registerSpawnEggItem("wild_antlion_spawn_egg", CompanionsEntities.WILD_ANTLION, 0xb5ae86, 0x66563f);
+        BROKEN_DINAMO_SPAWN_EGG = registerSpawnEggItem("broken_dinamo_spawn_egg", CompanionsEntities.BROKEN_DINAMO, 0x8d7441, 0xafafaf);
+        HOSTILE_IMP_SPAWN_EGG = registerSpawnEggItem("hostile_imp_spawn_egg", CompanionsEntities.HOSTILE_IMP, 0x47353a, 0x87496e);
+        GOLDEN_ALLAY_SPAWN_EGG = registerSpawnEggItem("golden_allay_spawn_egg", CompanionsEntities.GOLDEN_ALLAY, 0xa070d8, 0xf2db6a);
+        CROISSANT_DRAGON_SPAWN_EGG = registerSpawnEggItem("croissant_dragon_spawn_egg", CompanionsEntities.CROISSANT_DRAGON, 0x8f4727, 0xe1b078);
+        SACRED_PONTIFF_SPAWN_EGG = registerSpawnEggItem("sacred_pontiff_spawn_egg", CompanionsEntities.SACRED_PONTIFF, 0x4c604f, 0x8b6f51);
+        LIVING_CANDLE_SPAWN_EGG = registerSpawnEggItem("living_candle_spawn_egg", CompanionsEntities.LIVING_CANDLE, 0xfff67c, 0xfde4ab);
+        ILLAGER_GOLEM_SPAWN_EGG = registerSpawnEggItem("illager_golem_spawn_egg", CompanionsEntities.ILLAGER_GOLEM, 0x8d7441, 0xafafaf);
+        HOSTILE_PUPPET_GLOVE_SPAWN_EGG = registerSpawnEggItem("hostile_puppet_glove_spawn_egg", CompanionsEntities.HOSTILE_PUPPET_GLOVE, 0xe7e7e7, 0x1a1a1a);
     }
 
     private static <X extends Entity> RegistryObject<EntityType<X>> register(String name, EntityType.EntityFactory<X> entity, MobCategory category, float width, float height, @Nullable List<Consumer<EntityType.Builder<X>>> properties) {
@@ -181,6 +209,12 @@ public class CompanionsEntities {
 
             return builder.build(new ResourceLocation(Companions.MOD_ID, name).toString());
         });
+    }
+
+    private static RegistryObject<Item> registerSpawnEggItem(String id, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryEggColour, int secondaryEggColour) {
+        RegistryObject<Item> item = Companions.ITEMS.register(id, () -> new ForgeSpawnEggItem(entityType, primaryEggColour, secondaryEggColour, new Item.Properties()));
+        CompanionsCreativeModeTabs.populateSpawnEgg(item);
+        return item;
     }
 
 }
