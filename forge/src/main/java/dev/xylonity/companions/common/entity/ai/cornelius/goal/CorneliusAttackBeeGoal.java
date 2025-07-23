@@ -23,6 +23,7 @@ public class CorneliusAttackBeeGoal extends AbstractCorneliusAttackGoal {
         if (cornelius.isTame()) return false;
         if (cornelius.getAttackType() != 0) return false;
         if (cornelius.getTarget() == null) return false;
+        if (cornelius.distanceToSqr(cornelius.getTarget()) >= 9) return false;
 
         if (nextUseTick < 0) {
             int cd = minCooldown + cornelius.getRandom().nextInt(maxCooldown - minCooldown + 1);
@@ -53,7 +54,7 @@ public class CorneliusAttackBeeGoal extends AbstractCorneliusAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         if (target != null) {
-            if (this.cornelius.distanceToSqr(target) <= 4) {
+            if (this.cornelius.distanceToSqr(target) <= 9) {
                 target.kill();
                 this.shouldTame = true;
             }
