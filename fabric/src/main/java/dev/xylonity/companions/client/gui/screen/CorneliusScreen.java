@@ -77,6 +77,8 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
     public CorneliusScreen(CorneliusContainerMenu container, Inventory inv, Component title) {
         super(container, inv, title);
+        this.imageHeight = 216;
+        this.imageWidth = 208;
     }
 
     private int generalMarginLeft(){
@@ -116,7 +118,7 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         super.init();
 
         btnHit = addRenderableWidget(new ImageButton(
-                        generalMarginLeft() + 80,
+                        generalMarginLeft() + 96,
                         generalMarginTop() + PLAYER_Y + 100,
                         43, 29, 0, 227, TEX_TOP, b->
         {
@@ -153,7 +155,7 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         });
 
         btnStand = addRenderableWidget(new ImageButton(
-                generalMarginLeft() + 119,
+                generalMarginLeft() + 135,
                 generalMarginTop() + PLAYER_Y + 100,
                 43,29,0,227, TEX_TOP, b-> onStand())
         {

@@ -34,13 +34,13 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
         checkContainerSize(this.entityInventory, 2);
         this.entityInventory.startOpen(playerInv.player);
 
-        this.addSlot(new MainCoinSlot(entityInventory, 0, 8, 118));
-        this.addSlot(new MainCoinSlot(entityInventory, 1, 26, 118));
-        this.addSlot(new MainCoinSlot(entityInventory, 2, 44, 118));
+        this.addSlot(new MainCoinSlot(entityInventory, 0, 24, 118));
+        this.addSlot(new MainCoinSlot(entityInventory, 1, 42, 118));
+        this.addSlot(new MainCoinSlot(entityInventory, 2, 60, 118));
 
-        this.addSlot(new CrupierCoinSlot(entityInventory, 3, 62, 7));
-        this.addSlot(new CrupierCoinSlot(entityInventory, 4, 80, 7));
-        this.addSlot(new CrupierCoinSlot(entityInventory, 5, 98, 7));
+        this.addSlot(new CrupierCoinSlot(entityInventory, 3, 78, 7));
+        this.addSlot(new CrupierCoinSlot(entityInventory, 4, 96, 7));
+        this.addSlot(new CrupierCoinSlot(entityInventory, 5, 114, 7));
 
         this.addDataSlot(new DataSlot() {
             @Override
@@ -58,13 +58,13 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
         final int PLAYER_INVENTORY_START_Y = 144;
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
-                this.addSlot(new Slot(playerInv, col + row * 9 + 9, 8 + col * 18, PLAYER_INVENTORY_START_Y + row * 18));
+                this.addSlot(new Slot(playerInv, col + row * 9 + 9, 24 + col * 18, PLAYER_INVENTORY_START_Y + row * 18));
             }
         }
 
         final int HOTBAR_START_Y = PLAYER_INVENTORY_START_Y + 58;
         for (int col = 0; col < 9; col++) {
-            this.addSlot(new Slot(playerInv, col, 8 + col * 18, HOTBAR_START_Y));
+            this.addSlot(new Slot(playerInv, col, 24 + col * 18, HOTBAR_START_Y));
         }
 
     }
