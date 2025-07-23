@@ -63,7 +63,7 @@ public class FireRayPieceProjectile extends BaseProjectile {
         float yaw = (float) (Mth.atan2(dir.z, dir.x) * Mth.RAD_TO_DEG) - 90f;
         float pitch = (float) (-Mth.atan2(dir.y, Math.sqrt(dir.x*dir.x + dir.z*dir.z)) * Mth.RAD_TO_DEG);
 
-        entityData.set(YAW,   yaw);
+        entityData.set(YAW, yaw);
         entityData.set(PITCH, pitch);
     }
 
@@ -94,7 +94,8 @@ public class FireRayPieceProjectile extends BaseProjectile {
 
             if (!entities.isEmpty()) {
                 LivingEntity victim = entities.get(0);
-                victim.hurt(this.damageSources().indirectMagic(this, getOwner()), 0.1F);
+                victim.hurt(this.damageSources().indirectMagic(this, getOwner()), 5f);
+                victim.setRemainingFireTicks(level().random.nextInt(1, 8) * 20);
             }
         }
 
