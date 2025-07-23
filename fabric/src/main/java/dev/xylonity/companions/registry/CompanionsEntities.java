@@ -81,6 +81,7 @@ public class CompanionsEntities {
     public static final EntityType<FrogLevitateProjectile> FROG_LEVITATE_PROJECTILE;
     public static final EntityType<FrogEggProjectile> FROG_EGG_PROJECTILE;
     public static final EntityType<AntlionSandProjectile> ANTLION_SAND_PROJECTILE;
+    public static final EntityType<FireGeiserProjectile> FIRE_GEISER_PROJECTILE;
 
     public static final EntityType<ScrollProjectile> SCROLL;
     public static final EntityType<RedStarExplosion> RED_STAR_EXPLOSION;
@@ -152,6 +153,7 @@ public class CompanionsEntities {
         FROG_LEVITATE_PROJECTILE = register("frog_levitate_projectile", FrogLevitateProjectile::new, MobCategory.MISC, 0.4f, 0.4f, List.of(EntityType.Builder::noSummon, e -> e.clientTrackingRange(8)));
         FROG_EGG_PROJECTILE = register("frog_egg_projectile", FrogEggProjectile::new, MobCategory.MISC, 0.4f, 0.4f, List.of(EntityType.Builder::noSummon, e -> e.clientTrackingRange(8)));
         ANTLION_SAND_PROJECTILE = register("antlion_sand_projectile", AntlionSandProjectile::new, MobCategory.MISC, 0.4f, 0.4f, List.of(EntityType.Builder::noSummon, e -> e.clientTrackingRange(8)));
+        FIRE_GEISER_PROJECTILE = register("fire_geiser_projectile", FireGeiserProjectile::new, MobCategory.MISC, 1, 0.5f, List.of(EntityType.Builder::noSummon, e -> e.clientTrackingRange(8)));
 
         SCROLL = register("scroll", ScrollProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
         RESPAWN_TOTEM_RING_PROJECTILE = register("respawn_totem_ring_projectile", RespawnTotemRingProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
