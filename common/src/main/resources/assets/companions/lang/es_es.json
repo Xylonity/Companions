@@ -9,9 +9,9 @@
   "main_action_summon.companions.client_message.following_player": "%1$s te está siguiendo",
   "main_action_summon.companions.client_message.following_companion": "%1$s ahora sigue a %2$s.",
 
-  "broken_dinamo.companions.client_message.requires_wood": "Necesitas %1$d de madera para reparar.",
-  "broken_dinamo.companions.client_message.wood_will_get_consumed": "%1$d de madera se consumirán. Interactúa de nuevo para confirmar.",
-  "broken_dinamo.companions.client_message.wood_consumed": "Has dado %1$d de madera. Ahora se necesita un homúnculo.",
+  "broken_dinamo.companions.client_message.requires_wood": "Necesitas %1$d de madera de roble para reparar.",
+  "broken_dinamo.companions.client_message.wood_will_get_consumed": "%1$d de madera de roble se consumirán. Interactúa de nuevo para confirmar.",
+  "broken_dinamo.companions.client_message.wood_consumed": "Has dado %1$d de madera de roble. Ahora se necesita un homúnculo.",
   "broken_dinamo.companions.client_message.requires_homunculus": "Necesitas un homúnculo para reparar.",
   "broken_dinamo.companions.client_message.homunculus_consumed": "Has contribuido con un homúnculo. Interactúa con una llave inglesa para proceder.",
   "broken_dinamo.companions.client_message.requires_iron": "Necesitas %1$d lingotes de hierro para continuar la reparación.",
