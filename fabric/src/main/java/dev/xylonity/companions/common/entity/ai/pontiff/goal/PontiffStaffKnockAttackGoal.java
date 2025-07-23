@@ -45,7 +45,7 @@ public class PontiffStaffKnockAttackGoal extends AbstractSacredPontiffAttackGoal
         }
 
         Vec3 spawnPos = pontiff.position().add(forwardXZ).add(new Vec3(forwardXZ.z, 0, -forwardXZ.x));
-        PontiffFireRingProjectile ring = CompanionsEntities.PONTIFF_FIRE_RING.create(pontiff.level());
+        PontiffFireRingProjectile ring = CompanionsEntities.PONTIFF_FIRE_RING.get().create(pontiff.level());
         if (ring != null) {
             ring.setOwner(pontiff);
 
@@ -75,8 +75,8 @@ public class PontiffStaffKnockAttackGoal extends AbstractSacredPontiffAttackGoal
     }
 
     @Override
-    protected int phase() {
-        return 1;
+    protected int attackState() {
+        return 2;
     }
 
 }

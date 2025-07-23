@@ -31,7 +31,7 @@ public class HolinessStakeAttackGoal extends AbstractSacredPontiffAttackGoal {
 
     @Override
     public boolean canUse() {
-        return super.canUse() && pontiff.getTarget() != null && pontiff.distanceTo(pontiff.getTarget()) < 8 && isEntityInFront(pontiff, pontiff.getTarget(), 200);
+        return super.canUse() && pontiff.getTarget() != null && pontiff.distanceTo(pontiff.getTarget()) < 8 && isEntityInFront(pontiff, pontiff.getTarget(), 160);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class HolinessStakeAttackGoal extends AbstractSacredPontiffAttackGoal {
         for (Entity e : target.level().getEntitiesOfClass(Entity.class,
                 new AABB(new BlockPos((int) target.getX(), (int) target.getY(), (int) target.getZ())).inflate(3),
                 e -> !(e instanceof HostileEntity) )) {
-            if (e instanceof LivingEntity livingEntity && pontiff.hasLineOfSight(livingEntity) && isEntityInFront(pontiff, livingEntity, 90)) {
+            if (e instanceof LivingEntity livingEntity && pontiff.hasLineOfSight(livingEntity) && isEntityInFront(pontiff, livingEntity, 100)) {
                 pontiff.doHurtTarget(livingEntity);
                 livingEntity.knockback(1f, pontiff.getX() - target.getX(), pontiff.getZ() - target.getZ());
             }
@@ -66,8 +66,8 @@ public class HolinessStakeAttackGoal extends AbstractSacredPontiffAttackGoal {
     }
 
     @Override
-    protected int phase() {
-        return 2;
+    protected int attackState() {
+        return 6;
     }
 
 }
