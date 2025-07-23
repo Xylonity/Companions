@@ -132,8 +132,8 @@ public final class SoulFurnaceItemRecipeCategory implements IRecipeCategory<Soul
 
         Matrix3f normalMat = pose.last().normal();
 
-        Vector3f up = new Vector3f(-1, 10, -1);
-        Vector3f front = new Vector3f(-1, 3, -1);
+        Vector3f up = new Vector3f(0, 1, 0);
+        Vector3f front = new Vector3f(0, 0, -1);
 
         normalMat.transform(up).normalize();
         normalMat.transform(front).normalize();

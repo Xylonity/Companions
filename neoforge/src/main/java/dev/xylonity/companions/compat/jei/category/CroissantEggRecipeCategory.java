@@ -150,8 +150,8 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
 
         Matrix3f normalMat = pose.last().normal();
 
-        Vector3f up = new Vector3f(-1, 10, -1);
-        Vector3f front = new Vector3f(-1, 3, -1);
+        Vector3f up = new Vector3f(1, 0, 0);
+        Vector3f front = new Vector3f(0, 1, 0);
 
         normalMat.transform(up).normalize();
         normalMat.transform(front).normalize();
@@ -178,8 +178,8 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
 
         Matrix3f normalMat2 = pose.last().normal();
 
-        Vector3f up2 = new Vector3f(-1, 10, -1);
-        Vector3f front2 = new Vector3f(-1, 3, -1);
+        Vector3f up2 = new Vector3f(1, 0, 0);
+        Vector3f front2 = new Vector3f(0, 1, 0);
 
         normalMat2.transform(up2).normalize();
         normalMat2.transform(front2).normalize();

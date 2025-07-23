@@ -25,6 +25,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3f;
+import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class AntlionRecipeCategory implements IRecipeCategory<HourglassRecipe> {
@@ -128,6 +130,16 @@ public class AntlionRecipeCategory implements IRecipeCategory<HourglassRecipe> {
             pose.mulPose(Axis.XP.rotationDegrees(-25f));
             pose.mulPose(Axis.YP.rotationDegrees(45f));
             pose.mulPose(Axis.ZP.rotationDegrees(180f));
+
+            Matrix3f normalMat = pose.last().normal();
+
+            Vector3f up = new Vector3f(1, 0, 0);
+            Vector3f front = new Vector3f(0, 1, 0);
+
+            normalMat.transform(up).normalize();
+            normalMat.transform(front).normalize();
+
+            RenderSystem.setupGui3DDiffuseLighting(up, front);
 
             entityRenderer.render(entity, 0, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
 
