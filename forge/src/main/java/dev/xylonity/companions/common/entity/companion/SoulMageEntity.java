@@ -220,23 +220,25 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
 
         if (level().isClientSide) return InteractionResult.SUCCESS;
 
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            NetworkHooks.openScreen(
-                    (ServerPlayer) player, new MenuProvider() {
-                        @Override
-                        public @NotNull Component getDisplayName() {
-                            return SoulMageEntity.this.getName();
-                        }
+        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!level().isClientSide) {
+                NetworkHooks.openScreen(
+                        (ServerPlayer) player, new MenuProvider() {
+                            @Override
+                            public @NotNull Component getDisplayName() {
+                                return SoulMageEntity.this.getName();
+                            }
 
-                        @Override
-                        public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
-                            return new SoulMageContainerMenu(id, playerInv, SoulMageEntity.this);
-                        }
-                    },
-                    buf -> buf.writeInt(this.getId())
-            );
+                            @Override
+                            public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
+                                return new SoulMageContainerMenu(id, playerInv, SoulMageEntity.this);
+                            }
+                        },
+                        buf -> buf.writeInt(this.getId())
+                );
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+            }
 
             return InteractionResult.SUCCESS;
         }

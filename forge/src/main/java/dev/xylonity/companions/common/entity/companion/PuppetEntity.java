@@ -261,22 +261,26 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
 
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            NetworkHooks.openScreen(
-                    (ServerPlayer) player, new MenuProvider() {
-                        @Override
-                        public @NotNull Component getDisplayName() {
-                            return PuppetEntity.this.getName();
-                        }
+        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!level().isClientSide) {
+                NetworkHooks.openScreen(
+                        (ServerPlayer) player, new MenuProvider() {
+                            @Override
+                            public @NotNull Component getDisplayName() {
+                                return PuppetEntity.this.getName();
+                            }
 
-                        @Override
-                        public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
-                            return new PuppetContainerMenu(id, playerInv, PuppetEntity.this);
-                        }
-                    },
-                    buf -> buf.writeInt(this.getId())
-            );
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+                            @Override
+                            public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
+                                return new PuppetContainerMenu(id, playerInv, PuppetEntity.this);
+                            }
+                        },
+                        buf -> buf.writeInt(this.getId())
+                );
+
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+            }
+
             return InteractionResult.SUCCESS;
         }
 

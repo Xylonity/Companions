@@ -222,28 +222,31 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.openMenu(new ExtendedScreenHandlerFactory() {
-                        @Override
-                        public void writeScreenOpeningData(ServerPlayer p, FriendlyByteBuf buf) {
-                            buf.writeInt(CorneliusEntity.this.getId());
-                        }
+        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!level().isClientSide) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.openMenu(new ExtendedScreenHandlerFactory() {
+                            @Override
+                            public void writeScreenOpeningData(ServerPlayer p, FriendlyByteBuf buf) {
+                                buf.writeInt(CorneliusEntity.this.getId());
+                            }
 
-                        @Override
-                        public @NotNull Component getDisplayName() {
-                            return CorneliusEntity.this.getName();
-                        }
+                            @Override
+                            public @NotNull Component getDisplayName() {
+                                return CorneliusEntity.this.getName();
+                            }
 
-                        @Override
-                        public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                            return new CorneliusContainerMenu(i, inventory, CorneliusEntity.this);
+                            @Override
+                            public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                                return new CorneliusContainerMenu(i, inventory, CorneliusEntity.this);
+                            }
                         }
-                    }
-                );
+                    );
+                }
+
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
             }
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
             return InteractionResult.SUCCESS;
         }
 

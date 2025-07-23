@@ -221,26 +221,28 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
 
         if (level().isClientSide) return InteractionResult.SUCCESS;
 
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            player.openMenu(new ExtendedScreenHandlerFactory() {
-                    @Override
-                    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                        return new SoulMageContainerMenu(i, inventory, SoulMageEntity.this);
-                    }
+        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!level().isClientSide) {
+                player.openMenu(new ExtendedScreenHandlerFactory() {
+                        @Override
+                        public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                            return new SoulMageContainerMenu(i, inventory, SoulMageEntity.this);
+                        }
 
-                    @Override
-                    public Component getDisplayName() {
-                        return SoulMageEntity.this.getName();
-                    }
+                        @Override
+                        public Component getDisplayName() {
+                            return SoulMageEntity.this.getName();
+                        }
 
-                    @Override
-                    public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf buf) {
-                        buf.writeInt(SoulMageEntity.this.getId());
+                        @Override
+                        public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf buf) {
+                            buf.writeInt(SoulMageEntity.this.getId());
+                        }
                     }
-                }
-            );
+                );
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+            }
 
             return InteractionResult.SUCCESS;
         }
