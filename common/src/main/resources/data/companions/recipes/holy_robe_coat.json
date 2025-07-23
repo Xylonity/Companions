@@ -1,13 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "c c",
-    " c ",
-    " c "
+    "cxc"
   ],
   "key": {
     "c": {
       "item": "companions:old_cloth"
+    },
+    "x": {
+      "item": "minecraft:netherite_chestplate"
     }
   },
   "result": {

@@ -1,12 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " c ",
-    "ccc"
+    "cxc"
   ],
   "key": {
     "c": {
       "item": "companions:old_cloth"
+    },
+    "x": {
+      "item": "minecraft:netherite_leggings"
     }
   },
   "result": {
