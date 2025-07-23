@@ -451,6 +451,38 @@ public final class CompanionsConfig {
     public static double PUPPET_GLOVE_DAMAGE = 6.5;
 
     /**
+     * SACRED PONTIFF
+     */
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Max life of the Sacred Pontiff",
+            min = 0d, max = 5000d
+    )
+    public static double SACRED_PONTIFF_MAX_LIFE = 225d;
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Damage dealt by the Sacred Pontiff",
+            min = 0.0, max = 500.0
+    )
+    public static double SACRED_PONTIFF_DAMAGE = 7.0;
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Max life of His Holiness",
+            min = 0d, max = 5000d
+    )
+    public static double HIS_HOLINESS_MAX_LIFE = 350d;
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Damage dealt by His Holiness",
+            min = 0.0, max = 500.0
+    )
+    public static double HIS_HOLINESS_DAMAGE = 9.0;
+
+    /**
      * MAGIC BOOKS
      */
 

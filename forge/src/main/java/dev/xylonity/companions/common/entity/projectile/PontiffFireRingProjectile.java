@@ -36,7 +36,7 @@ public class PontiffFireRingProjectile extends BaseProjectile implements GeoEnti
                     px + outer, py + 1.0, pz + outer
             );
 
-            for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, box, e -> e.isAlive() && !Util.areEntitiesLinked(e, this))) {
+            for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, box, e -> e.isAlive() && !Util.areEntitiesLinked(e, getOwner()))) {
                 double dx = e.getX() - px;
                 double dz = e.getZ() - pz;
                 double dist = Math.sqrt(dx * dx + dz * dz);

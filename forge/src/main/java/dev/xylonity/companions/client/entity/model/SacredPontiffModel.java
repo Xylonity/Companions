@@ -18,7 +18,7 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
 
     @Override
     public ResourceLocation getModelResource(SacredPontiffEntity animatable) {
-        if (animatable.getPhase() == 2) {
+        if (animatable.getState() >= 5) {
             return new ResourceLocation(CompanionsCommon.MOD_ID, "geo/his_holiness.geo.json");
         }
 
@@ -27,7 +27,7 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
 
     @Override
     public ResourceLocation getTextureResource(SacredPontiffEntity animatable) {
-        if (animatable.getPhase() == 2) {
+        if (animatable.getState() >= 5) {
             if (animatable.isDeadOrDying()) {
                 int frames = 21;
                 int perTick = 10;
@@ -44,7 +44,7 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(SacredPontiffEntity animatable) {
-        if (animatable.getPhase() == 2) {
+        if (animatable.getState() >= 5) {
             return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/his_holiness.animation.json");
         }
 

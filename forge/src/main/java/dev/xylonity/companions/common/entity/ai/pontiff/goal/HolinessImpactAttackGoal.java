@@ -134,8 +134,8 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
     }
 
     @Override
-    protected int phase() {
-        return 2;
+    protected int attackState() {
+        return 6;
     }
 
 }
