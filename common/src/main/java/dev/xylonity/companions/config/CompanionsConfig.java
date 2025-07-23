@@ -638,7 +638,7 @@ public final class CompanionsConfig {
             category = "Armoury",
             comment = "Netherite Dagger stats: [miningLvl, durability, miningSpeed, baseDmg, enchantability]. Don't use negative values and stick to the format."
     )
-    public static String NETHERITE_DAGGER_STATS = "4, 1785, 6, 1, 15";
+    public static String NETHERITE_DAGGER_STATS = "4, 1300, 6, 1, 15";
 
     @ConfigEntry(
             category = "Armoury",
