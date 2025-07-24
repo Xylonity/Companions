@@ -777,13 +777,13 @@ public final class CompanionsConfig {
             category = "Spawn Rates",
             comment = "Golden allay spawnrate: [weight, minAmount, maxAmount, biomes and tags... (as many as you want)]"
     )
-    public static String GOLDEN_ALLAY_SPAWN = "50, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
+    public static String GOLDEN_ALLAY_SPAWN = "20, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
 
     @ConfigEntry(
             category = "Spawn Rates",
             comment = "Cornelius spawnrate: [weight, minAmount, maxAmount, biomes and tags... (as many as you want)]"
     )
-    public static String CORNELIUS_SPAWN = "40, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
+    public static String CORNELIUS_SPAWN = "15, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
 
     @ConfigEntry(
             category = "Spawn Rates",
