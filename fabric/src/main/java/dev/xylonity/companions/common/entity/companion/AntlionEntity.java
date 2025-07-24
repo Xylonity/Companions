@@ -564,6 +564,11 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         else throttle = Mth.lerp(0.20F, throttle, 0F);
 
         float speed = ((float) getAttributeValue(Attributes.MOVEMENT_SPEED)) * 1.1f * throttle;
+
+        if (onGround()) {
+            speed *= 0.05f;
+        }
+
         float speedMag = Math.abs(speed);
 
         Vec3 aim = rider.getLookAngle().normalize();

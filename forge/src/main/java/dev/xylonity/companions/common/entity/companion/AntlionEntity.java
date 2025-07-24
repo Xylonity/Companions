@@ -98,9 +98,10 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     private static final int ANIMATION_ADULT_HIT_GROUND_TICKS = 7;
     private static final int ANIMATION_ADULT_UNSTUCK_TICKS = 35;
     private static final int ANIMATION_ADULT_TURN_TICKS = 10;
-    private static final int MAX_FALL_TICKS = 7;
+
+    private static final int MAX_FALL_TICKS = 8;
     private static final int NO_TARGET_MAX_TICKS = 20;
-    private static final float MIN_SPEED_FOR_DESCENT = 0.4f;
+    private static final float MIN_SPEED_FOR_DESCENT = 0.2f;
     private static final float MAX_SPEED_FOR_DESCENT = 1.01f;
 
     private Vec3 vel = Vec3.ZERO;
@@ -564,6 +565,11 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         else throttle = Mth.lerp(0.20F, throttle, 0F);
 
         float speed = ((float) getAttributeValue(Attributes.MOVEMENT_SPEED)) * 1.1f * throttle;
+
+        if (onGround()) {
+            speed *= 0.05f;
+        }
+
         float speedMag = Math.abs(speed);
 
         Vec3 aim = rider.getLookAngle().normalize();
