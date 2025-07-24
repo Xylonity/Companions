@@ -179,8 +179,6 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
         }
 
-        System.out.println("state: " + getState());
-
         // Impact attack camera shaking
         if (level().isClientSide && getState() == 6 && getAttackType() == 4) {
 
