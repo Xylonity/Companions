@@ -261,13 +261,13 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         playSound(CompanionsSounds.PONTIFF_STEP.get(), 0.55f, 1f);
     }
 
-    public static AttributeSupplier setAttributes() {
+    public static AttributeSupplier.Builder setAttributes() {
         return Monster.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, CompanionsConfig.SACRED_PONTIFF_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.SACRED_PONTIFF_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.45f)
-                .add(Attributes.FOLLOW_RANGE, 35.0).build();
+                .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
     @Override

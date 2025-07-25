@@ -37,6 +37,11 @@ public final class CompanionsServerEvents {
         FabricDefaultAttributeRegistry.register(CompanionsEntities.SACRED_PONTIFF, SacredPontiffEntity.setAttributes());
         FabricDefaultAttributeRegistry.register(CompanionsEntities.WILD_ANTLION, WildAntlionEntity.setAttributes());
         FabricDefaultAttributeRegistry.register(CompanionsEntities.HOSTILE_IMP, HostileImpEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(CompanionsEntities.FIREWORK_TOAD, FireworkToadEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(CompanionsEntities.NETHER_BULLFROG, NetherBullfrogEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(CompanionsEntities.ENDER_FROG, EnderFrogEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(CompanionsEntities.EMBER_POLE, EmberPoleEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(CompanionsEntities.BUBBLE_FROG, BubbleFrogEntity.setAttributes());
 
         // Demon flesh drop fallback when the destination entity doesn't have a loot table json defined
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
