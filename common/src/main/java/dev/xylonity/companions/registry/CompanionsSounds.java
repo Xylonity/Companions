@@ -76,6 +76,7 @@ public class CompanionsSounds {
     public static final Supplier<SoundEvent> HOLINESS_STAB = registerSound("holiness_stab", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "holiness_stab")));
     public static final Supplier<SoundEvent> HOLINESS_STAKE = registerSound("holiness_stake", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "holiness_stake")));
     public static final Supplier<SoundEvent> HOLINESS_STAR_SPAWN = registerSound("holiness_star_spawn", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "holiness_star_spawn")));
+    public static final Supplier<SoundEvent> HOLINESS_APPEAR = registerSound("holiness_appear", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "holiness_appear")));
     public static final Supplier<SoundEvent> PONTIFF_ACTIVATE = registerSound("pontiff_activate", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "pontiff_activate")));
     public static final Supplier<SoundEvent> PONTIFF_AREA_ATTACK = registerSound("pontiff_area_attack", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "pontiff_area_attack")));
     public static final Supplier<SoundEvent> PONTIFF_FRONT_ATTACK = registerSound("pontiff_front_attack", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "pontiff_front_attack")));
@@ -83,6 +84,7 @@ public class CompanionsSounds {
     public static final Supplier<SoundEvent> PONTIFF_HURT = registerSound("pontiff_ground_hurt", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "pontiff_ground_hurt")));
     public static final Supplier<SoundEvent> PONTIFF_IDLE = registerSound("pontiff_ground_idle", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "pontiff_ground_idle")));
     public static final Supplier<SoundEvent> PONTIFF_STEP = registerSound("pontiff_step", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "pontiff_step")));
+    public static final Supplier<SoundEvent> PONTIFF_DESPAWN = registerSound("pontiff_despawn", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "pontiff_despawn")));
 
     public static final Supplier<SoundEvent> CROISSANT_DRAGON_BREATH = registerSound("croissant_dragon_breath", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "croissant_dragon_breath")));
     public static final Supplier<SoundEvent> CROISSANT_DRAGON_CREAM_SPLAT = registerSound("croissant_dragon_cream_splat", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CompanionsCommon.MOD_ID, "croissant_dragon_cream_splat")));

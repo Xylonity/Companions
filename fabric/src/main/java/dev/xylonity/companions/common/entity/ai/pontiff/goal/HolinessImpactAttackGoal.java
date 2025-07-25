@@ -31,7 +31,6 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
         super.start();
         pontiff.setNoMovement(true);
         pontiff.setShouldLookAtTarget(false);
-        pontiff.playSound(CompanionsSounds.HOLINESS_HIT_GROUND.get());
     }
 
     @Override

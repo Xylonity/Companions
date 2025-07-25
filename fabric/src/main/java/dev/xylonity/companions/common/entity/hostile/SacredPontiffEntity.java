@@ -92,7 +92,9 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
 
     private boolean hasRegisteredBossBar = false;
 
-    private int impactAttackCounter;
+    private int attackCounter;
+    private int lastAttackType;
+    private int transformationCounter;
 
     private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
 
@@ -104,7 +106,9 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         this.setNoMovement(true);
         this.setMaxUpStep(1f);
         this.bossInfo.setCreateWorldFog(true);
-        this.impactAttackCounter = 0;
+        this.attackCounter = 0;
+        this.lastAttackType = 0;
+        this.transformationCounter = 0;
     }
 
     @Override
@@ -169,33 +173,77 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         if (getTicksFrozen() > 0) setTicksFrozen(0);
         if (hasEffect(MobEffects.LEVITATION)) removeEffect(MobEffects.LEVITATION);
 
-        // camera shaking when the pontiff punches its chest
-        if (level().isClientSide && getState() == 5) {
-            if (SHAKE_TICKS.contains(getStateCounter())) {
-                for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                    Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+        // phase 1 transformation
+        if (getState() >= 3 && getState() <= 5) {
+            if (getState() == 3) {
+                if (level().isClientSide && transformationCounter == 130) {
+                    for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                        if (level().isClientSide) {
+                            Companions.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
+                        }
+                    }
+                }
+                else if (!level().isClientSide && transformationCounter == 120) {
+                    playSound(CompanionsSounds.PONTIFF_DESPAWN.get(), 0.5f, 1f);
+                }
+
+            }
+
+            if (getState() == 5) {
+                if (!level().isClientSide && transformationCounter == 15) {
+                    playSound(CompanionsSounds.HOLINESS_APPEAR.get(), 0.5f, 1f);
+                }
+
+            }
+
+            transformationCounter++;
+        }
+
+        // Impact attack camera shaking
+        if (getState() >= 5) {
+            if (getAttackType() == 4) {
+                if (level().isClientSide && attackCounter == 35) {
+                    for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                        if (level().isClientSide) {
+                            Companions.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
+                        }
+                    }
+                } else if (!level().isClientSide && attackCounter == 35) {
+                    playSound(CompanionsSounds.HOLINESS_HIT_GROUND.get(), 14f, 1f);
                 }
             }
 
         }
 
-        // Impact attack camera shaking
-        if (level().isClientSide && getState() == 6 && getAttackType() == 4) {
-
-            if (impactAttackCounter == 35) {
-                for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(40))) {
-                    Companions.PROXY.shakePlayerCamera(player, 40, 0.1f, 0.1f, 0.1f, 10);
+        // camera shaking when the pontiff punches its chest
+        if (getState() == 5) {
+            if (SHAKE_TICKS.contains(getStateCounter())) {
+                for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                    if (level().isClientSide) {
+                        Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+                    } else {
+                        playSound(CompanionsSounds.HOLINESS_HIT_CHEST.get(), 2f, 1f);
+                    }
                 }
             }
 
-            impactAttackCounter++;
-
-            if (impactAttackCounter >= 64) impactAttackCounter = 0;
         }
 
         super.tick();
 
         if (!level().isClientSide) stateMachine();
+
+        // global attack counter for both server and client
+        if (getAttackType() != 0) {
+            if (getAttackType() != lastAttackType) {
+                lastAttackType = getAttackType();
+                attackCounter = 0;
+            }
+
+            attackCounter++;
+        } else {
+            attackCounter = 0;
+        }
 
     }
 
@@ -243,7 +291,6 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         }
 
         if (getStateCounter() != -1 && getState() != 0) setStateCounter(getStateCounter() + 1);
-
     }
 
     @Override
@@ -316,6 +363,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     public void cycleState() {
         this.entityData.set(STATE, getState() + 1);
         this.setStateCounter(-1); // resets state counter when the state is cycled
+        transformationCounter = 0;
     }
 
     public void setState(int state) {
