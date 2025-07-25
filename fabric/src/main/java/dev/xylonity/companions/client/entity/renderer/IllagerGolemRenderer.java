@@ -18,12 +18,14 @@ import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> {
 
     public IllagerGolemRenderer(EntityRendererProvider.Context renderManager, int totalFrames, int ticksPerFrame) {
         super(renderManager, new IllagerGolemModel());
+        addRenderLayer(new AutoGlowingGeoLayer<>(this));
         addRenderLayer(new ElectricConnectionLayer(this,
                 new ResourceLocation(Companions.MOD_ID, "textures/misc/illager_golem_electric_arch.png"),
                 totalFrames,

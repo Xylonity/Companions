@@ -4,11 +4,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.client.projectile.model.BloodSlashModel;
 import dev.xylonity.companions.common.entity.projectile.BloodSlashProjectile;
+import dev.xylonity.companions.common.entity.projectile.RespawnTotemRingProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class BloodSlashRenderer extends GeoEntityRenderer<BloodSlashProjectile> {
@@ -34,4 +38,8 @@ public class BloodSlashRenderer extends GeoEntityRenderer<BloodSlashProjectile> 
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
+    @Override
+    public RenderType getRenderType(BloodSlashProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
+    }
 }

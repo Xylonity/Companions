@@ -10,11 +10,13 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 public class SacredPontiffRenderer extends GeoEntityRenderer<SacredPontiffEntity> {
 
     public SacredPontiffRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SacredPontiffModel());
+        addRenderLayer(new AutoGlowingGeoLayer<>(this));
         this.shadowRadius = 2f;
     }
 

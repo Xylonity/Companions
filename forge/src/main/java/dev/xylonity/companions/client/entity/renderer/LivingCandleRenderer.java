@@ -7,11 +7,13 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 public class LivingCandleRenderer extends GeoEntityRenderer<LivingCandleEntity> {
 
     public LivingCandleRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new LivingCandleModel());
+        addRenderLayer(new AutoGlowingGeoLayer<>(this));
         this.shadowRadius = 0.3f;
     }
 
