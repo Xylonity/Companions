@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.ShadeEntity;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -10,6 +11,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -123,6 +126,12 @@ public class ShadeMawAltarBlockEntity extends AbstractShadeAltarBlockEntity {
 
             if (isBloodUpgradeActive()) {
                 entity.setIsBlood(true);
+
+                AttributeInstance maxHealth = entity.getAttribute(Attributes.MAX_HEALTH);
+                if (maxHealth != null) maxHealth.setBaseValue(maxHealth.getBaseValue() * CompanionsConfig.SHADOW_MAW_BLOOD_MULTIPLIER);
+
+                AttributeInstance dmg = entity.getAttribute(Attributes.ATTACK_DAMAGE);
+                if (dmg != null) dmg.setBaseValue(dmg.getBaseValue() * CompanionsConfig.SHADOW_MAW_BLOOD_MULTIPLIER);
             }
 
             double dx = pPlayer.getX() - px;

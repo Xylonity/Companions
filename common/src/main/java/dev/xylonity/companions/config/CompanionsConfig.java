@@ -305,6 +305,13 @@ public final class CompanionsConfig {
     )
     public static double SHADOW_SWORD_DAMAGE = 8.0;
 
+    @ConfigEntry(
+            category = "Shadow Sword",
+            comment = "Shadow Sword stats multiplier on its blood state. For example, if set to 1.2, a default damage of 10 will be 12 when the blood upgrade is active. This is only applied to Health and Attack Damage attributes.",
+            min = 0.0, max = 10.0
+    )
+    public static double SHADOW_SWORD_BLOOD_MULTIPLIER = 1.2;
+
     /**
      * SHADE MAW
      */
@@ -330,6 +337,13 @@ public final class CompanionsConfig {
             min = 0.0, max = 500.0
     )
     public static double SHADOW_MAW_DAMAGE = 6.0;
+
+    @ConfigEntry(
+            category = "Shadow Maw",
+            comment = "Shadow Maw stats multiplier on its blood state. For example, if set to 1.2, a default damage of 10 will be 12 when the blood upgrade is active. This is only applied to Health and Attack Damage attributes.",
+            min = 0.0, max = 10.0
+    )
+    public static double SHADOW_MAW_BLOOD_MULTIPLIER = 1.2;
 
     /**
      * MINION
