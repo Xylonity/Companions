@@ -1,0 +1,17 @@
+{
+  "structures": [
+    {
+      "structure": "companions:companions_factory",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 168272323,
+
+    "spacing": 80,
+
+    "separation": 10,
+
+    "type": "minecraft:random_spread"
+  }
+}
