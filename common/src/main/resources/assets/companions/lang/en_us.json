@@ -16,9 +16,9 @@
   "broken_dinamo.companions.client_message.homunculus_consumed": "You have contributed a Homunculus. Interact with a wrench to proceed.",
   "broken_dinamo.companions.client_message.requires_iron": "You need %1$d iron ingots to continue the repair.",
   "broken_dinamo.companions.client_message.iron_will_get_consumed": "%1$d iron ingots will be consumed. Interact again to confirm.",
-  "broken_dinamo.companions.client_message.iron_consumed": "You have provided %1$d iron ingots. A Tesla Receiver is now required.",
-  "broken_dinamo.companions.client_message.requires_tesla_coil": "You need a Tesla Receiver to complete the repair.",
-  "broken_dinamo.companions.client_message.tesla_coil_consumed": "You have supplied a Tesla Receiver. Interact with a wrench to proceed.",
+  "broken_dinamo.companions.client_message.iron_consumed": "You have provided %1$d iron ingots. A Tesla Coil is now required.",
+  "broken_dinamo.companions.client_message.requires_tesla_coil": "You need a Tesla Coil to complete the repair.",
+  "broken_dinamo.companions.client_message.tesla_coil_consumed": "You have supplied a Tesla Coil. Interact with a wrench to proceed.",
   "broken_dinamo.companions.client_message.requires_wrench": "You need a Wrench repair the entity.",
 
   "dinamo.companions.client_message.no_attack": "Dectivating attack mode",
