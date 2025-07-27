@@ -2,7 +2,9 @@ package dev.xylonity.companions.common.entity.ai.pontiff.goal;
 
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
+import dev.xylonity.companions.common.entity.projectile.PontiffFireRingProjectile;
 import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
+import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.knightlib.api.TickScheduler;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,6 +28,21 @@ public class PontiffRotatingFireRayGoal extends AbstractSacredPontiffAttackGoal 
     public void stop() {
         super.stop();
         pontiff.setNoMovement(false);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (attackTicks >= 21 && attackTicks <= 150 && attackTicks % 20 == 0) {
+            PontiffFireRingProjectile ring = CompanionsEntities.PONTIFF_FIRE_RING.create(pontiff.level());
+            if (ring != null) {
+                ring.setOwner(pontiff);
+                ring.moveTo(pontiff.getX(), pontiff.getY(), pontiff.getZ());
+                pontiff.level().addFreshEntity(ring);
+            }
+        }
+
     }
 
     private void doAttack() {
@@ -57,8 +74,8 @@ public class PontiffRotatingFireRayGoal extends AbstractSacredPontiffAttackGoal 
     }
 
     @Override
-    protected int phase() {
-        return 1;
+    protected int attackState() {
+        return 2;
     }
 
 }

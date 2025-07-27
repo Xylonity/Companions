@@ -2,6 +2,7 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.client.projectile.model.BloodTornadoModel;
+import dev.xylonity.companions.common.entity.projectile.BloodSlashProjectile;
 import dev.xylonity.companions.common.entity.projectile.BloodTornadoProjectile;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,7 +21,7 @@ public class BloodTornadoRenderer extends GeoEntityRenderer<BloodTornadoProjecti
 
     @Override
     public RenderType getRenderType(BloodTornadoProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
     }
 
     @Override
@@ -28,5 +29,4 @@ public class BloodTornadoRenderer extends GeoEntityRenderer<BloodTornadoProjecti
         poseStack.scale(1.25f,1.25f,1.25f);
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, entity.isInWall() ? LightTexture.FULL_SKY : packedLight);
     }
-
 }

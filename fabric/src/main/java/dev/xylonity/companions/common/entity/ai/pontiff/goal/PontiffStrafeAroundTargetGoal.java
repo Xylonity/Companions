@@ -27,7 +27,7 @@ public class PontiffStrafeAroundTargetGoal extends Goal {
     public boolean canUse() {
         if (pontiff.getTarget() == null) return false;
         if (pontiff.getAttackType() != 0) return false;
-        if (pontiff.getActivationPhase() != 2) return false;
+        if (!pontiff.shouldSearchTarget()) return false;
         return true;
     }
 

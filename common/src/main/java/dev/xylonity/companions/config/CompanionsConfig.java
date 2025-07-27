@@ -305,6 +305,13 @@ public final class CompanionsConfig {
     )
     public static double SHADOW_SWORD_DAMAGE = 8.0;
 
+    @ConfigEntry(
+            category = "Shadow Sword",
+            comment = "Shadow Sword stats multiplier on its blood state. For example, if set to 1.2, a default damage of 10 will be 12 when the blood upgrade is active. This is only applied to Health and Attack Damage attributes.",
+            min = 0.0, max = 10.0
+    )
+    public static double SHADOW_SWORD_BLOOD_MULTIPLIER = 1.2;
+
     /**
      * SHADE MAW
      */
@@ -330,6 +337,13 @@ public final class CompanionsConfig {
             min = 0.0, max = 500.0
     )
     public static double SHADOW_MAW_DAMAGE = 6.0;
+
+    @ConfigEntry(
+            category = "Shadow Maw",
+            comment = "Shadow Maw stats multiplier on its blood state. For example, if set to 1.2, a default damage of 10 will be 12 when the blood upgrade is active. This is only applied to Health and Attack Damage attributes.",
+            min = 0.0, max = 10.0
+    )
+    public static double SHADOW_MAW_BLOOD_MULTIPLIER = 1.2;
 
     /**
      * MINION
@@ -449,6 +463,38 @@ public final class CompanionsConfig {
             min = 0.0, max = 100.0
     )
     public static double PUPPET_GLOVE_DAMAGE = 6.5;
+
+    /**
+     * SACRED PONTIFF
+     */
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Max life of the Sacred Pontiff",
+            min = 0d, max = 5000d
+    )
+    public static double SACRED_PONTIFF_MAX_LIFE = 225d;
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Damage dealt by the Sacred Pontiff",
+            min = 0.0, max = 500.0
+    )
+    public static double SACRED_PONTIFF_DAMAGE = 7.0;
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Max life of His Holiness",
+            min = 0d, max = 5000d
+    )
+    public static double HIS_HOLINESS_MAX_LIFE = 350d;
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Damage dealt by His Holiness",
+            min = 0.0, max = 500.0
+    )
+    public static double HIS_HOLINESS_DAMAGE = 9.0;
 
     /**
      * MAGIC BOOKS
@@ -606,7 +652,7 @@ public final class CompanionsConfig {
             category = "Armoury",
             comment = "Netherite Dagger stats: [miningLvl, durability, miningSpeed, baseDmg, enchantability]. Don't use negative values and stick to the format."
     )
-    public static String NETHERITE_DAGGER_STATS = "4, 1785, 6, 1, 15";
+    public static String NETHERITE_DAGGER_STATS = "4, 1300, 6, 1, 15";
 
     @ConfigEntry(
             category = "Armoury",
@@ -745,13 +791,13 @@ public final class CompanionsConfig {
             category = "Spawn Rates",
             comment = "Golden allay spawnrate: [weight, minAmount, maxAmount, biomes and tags... (as many as you want)]"
     )
-    public static String GOLDEN_ALLAY_SPAWN = "50, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
+    public static String GOLDEN_ALLAY_SPAWN = "20, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
 
     @ConfigEntry(
             category = "Spawn Rates",
             comment = "Cornelius spawnrate: [weight, minAmount, maxAmount, biomes and tags... (as many as you want)]"
     )
-    public static String CORNELIUS_SPAWN = "40, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
+    public static String CORNELIUS_SPAWN = "15, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
 
     @ConfigEntry(
             category = "Spawn Rates",

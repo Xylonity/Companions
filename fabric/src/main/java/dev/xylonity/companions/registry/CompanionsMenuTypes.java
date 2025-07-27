@@ -31,7 +31,7 @@ public class CompanionsMenuTypes {
                             return new SoulFurnaceContainerMenu(syncId, inv, furnace, new SimpleContainerData(3));
                         }
 
-                        throw new IllegalStateException("TileEntity en " + pos + " no es SoulFurnace");
+                        throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
                     }
             );
 
@@ -45,7 +45,7 @@ public class CompanionsMenuTypes {
                             return new SoulMageContainerMenu(syncId, inv, mage);
                         }
 
-                        throw new IllegalStateException("Entidad " + entityId + " no es SoulMage");
+                        throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
                     }
             );
 
@@ -59,7 +59,7 @@ public class CompanionsMenuTypes {
                             return new PuppetContainerMenu(syncId, inv, puppet);
                         }
 
-                        throw new IllegalStateException("Entidad " + entityId + " no es Puppet");
+                        throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
                     }
             );
 
@@ -73,7 +73,7 @@ public class CompanionsMenuTypes {
                             return new CorneliusContainerMenu(syncId, inv, cor);
                         }
 
-                        throw new IllegalStateException("Entidad " + entityId + " no es Cornelius");
+                        throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
                     }
             );
 

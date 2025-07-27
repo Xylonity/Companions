@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 public class BlackHoleRenderer extends GeoEntityRenderer<BlackHoleProjectile> {
 
@@ -32,7 +33,7 @@ public class BlackHoleRenderer extends GeoEntityRenderer<BlackHoleProjectile> {
 
     @Override
     public RenderType getRenderType(BlackHoleProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
     }
 
     @Override

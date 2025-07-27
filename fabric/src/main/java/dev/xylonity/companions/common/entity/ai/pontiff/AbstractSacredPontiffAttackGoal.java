@@ -28,8 +28,7 @@ public abstract class AbstractSacredPontiffAttackGoal extends Goal {
     @Override
     public boolean canUse() {
         if (!pontiff.shouldAttack()) return false;
-        if (pontiff.getPhase() != phase()) return false;
-        if (pontiff.getActivationPhase() != 2) return false;
+        if (pontiff.getState() != attackState()) return false;
         if (pontiff.getAttackType() != 0) return false;
         if (pontiff.getTarget() == null) return false;
 
@@ -43,7 +42,6 @@ public abstract class AbstractSacredPontiffAttackGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (pontiff.getActivationPhase() != 2) return false;
         return started && attackTicks < attackDuration;
     }
 
@@ -91,6 +89,6 @@ public abstract class AbstractSacredPontiffAttackGoal extends Goal {
     protected abstract int getAttackType();
     protected abstract void performAttack(LivingEntity target);
     protected abstract int attackDelay();
-    protected abstract int phase();
+    protected abstract int attackState();
 
 }

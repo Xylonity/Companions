@@ -24,7 +24,7 @@ public class HealRingRenderer extends GeoEntityRenderer<HealRingProjectile> {
 
     @Override
     public RenderType getRenderType(HealRingProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
     }
 
 }

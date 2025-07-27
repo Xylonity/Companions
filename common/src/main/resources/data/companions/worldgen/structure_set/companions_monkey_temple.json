@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "companions:companions_monkey_temple",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 987654321,
+    "spacing": 50,
+    "separation": 20,
+    "type": "minecraft:random_spread"
+  }
+}

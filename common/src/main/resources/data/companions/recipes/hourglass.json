@@ -10,7 +10,7 @@
       "item": "minecraft:copper_ingot"
     },
     "p": {
-      "tag": "minecraft:planks"
+      "item": "knightlib:filled_grail"
     },
     "g": {
       "item": "minecraft:glass"

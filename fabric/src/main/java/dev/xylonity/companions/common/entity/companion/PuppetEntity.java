@@ -258,8 +258,9 @@ public class PuppetEntity extends CompanionEntity implements ContainerListener {
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
 
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            player.openMenu(new ExtendedScreenHandlerFactory() {
+        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!level().isClientSide) {
+                player.openMenu(new ExtendedScreenHandlerFactory() {
                         @Override
                         public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
                             return new PuppetContainerMenu(i, inventory, PuppetEntity.this);
@@ -277,7 +278,9 @@ public class PuppetEntity extends CompanionEntity implements ContainerListener {
                     }
                 );
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+            }
+
             return InteractionResult.SUCCESS;
         }
 

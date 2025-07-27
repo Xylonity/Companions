@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.goal.*;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomHopStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -220,24 +221,27 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            NetworkHooks.openScreen(
-                    (ServerPlayer) player, new MenuProvider() {
-                        @Override
-                        public @NotNull Component getDisplayName() {
-                            return CorneliusEntity.this.getName();
-                        }
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!level().isClientSide) {
+                NetworkHooks.openScreen(
+                        (ServerPlayer) player, new MenuProvider() {
+                            @Override
+                            public @NotNull Component getDisplayName() {
+                                return CorneliusEntity.this.getName();
+                            }
 
-                        @Override
-                        public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
-                            return new CorneliusContainerMenu(id, playerInv, CorneliusEntity.this);
-                        }
-                    },
-                    buf -> buf.writeInt(this.getId())
-            );
+                            @Override
+                            public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
+                                return new CorneliusContainerMenu(id, playerInv, CorneliusEntity.this);
+                            }
+                        },
+                        buf -> buf.writeInt(this.getId())
+                );
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+            }
+
             return InteractionResult.SUCCESS;
         }
 

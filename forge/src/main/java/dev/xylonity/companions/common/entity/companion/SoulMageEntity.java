@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
 import dev.xylonity.companions.common.entity.ai.mage.goal.*;
 import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
@@ -130,6 +131,8 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
         this.goalSelector.addGoal(4, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(4, new CompanionRandomStrollGoal(this, 0.43));
 
+        this.goalSelector.addGoal(6, new CompanionsLookAtPlayerGoal(this, Player.class, 6.0F));
+
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
@@ -220,23 +223,25 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
 
         if (level().isClientSide) return InteractionResult.SUCCESS;
 
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            NetworkHooks.openScreen(
-                    (ServerPlayer) player, new MenuProvider() {
-                        @Override
-                        public @NotNull Component getDisplayName() {
-                            return SoulMageEntity.this.getName();
-                        }
+        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!level().isClientSide) {
+                NetworkHooks.openScreen(
+                        (ServerPlayer) player, new MenuProvider() {
+                            @Override
+                            public @NotNull Component getDisplayName() {
+                                return SoulMageEntity.this.getName();
+                            }
 
-                        @Override
-                        public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
-                            return new SoulMageContainerMenu(id, playerInv, SoulMageEntity.this);
-                        }
-                    },
-                    buf -> buf.writeInt(this.getId())
-            );
+                            @Override
+                            public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
+                                return new SoulMageContainerMenu(id, playerInv, SoulMageEntity.this);
+                            }
+                        },
+                        buf -> buf.writeInt(this.getId())
+                );
 
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
+            }
 
             return InteractionResult.SUCCESS;
         }

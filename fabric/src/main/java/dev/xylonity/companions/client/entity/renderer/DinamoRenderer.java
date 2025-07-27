@@ -24,12 +24,14 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.texture.AutoGlowingTexture;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements ITeslaUtil {
 
     public DinamoRenderer(EntityRendererProvider.Context renderManager, int totalFrames, int ticksPerFrame) {
         super(renderManager, new DinamoModel());
+        addRenderLayer(new AutoGlowingGeoLayer<>(this));
         addRenderLayer(new ElectricConnectionLayer(this,
                 new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"),
                 totalFrames,

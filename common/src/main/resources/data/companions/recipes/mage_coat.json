@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "l l",
-    "lil",
-    "lll"
+    "lxl",
+    "lil"
   ],
   "key": {
     "l": {
@@ -11,6 +11,9 @@
     },
     "i": {
       "item": "minecraft:iron_ingot"
+    },
+    "x": {
+      "item": "minecraft:diamond_chestplate"
     }
   },
   "result": {

@@ -5,6 +5,9 @@ import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -68,6 +71,11 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
         if (Util.areEntitiesLinked(entity, this)) return false;
 
         return super.canHitEntity(entity);
+    }
+
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
     }
 
     @Override
@@ -154,7 +162,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
     protected void onHit(@NotNull HitResult pResult) {
         if (pResult.getType().equals(HitResult.Type.ENTITY)) {
             Entity target = ((EntityHitResult) pResult).getEntity();
-            if (target.equals(getOwner()) || target instanceof TamableAnimal t && t.getOwner() != null && t.getOwner().equals(getOwner())) {
+            if (target instanceof SmallIceShardProjectile) {
                 return;
             }
 
@@ -162,15 +170,19 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
             target.setTicksFrozen(target.getTicksFrozen() + CompanionsConfig.SMALL_ICE_SHARD_FREEZE_TICKS);
         }
 
-        if (level().isClientSide) {
-            spawnHitParticles();
-        } else {
-            level().broadcastEntityEvent(this, (byte) 3);
-            playSound(SoundEvents.AMETHYST_BLOCK_HIT);
+        if (pResult.getType() != HitResult.Type.MISS) {
+            if (level().isClientSide) {
+                spawnHitParticles();
+            } else {
+                level().broadcastEntityEvent(this, (byte) 3);
+                playSound(SoundEvents.AMETHYST_BLOCK_HIT);
+            }
+
+            remove(RemovalReason.DISCARDED);
         }
 
-        remove(RemovalReason.DISCARDED);
     }
+
 
     @Override
     public void handleEntityEvent(byte pId) {
@@ -179,6 +191,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
         } else {
             super.handleEntityEvent(pId);
         }
+
     }
 
     public void setFollowOwnerLook(boolean ownerLook) {

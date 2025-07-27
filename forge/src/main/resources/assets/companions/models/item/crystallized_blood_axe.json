@@ -1,0 +1,18 @@
+{
+  "parent": "minecraft:item/handheld",
+  "loader": "forge:separate_transforms",
+  "base": {
+    "parent": "companions:item/crystallized_blood_axe_3d"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "companions:item/crystallized_blood_axe_2d"
+    },
+    "ground": {
+      "parent": "companions:item/crystallized_blood_axe_2d"
+    },
+    "fixed": {
+      "parent": "companions:item/crystallized_blood_axe_2d"
+    }
+  }
+}

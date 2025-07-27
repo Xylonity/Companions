@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
 import dev.xylonity.companions.common.entity.ai.teddy.control.TeddyMoveControl;
 import dev.xylonity.companions.common.entity.ai.teddy.goal.*;
 import dev.xylonity.companions.common.util.Util;
@@ -147,6 +148,18 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             @Override
             public boolean canUse() {
                 return super.canUse() && getPhase() == 1;
+            }
+        });
+
+        this.goalSelector.addGoal(6, new CompanionsLookAtPlayerGoal(this, Player.class, 6.0F) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && getMainAction() != 0 && getPhase() == 1;
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && getMainAction() != 0 && getPhase() == 1;
             }
         });
 

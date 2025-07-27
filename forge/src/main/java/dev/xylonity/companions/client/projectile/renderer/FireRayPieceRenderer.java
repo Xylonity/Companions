@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.FireRayPieceModel;
 import dev.xylonity.companions.client.projectile.model.MagicRayPieceModel;
+import dev.xylonity.companions.common.entity.projectile.BloodTornadoProjectile;
 import dev.xylonity.companions.common.entity.projectile.FireRayPieceProjectile;
 import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -39,5 +40,10 @@ public class FireRayPieceRenderer extends GeoEntityRenderer<FireRayPieceProjecti
 
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
         poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
+    }
+
+    @Override
+    public RenderType getRenderType(FireRayPieceProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
     }
 }

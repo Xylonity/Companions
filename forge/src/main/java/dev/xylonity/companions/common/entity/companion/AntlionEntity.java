@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.ai.antlion.tamable.goal.*;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
@@ -98,9 +99,10 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     private static final int ANIMATION_ADULT_HIT_GROUND_TICKS = 7;
     private static final int ANIMATION_ADULT_UNSTUCK_TICKS = 35;
     private static final int ANIMATION_ADULT_TURN_TICKS = 10;
-    private static final int MAX_FALL_TICKS = 7;
+
+    private static final int MAX_FALL_TICKS = 8;
     private static final int NO_TARGET_MAX_TICKS = 20;
-    private static final float MIN_SPEED_FOR_DESCENT = 0.4f;
+    private static final float MIN_SPEED_FOR_DESCENT = 0.2f;
     private static final float MAX_SPEED_FOR_DESCENT = 1.01f;
 
     private Vec3 vel = Vec3.ZERO;
@@ -402,6 +404,8 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         });
         this.goalSelector.addGoal(4, new CompanionRandomStrollGoal(this, 0.43));
 
+        this.goalSelector.addGoal(6, new CompanionsLookAtPlayerGoal(this, Player.class, 6.0F));
+
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
@@ -564,6 +568,11 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         else throttle = Mth.lerp(0.20F, throttle, 0F);
 
         float speed = ((float) getAttributeValue(Attributes.MOVEMENT_SPEED)) * 1.1f * throttle;
+
+        if (onGround()) {
+            speed *= 0.05f;
+        }
+
         float speedMag = Math.abs(speed);
 
         Vec3 aim = rider.getLookAngle().normalize();

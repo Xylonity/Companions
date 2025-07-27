@@ -3,7 +3,7 @@
   "pattern": [
     " ll",
     " i ",
-    "lll"
+    "lxl"
   ],
   "key": {
     "l": {
@@ -11,6 +11,9 @@
     },
     "i": {
       "item": "minecraft:iron_ingot"
+    },
+    "x": {
+      "item": "minecraft:diamond_helmet"
     }
   },
   "result": {

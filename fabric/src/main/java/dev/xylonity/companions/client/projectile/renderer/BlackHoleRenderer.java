@@ -28,7 +28,7 @@ public class BlackHoleRenderer extends GeoEntityRenderer<BlackHoleProjectile> {
 
     @Override
     public RenderType getRenderType(BlackHoleProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
     }
 
     @Override

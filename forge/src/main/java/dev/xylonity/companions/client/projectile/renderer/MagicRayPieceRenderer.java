@@ -35,7 +35,7 @@ public class MagicRayPieceRenderer extends GeoEntityRenderer<MagicRayPieceProjec
 
     @Override
     public RenderType getRenderType(MagicRayPieceProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
     }
 
     @Override

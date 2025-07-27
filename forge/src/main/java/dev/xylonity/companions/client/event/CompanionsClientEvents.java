@@ -104,6 +104,7 @@ public class CompanionsClientEvents {
             EntityRenderers.register(CompanionsEntities.FROG_EGG_PROJECTILE.get(), FrogEggRenderer::new);
             EntityRenderers.register(CompanionsEntities.ANTLION_SAND_PROJECTILE.get(), AntlionSandProjectileRenderer::new);
             EntityRenderers.register(CompanionsEntities.BLOOD_SLASH_PROJECTILE.get(), BloodSlashRenderer::new);
+            EntityRenderers.register(CompanionsEntities.FIRE_GEISER_PROJECTILE.get(), FireGeiserProjectileRenderer::new);
 
             EntityRenderers.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);
             EntityRenderers.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), GenericTriggerProjectileRenderer::new);

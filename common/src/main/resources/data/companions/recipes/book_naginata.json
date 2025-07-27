@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "sss",
+    " s ",
     "sps",
-    "sss"
+    " s "
   ],
   "key": {
     "s": {
       "item": "companions:relic_gold"
     },
     "p": {
-      "item": "minecraft:enchanted_book"
+      "item": "minecraft:book"
     }
   },
   "result": {

@@ -3,9 +3,13 @@ package dev.xylonity.companions.common.entity.ai.pontiff.goal;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
+import dev.xylonity.companions.common.entity.projectile.FireGeiserProjectile;
+import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.api.TickScheduler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -13,7 +17,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
 
@@ -26,7 +31,6 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
         super.start();
         pontiff.setNoMovement(true);
         pontiff.setShouldLookAtTarget(false);
-        pontiff.playSound(CompanionsSounds.HOLINESS_HIT_GROUND.get());
     }
 
     @Override
@@ -60,12 +64,12 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
 
         boolean[][] claimedPortions = new boolean[radius * 2 + 1][radius * 2 + 1];
         List<List<BlockPos>> plates = new ArrayList<>();
-
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
-
                 if (pontiff.getRandom().nextFloat() > 0.2) continue;
-                int ci = dx + radius, cj = dz + radius;
+
+                int ci = dx + radius;
+                int cj = dz + radius;
                 if (claimedPortions[ci][cj]) continue;
 
                 int size = 3 + pontiff.getRandom().nextInt(2);
@@ -76,7 +80,8 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
                         int rx = dx + x, rz = dz + z;
                         if (Math.abs(rx) > radius || Math.abs(rz) > radius) continue;
 
-                        int ii = rx + radius, jj = rz + radius;
+                        int ii = rx + radius;
+                        int jj = rz + radius;
                         if (claimedPortions[ii][jj]) continue;
 
                         claimedPortions[ii][jj] = true;
@@ -86,6 +91,7 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
 
                 if (!plate.isEmpty()) plates.add(plate);
             }
+
         }
 
         int tickDelay = 0;
@@ -106,6 +112,28 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
                         spawnFallingBlock(serverLevel, bp, state, yDelay);
                     }
                 }
+
+                BlockPos randPos = plate.get(pontiff.getRandom().nextInt(plate.size()));
+                double x = randPos.getX() + pontiff.getRandom().nextDouble();
+                double z = randPos.getZ() + pontiff.getRandom().nextDouble();
+
+                FireGeiserProjectile geiser = CompanionsEntities.FIRE_GEISER_PROJECTILE.get().create(serverLevel);
+                if (geiser != null && serverLevel.random.nextFloat() < 0.35f) {
+                    geiser.moveTo(x, randPos.getY() + 0.75, z, 0f, 0f);
+                    geiser.setOwner(pontiff);
+                    serverLevel.addFreshEntity(geiser);
+                }
+                if (pontiff.getRandom().nextFloat() < 0.65f) {
+                    for (int j = 0; j < 10; j++) {
+                        double dx = (pontiff.getRandom().nextDouble() - 0.5) * 2.0;
+                        double dy = (pontiff.getRandom().nextDouble() - 0.5) * 2.0;
+                        double dz = (pontiff.getRandom().nextDouble() - 0.5) * 2.0;
+                        if (pontiff.level() instanceof ServerLevel level) {
+                            level.sendParticles(ParticleTypes.POOF, x, randPos.getY() + 1, z, 1, dx, dy, dz, 0.2);
+                        }
+                    }
+                }
+
             };
 
             if (tickDelay == 0) {
@@ -134,8 +162,8 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
     }
 
     @Override
-    protected int phase() {
-        return 2;
+    protected int attackState() {
+        return 6;
     }
 
 }

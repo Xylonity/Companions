@@ -20,7 +20,7 @@ public class CompanionsItems {
     public static final Supplier<Item> WHIP_ARM = registerItem("whip_arm", () -> new PuppetArm(new Item.Properties().stacksTo(1), "whip_arm"));
     public static final Supplier<Item> BLADE_ARM = registerItem("blade_arm", () -> new PuppetArm(new Item.Properties().stacksTo(1), "blade_arm"));
     public static final Supplier<Item> MUTANT_ARM = registerItem("mutant_arm", () -> new PuppetArm(new Item.Properties().stacksTo(1), "mutant_arm"));
-    public static final Supplier<Item> NETHERITE_DAGGER = registerItem("netherite_dagger", () -> new SwordItem(ItemMaterials.NETHERITE_DAGGER, 0, -2f, (new Item.Properties()).fireResistant()));
+    public static final Supplier<Item> NETHERITE_DAGGER = registerItem("netherite_dagger", () -> new SwordItem(ItemMaterials.NETHERITE_DAGGER, 2, -2f, (new Item.Properties()).fireResistant()));
     public static final Supplier<Item> SAINT_KLIMT_MUSIC_DISC = registerItem("saint_klimt_music_disc", () -> new RecordItem(7, CompanionsSounds.SAINT_KLIMT.get(), new Item.Properties().stacksTo(1), 5800));
     public static final Supplier<Item> MUTANT_FLESH = registerItem("mutant_flesh", () -> new MutantFlesh(new Item.Properties().food((new FoodProperties.Builder()).nutrition(5).saturationMod(0.3F).meat().build()), "mutant_flesh"));
     public static final Supplier<Item> ANTLION_FUR = registerItem("antlion_fur", () -> new AntlionFur(new Item.Properties().food((new FoodProperties.Builder()).nutrition(4).saturationMod(0.4F).meat().build()), "antlion_fur"));
@@ -62,9 +62,9 @@ public class CompanionsItems {
     public static final Supplier<Item> CRYSTALLIZED_BLOOD_CHESTPLATE = registerArmorItem("crystallized_blood_chestplate", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.CHESTPLATE, false);
     public static final Supplier<Item> CRYSTALLIZED_BLOOD_LEGGINGS = registerArmorItem("crystallized_blood_leggings", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.LEGGINGS, false);
     public static final Supplier<Item> CRYSTALLIZED_BLOOD_BOOTS = registerArmorItem("crystallized_blood_boots", ArmorMaterials.CRYSTALLIZED_BLOOD, ArmorItem.Type.BOOTS, false);
-    public static final Supplier<Item> CRYSTALLIZED_BLOOD_SWORD = registerSpecificItem("crystallized_blood_sword", new Item.Properties(), ItemType.BLOOD_SWORD, ItemMaterials.CRYSTALLIZED_BLOOD, 3f, -2.4F);
-    public static final Supplier<Item> CRYSTALLIZED_BLOOD_SCYTHE = registerSpecificItem("crystallized_blood_scythe", new Item.Properties(), ItemType.BLOOD_PICKAXE, ItemMaterials.CRYSTALLIZED_BLOOD, 1f, -2.8F);
-    public static final Supplier<Item> CRYSTALLIZED_BLOOD_AXE = registerSpecificItem("crystallized_blood_axe", new Item.Properties(), ItemType.BLOOD_AXE, ItemMaterials.CRYSTALLIZED_BLOOD, 5f, -3.0F);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_SWORD = registerSpecificItem("crystallized_blood_sword", new Item.Properties().fireResistant(), ItemType.BLOOD_SWORD, ItemMaterials.CRYSTALLIZED_BLOOD, 3f, -2.4F);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_SCYTHE = registerSpecificItem("crystallized_blood_scythe", new Item.Properties().fireResistant(), ItemType.BLOOD_PICKAXE, ItemMaterials.CRYSTALLIZED_BLOOD, 1f, -2.8F);
+    public static final Supplier<Item> CRYSTALLIZED_BLOOD_AXE = registerSpecificItem("crystallized_blood_axe", new Item.Properties().fireResistant(), ItemType.BLOOD_AXE, ItemMaterials.CRYSTALLIZED_BLOOD, 5f, -3.0F);
 
     private static <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item) {
         return CompanionsCommon.COMMON_PLATFORM.registerItem(id, item);

@@ -126,13 +126,13 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     public <T extends Item> Supplier<T> registerArmorItem(String id, ArmorMaterials armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
         if (isGeckoArmor) {
             return switch (armorMaterial) {
-                case CRYSTALLIZED_BLOOD -> (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+                case CRYSTALLIZED_BLOOD -> (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(armorMaterial, armorType, new Item.Properties().fireResistant(), id));
                 case MAGE -> (Supplier<T>) registerItem(id, () -> new GeckoMageArmorItem(armorMaterial, armorType, new Item.Properties(), id));
-                case HOLY_ROBE -> (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(armorMaterial, armorType, new Item.Properties(), id));
+                case HOLY_ROBE -> (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(armorMaterial, armorType, new Item.Properties().fireResistant(), id));
             };
         } else {
             return switch (armorMaterial) {
-                case CRYSTALLIZED_BLOOD -> (Supplier<T>) registerItem(id, () -> new BloodArmorItem(armorMaterial, armorType, new Item.Properties()));
+                case CRYSTALLIZED_BLOOD -> (Supplier<T>) registerItem(id, () -> new BloodArmorItem(armorMaterial, armorType, new Item.Properties().fireResistant()));
                 default -> (Supplier<T>) registerItem(id, () -> new ArmorItem(armorMaterial, armorType, new Item.Properties()));
             };
         }

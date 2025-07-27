@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "companions:companions_tent",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 2143658709,
+    "spacing": 30,
+    "separation": 5,
+    "type": "minecraft:random_spread"
+  }
+}

@@ -758,5 +758,15 @@
     "sounds": [
       { "name": "companions:shade_sword_spin_slash" }
     ]
+  },
+  "pontiff_despawn": {
+    "sounds": [
+      { "name": "companions:pontiff_despawn" }
+    ]
+  },
+  "holiness_appear": {
+    "sounds": [
+      { "name": "companions:holiness_appear" }
+    ]
   }
 }
