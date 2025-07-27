@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -124,9 +125,8 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
 
         if (pLevel.isClientSide) return InteractionResult.SUCCESS;
 
-        ItemStack held = pPlayer.getItemInHand(pHand);
-
-        if (!held.is(CompanionsItems.ETERNAL_LIGHTER.get())) {
+        Item item = pPlayer.getItemInHand(pHand).getItem();
+        if (item != CompanionsItems.RELIC_GOLD.get() && item != CompanionsItems.OLD_CLOTH.get()) {
             return InteractionResult.PASS;
         }
 
@@ -135,11 +135,10 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
         pLevel.setBlock(lowerPos, Blocks.AIR.defaultBlockState(), 35);
         pLevel.setBlock(lowerPos.above(), Blocks.AIR.defaultBlockState(), 35);
 
-        CompanionEntity entity;
-
-        if (pLevel.random.nextBoolean()) {
+        CompanionEntity entity = null;
+        if (item == CompanionsItems.RELIC_GOLD.get()) {
             entity = CompanionsEntities.MANKH.get().create(pLevel);
-        } else {
+        } else if (item == CompanionsItems.OLD_CLOTH.get()) {
             entity = CompanionsEntities.CLOAK.get().create(pLevel);
         }
 
