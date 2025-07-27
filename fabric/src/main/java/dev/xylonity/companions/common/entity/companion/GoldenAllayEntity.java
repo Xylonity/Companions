@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.companion;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
 import dev.xylonity.companions.common.entity.ai.mage.allay.control.GoldenAllayMoveControl;
 import dev.xylonity.companions.common.entity.ai.mage.allay.goal.GoldenAllayRandomMoveGoal;
 import dev.xylonity.companions.common.entity.projectile.SoulMageBookEntity;
@@ -194,6 +195,8 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
 
         this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Monster.class, 6.0F, 0.6f, 1));
+
+        this.goalSelector.addGoal(6, new CompanionsLookAtPlayerGoal(this, Player.class, 6.0F));
     }
 
     @Nullable
