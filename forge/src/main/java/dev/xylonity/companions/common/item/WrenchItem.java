@@ -129,6 +129,7 @@ public class WrenchItem extends TooltipItem {
 
                 if (posFirst.distanceToSqr(posCurrent) > maxConnDist) {
                     player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_distance", CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE).withStyle(ChatFormatting.RED), true);
+                    this.firstNode = null;
                     return;
                 }
 
@@ -152,10 +153,12 @@ public class WrenchItem extends TooltipItem {
                                 BlockEntity curr = context.getLevel().getBlockEntity(currentNode.blockPos());
                                 if (curr instanceof VoltaicPillarBlockEntity pillar && !pillar.isTop()) {
                                     player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_top_voltaic_pillar").withStyle(ChatFormatting.RED), true);
+                                    this.firstNode = null;
                                     return;
                                 }
                                 if (be.getDistance() == CompanionsConfig.DINAMO_MAX_CHAIN_CONNECTIONS && !(curr instanceof VoltaicRelayBlockEntity)) {
                                     player.displayClientMessage(Component.translatable("wrench.companions.client_message.max_chain_connections").withStyle(ChatFormatting.RED), true);
+                                    this.firstNode = null;
                                     return;
                                 }
                             }
