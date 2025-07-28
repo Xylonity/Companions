@@ -14,6 +14,7 @@ import dev.xylonity.companions.common.entity.ai.minion.tamable.minion.MinionTorn
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -154,8 +155,12 @@ public class MinionEntity extends CompanionEntity {
 
         if (level().isClientSide) return InteractionResult.SUCCESS;
 
-        if (isTame() && player == getOwner() && player.getItemInHand(hand).getItem() == CompanionsItems.NETHERITE_CHAINS.get()) {
+        if (isTame() && player == getOwner() && player.getItemInHand(hand).getItem() == CompanionsItems.NETHERITE_CHAINS.get() && !isPhaseLocked()) {
+
             if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
+
+            tameParticles();
+            playSound(CompanionsSounds.SPELL_RELEASE_MARK.get());
 
             setIsPhaseLocked(true);
             return InteractionResult.SUCCESS;
@@ -422,6 +427,19 @@ public class MinionEntity extends CompanionEntity {
         }
 
         return PlayState.CONTINUE;
+    }
+
+    private void tameParticles() {
+        for (int i = 0; i < 20; i++) {
+            double dx = (this.random.nextDouble() - 0.5) * 2.0;
+            double dy = (this.random.nextDouble() - 0.5) * 2.0;
+            double dz = (this.random.nextDouble() - 0.5) * 2.0;
+            if (this.level() instanceof ServerLevel level) {
+                if (level.random.nextFloat() < 0.65f) level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.1);
+                if (level.random.nextFloat() < 0.25f) level.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.2);
+            }
+        }
+
     }
 
     public enum Variant {
