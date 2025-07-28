@@ -34,7 +34,7 @@ public class TeddyRenderer extends GeoEntityRenderer<TeddyEntity> {
 
     @Override
     public void render(@NotNull TeddyEntity entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, entity.isInWall() && entity.getPhase() == 2 ? LightTexture.FULL_SKY : packedLight);
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, (entity.isInWall() && entity.getPhase() == 2) ? LightTexture.FULL_SKY : packedLight);
     }
 
 }

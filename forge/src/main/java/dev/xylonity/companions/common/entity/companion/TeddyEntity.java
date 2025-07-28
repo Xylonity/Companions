@@ -25,6 +25,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -166,6 +168,9 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+
+        if (getPhase() == 2 && source.is(DamageTypes.IN_WALL)) return false;
+
         boolean ret = super.hurt(source, amount);
 
         if (!level().isClientSide && amount > 4.0f && getPhase() == 2 && getTarget() != null) {
