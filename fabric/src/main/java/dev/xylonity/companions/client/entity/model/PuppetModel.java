@@ -27,17 +27,4 @@ public class PuppetModel extends GeoModel<PuppetEntity> {
         return new ResourceLocation(CompanionsCommon.MOD_ID, "animations/puppet.animation.json");
     }
 
-    @Override
-    public void setCustomAnimations(PuppetEntity animatable, long instanceId, AnimationState<PuppetEntity> animationState) {
-        CoreGeoBone head = getAnimationProcessor().getBone("head");
-
-        if (head != null && animatable.isAttacking() == 0) {
-            EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-            head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
-            head.setRotY((entityData.netHeadYaw() * 0.5f) * Mth.DEG_TO_RAD);
-        }
-
-        super.setCustomAnimations(animatable, instanceId, animationState);
-    }
-
 }
