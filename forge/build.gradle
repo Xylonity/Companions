@@ -81,7 +81,7 @@ dependencies {
     implementation fg.deobf("curse.maven:puzzles-lib-495476:5904750")
     implementation fg.deobf("curse.maven:overflowing-bars-852662:5763974")
 
-    implementation fg.deobf("dev.xylonity.knightlib:knightlib-forge-${minecraft_version}:1.3.0")
+    implementation fg.deobf("dev.xylonity.knightlib:knightlib-forge-${minecraft_version}:${knightlib_version}")
 
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
     implementation fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
