@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-public abstract class AbstractPuppetAttackGoal extends Goal {
+public abstract class AbstractPuppetRightAttackGoal extends Goal {
     protected final PuppetEntity puppet;
     protected int attackTicks;
     protected int nextUseTick;
@@ -15,7 +15,7 @@ public abstract class AbstractPuppetAttackGoal extends Goal {
     protected boolean started;
     protected final String attackType;
 
-    public AbstractPuppetAttackGoal(PuppetEntity puppet, int minCd, int maxCd, String attackType) {
+    public AbstractPuppetRightAttackGoal(PuppetEntity puppet, int minCd, int maxCd, String attackType) {
         this.puppet = puppet;
         this.minCooldown = minCd;
         this.maxCooldown = maxCd;
@@ -25,10 +25,10 @@ public abstract class AbstractPuppetAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (puppet.isAttacking() != 0) return false;
+        if (puppet.isAttackingRight()) return false;
         if (puppet.getTarget() == null) return false;
         if (puppet.tickCount < nextUseTick) return false;
-        if (hasRequiredArm() == 0) return false;
+        if (!hasRequiredArm()) return false;
         return true;
     }
 
@@ -45,14 +45,14 @@ public abstract class AbstractPuppetAttackGoal extends Goal {
     @Override
     public void start() {
         attackTicks = 0;
-        puppet.setAttacking(hasRequiredArm());
+        puppet.setAttackingRight(true);
         started = true;
     }
 
     @Override
     public void stop() {
         started = false;
-        puppet.setAttacking(0);
+        puppet.setAttackingRight(false);
 
         int randomCd = minCooldown + puppet.getRandom().nextInt(maxCooldown - minCooldown + 1);
         nextUseTick = puppet.tickCount + randomCd;
@@ -86,6 +86,6 @@ public abstract class AbstractPuppetAttackGoal extends Goal {
     }
 
     protected abstract void performAttack(LivingEntity target);
-    protected abstract int hasRequiredArm();
+    protected abstract boolean hasRequiredArm();
 
 }

@@ -5,8 +5,10 @@ import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.goal.*;
+import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
 import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -36,6 +38,7 @@ import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -57,7 +60,7 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.Optional;
 
-public class PuppetEntity extends CompanionEntity implements ContainerListener {
+public class PuppetEntity extends CompanionEntity implements RangedAttackMob, ContainerListener {
     public SimpleContainer inventory;
 
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
@@ -68,8 +71,8 @@ public class PuppetEntity extends CompanionEntity implements ContainerListener {
 
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<String> ATTACK_ANIMATION_NAME = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
-    // 0 none, 1 left, 2 right
-    private static final EntityDataAccessor<Integer> IS_ATTACKING = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING_RIGHT = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING_LEFT = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.BOOLEAN);
     // 0 none, 1 left, 2 right, 3 both
     private static final EntityDataAccessor<Integer> ACTIVE_ARMS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
     // none,none -> left/right
@@ -114,10 +117,14 @@ public class PuppetEntity extends CompanionEntity implements ContainerListener {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
-        this.goalSelector.addGoal(2, new PuppetCannonAttackGoal(this, 30, 50));
-        this.goalSelector.addGoal(2, new PuppetBladeAttackGoal(this, 30, 50));
-        this.goalSelector.addGoal(2, new PuppetMutantAttackGoal(this, 30, 50));
-        this.goalSelector.addGoal(2, new PuppetWhipAttackGoal(this, 30, 50));
+        this.goalSelector.addGoal(2, new PuppetRightCannonAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetRightBladeAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetRightMutantAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetRightWhipAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetLeftCannonAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetLeftBladeAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetLeftMutantAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetLeftWhipAttackGoal(this, 10, 50));
 
         this.goalSelector.addGoal(3, new PuppetApproachTargetGoal(this, 0.5, 0.4f, 1.25f));
 
@@ -212,12 +219,20 @@ public class PuppetEntity extends CompanionEntity implements ContainerListener {
         return this.entityData.get(ACTIVE_ARMS);
     }
 
-    public int isAttacking() {
-        return this.entityData.get(IS_ATTACKING);
+    public boolean isAttackingRight() {
+        return this.entityData.get(IS_ATTACKING_RIGHT);
     }
 
-    public void setAttacking(int attacking) {
-        this.entityData.set(IS_ATTACKING, attacking);
+    public void setAttackingRight(boolean attacking) {
+        this.entityData.set(IS_ATTACKING_RIGHT, attacking);
+    }
+
+    public boolean isAttackingLeft() {
+        return this.entityData.get(IS_ATTACKING_LEFT);
+    }
+
+    public void setAttackingLeft(boolean attacking) {
+        this.entityData.set(IS_ATTACKING_LEFT, attacking);
     }
 
     public void setArmNames(String armNames) {
@@ -231,7 +246,8 @@ public class PuppetEntity extends CompanionEntity implements ContainerListener {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(IS_ATTACKING, 0);
+        this.entityData.define(IS_ATTACKING_RIGHT, false);
+        this.entityData.define(IS_ATTACKING_LEFT, false);
         this.entityData.define(DATA_ID_FLAGS, (byte)0);
         this.entityData.define(ATTACK_ANIMATION_NAME, "");
         this.entityData.define(ACTIVE_ARMS, 0);
@@ -261,22 +277,21 @@ public class PuppetEntity extends CompanionEntity implements ContainerListener {
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!level().isClientSide) {
                 player.openMenu(new ExtendedScreenHandlerFactory() {
-                        @Override
-                        public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                            return new PuppetContainerMenu(i, inventory, PuppetEntity.this);
-                        }
-
-                        @Override
-                        public Component getDisplayName() {
-                            return PuppetEntity.this.getName();
-                        }
-
-                        @Override
-                        public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf buf) {
-                            buf.writeInt(PuppetEntity.this.getId());
-                        }
+                    @Override
+                    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                        return new PuppetContainerMenu(i, inventory, PuppetEntity.this);
                     }
-                );
+
+                    @Override
+                    public Component getDisplayName() {
+                        return PuppetEntity.this.getName();
+                    }
+
+                    @Override
+                    public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf buf) {
+                        buf.writeInt(PuppetEntity.this.getId());
+                    }
+                });
 
                 this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
             }
@@ -343,9 +358,8 @@ public class PuppetEntity extends CompanionEntity implements ContainerListener {
     }
 
     @Override
-    public void aiStep() {
-        setNoMovement(isAttacking() == 1 || isAttacking() == 2);
-        super.aiStep();
+    public void performRangedAttack(@NotNull LivingEntity target, float v) {
+
     }
 
     @Nullable
@@ -357,15 +371,6 @@ public class PuppetEntity extends CompanionEntity implements ContainerListener {
     @Override
     protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         playSound(CompanionsSounds.PUPPET_WALK.get(), 0.45f, 1f);
-    }
-
-    private void setProjectileRotation(MagicRayPieceProjectile projectile, Vec3 direction) {
-        Vec3 dir = direction.normalize();
-        float yaw = (float) (Math.atan2(dir.z, dir.x) * (180.0F / Math.PI)) - 90.0F;
-        float pitch = (float) (-(Math.atan2(dir.y, Math.sqrt(dir.x * dir.x + dir.z * dir.z))) * (180.0F / Math.PI));
-
-        projectile.setPitch(pitch);
-        projectile.setYaw(yaw);
     }
 
     @Override
@@ -463,14 +468,24 @@ public class PuppetEntity extends CompanionEntity implements ContainerListener {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "rightAttackcontroller", 1, this::rightAttackPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "leftAttackcontroller", 1, this::leftAttackPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
-        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
     }
 
-    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
-        if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttacking() != 0) {
+    private <T extends GeoAnimatable> PlayState rightAttackPredicate(AnimationState<T> event) {
+        if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttackingRight()) {
             event.getController().forceAnimationReset();
-            event.setAnimation(isAttacking() == 1 ? ATTACK_R : ATTACK_L);
+            event.setAnimation(ATTACK_R);
+        }
+
+        return PlayState.CONTINUE;
+    }
+
+    private <T extends GeoAnimatable> PlayState leftAttackPredicate(AnimationState<T> event) {
+        if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttackingLeft()) {
+            event.getController().forceAnimationReset();
+            event.setAnimation(ATTACK_L);
         }
 
         return PlayState.CONTINUE;

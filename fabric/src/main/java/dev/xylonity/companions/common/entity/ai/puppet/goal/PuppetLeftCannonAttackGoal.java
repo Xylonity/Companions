@@ -1,17 +1,16 @@
 package dev.xylonity.companions.common.entity.ai.puppet.goal;
 
-import dev.xylonity.companions.common.entity.ai.puppet.AbstractPuppetAttackGoal;
+import dev.xylonity.companions.common.entity.ai.puppet.AbstractPuppetLeftAttackGoal;
 import dev.xylonity.companions.common.entity.companion.PuppetEntity;
 import dev.xylonity.companions.common.entity.projectile.StakeProjectile;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public class PuppetCannonAttackGoal extends AbstractPuppetAttackGoal {
+public class PuppetLeftCannonAttackGoal extends AbstractPuppetLeftAttackGoal {
 
-    public PuppetCannonAttackGoal(PuppetEntity puppet, int minCd, int maxCd) {
+    public PuppetLeftCannonAttackGoal(PuppetEntity puppet, int minCd, int maxCd) {
         super(puppet, minCd, maxCd, "CANNON");
     }
 
@@ -19,8 +18,7 @@ public class PuppetCannonAttackGoal extends AbstractPuppetAttackGoal {
     protected void performAttack(LivingEntity target) {
         Vec3 lookVec = puppet.getLookAngle();
         Vec3 vec3 = new Vec3(-lookVec.z, 0, lookVec.x).normalize();
-        // == 1 left and == 2 right
-        Vec3 offset = vec3.scale(puppet.isAttacking() == 2 ? 0.5 : -0.5).add(0, puppet.isAttacking() == 2 ? 0.2 : -0.2, 0);
+        Vec3 offset = vec3.scale(-0.5).add(0, -0.2, 0);
 
         Vec3 startPos =  new Vec3(puppet.getX(), puppet.getY(), puppet.getZ()).add(offset); // puppet.getEyePosition(1.0F).subtract().add(offset);
         Vec3 targetPos = target.getEyePosition(1.0F);
@@ -35,7 +33,7 @@ public class PuppetCannonAttackGoal extends AbstractPuppetAttackGoal {
     @Override
     public void start() {
         super.start();
-        puppet.playSound(CompanionsSounds.PUPPET_ATTACK_CANON.get());
+        puppet.level().playSound(null, puppet.blockPosition(), CompanionsSounds.PUPPET_ATTACK_CANON.get(), puppet.getSoundSource(), 4, 1);
     }
 
     @Override
@@ -44,15 +42,8 @@ public class PuppetCannonAttackGoal extends AbstractPuppetAttackGoal {
     }
 
     @Override
-    protected int hasRequiredArm() {
-        for (int i = 0; i < puppet.inventory.getContainerSize(); i++) {
-            ItemStack stack = puppet.inventory.getItem(i);
-            if (stack.getItem() == CompanionsItems.CANNON_ARM.get()) {
-                return i + 1;
-            }
-        }
-
-        return 0;
+    protected boolean hasRequiredArm() {
+        return puppet.inventory.getItem(1).is(CompanionsItems.CANNON_ARM.get());
     }
 
 }
