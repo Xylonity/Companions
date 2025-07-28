@@ -148,7 +148,7 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
         }
 
         if (level().isClientSide) {
-            Companions.PROXY.spawnGoldenAllayRibbonTrail(this, level(), getX(), getY(), getZ(), 1, 1, 160/255f, 0, getBbHeight() * 0.175f);
+            Companions.PROXY.spawnGoldenAllayRibbonTrail(this, level(), getX(), getY(), getZ(), 1, 1, 160/255f, 0, 0.1225f);
         }
 
     }

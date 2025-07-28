@@ -678,9 +678,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     private <T extends GeoAnimatable> PlayState pupaPredicate(AnimationState<T> event) {
 
         if (getVariant() == 1) {
-            if (this.getMainAction() == 0) {
-                event.getController().setAnimation(SIT);
-            } else if (getAttackType() == 1) {
+            if (getAttackType() == 1) {
                 event.getController().setAnimation(ATTACK);
             } else if (event.isMoving()) {
                 event.getController().setAnimation(WALK);
