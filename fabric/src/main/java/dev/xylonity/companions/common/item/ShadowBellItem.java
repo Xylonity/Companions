@@ -82,7 +82,6 @@ public class ShadowBellItem extends TooltipItem {
         }
 
         if (altar.getCharges() <= 0) {
-            pStack.shrink(1);
             return;
         }
 
@@ -134,15 +133,19 @@ public class ShadowBellItem extends TooltipItem {
     // If the interaction is done on an altar, its relevant data is written in memory
     @Override
     public @NotNull InteractionResult useOn(UseOnContext ctx) {
-        Level world = ctx.getLevel();
+        Level level = ctx.getLevel();
         BlockPos pos = ctx.getClickedPos();
         ItemStack stack = ctx.getItemInHand();
 
-        if (world.isClientSide) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
 
-        if (!(world.getBlockEntity(pos) instanceof AbstractShadeAltarBlockEntity altar)) {
+        if (!(level.getBlockEntity(pos) instanceof AbstractShadeAltarBlockEntity altar)) {
+            if (ctx.getPlayer() != null) {
+                return this.use(level, ctx.getPlayer(), ctx.getHand()).getResult();
+            }
+
             return InteractionResult.PASS;
         }
 
@@ -150,18 +153,16 @@ public class ShadowBellItem extends TooltipItem {
             if (ctx.getPlayer() != null) {
                 ctx.getPlayer().displayClientMessage(Component.translatable("shadow_bell.companions.client_message.altar_empty"), true);
             }
-
-            return InteractionResult.FAIL;
         }
 
         CompoundTag tag = stack.getOrCreateTag();
-        tag.putString(ST_DIM, world.dimension().location().toString());
+        tag.putString(ST_DIM, level.dimension().location().toString());
         tag.putInt(ST_X, pos.getX());
         tag.putInt(ST_Y, pos.getY());
         tag.putInt(ST_Z, pos.getZ());
         tag.putInt(BELL_CURR, altar.getCharges());
         tag.putInt(BELL_MAX, altar.getMaxCharges());
-        tag.putString(ALTAR_NAME, world.getBlockState(pos).getBlock().getName().getString());
+        tag.putString(ALTAR_NAME, level.getBlockState(pos).getBlock().getName().getString());
         stack.setTag(tag);
 
         if (ctx.getPlayer() != null) {
@@ -209,7 +210,6 @@ public class ShadowBellItem extends TooltipItem {
 
             if (altar.getCharges() <= 0) {
                 pPlayer.displayClientMessage(Component.translatable("shadow_bell.companions.client_message.no_charges"), true);
-                clearLink(stack);
                 return InteractionResultHolder.pass(stack);
             }
 
