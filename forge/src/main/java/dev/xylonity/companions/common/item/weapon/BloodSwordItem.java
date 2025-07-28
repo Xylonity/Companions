@@ -6,8 +6,10 @@ import dev.xylonity.companions.common.item.generic.GenericGeckoSwordItem;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -40,6 +42,7 @@ public class BloodSwordItem extends GenericGeckoSwordItem {
                 pLevel.addFreshEntity(slash);
             }
 
+            pLevel.playSound(null, player.blockPosition(), CompanionsSounds.SPELL_RELEASE_DARK_HOLE.get(), SoundSource.PLAYERS);
             player.getCooldowns().addCooldown(this, CompanionsConfig.CRYSTALLIZED_BLOOD_SWORD_COOLDOWN);
         }
 
