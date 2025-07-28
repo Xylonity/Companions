@@ -24,11 +24,13 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
 
     private final ITeslaNodeBehaviour pulseBehaviour;
     private boolean isTop;
+    private boolean hasBlockOnTop;
 
     public VoltaicPillarBlockEntity(BlockPos pos, BlockState state) {
         super(CompanionsBlockEntities.VOLTAIC_PILLAR, pos, state);
         this.pulseBehaviour = new PillarPulseBehaviour();
         this.isTop = false;
+        this.hasBlockOnTop = false;
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
@@ -38,12 +40,21 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
         pillar.defaultAttackBehaviour.process(pillar, level, blockPos, blockState);
 
         pillar.setIsTop(!(level.getBlockEntity(pillar.getBlockPos().above()) instanceof VoltaicPillarBlockEntity));
+        pillar.setHasBlockOnTop(!level.getBlockState(pillar.getBlockPos().above()).isAir());
 
         if (level.getBlockEntity(pillar.getBlockPos().above()) instanceof VoltaicPillarBlockEntity be) {
             pillar.setOwnerUUID(be.getOwnerUUID());
         }
 
         pillar.sync();
+    }
+
+    public void setHasBlockOnTop(boolean hasBlockOnTop) {
+        this.hasBlockOnTop = hasBlockOnTop;
+    }
+
+    public boolean hasBlockOnTop() {
+        return hasBlockOnTop;
     }
 
     public boolean isTop() {
@@ -58,18 +69,21 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         this.setIsTop(tag.getBoolean("IsTop"));
+        this.setHasBlockOnTop(tag.getBoolean("BlockOnTop"));
     }
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putBoolean("IsTop", this.isTop());
+        tag.putBoolean("BlockOnTop", this.hasBlockOnTop());
     }
 
     @Override
     public @NotNull CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
         tag.putBoolean("IsTop", this.isTop());
+        tag.putBoolean("BlockOnTop", this.hasBlockOnTop());
         return tag;
     }
 

@@ -76,6 +76,15 @@ public class VoltaicPillarBlock extends AbstractTeslaBlock {
             }
         }
 
+        if (pLevel.getBlockEntity(pPos) instanceof VoltaicPillarBlockEntity curr) {
+            if (!pLevel.getBlockState(pPos.above()).isAir()) {
+                curr.setHasBlockOnTop(true);
+            } else {
+                curr.setHasBlockOnTop(false);
+                curr.setIsTop(true);
+            }
+        }
+
         super.onPlace(pState, pLevel, pPos, pOldState, pMovedByPiston);
     }
 
