@@ -260,7 +260,7 @@
   "tooltip.block.companions.voltaic_pillar_block": "Connect 2 columns of voltaic pillars to create a constant current.",
   "tooltip.block.companions.voltaic_relay_block": "Extends the range of Tesla network connections.",
   "tooltip.block.companions.recall_platform_block": "Allows to teleport between platforms.",
-  "tooltip.block.companions.soul_furnace_block": "Consumes souls to smelt resources.",
+  "tooltip.block.companions.soul_furnace_block": "Consumes souls to smelt resources. Put a filled great chalice on top to charge.",
   "tooltip.block.companions.croissant_egg_block": "Contains the embryo of a Croissant Dragon.",
   "tooltip.block.companions.empty_puppet_block": "Soulless puppet block.",
   "tooltip.block.companions.respawn_totem_block": "Sets companion's respawn point when activated.",
