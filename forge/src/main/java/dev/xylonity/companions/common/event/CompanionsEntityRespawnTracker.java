@@ -67,7 +67,7 @@ public class CompanionsEntityRespawnTracker {
             if (ownerId != null) {
                 Player owner = totemLevel.getPlayerByUUID(ownerId);
                 if (owner != null) {
-                    owner.sendSystemMessage(Component.translatable("totem.companions.charges_remaining", pos.toShortString(), totem.getCharges()));
+                    owner.sendSystemMessage(Component.translatable("respawn_totem.companions.charges_remaining", totem.getCharges() - 1));
                 }
             }
         }

@@ -6,13 +6,17 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+
+import java.util.UUID;
 
 public final class CompanionsEntityRespawnTracker {
     public static void init() {
@@ -48,15 +52,15 @@ public final class CompanionsEntityRespawnTracker {
 
             totem.queueRespawn(nbt, 20);
             totem.setChanged();
-             //if (dead instanceof TamableAnimal tame) {
-             //   jUUID ownerId = tame.getOwnerUUID();
-             //   if (ownerId != null) {
-             //       Player owner = totemLevel.getPlayerByUUID(ownerId);
-             //       if (owner != null) {
-             //           owner.sendSystemMessage(Component.translatable("totem.companions.charges_remaining", BlockPos.of(posLong).toShortString(), totem.getCharges()));
-             //       }
-             //   }
-             //}
+            if (dead instanceof CompanionEntity tame) {
+               UUID owner = tame.getOwnerUUID();
+               if (owner != null) {
+                   Player player = totemLevel.getPlayerByUUID(owner);
+                   if (player != null) {
+                       player.sendSystemMessage(Component.translatable("respawn_totem.companions.charges_remaining", totem.getCharges() - 1));
+                   }
+               }
+            }
 
         });
     }
