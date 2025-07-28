@@ -173,6 +173,11 @@ public class HostileImpEntity extends HostileEntity {
 
     }
 
+    @Override
+    public boolean removeWhenFarAway(double pDistanceToClosestPlayer) {
+        return false;
+    }
+
     private void failureParticles() {
         for (int i = 0; i < 20; i++) {
             double dx = (this.random.nextDouble() - 0.5) * 2.0;

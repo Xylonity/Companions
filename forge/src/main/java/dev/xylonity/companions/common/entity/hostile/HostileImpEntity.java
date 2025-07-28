@@ -160,6 +160,11 @@ public class HostileImpEntity extends HostileEntity {
         return InteractionResult.SUCCESS;
     }
 
+    @Override
+    public boolean removeWhenFarAway(double pDistanceToClosestPlayer) {
+        return false;
+    }
+
     private void tameParticles() {
         for (int i = 0; i < 20; i++) {
             double dx = (this.random.nextDouble() - 0.5) * 2.0;

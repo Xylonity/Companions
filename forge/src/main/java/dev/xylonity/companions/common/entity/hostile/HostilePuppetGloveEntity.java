@@ -68,6 +68,11 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
         super(pEntityType, pLevel);
     }
 
+    @Override
+    public boolean removeWhenFarAway(double pDistanceToClosestPlayer) {
+        return false;
+    }
+
     public static AttributeSupplier setAttributes() {
         return Monster.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 160)
