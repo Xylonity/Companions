@@ -482,6 +482,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         if (pCompound.contains("IsInvisible")) {
             this.setInvisible(pCompound.getBoolean("IsInvisible"));
         }
+        this.bossInfo.setName(this.getDisplayName());
         this.setStateCounter(-1);
     }
 
