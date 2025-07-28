@@ -322,7 +322,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         if (!player.isSecondaryUseActive() && !player.isShiftKeyDown() && getOwner() != null && player.equals(getOwner())) {
-            if (!this.level().isClientSide) {
+            if (!this.level().isClientSide && !isSpawning()) {
                 player.startRiding(this, true);
             }
 
