@@ -156,6 +156,11 @@ public class WrenchItem extends TooltipItem {
                                     this.firstNode = null;
                                     return;
                                 }
+                                if (first instanceof VoltaicPillarBlockEntity && !(curr instanceof VoltaicPillarBlockEntity)) {
+                                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_voltaic_pillar").withStyle(ChatFormatting.RED), true);
+                                    this.firstNode = null;
+                                    return;
+                                }
                                 if (be.getDistance() == CompanionsConfig.DINAMO_MAX_CHAIN_CONNECTIONS && !(curr instanceof VoltaicRelayBlockEntity)) {
                                     player.displayClientMessage(Component.translatable("wrench.companions.client_message.max_chain_connections").withStyle(ChatFormatting.RED), true);
                                     this.firstNode = null;
