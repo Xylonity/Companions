@@ -155,7 +155,6 @@ public class HostileImpEntity extends HostileEntity {
                 level().addFreshEntity(halo);
             }
 
-            return InteractionResult.PASS;
         }
 
         return InteractionResult.SUCCESS;
