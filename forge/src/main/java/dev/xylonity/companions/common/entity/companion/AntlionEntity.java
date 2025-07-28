@@ -99,10 +99,9 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     private static final int ANIMATION_ADULT_HIT_GROUND_TICKS = 7;
     private static final int ANIMATION_ADULT_UNSTUCK_TICKS = 35;
     private static final int ANIMATION_ADULT_TURN_TICKS = 10;
-
     private static final int MAX_FALL_TICKS = 8;
     private static final int NO_TARGET_MAX_TICKS = 20;
-    private static final float MIN_SPEED_FOR_DESCENT = 0.2f;
+    private static final float MIN_SPEED_FOR_DESCENT = 0.3f;
     private static final float MAX_SPEED_FOR_DESCENT = 1.01f;
 
     private Vec3 vel = Vec3.ZERO;
@@ -390,6 +389,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         this.goalSelector.addGoal(2, new AntlionBaseAttackGoal(this, 20, 60));
         this.goalSelector.addGoal(2, new AntlionBaseLongAttackGoal(this, 20, 60));
         this.goalSelector.addGoal(2, new AntlionPupaAttackGoal(this, 20, 60));
+        this.goalSelector.addGoal(3, new AntlionPupaApproachTargetGoal(this, 0.475, 0.4f, 1.25f));
         this.goalSelector.addGoal(2, new AntlionAdultAttackGoal(this, 20, 60));
         this.goalSelector.addGoal(2, new AntlionSoldierAttackGoal(this, 20, 60));
         this.goalSelector.addGoal(2, new AntlionSoldierLongAttackGoal(this, 20, 60));
@@ -671,6 +671,24 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
+        controllerRegistrar.add(new AnimationController<>(this, "pupaController", 0, this::pupaPredicate));
+    }
+
+    private <T extends GeoAnimatable> PlayState pupaPredicate(AnimationState<T> event) {
+
+        if (getVariant() == 1) {
+            if (this.getMainAction() == 0) {
+                event.getController().setAnimation(SIT);
+            } else if (getAttackType() == 1) {
+                event.getController().setAnimation(ATTACK);
+            } else if (event.isMoving()) {
+                event.getController().setAnimation(WALK);
+            } else {
+                event.getController().setAnimation(IDLE);
+            }
+        }
+
+        return PlayState.CONTINUE;
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
@@ -695,17 +713,6 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
                     event.getController().setAnimation(IDLE);
                 }
             }
-            case 1 -> {
-                if (this.getMainAction() == 0) {
-                    event.getController().setAnimation(SIT);
-                } else if (getAttackType() == 1) {
-                    event.getController().setAnimation(DIG_ATTACK);
-                } else if (event.isMoving()) {
-                    event.getController().setAnimation(WALK);
-                } else {
-                    event.getController().setAnimation(IDLE);
-                }
-            }
             case 2 -> {
                 if (this.getMainAction() == 0) {
                     event.getController().setAnimation(SIT);
@@ -721,7 +728,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
                     event.getController().setAnimation(FLY);
                 }
             }
-            default -> {
+            case 3 -> {
                 if (this.getMainAction() == 0) {
                     event.getController().setAnimation(getSitVariation() == 0 ? SIT : SIT2);
                 } else if (getAttackType() == 1) {
