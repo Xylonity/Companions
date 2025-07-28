@@ -21,6 +21,7 @@ public class CorneliusAttackBeeGoal extends AbstractCorneliusAttackGoal {
     @Override
     public boolean canUse() {
         if (cornelius.isTame()) return false;
+        if (cornelius.level().getEntitiesOfClass(Player.class, cornelius.getBoundingBox().inflate(10)).isEmpty()) return false;
         if (cornelius.getAttackType() != 0) return false;
         if (cornelius.getTarget() == null) return false;
         if (cornelius.distanceToSqr(cornelius.getTarget()) >= 9) return false;
