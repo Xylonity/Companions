@@ -175,13 +175,17 @@ public class ShadowBellItem extends TooltipItem {
     @Override
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack pStack, @NotNull Player pPlayer, @NotNull LivingEntity pInteractionTarget, @NotNull InteractionHand pUsedHand) {
         CompoundTag tag = pStack.getTag();
-        if (tag != null && tag.hasUUID(UUID_SHADE)) {
-            if (pInteractionTarget.getUUID().equals(tag.getUUID(UUID_SHADE)) && pInteractionTarget instanceof ShadeEntity) {
+        if (tag != null) {
+            if (pInteractionTarget instanceof ShadeEntity shade && shade.getOwnerUUID() != null && shade.getOwnerUUID().equals(pPlayer.getUUID())) {
                 pInteractionTarget.discard();
-                tag.remove(UUID_SHADE);
-                pStack.setTag(tag);
+                if (tag.hasUUID(UUID_SHADE) && pInteractionTarget.getUUID().equals(tag.getUUID(UUID_SHADE)) && pInteractionTarget instanceof ShadeEntity) {
+                    tag.remove(UUID_SHADE);
+                    pStack.setTag(tag);
+                }
+
                 return InteractionResult.SUCCESS;
             }
+
         }
 
         return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
