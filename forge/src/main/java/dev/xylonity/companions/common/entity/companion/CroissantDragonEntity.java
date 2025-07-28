@@ -294,7 +294,7 @@ public class CroissantDragonEntity extends CompanionEntity {
 
                 setMilkAmount(getMilkAmount() + 1);
 
-                player.level().playSound(null, this.blockPosition(), SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                player.level().playSound(null, this.blockPosition(), SoundEvents.HONEY_DRINK, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
                 return InteractionResult.SUCCESS;
             }
