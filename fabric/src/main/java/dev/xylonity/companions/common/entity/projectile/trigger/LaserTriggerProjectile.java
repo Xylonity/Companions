@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.projectile.trigger;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.companion.MankhEntity;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -91,7 +92,7 @@ public class LaserTriggerProjectile extends BaseProjectile {
             Vec3 end = (hit.getType() == BlockHitResult.Type.BLOCK && !level().getBlockState(hit.getBlockPos()).getCollisionShape(level(), hit.getBlockPos()).isEmpty()) ? hit.getLocation() : targetPos;
 
             AABB bb = new AABB(start, end).inflate(0.25);
-            List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, bb, e -> e != getOwner());
+            List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, bb, e -> !Util.areEntitiesLinked(this, e));
 
             for (LivingEntity e : entities) {
                 if (getOwner() instanceof LivingEntity le) {
