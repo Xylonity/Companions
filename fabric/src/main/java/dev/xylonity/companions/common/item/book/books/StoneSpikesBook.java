@@ -9,6 +9,7 @@ import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.knightlib.api.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.BiPredicate;
 
 public class StoneSpikesBook extends AbstractMagicBook {
 
@@ -53,12 +56,15 @@ public class StoneSpikesBook extends AbstractMagicBook {
 
     private void spawnSpikeRow(Vec3 direction, int count, Player player) {
         for (int i = 0; i < count; i++) {
-            Vec3 pos = player.position().add(direction.scale(1.5 + i * 1.5));
-            int y = player.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, new BlockPos((int) pos.x, 0, (int) pos.z)).getY();
+            Vec3 line = player.position().add(direction.scale(1.5 + i * 1.5));
+
+            int ix = Mth.floor(line.x);
+            int iz = Mth.floor(line.z);
+            int iy = Mth.floor(line.y);
 
             StoneSpikeProjectile spike = CompanionsEntities.STONE_SPIKE_PROJECTILE.create(player.level());
             if (spike != null) {
-                spike.moveTo(pos.x, Util.findValidSpawnPos(new BlockPos((int) pos.x, y, (int) pos.z), player.level()).getY(), pos.z, player.getYRot(), 0.0F);
+                spike.moveTo(ix + 0.5, findSpikeH(player.level(), ix, iy, iz, Math.toRadians(player.getXRot()) < 0) + 1, iz + 0.5, player.getYRot(), 0.0F);
                 spike.setOwner(player);
 
                 if (i == 0) {
@@ -66,9 +72,35 @@ public class StoneSpikesBook extends AbstractMagicBook {
                 } else {
                     TickScheduler.scheduleBoth(player.level(), () -> player.level().addFreshEntity(spike), i * 2);
                 }
+
             }
         }
 
+    }
+
+    private int findSpikeH(Level level, int x, int yStart, int z, boolean shouldCheckUp) {
+        BiPredicate<Level, BlockPos> solid = (level1, pos) -> !level1.getBlockState(pos).getCollisionShape(level1, pos).isEmpty();
+        if (shouldCheckUp) {
+            for (int y = yStart; y <= level.getMaxBuildHeight(); y++) {
+                BlockPos pos = new BlockPos(x, y, z);
+                if (solid.test(level, pos)) return y;
+            }
+            for (int y = yStart; y >= 0; y--) {
+                BlockPos pos = new BlockPos(x, y, z);
+                if (solid.test(level, pos)) return y;
+            }
+        } else {
+            for (int y = yStart; y >= 0; y--) {
+                BlockPos pos = new BlockPos(x, y, z);
+                if (solid.test(level, pos)) return y;
+            }
+            for (int y = yStart; y <= level.getMaxBuildHeight(); y++) {
+                BlockPos pos = new BlockPos(x, y, z);
+                if (solid.test(level, pos)) return y;
+            }
+        }
+
+        return yStart;
     }
 
 }
