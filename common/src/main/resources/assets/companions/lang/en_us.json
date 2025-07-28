@@ -52,6 +52,19 @@
   "crystallized_blood.companions.client_message.added_charge": "A blood charge has been consumed!",
   "crystallized_blood.companions.client_message.max_charges": "Max blood charges amount reached!",
 
+  "croissant_dragon.companions.client_message.requires_milk": "Use a bucket of milk to tame!",
+
+  "golden_allay.companions.client_message.mage_coat_consumed": "Mage coat consumed.",
+  "golden_allay.companions.client_message.requires_mage_coat": "Requires a mage coat to tame!",
+  "golden_allay.companions.client_message.mage_hat_consumed": "Mage hat consumed.",
+  "golden_allay.companions.client_message.requires_hat_coat": "Requires a mage hat to tame!",
+  "golden_allay.companions.client_message.mage_staff_consumed": "Mage staff consumed.",
+  "golden_allay.companions.client_message.requires_staff_coat": "Requires a mage staff to tame!",
+
+  "hostile_imp.companions.client_message.requires_coin": "Requires coins to tame!",
+
+  "respawn_totem.companions.charges_remaining": "\uEA11 %1$d respawn totem charges remaining.",
+
   "item.companions.saint_klimt_music_disc.desc": "Solas Composer - Angel of Gertrude",
 
   "item.companions.netherite_chains": "Netherite Chains",
