@@ -89,16 +89,6 @@ public class MinionEntity extends CompanionEntity {
         return new GroundNavigator(this, pLevel);
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (!isPhaseLocked()) {
-            updateVariantByDimension();
-        }
-
-    }
-
     public static AttributeSupplier setAttributes() {
         return Monster.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, CompanionsConfig.MINION_MAX_LIFE)
@@ -130,6 +120,8 @@ public class MinionEntity extends CompanionEntity {
     }
 
     private void updateVariantByDimension() {
+        if (isPhaseLocked()) return;
+
         ResourceKey<Level> currentDim = this.level().dimension();
 
         if (currentDim.equals(lastDimension)) {
@@ -231,6 +223,21 @@ public class MinionEntity extends CompanionEntity {
 
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!level().isClientSide) {
+            updateVariantByDimension();
+        }
+
+    }
+
+    @Override
+    public boolean fireImmune() {
+        return getVariant().equals(Variant.NETHER.getName());
+    }
+
     private void rewardParticles() {
         for (int i = 0; i < 20; i++) {
             double dx = (this.random.nextDouble() - 0.5) * 2.0;
@@ -303,9 +310,7 @@ public class MinionEntity extends CompanionEntity {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        if (pCompound.contains("IsVariantLocked")) {
-            setIsPhaseLocked(pCompound.getBoolean("IsVariantLocked"));
-        }
+        setIsPhaseLocked(pCompound.getBoolean("IsVariantLocked"));
     }
 
     @Override
@@ -317,7 +322,7 @@ public class MinionEntity extends CompanionEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(VARIANT, Variant.NETHER.getName());
+        this.entityData.define(VARIANT, Variant.OVERWORLD.getName());
         this.entityData.define(IS_LOCKED, false);
         this.entityData.define(IS_FLYING, false);
         this.entityData.define(ATTACK_TYPE, 0);
