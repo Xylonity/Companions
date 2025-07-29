@@ -823,4 +823,46 @@ public final class CompanionsConfig {
     )
     public static boolean ANTLION_FUR_SHOULD_FIRE = true;
 
+    @ConfigEntry(
+            category = "Bonanza",
+            comment = "Bonanza item reward drops from 2 teddy heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]"
+    )
+    public static String BONANZA_2_TEDDY_HEADS_DROPS =
+            "minecraft:golden_apple, 1.0, 1;" +
+            "minecraft:feather, 1.0, 1-4;" +
+            "minecraft:ender_pearl, 0.5, 1;" +
+            "minecraft:enchanted_golden_apple, 0.25, 1;" +
+            "minecraft:netherite_scrap, 0.05, 1;" +
+            "minecraft:wither_skeleton_skull, 0.10, 1;" +
+            "minecraft:axolotl_bucket, 0.10, 1;" +
+            "minecraft:music_disc_pigstep, 0.05, 1;" +
+            "minecraft:diamond, 0.15, 1;" +
+            "minecraft:emerald, 0.20, 1-2;" +
+            "minecraft:experience_bottle, 0.10, 1-3;" +
+            "minecraft:nether_star, 0.005, 1";
+
+    @ConfigEntry(
+            category = "Bonanza",
+            comment = "Bonanza item reward drops from 3 teddy heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]"
+    )
+    public static String BONANZA_3_TEDDY_HEADS_DROPS =
+            "minecraft:golden_apple, 1.0, 1-3;" +
+            "minecraft:enchanted_golden_apple, 0.8, 1-3;" +
+            "minecraft:ender_pearl, 0.75, 1-2;" +
+            "minecraft:ender_eye, 0.75, 1-2;" +
+            "minecraft:diamond, 0.65, 1-9;" +
+            "minecraft:gold_ingot, 0.85, 1-19;" +
+            "minecraft:cake, 0.55, 1;" +
+            "minecraft:netherite_scrap, 0.30, 1;" +
+            "minecraft:netherite_ingot, 0.10, 1;" +
+            "minecraft:nether_star, 0.05, 1;" +
+            "minecraft:enchanted_book, 0.15, 1;" +
+            "minecraft:enchanted_book, 0.10, 1";
+
+    @ConfigEntry(
+            category = "Bonanza",
+            comment = "Bonanza entity spawns from 3 skull heads: [entity, amount; ...]"
+    )
+    public static String BONANZA_3_SKULL_DROP_ENTITIES = "minecraft:warden, 1";
+
 }

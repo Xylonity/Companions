@@ -1,14 +1,16 @@
 package dev.xylonity.companions.common.blockentity;
 
+import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.*;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -16,21 +18,15 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -47,6 +43,8 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.util.RenderUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -173,6 +171,76 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
         }
     }
 
+    private record TeddyDrop(String id, float chance, int min, int max) { ;; }
+    private record SkullDropEntities(String id, int amount) { ;; }
+
+    private static List<TeddyDrop> parseBonanzaTeddyDrops(String config) {
+        List<TeddyDrop> list = new ArrayList<>();
+
+        if (config == null || config.isBlank()) return list;
+
+        for (String part : config.split(";")) {
+            String[] entry = part.trim().split(",");
+            if (entry.length != 3) continue;
+
+            float chance;
+            try {
+                chance = Float.parseFloat(entry[1].trim());
+            } catch (NumberFormatException ignore) {
+                continue;
+            }
+
+            int min;
+            int max;
+            String count = entry[2].trim();
+            if (count.contains("-")) {
+                String[] range = count.split("-");
+                try {
+                    min = Integer.parseInt(range[0].trim());
+                    max = Integer.parseInt(range[1].trim());
+                } catch (NumberFormatException ignore) {
+                    min = 1;
+                    max = 1;
+                }
+            } else {
+                try {
+                    min = Integer.parseInt(count);
+                    max = Integer.parseInt(count);
+                } catch (NumberFormatException ignore) {
+                    min = 1;
+                    max = 1;
+                }
+            }
+
+            list.add(new TeddyDrop(entry[0].trim(), chance, min, max));
+        }
+
+        return list;
+    }
+
+    private static List<SkullDropEntities> parseEntitySpawns(String config) {
+        List<SkullDropEntities> list = new ArrayList<>();
+
+        if (config == null || config.isBlank()) return list;
+
+        for (String part : config.split(";")) {
+            String[] entry = part.trim().split(",");
+            if (entry.length != 2) continue;
+
+            int amount;
+            String id = entry[0].trim();
+            try {
+                amount = Integer.parseInt(entry[1].trim());
+            } catch (NumberFormatException ignore) {
+                continue;
+            }
+
+            list.add(new SkullDropEntities(id, amount));
+        }
+
+        return list;
+    }
+
     private void doubleCreeper() {
         if (getLevel() instanceof ServerLevel server) {
             BlockPos center = worldPosition.above();
@@ -203,50 +271,15 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
     private void doubleTeddy() {
         if (getLevel() != null) {
-            RandomSource rand = getLevel().getRandom();
-
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLDEN_APPLE, 1));
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.FEATHER, rand.nextInt(1, 5)));
-
-            if (rand.nextFloat() < 0.5f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_PEARL, 1));
-            }
-
-            if (rand.nextFloat() < 0.25f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, rand.nextInt(1, 2)));
-            }
-
-            if (rand.nextFloat() < 0.05f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_SCRAP, 1));
-            }
-
-            if (rand.nextFloat() < 0.10f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.WITHER_SKELETON_SKULL));
-            }
-
-            if (rand.nextFloat() < 0.10f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.AXOLOTL_BUCKET));
-            }
-
-            if (rand.nextFloat() < 0.05f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.MUSIC_DISC_PIGSTEP));
-            }
-
-            if (rand.nextFloat() < 0.15f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.DIAMOND, 1));
-            }
-
-            if (rand.nextFloat() < 0.20f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.EMERALD, rand.nextInt(1, 3)));
-            }
-
-            if (rand.nextFloat() < 0.10f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.EXPERIENCE_BOTTLE, rand.nextInt(1, 4)));
-            }
-
-            if (rand.nextFloat() < 0.005f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHER_STAR, 1));
-            }
+            parseBonanzaTeddyDrops(CompanionsConfig.BONANZA_2_TEDDY_HEADS_DROPS)
+                .forEach(drop -> {
+                    if (getLevel().getRandom().nextFloat() < drop.chance) {
+                        Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(drop.id()));
+                        if (item != null) {
+                            popResource(getLevel(), getBlockPos(), new ItemStack(item, (drop.min == drop.max) ? drop.min : getLevel().getRandom().nextInt(drop.min, drop.max + 1)));
+                        }
+                    }
+                });
 
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
@@ -256,11 +289,12 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
     private void doubleSkull() {
         if (getLevel() instanceof ServerLevel serverLevel) {
             Vec3 center = Vec3.atCenterOf(getBlockPos());
-            Player player = serverLevel.getNearestPlayer(center.x, center.y, center.z, 15.0, false);
+            Player player = serverLevel.getNearestPlayer(center.x, center.y, center.z, 25.0, false);
             if (player != null) {
-                FallingBlockEntity anvil = new FallingBlockEntity(serverLevel, player.getX(), player.getY() + 15, player.getZ(), Blocks.ANVIL.defaultBlockState());
+                FallingBlockEntity anvil = new FallingBlockEntity(serverLevel, player.getX(), player.getY() + 20, player.getZ(), Blocks.ANVIL.defaultBlockState());
 
                 anvil.time = 1;
+                anvil.disableDrop();
                 anvil.setHurtsEntities(2.0f, 40);
                 serverLevel.addFreshEntity(anvil);
             }
@@ -321,57 +355,19 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
     private void tripleTeddy() {
         if (getLevel() != null) {
-            RandomSource rand = getLevel().getRandom();
+            if (getLevel() != null) {
+                parseBonanzaTeddyDrops(CompanionsConfig.BONANZA_3_TEDDY_HEADS_DROPS)
+                        .forEach(drop -> {
+                            if (getLevel().getRandom().nextFloat() < drop.chance) {
+                                Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(drop.id()));
+                                if (item != null) {
+                                    popResource(getLevel(), getBlockPos(), new ItemStack(item, (drop.min == drop.max) ? drop.min : getLevel().getRandom().nextInt(drop.min, drop.max + 1)));
+                                }
+                            }
+                        });
 
-            popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLDEN_APPLE, rand.nextInt(1, 4)));
-
-            if (rand.nextFloat() < 0.8f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, rand.nextInt(1, 4)));
+                getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
             }
-
-            if (rand.nextFloat() < 0.75f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_PEARL, rand.nextInt(1, 3)));
-            }
-
-            if (rand.nextFloat() < 0.75f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.ENDER_EYE, rand.nextInt(1, 3)));
-            }
-
-            if (rand.nextFloat() < 0.65f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.DIAMOND, rand.nextInt(1, 10)));
-            }
-
-            if (rand.nextFloat() < 0.85f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.GOLD_INGOT, rand.nextInt(1, 20)));
-            }
-
-            if (rand.nextFloat() < 0.55f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.CAKE, 1));
-            }
-
-            if (rand.nextFloat() < 0.3f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_SCRAP, 1));
-            } else if (rand.nextFloat() < 0.1f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHERITE_INGOT, 1));
-            }
-
-            if (rand.nextFloat() < 0.05f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(Items.NETHER_STAR, 1));
-            }
-
-            if (rand.nextFloat() < 0.15f) {
-                ItemStack book = new ItemStack(Items.ENCHANTED_BOOK);
-                EnchantedBookItem.addEnchantment(book, new EnchantmentInstance(Enchantments.FIRE_ASPECT, 2));
-                popResource(getLevel(), getBlockPos(), book);
-            }
-
-            if (rand.nextFloat() < 0.1f) {
-                ItemStack book = new ItemStack(Items.ENCHANTED_BOOK);
-                EnchantedBookItem.addEnchantment(book, new EnchantmentInstance(Enchantments.ALL_DAMAGE_PROTECTION, 4));
-                popResource(getLevel(), getBlockPos(), book);
-            }
-
-            getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
 
     }
@@ -383,12 +379,31 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
         Player player = server.getNearestPlayer(center.getX(), center.getY(), center.getZ(), 15.0,false);
         if (player == null) return;
 
-        SpawnUtil.trySpawnMob(EntityType.WARDEN, MobSpawnType.TRIGGERED, server, center, 20, 5, 6, SpawnUtil.Strategy.ON_TOP_OF_COLLIDER
-        ).ifPresent(warden -> {
-            warden.moveTo(warden.getX(), warden.getY(), warden.getZ(), player.getYRot(), 0);
-            warden.setTarget(player);
-            warden.getBrain().setMemory(MemoryModuleType.ANGRY_AT, player.getUUID());
-        });
+        for (SkullDropEntities config : parseEntitySpawns(CompanionsConfig.BONANZA_3_SKULL_DROP_ENTITIES)) {
+            EntityType<?> raw = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(config.id()));
+            if (raw == null) continue;
+            // Unsafe cast but eh nobody will spawn non-mob entities... right?
+            EntityType<? extends Mob> type = (EntityType<? extends Mob>) raw;
+
+            for (int i = 0; i < config.amount; i++) {
+                if (type == EntityType.WARDEN) {
+                    SpawnUtil.trySpawnMob(type, MobSpawnType.TRIGGERED, server, center, 20, 5, 6, SpawnUtil.Strategy.ON_TOP_OF_COLLIDER).ifPresent(e -> {
+                        e.moveTo(e.getX(), e.getY(), e.getZ(), player.getYRot(), 0);
+                        e.setTarget(player);
+                        e.getBrain().setMemory(MemoryModuleType.ANGRY_AT, player.getUUID());
+                    });
+                } else {
+                    LivingEntity e = type.spawn(server, new BlockPos(center.getX() - 3 + server.random.nextInt(4), center.getY() - 1, center.getZ() - 3 + server.random.nextInt(4)), MobSpawnType.MOB_SUMMONED);
+                    if (e != null) {
+                        e.moveTo(e.getX(), e.getY(), e.getZ(), player.getYRot(), 0);
+
+                        if (e instanceof HostileEntity hostile) hostile.setTarget(player);
+
+                        server.addFreshEntity(e);
+                    }
+                }
+            }
+        }
 
         level.playSound(null, center, CompanionsSounds.POP.get(), SoundSource.BLOCKS, 1f, 1f);
     }
