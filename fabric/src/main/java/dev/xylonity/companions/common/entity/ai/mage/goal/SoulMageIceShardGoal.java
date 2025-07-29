@@ -24,7 +24,7 @@ public class SoulMageIceShardGoal extends AbstractSoulMageAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        if (soulMage.getOwner() != null) {
+        if (target != null) {
             BigIceShardProjectile projectile = CompanionsEntities.BIG_ICE_SHARD_PROJECTILE.create(soulMage.level());
 
             if (projectile != null) {

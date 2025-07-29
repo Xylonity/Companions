@@ -17,16 +17,19 @@ public class SoulMageTornadoGoal extends AbstractSoulMageAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        TornadoProjectile tornado = CompanionsEntities.TORNADO_PROJECTILE.create(this.soulMage.level());
-        if (tornado != null) {
-            Vec3 startPos = this.soulMage.getEyePosition(1f);
-            Vec3 spawnPos = startPos.add(target.getEyePosition(1f).subtract(startPos).normalize());
+        if (target != null) {
+            TornadoProjectile tornado = CompanionsEntities.TORNADO_PROJECTILE.create(this.soulMage.level());
+            if (tornado != null) {
+                Vec3 startPos = this.soulMage.getEyePosition(1f);
+                Vec3 spawnPos = startPos.add(target.getEyePosition(1f).subtract(startPos).normalize());
 
-            tornado.moveTo(spawnPos.x, spawnPos.y - 1, spawnPos.z);
-            tornado.setOwner(this.soulMage);
+                tornado.moveTo(spawnPos.x, spawnPos.y - 1, spawnPos.z);
+                tornado.setOwner(this.soulMage);
 
-            this.soulMage.level().addFreshEntity(tornado);
+                this.soulMage.level().addFreshEntity(tornado);
+            }
         }
+
     }
 
     @Override

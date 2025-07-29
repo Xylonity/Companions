@@ -17,7 +17,7 @@ public class SoulMageBraceGoal extends AbstractSoulMageAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        if (soulMage.getOwner() != null) {
+        if (target != null) {
             BraceProjectile projectile = CompanionsEntities.BRACE_PROJECTILE.get().create(this.soulMage.level());
             if (projectile != null) {
                 Vec3 eyePos = this.soulMage.getEyePosition();

@@ -16,7 +16,7 @@ public class SoulMageFireMarkGoal extends AbstractSoulMageAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        if (soulMage.getOwner() != null) {
+        if (target != null) {
             FireMarkRingProjectile ring = CompanionsEntities.FIRE_MARK_RING_PROJECTILE.get().create(soulMage.level());
             if (ring != null) {
                 ring.moveTo(target.getX(), target.getY(), target.getZ());

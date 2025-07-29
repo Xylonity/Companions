@@ -21,12 +21,14 @@ public class SoulMageStoneSpikesGoal extends AbstractSoulMageAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        Vec3 baseDir = target.position().subtract(soulMage.position()).normalize();
+        if (target != null) {
+            Vec3 baseDir = target.position().subtract(soulMage.position()).normalize();
 
-        int spikes = 12;
-        spawnSpikeRow(baseDir, spikes);
-        spawnSpikeRow(Util.rotateHorizontalDirection(baseDir, -25), (int) (spikes * 0.7));
-        spawnSpikeRow(Util.rotateHorizontalDirection(baseDir, 25), (int) (spikes * 0.7));
+            int spikes = 12;
+            spawnSpikeRow(baseDir, spikes);
+            spawnSpikeRow(Util.rotateHorizontalDirection(baseDir, -25), (int) (spikes * 0.7));
+            spawnSpikeRow(Util.rotateHorizontalDirection(baseDir, 25), (int) (spikes * 0.7));
+        }
     }
 
     private void spawnSpikeRow(Vec3 direction, int count) {
