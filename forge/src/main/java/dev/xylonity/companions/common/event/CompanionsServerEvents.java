@@ -12,6 +12,7 @@ import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -73,6 +74,10 @@ public class CompanionsServerEvents {
     @Mod.EventBusSubscriber(modid = CompanionsCommon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class CompanionsServerForgeBus {
         ;;
+        @SubscribeEvent
+        public static void wasd(EntityLeaveLevelEvent e) {
+            System.out.println(e.getEntity());
+        }
     }
 
 }

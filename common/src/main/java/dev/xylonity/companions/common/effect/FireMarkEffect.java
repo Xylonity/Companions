@@ -1,20 +1,16 @@
 package dev.xylonity.companions.common.effect;
 
 import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class FireMarkEffect extends MobEffect {
-    private static final Map<UUID, Projectile> FIRE_MARK_PROJECTILES = new ConcurrentHashMap<>();
 
     public FireMarkEffect() {
         super(MobEffectCategory.HARMFUL, 0x303030);
@@ -27,18 +23,22 @@ public class FireMarkEffect extends MobEffect {
             fireMark.moveTo(entity.getX(), entity.getY(), entity.getZ());
             fireMark.setOwner(entity);
             entity.level().addFreshEntity(fireMark);
-
-            FIRE_MARK_PROJECTILES.put(entity.getUUID(), fireMark);
         }
     }
 
-    public void removeAttributeModifiers(@NotNull LivingEntity entity, @NotNull AttributeMap pAttributeMap, int pAmplifier) {
-        super.removeAttributeModifiers(entity, pAttributeMap, pAmplifier);
-
-        Projectile fireMark = FIRE_MARK_PROJECTILES.remove(entity.getUUID());
-        if (fireMark != null) {
-            fireMark.remove(Entity.RemovalReason.DISCARDED);
+    @Override
+    public void applyEffectTick(LivingEntity entity, int i) {
+        if (entity.isOnFire()) {
+            entity.removeEffect(this);
+            entity.level().explode(null, entity.getX(), entity.getY(0.0625) + entity.getBbHeight() * 0.5, entity.getZ(), (float) CompanionsConfig.FIRE_MARK_EFFECT_RADIUS * (CompanionsConfig.FIRE_MARK_EFFECT_RADIUS > 4 ? 0.45F : 0.75f), Level.ExplosionInteraction.MOB);
         }
+
+        super.applyEffectTick(entity, i);
+    }
+
+    @Override
+    public boolean isDurationEffectTick(int i, int ii) {
+        return true;
     }
 
 }
