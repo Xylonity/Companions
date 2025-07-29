@@ -74,10 +74,6 @@ public class CompanionsServerEvents {
     @Mod.EventBusSubscriber(modid = CompanionsCommon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class CompanionsServerForgeBus {
         ;;
-        @SubscribeEvent
-        public static void wasd(EntityLeaveLevelEvent e) {
-            System.out.println(e.getEntity());
-        }
     }
 
 }
