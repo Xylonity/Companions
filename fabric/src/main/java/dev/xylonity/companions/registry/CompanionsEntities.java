@@ -135,7 +135,7 @@ public class CompanionsEntities {
         NETHER_BULLFROG = register("nether_bullfrog", NetherBullfrogEntity::new, MobCategory.CREATURE, 1f, 1f, List.of(EntityType.Builder::fireImmune));
         ENDER_FROG = register("ender_frog", EnderFrogEntity::new, MobCategory.CREATURE, 1f, 2f, null);
 
-        HOSTILE_IMP = register("hostile_imp", HostileImpEntity::new, MobCategory.MONSTER, 0.85f, 1.5f, null);
+        HOSTILE_IMP = register("hostile_imp", HostileImpEntity::new, MobCategory.MONSTER, 0.85f, 1.5f, List.of(EntityType.Builder::fireImmune));
         ILLAGER_GOLEM = register("illager_golem", IllagerGolemEntity::new, MobCategory.MONSTER, 1f, 2f, null);
         HOSTILE_PUPPET_GLOVE = register("hostile_puppet_glove", HostilePuppetGloveEntity::new, MobCategory.CREATURE, 0.8f, 2f, null);
         SACRED_PONTIFF = register("sacred_pontiff", SacredPontiffEntity::new, MobCategory.CREATURE, 2f, 4f, List.of(EntityType.Builder::fireImmune));
