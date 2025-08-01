@@ -83,6 +83,8 @@ dependencies {
 
     implementation fg.deobf("dev.xylonity.knightlib:knightlib-forge-${minecraft_version}:${knightlib_version}")
 
+    implementation fg.deobf("curse.maven:Xaeros-263420:4812568")
+
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
     implementation fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
