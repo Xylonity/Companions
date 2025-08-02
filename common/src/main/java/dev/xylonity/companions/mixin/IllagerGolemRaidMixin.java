@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Raid.class)
-public abstract class IllagerGolemRaidMixin implements RaidAccessor {
+public abstract class IllagerGolemRaidMixin {
 
     @Shadow public abstract int getGroupsSpawned();
     @Shadow public abstract Level getLevel();
@@ -78,7 +78,7 @@ public abstract class IllagerGolemRaidMixin implements RaidAccessor {
     }
 
     static {
-        COMPANIONS_ILLAGER_GOLEM_SPAWNWAVE = new int[]{0, 1, 2, 1, 2, 1, 2, 3};
+        COMPANIONS_ILLAGER_GOLEM_SPAWNWAVE = new int[]{0, 1, 0, 2, 0, 1, 0, 2};
     }
 
 }

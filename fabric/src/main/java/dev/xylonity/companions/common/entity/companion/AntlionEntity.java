@@ -10,6 +10,7 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGo
 import dev.xylonity.companions.common.entity.ai.teddy.goal.TeddyApproachTargetGoal;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.mixin.FallingBlockEntityAccessor;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.api.TickScheduler;
@@ -288,7 +289,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     }
 
     private void spawnFallingBlock(BlockPos pos, BlockState state, double yDelay) {
-        FallingBlockEntity block = new FallingBlockEntity(level(), pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
+        FallingBlockEntity block = FallingBlockEntityAccessor._new(level(), pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
 
         block.setDeltaMovement(0.0, yDelay, 0.0);
 

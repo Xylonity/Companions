@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.AbstractSacredPontiffAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.entity.projectile.FireGeiserProjectile;
+import dev.xylonity.companions.mixin.FallingBlockEntityAccessor;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -148,7 +149,7 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
     }
 
     private void spawnFallingBlock(ServerLevel level, BlockPos pos, BlockState state, double yDelay) {
-        FallingBlockEntity fallingBlock = new FallingBlockEntity(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
+        FallingBlockEntity fallingBlock = FallingBlockEntityAccessor._new(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
 
         fallingBlock.setDeltaMovement(0.0, yDelay, 0.0);
 

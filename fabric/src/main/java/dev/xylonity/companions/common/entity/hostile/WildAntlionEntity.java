@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.ai.antlion.wild.goal.WildAntlionBas
 import dev.xylonity.companions.common.entity.ai.antlion.wild.goal.WildAntlionBaseLongAttackGoal;
 import dev.xylonity.companions.common.entity.ai.antlion.wild.goal.WildAntlionNearestAttackableTarget;
 import dev.xylonity.companions.common.entity.companion.AntlionEntity;
+import dev.xylonity.companions.mixin.FallingBlockEntityAccessor;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -154,7 +155,7 @@ public class WildAntlionEntity extends HostileEntity implements PlayerRideable {
     }
 
     private void spawnFallingBlock(BlockPos pos, BlockState state, double yDelay) {
-        FallingBlockEntity block = new FallingBlockEntity(level(), pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
+        FallingBlockEntity block = FallingBlockEntityAccessor._new(level(), pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
 
         block.setDeltaMovement(0.0, yDelay, 0.0);
 

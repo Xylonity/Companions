@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.blockentity;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.mixin.FallingBlockEntityAccessor;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -292,7 +293,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             Vec3 center = Vec3.atCenterOf(getBlockPos());
             Player player = serverLevel.getNearestPlayer(center.x, center.y, center.z, 25.0, false);
             if (player != null) {
-                FallingBlockEntity anvil = new FallingBlockEntity(serverLevel, player.getX(), player.getY() + 20, player.getZ(), Blocks.ANVIL.defaultBlockState());
+                FallingBlockEntity anvil = FallingBlockEntityAccessor._new(serverLevel, player.getX(), player.getY() + 20, player.getZ(), Blocks.ANVIL.defaultBlockState());
 
                 anvil.time = 1;
                 anvil.disableDrop();

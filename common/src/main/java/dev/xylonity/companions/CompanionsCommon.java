@@ -2,6 +2,9 @@ package dev.xylonity.companions;
 
 import dev.xylonity.companions.platform.CompanionsPlatform;
 import dev.xylonity.companions.registry.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
