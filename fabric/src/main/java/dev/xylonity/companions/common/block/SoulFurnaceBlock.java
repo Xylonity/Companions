@@ -1,11 +1,15 @@
 package dev.xylonity.companions.common.block;
 
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
+import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -15,7 +19,9 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -61,8 +67,23 @@ public class SoulFurnaceBlock extends Block implements EntityBlock {
 
     protected void openContainer(Level pLevel, BlockPos pPos, Player pPlayer) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-        if (blockEntity instanceof SoulFurnaceBlockEntity) {
-            pPlayer.openMenu((MenuProvider) blockEntity);
+        if (blockEntity instanceof SoulFurnaceBlockEntity furnace) {
+            pPlayer.openMenu(new ExtendedScreenHandlerFactory() {
+                @Override
+                public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf friendlyByteBuf) {
+                    friendlyByteBuf.writeBlockPos(pPos);
+                }
+
+                @Override
+                public @NotNull Component getDisplayName() {
+                    return SoulFurnaceBlock.this.getName();
+                }
+
+                @Override
+                public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                    return furnace.createMenu(i, inventory, player);
+                }
+            });
         }
 
     }
