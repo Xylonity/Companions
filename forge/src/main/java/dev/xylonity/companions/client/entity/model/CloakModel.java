@@ -19,7 +19,7 @@ public class CloakModel extends GeoModel<CloakEntity> {
 
     @Override
     public ResourceLocation getTextureResource(CloakEntity animatable) {
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/cloak.png");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/cloak_" + ((animatable.tickCount / 2) % 5) + ".png");
     }
 
     @Override

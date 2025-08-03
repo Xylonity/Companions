@@ -36,10 +36,10 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
                 return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/his_holiness_petrification%d.png", frameIndex));
             }
 
-            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/his_holiness.png");
+            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/his_holiness_" + ((animatable.tickCount / 2) % 10) + ".png");
         }
 
-        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/sacred_pontiff.png");
+        return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/sacred_pontiff_" + ((animatable.tickCount / 2) % 5) + ".png");
     }
 
     @Override
