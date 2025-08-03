@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -23,7 +24,9 @@ public class EternalFireBlock extends BaseFireBlock {
     }
 
     public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader level, @NotNull BlockPos pos) {
-        return true;
+        BlockPos down = pos.below();
+        BlockState belowState = level.getBlockState(down);
+        return belowState.isFaceSturdy(level, down, Direction.UP);
     }
 
     protected boolean canBurn(@NotNull BlockState state) {
