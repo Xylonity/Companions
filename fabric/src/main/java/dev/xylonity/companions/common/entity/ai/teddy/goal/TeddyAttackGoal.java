@@ -17,7 +17,7 @@ public class TeddyAttackGoal extends AbstractTeddyAttackGoal {
 
     @Override
     public boolean canUse() {
-        return super.canUse() && teddy.getTarget() != null && teddy.distanceToSqr(teddy.getTarget()) < 4 && teddy.getPhase() == 1;
+        return super.canUse() && teddy.getTarget() != null && teddy.distanceToSqr(teddy.getTarget()) <= 4.75 && teddy.getPhase() == 1;
     }
 
     @Override
