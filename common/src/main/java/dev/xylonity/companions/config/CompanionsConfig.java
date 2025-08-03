@@ -229,7 +229,7 @@ public final class CompanionsConfig {
     @ConfigEntry(
             category = "Teddy",
             comment = "Max life of the Teddy",
-            min = 0d, max = 65d
+            min = 0d, max = 5000d
     )
     public static double TEDDY_MAX_LIFE = 70d;
 
