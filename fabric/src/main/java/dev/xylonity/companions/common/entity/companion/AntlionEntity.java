@@ -333,12 +333,25 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
     private void updateStats() {
         AttributeInstance maxHealth = this.getAttribute(Attributes.MAX_HEALTH);
-        if (maxHealth != null && getHealth() >= getMaxHealth() * 0.95) {
+        if (maxHealth != null) {
+            double prevHealth = getMaxHealth() * 0.95;
             switch (getVariant()) {
-                case 0 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_NORMAL_MAX_LIFE);
-                case 1 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_TANK_MAX_LIFE);
-                case 2 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_FLYER_MAX_LIFE);
-                default -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_SOLDIER_MAX_LIFE);
+                case 0 -> {
+                    maxHealth.setBaseValue(CompanionsConfig.ANTLION_NORMAL_MAX_LIFE);
+                    if (getHealth() >= prevHealth) setHealth((float) CompanionsConfig.ANTLION_NORMAL_MAX_LIFE);
+                }
+                case 1 -> {
+                    maxHealth.setBaseValue(CompanionsConfig.ANTLION_TANK_MAX_LIFE);
+                    if (getHealth() >= prevHealth) setHealth((float) CompanionsConfig.ANTLION_TANK_MAX_LIFE);
+                }
+                case 2 -> {
+                    maxHealth.setBaseValue(CompanionsConfig.ANTLION_FLYER_MAX_LIFE);
+                    if (getHealth() >= prevHealth) setHealth((float) CompanionsConfig.ANTLION_FLYER_MAX_LIFE);
+                }
+                default -> {
+                    maxHealth.setBaseValue(CompanionsConfig.ANTLION_SOLDIER_MAX_LIFE);
+                    if (getHealth() >= prevHealth) setHealth((float) CompanionsConfig.ANTLION_SOLDIER_MAX_LIFE);
+                }
             }
         }
 
