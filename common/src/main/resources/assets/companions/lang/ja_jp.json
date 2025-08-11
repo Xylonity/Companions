@@ -66,6 +66,11 @@
 
   "respawn_totem.companions.charges_remaining": "\uEA11 リスポーントーテムの残りチャージ：%1$d",
 
+  "effect.companions.fire_mark": "炎の刻印",
+  "effect.companions.electroshock": "感電",
+  "effect.companions.phantom": "幻影",
+  "effect.companions.voodoo": "呪い",
+
   "item.companions.saint_klimt_music_disc.desc": "Solas Composer - Angel of Gertrude",
 
   "item.companions.netherite_chains": "ネザライトの鎖",
