@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.entity.ai.croissant;
 
 import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.CakeCreamTriggerProjectile;
-import dev.xylonity.companions.common.particle.CakeCreamParticle;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -90,7 +89,7 @@ public class CroissantDragonAttackGoal extends Goal {
             Vec3 viewVector = dragon.getViewVector(1.0F).normalize();
             Vec3 spawnPos = eyePos.add(viewVector.scale(1.0));
 
-            CakeCreamParticle.setDefaultVelocity(viewVector.x * 0.5, viewVector.y * 0.5, viewVector.z * 0.5);
+            dragon.setStoredViewVector(viewVector);
 
             if (dragon.level() instanceof ServerLevel level) {
                 SimpleParticleType particle = dragon.getArmorName().equals("chocolate") ?

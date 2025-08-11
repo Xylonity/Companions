@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public interface IProxy {
 
@@ -22,5 +23,6 @@ public interface IProxy {
     default void tickLaserTriggerProjectile(LaserTriggerProjectile e) { ;; }
     default void tickShadeMaw(ShadeMawEntity e) { ;; }
     default void shakePlayerCamera(Player player, int durationTicks, float intensityX, float intensityY, float intensityZ, int fadeStartTick) { ;; }
+    default void updateCreamParticle(Vec3 coordinates) { ;; }
 
 }

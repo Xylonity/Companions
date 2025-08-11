@@ -145,4 +145,9 @@ public class ClientProxy implements IProxy {
         }
     }
 
+    @Override
+    public void updateCreamParticle(Vec3 coordinates) {
+        CakeCreamParticle.setDefaultVelocity(coordinates.x * 0.5, coordinates.y * 0.5, coordinates.z * 0.5);
+    }
+
 }
