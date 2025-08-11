@@ -19,6 +19,7 @@ import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -311,12 +312,25 @@ public class MinionEntity extends CompanionEntity {
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         setIsPhaseLocked(pCompound.getBoolean("IsVariantLocked"));
+        if (pCompound.contains("Variant", Tag.TAG_STRING)) {
+            setVariant(pCompound.getString("Variant"));
+        } else {
+            ResourceKey<Level> dim = this.level().dimension();
+            if (dim.equals(Level.NETHER)) {
+                setVariant(Variant.NETHER.getName());
+            } else if (dim.equals(Level.END)) {
+                setVariant(Variant.END.getName());
+            } else {
+                setVariant(Variant.OVERWORLD.getName());
+            }
+        }
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("IsVariantLocked", isPhaseLocked());
+        pCompound.putString("Variant", getVariant());
     }
 
     @Override
