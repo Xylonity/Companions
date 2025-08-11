@@ -66,6 +66,11 @@
 
   "respawn_totem.companions.charges_remaining": "\uEA11 %1$d respawn totem charges remaining.",
 
+  "effect.companions.fire_mark": "Fire Mark",
+  "effect.companions.electroshock": "Electroshock",
+  "effect.companions.phantom": "Phantom",
+  "effect.companions.voodoo": "Voodoo",
+
   "item.companions.saint_klimt_music_disc.desc": "Solas Composer - Angel of Gertrude",
 
   "item.companions.netherite_chains": "Netherite Chains",
