@@ -123,7 +123,11 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
                 entity.setIsBlood(true);
 
                 AttributeInstance maxHealth = entity.getAttribute(Attributes.MAX_HEALTH);
-                if (maxHealth != null) maxHealth.setBaseValue(maxHealth.getBaseValue() * CompanionsConfig.SHADOW_SWORD_BLOOD_MULTIPLIER);
+                if (maxHealth != null) {
+                    float updatedHealth = (float) (maxHealth.getBaseValue() * CompanionsConfig.SHADOW_SWORD_BLOOD_MULTIPLIER);
+                    maxHealth.setBaseValue(updatedHealth);
+                    entity.setHealth(updatedHealth);
+                }
 
                 AttributeInstance dmg = entity.getAttribute(Attributes.ATTACK_DAMAGE);
                 if (dmg != null) dmg.setBaseValue(dmg.getBaseValue() * CompanionsConfig.SHADOW_SWORD_BLOOD_MULTIPLIER);
