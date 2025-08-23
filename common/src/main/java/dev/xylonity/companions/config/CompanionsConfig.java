@@ -189,6 +189,12 @@ public final class CompanionsConfig {
     )
     public static double CORNELIUS_MAX_LIFE = 70d;
 
+    @ConfigEntry(
+            category = "Cornelius",
+            comment = "Cornelius jackblack bets: [item; item; item; tag; item; ...] the order doesn't matter"
+    )
+    public static String CORNELIUS_JACKBLACK_BETS = "companions:copper_coin; companions:nether_coin; companions:end_coin";
+
     /**
      * CROISSANT DRAGON
      */
