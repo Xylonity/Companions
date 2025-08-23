@@ -2,7 +2,12 @@ package dev.xylonity.companions.common.container;
 
 import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsMenuTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,8 +15,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CorneliusContainerMenu extends AbstractContainerMenu {
 
@@ -25,6 +34,9 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
     public static final int ACTION_TIE = 3;
     public static final int ACTION_WIN = 4;
     public static final int ACTION_JACK = 5;
+
+    private static final List<Object> ALLOWED_BET_KEYS = new ArrayList<>();
+    private static String cachedBets = null;
 
     public CorneliusContainerMenu(int windowId, Inventory playerInv, CorneliusEntity cornelius) {
         super(CompanionsMenuTypes.CORNELIUS_CONTAINER, windowId);
@@ -183,7 +195,7 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
-            return stack.getItem() instanceof CoinItem && !CorneliusContainerMenu.this.gameActive;
+            return isAllowedBet(stack) && !CorneliusContainerMenu.this.gameActive;
         }
 
         @Override
@@ -195,6 +207,59 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
         public boolean allowModification(@NotNull Player pPlayer) {
             return !CorneliusContainerMenu.this.gameActive && super.allowModification(pPlayer);
         }
+
+    }
+
+    private static boolean isAllowedBet(ItemStack stack) {
+        if (stack.isEmpty()) return false;
+
+        parsePossibleBets();
+
+        for (Object object : ALLOWED_BET_KEYS) {
+            if (object instanceof Item item) {
+                if (stack.is(item)) {
+                    return true;
+                }
+
+            } else if (object instanceof TagKey<?> anyTag) {
+                if (stack.is((TagKey<Item>) anyTag)) {
+                    return true;
+                }
+
+            }
+
+        }
+
+        return false;
+    }
+
+    private static void parsePossibleBets() {
+        String raw = CompanionsConfig.CORNELIUS_JACKBLACK_BETS;
+
+        if (raw == null) raw = "";
+        if (raw.equals(cachedBets)) return;
+
+        ALLOWED_BET_KEYS.clear();
+        cachedBets = raw;
+
+        String[] parts = raw.split(";");
+        for (String part : parts) {
+            String string = part.trim();
+            if (string.isEmpty()) continue;
+
+            boolean isTag = string.startsWith("#");
+            ResourceLocation resourceLocation = ResourceLocation.tryParse(isTag ? string.substring(1).trim() : string);
+            if (resourceLocation == null) continue;
+
+            if (isTag) {
+                TagKey<Item> tag = TagKey.create(Registries.ITEM, resourceLocation);
+                ALLOWED_BET_KEYS.add(tag);
+            } else {
+                BuiltInRegistries.ITEM.getOptional(resourceLocation).ifPresent(ALLOWED_BET_KEYS::add);
+            }
+
+        }
+
     }
 
 }
