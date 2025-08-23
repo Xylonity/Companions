@@ -477,11 +477,11 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
         if (spinsRemaining <= 0) {
             if (item == CompanionsBlocks.COPPER_COIN.get().asItem()) {
-                spinsRemaining = 1;
+                spinsRemaining = Integer.parseInt(CompanionsConfig.BONANZA_COIN_TRIES.split(",")[0].trim());
             } else if (item == CompanionsBlocks.NETHER_COIN.get().asItem()) {
-                spinsRemaining = 3;
+                spinsRemaining = Integer.parseInt(CompanionsConfig.BONANZA_COIN_TRIES.split(",")[1].trim());
             } else if (item == CompanionsBlocks.END_COIN.get().asItem()) {
-                spinsRemaining = 5;
+                spinsRemaining = Integer.parseInt(CompanionsConfig.BONANZA_COIN_TRIES.split(",")[2].trim());
             } else {
                 return InteractionResult.PASS;
             }

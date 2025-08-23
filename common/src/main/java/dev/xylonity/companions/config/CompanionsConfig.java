@@ -871,4 +871,10 @@ public final class CompanionsConfig {
     )
     public static String BONANZA_3_SKULL_DROP_ENTITIES = "minecraft:warden, 1";
 
+    @ConfigEntry(
+            category = "Bonanza",
+            comment = "Bonanza amount of tries per coin. The first number corresponds to the copper coin, the second to the nether coin and the third to the end coin. To clarify: [copper_coin, nether_coin, end_coin]"
+    )
+    public static String BONANZA_COIN_TRIES = "1, 3, 5";
+
 }
