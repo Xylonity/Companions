@@ -1,0 +1,9 @@
+{
+  "type": "companions:soul_furnace",
+  "input": {
+    "item": "minecraft:candle"
+  },
+  "required_charges": 1,
+  "process_time": 200,
+  "result_entity": "companions:living_candle"
+}

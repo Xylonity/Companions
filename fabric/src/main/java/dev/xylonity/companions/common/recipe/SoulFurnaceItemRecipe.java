@@ -1,8 +1,7 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.google.gson.JsonObject;
-import dev.xylonity.knightlib.KnightLib;
-import dev.xylonity.knightlib.common.recipe.GreatChaliceRecipe;
+import dev.xylonity.companions.Companions;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -16,10 +15,9 @@ import org.jetbrains.annotations.NotNull;
 
 public record SoulFurnaceItemRecipe(ItemStack input, ItemStack output) implements Recipe<SimpleContainer> {
 
-    private static final ResourceLocation ID = new ResourceLocation(KnightLib.MOD_ID, "great_chalice_interaction");
-
-    public static final RecipeSerializer<GreatChaliceRecipe> SERIALIZER = new Serializer();
-    public static final RecipeType<GreatChaliceRecipe> RECIPE_TYPE = new Type();
+    private static final ResourceLocation ID = new ResourceLocation(Companions.MOD_ID, "soul_furnace_item_interaction");
+    public static final RecipeSerializer<SoulFurnaceItemRecipe> SERIALIZER = new Serializer();
+    public static final RecipeType<SoulFurnaceItemRecipe> RECIPE_TYPE = new Type();
 
     @Override
     public boolean matches(SimpleContainer inv, @NotNull Level lvl) {
@@ -56,8 +54,7 @@ public record SoulFurnaceItemRecipe(ItemStack input, ItemStack output) implement
         return RECIPE_TYPE;
     }
 
-    public static final class Type implements RecipeType<GreatChaliceRecipe> {
-
+    public static final class Type implements RecipeType<SoulFurnaceItemRecipe> {
         @Override
         public String toString() {
             return ID.toString();
@@ -65,19 +62,23 @@ public record SoulFurnaceItemRecipe(ItemStack input, ItemStack output) implement
 
     }
 
-    public static final class Serializer implements RecipeSerializer<GreatChaliceRecipe> {
+    public static final class Serializer implements RecipeSerializer<SoulFurnaceItemRecipe> {
+
         @Override
-        public @NotNull GreatChaliceRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
-            return new GreatChaliceRecipe();
+        public @NotNull SoulFurnaceItemRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
+            return new SoulFurnaceItemRecipe(ItemStack.EMPTY, ItemStack.EMPTY);
         }
 
         @Override
-        public GreatChaliceRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
-            return new GreatChaliceRecipe();
+        public SoulFurnaceItemRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
+            return new SoulFurnaceItemRecipe(ItemStack.EMPTY, ItemStack.EMPTY);
         }
 
         @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull GreatChaliceRecipe rec) { ;; }
+        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull SoulFurnaceItemRecipe rec) {
+            ;;
+        }
+
     }
 
 }

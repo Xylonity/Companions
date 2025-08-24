@@ -1,6 +1,7 @@
 package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.common.recipe.SoulFurnaceRecipe;
 import dev.xylonity.companions.common.recipe.ShadeMawAltarRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -16,9 +17,20 @@ public final class CompanionsRecipes {
     public static final RegistryObject<RecipeSerializer<ShadeMawAltarRecipe>> CHALICE_SERIALIZER;
     public static final RegistryObject<RecipeType<ShadeMawAltarRecipe>> CHALICE_TYPE;
 
+    public static final RegistryObject<RecipeSerializer<SoulFurnaceRecipe>> SOUL_FURNACE_SERIALIZER;
+    public static final RegistryObject<RecipeType<SoulFurnaceRecipe>> SOUL_FURNACE_TYPE;
+
     static {
         CHALICE_SERIALIZER = SERIALIZERS.register("shade_maw_altar_interaction", () -> ShadeMawAltarRecipe.SERIALIZER);
         CHALICE_TYPE = TYPES.register("shade_maw_altar_interaction", () -> ShadeMawAltarRecipe.RECIPE_TYPE);
+
+        SOUL_FURNACE_SERIALIZER = SERIALIZERS.register("soul_furnace", SoulFurnaceRecipe.Serializer::new);
+        SOUL_FURNACE_TYPE = TYPES.register("soul_furnace", () -> new RecipeType<>() {
+            @Override
+            public String toString() {
+                return Companions.MOD_ID + ":soul_furnace";
+            }
+        });
     }
 
 }

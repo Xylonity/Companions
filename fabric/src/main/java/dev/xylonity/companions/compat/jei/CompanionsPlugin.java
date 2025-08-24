@@ -5,16 +5,20 @@ import dev.xylonity.companions.common.recipe.*;
 import dev.xylonity.companions.compat.jei.category.*;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsRecipes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JeiPlugin
@@ -50,12 +54,34 @@ public final class CompanionsPlugin implements IModPlugin {
         reg.addRecipes(RespawnTotemRecipeCategory.TYPE, List.of(new HourglassRecipe()));
         reg.addRecipes(AntlionRecipeCategory.TYPE, List.of(new HourglassRecipe()));
         reg.addRecipes(PuppetRecipeCategory.TYPE, List.of(new EmptyPuppetRecipe()));
-        reg.addRecipes(SoulFurnaceEntityRecipeCategory.TYPE, List.of(new SoulFurnaceEntityRecipe()));
-        reg.addRecipes(SoulFurnaceItemRecipeCategory.TYPE, List.of(
-                new SoulFurnaceItemRecipe(new ItemStack(Items.ROTTEN_FLESH), new ItemStack(CompanionsItems.CRYSTALLIZED_BLOOD.get())),
-                new SoulFurnaceItemRecipe(new ItemStack(Items.DIAMOND), new ItemStack(CompanionsItems.SOUL_GEM.get())),
-                new SoulFurnaceItemRecipe(new ItemStack(CompanionsItems.BIG_BREAD.get()), new ItemStack(CompanionsBlocks.CROISSANT_EGG.get()))
-        ));
+
+        Level lvl = Minecraft.getInstance().level;
+        if (lvl != null) {
+            List<SoulFurnaceItemRecipe> itemRecipes = new ArrayList<>();
+            List<SoulFurnaceEntityRecipe> entityRecipes = new ArrayList<>();
+            for (Recipe<?> base : lvl.getRecipeManager().getAllRecipesFor(CompanionsRecipes.SOUL_FURNACE_TYPE)) {
+                if (!(base instanceof SoulFurnaceRecipe r)) continue;
+
+                ItemStack[] inputs = r.input().getItems();
+
+                if (inputs.length == 0) continue;
+
+                ItemStack in = inputs[0];
+                if (r.resultItem() != null) {
+                    itemRecipes.add(new SoulFurnaceItemRecipe(in, new ItemStack(r.resultItem(), Math.max(1, r.resultCount()))));
+                }
+                else if (r.resultBlock() != null) {
+                    itemRecipes.add(new SoulFurnaceItemRecipe(in, new ItemStack(r.resultBlock())));
+                }
+                else if (r.resultEntity() != null) {
+                    entityRecipes.add(new SoulFurnaceEntityRecipe(in, r.resultEntity()));
+                }
+
+            }
+            reg.addRecipes(SoulFurnaceItemRecipeCategory.TYPE, itemRecipes);
+            reg.addRecipes(SoulFurnaceEntityRecipeCategory.TYPE, entityRecipes);
+        }
+
         reg.addRecipes(CroissantDragonArmorRecipeCategory.TYPE, List.of(
                 new CroissantDragonArmorRecipe(new ItemStack(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get())),
                 new CroissantDragonArmorRecipe(new ItemStack(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get())),

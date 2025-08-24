@@ -6,8 +6,8 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -17,11 +17,16 @@ import org.jetbrains.annotations.NotNull;
 public final class SoulFurnaceEntityRecipe implements Recipe<SimpleContainer> {
 
     private static final ResourceLocation ID = new ResourceLocation(Companions.MOD_ID, "soul_furnace_entity_interaction");
-
     public static final RecipeSerializer<SoulFurnaceEntityRecipe> SERIALIZER = new Serializer();
     public static final RecipeType<SoulFurnaceEntityRecipe> RECIPE_TYPE = new Type();
 
-    public final ItemStack input = new ItemStack(Items.CANDLE);
+    public final ItemStack input;
+    public final EntityType<?> entityType;
+
+    public SoulFurnaceEntityRecipe(ItemStack input, EntityType<?> entityType) {
+        this.input = input;
+        this.entityType = entityType;
+    }
 
     @Override
     public boolean matches(SimpleContainer inv, @NotNull Level lvl) {
@@ -59,7 +64,6 @@ public final class SoulFurnaceEntityRecipe implements Recipe<SimpleContainer> {
     }
 
     public static final class Type implements RecipeType<SoulFurnaceEntityRecipe> {
-
         @Override
         public String toString() {
             return ID.toString();
@@ -68,18 +72,22 @@ public final class SoulFurnaceEntityRecipe implements Recipe<SimpleContainer> {
     }
 
     public static final class Serializer implements RecipeSerializer<SoulFurnaceEntityRecipe> {
+
         @Override
         public @NotNull SoulFurnaceEntityRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
-            return new SoulFurnaceEntityRecipe();
+            return new SoulFurnaceEntityRecipe(ItemStack.EMPTY, EntityType.PIG);
         }
 
         @Override
         public SoulFurnaceEntityRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
-            return new SoulFurnaceEntityRecipe();
+            return new SoulFurnaceEntityRecipe(ItemStack.EMPTY, EntityType.PIG);
         }
 
         @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull SoulFurnaceEntityRecipe rec) { ;; }
+        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull SoulFurnaceEntityRecipe rec) {
+            ;;
+        }
+
     }
 
 }

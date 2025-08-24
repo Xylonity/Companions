@@ -14,11 +14,6 @@ import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.config.ConfigComposer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Companions implements ModInitializer, ClientModInitializer {
 
