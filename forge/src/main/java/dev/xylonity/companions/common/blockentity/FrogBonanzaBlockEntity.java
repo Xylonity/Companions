@@ -245,7 +245,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
         if (getLevel() instanceof ServerLevel server) {
             BlockPos center = worldPosition.above();
             for (int i = 0; i < 2 + new Random().nextInt(3); i++) {
-                PrimedTnt tnt = new PrimedTnt(server, center.getX() + 0.5, center.getY(), center.getZ() + 0.5, null);
+                BonanzaTnt tnt = new BonanzaTnt(server, center.getX() + 0.5, center.getY(), center.getZ() + 0.5, null);
                 double angle = getLevel().random.nextDouble() * Math.PI * 2;
                 double speed = 0.15 + getLevel().random.nextDouble() * 0.6;
                 tnt.setDeltaMovement(Math.cos(angle) * speed, 0.5 + getLevel().random.nextDouble() * 0.3, Math.sin(angle) * speed);
@@ -504,6 +504,18 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
         level.playSound(null, getBlockPos(), CompanionsSounds.BONANZA.get(), SoundSource.BLOCKS, 0.35f, 1f);
 
         return InteractionResult.SUCCESS;
+    }
+
+    private static class BonanzaTnt extends PrimedTnt {
+        public BonanzaTnt(Level level, double x, double y, double z, LivingEntity owner) {
+            super(level, x, y, z, owner);
+        }
+
+        @Override
+        protected void explode() {
+            level().explode(this, getX(), getY() + (double)(getBbHeight() / 16.0F), getZ(), 4.0F, Level.ExplosionInteraction.NONE);
+        }
+
     }
 
     @Override
