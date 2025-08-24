@@ -1,7 +1,6 @@
 package dev.xylonity.companions.mixin;
 
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.companions.common.accessor.RaidAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -22,38 +21,60 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Raid.class)
 public abstract class IllagerGolemRaidMixin {
 
-    @Shadow public abstract int getGroupsSpawned();
-    @Shadow public abstract Level getLevel();
-    @Shadow public abstract void joinRaid(int wave, Raider raider, @Nullable BlockPos pos, boolean isRecruited);
-    @Shadow @Final private int numGroups;
-    @Shadow protected abstract boolean shouldSpawnBonusGroup();
+    @Shadow
+    public abstract int getGroupsSpawned();
 
-    @Shadow @Final private RandomSource random;
-    @Unique private static final int[] COMPANIONS_ILLAGER_GOLEM_SPAWNWAVE;
+    @Shadow
+    public abstract Level getLevel();
+
+    @Shadow
+    public abstract void joinRaid(int wave, Raider raider, @Nullable BlockPos pos, boolean isRecruited);
+
+    @Shadow
+    @Final
+    private int numGroups;
+
+    @Shadow
+    protected abstract boolean shouldSpawnBonusGroup();
+
+    @Shadow
+    @Final
+    private RandomSource random;
+
+    @Unique
+    private static final int[] COMPANIONS_ILLAGER_GOLEM_SPAWNWAVE;
 
     @Inject(method = "spawnGroup", at = @At("HEAD"))
     private void companions$addCustomEntity(BlockPos pos, CallbackInfo ci) {
         int wave = this.getGroupsSpawned() + 1;
+        boolean bonus = this.shouldSpawnBonusGroup();
 
-        DifficultyInstance difficultyInstance = this.getLevel().getCurrentDifficultyAt(pos);
+        int numIllagerGolems = companions$getDefaultNumSpawns(COMPANIONS_ILLAGER_GOLEM_SPAWNWAVE, wave, bonus)
+                + companions$getCustomBonusSpawns(this.random, wave, this.getLevel().getCurrentDifficultyAt(pos), bonus);
 
-        int numIllagerGolems = this.companions$getDefaultNumSpawns(COMPANIONS_ILLAGER_GOLEM_SPAWNWAVE, wave, this.shouldSpawnBonusGroup()) + this.companions$getCustomBonusSpawns(this.random, wave, difficultyInstance, this.shouldSpawnBonusGroup());
+        if (numIllagerGolems <= 0) return;
 
         for (int i = 0; i < numIllagerGolems; i++) {
-            EntityType<? extends Raider> companions$illager_golem_entityType = CompanionsCommon.COMMON_PLATFORM.getIllagerGolemEntity();
-            Raider companions$illager_golem = companions$illager_golem_entityType.create(this.getLevel());
+            Raider raider = CompanionsCommon.COMMON_PLATFORM.getIllagerGolemEntity().create(this.getLevel());
+            if (raider == null) continue;
 
-            if (companions$illager_golem != null) {
-                companions$illager_golem.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
-                this.joinRaid(wave, companions$illager_golem, pos, false);
-            }
+            raider.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
+            this.joinRaid(wave, raider, pos, false);
         }
 
     }
 
     @Unique
-    private int companions$getDefaultNumSpawns(int[] waves, int pWave, boolean pShouldSpawnBonusGroup) {
-        return pShouldSpawnBonusGroup ? waves[this.numGroups] : waves[pWave];
+    private int companions$getDefaultNumSpawns(int[] waves, int pWave, boolean bonus) {
+        int idx = bonus ? this.numGroups : pWave;
+        if (idx < 0) idx = 0;
+
+        if (idx >= waves.length) {
+            int mod = idx & 3;
+            return (mod == 1) ? 1 : (mod == 3 ? 2 : 0);
+        }
+
+        return waves[idx];
     }
 
     @Unique
@@ -74,7 +95,7 @@ public abstract class IllagerGolemRaidMixin {
             }
         }
 
-        return Math.max(0, potentialSpawns > 0 ? random.nextInt(potentialSpawns + 1) : 0);
+        return potentialSpawns > 0 ? random.nextInt(potentialSpawns + 1) : 0;
     }
 
     static {
