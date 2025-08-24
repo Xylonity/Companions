@@ -433,7 +433,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
         controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 2, this::attackPredicate));
     }
 
-    private boolean isInAnyFluid() {
+    public boolean isInAnyFluid() {
         Vec3 eyePos = this.getEyePosition(1.0F);
         return !level().getFluidState(new BlockPos((int) eyePos.x, (int) eyePos.y, (int) eyePos.z)).isEmpty();
     }
