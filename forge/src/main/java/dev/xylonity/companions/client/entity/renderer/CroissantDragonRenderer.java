@@ -31,6 +31,10 @@ public class CroissantDragonRenderer extends GeoEntityRenderer<CroissantDragonEn
             return;
         }
 
+        if (!animatable.isAttacking() && bone.getName().equals("attack_head")) {
+            return;
+        }
+
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 

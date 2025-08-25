@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.ShadeEntity;
+import dev.xylonity.companions.common.item.ShadowBellItem;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
@@ -89,7 +90,7 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
     }
 
     @Override
-    public ShadeEntity spawnShade(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
+    public ShadeEntity spawnShade(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand, ShadowBellItem shadowBell) {
         ShadeEntity entity = CompanionsEntities.SHADE_SWORD.get().create(pLevel);
         if (entity != null) {
             entity.tame(pPlayer);
@@ -131,6 +132,10 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
 
                 AttributeInstance dmg = entity.getAttribute(Attributes.ATTACK_DAMAGE);
                 if (dmg != null) dmg.setBaseValue(dmg.getBaseValue() * CompanionsConfig.SHADOW_SWORD_BLOOD_MULTIPLIER);
+            }
+
+            if (pPlayer.getItemInHand(pUsedHand).hasTag()) {
+                entity.setHasReskin(true);
             }
 
             double dx = pPlayer.getX() - px;

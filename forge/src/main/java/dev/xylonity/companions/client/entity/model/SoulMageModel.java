@@ -19,6 +19,10 @@ public class SoulMageModel extends GeoModel<SoulMageEntity> {
 
     @Override
     public ResourceLocation getTextureResource(SoulMageEntity animatable) {
+        if (animatable.hasCustomName()) {
+            return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/soul_mage_reskin.png");
+        }
+
         return new ResourceLocation(CompanionsCommon.MOD_ID, "textures/entity/soul_mage.png");
     }
 

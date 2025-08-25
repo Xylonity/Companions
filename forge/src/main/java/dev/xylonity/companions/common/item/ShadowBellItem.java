@@ -227,7 +227,7 @@ public class ShadowBellItem extends TooltipItem {
                 altar.activeShadeUUID = null;
             }
 
-            ShadeEntity entity = altar.spawnShade(pPlayer.level(), pPlayer, pUsedHand);
+            ShadeEntity entity = altar.spawnShade(pPlayer.level(), pPlayer, pUsedHand, this);
             if (entity != null) {
                 tag.putUUID(UUID_SHADE, entity.getUUID());
                 stack.setTag(tag);

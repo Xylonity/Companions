@@ -18,6 +18,7 @@ public abstract class ShadeEntity extends CompanionEntity {
     private static final EntityDataAccessor<Boolean> IS_SPAWNING = SynchedEntityData.defineId(ShadeEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_BLOOD = SynchedEntityData.defineId(ShadeEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> LIFETIME = SynchedEntityData.defineId(ShadeEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> RESKIN = SynchedEntityData.defineId(ShadeEntity.class, EntityDataSerializers.BOOLEAN);
 
     protected ShadeEntity(EntityType<? extends CompanionEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -79,6 +80,14 @@ public abstract class ShadeEntity extends CompanionEntity {
         this.entityData.set(IS_SPAWNING, isSpawning);
     }
 
+    public boolean hasReskin() {
+        return this.entityData.get(RESKIN);
+    }
+
+    public void setHasReskin(boolean hasReskin) {
+        this.entityData.set(RESKIN, hasReskin);
+    }
+
     public boolean isBlood() {
         return this.entityData.get(IS_BLOOD);
     }
@@ -101,6 +110,7 @@ public abstract class ShadeEntity extends CompanionEntity {
         pCompound.putBoolean("HasSpawned", this.isSpawning());
         pCompound.putBoolean("IsBlood", this.isBlood());
         pCompound.putInt("Lifetime", this.getLifetime());
+        pCompound.putBoolean("HasReskin", this.hasReskin());
     }
 
     @Override
@@ -115,6 +125,9 @@ public abstract class ShadeEntity extends CompanionEntity {
         if (pCompound.contains("Lifetime")) {
             setLifetime(pCompound.getInt("Lifetime"));
         }
+        if (pCompound.contains("HasReskin")) {
+            setHasReskin(pCompound.getBoolean("HasReskin"));
+        }
     }
 
     @Override
@@ -125,6 +138,7 @@ public abstract class ShadeEntity extends CompanionEntity {
         this.entityData.define(IS_BLOOD, false);
         this.entityData.define(IS_SPAWNING, true);
         this.entityData.define(LIFETIME, getMaxLifetime());
+        this.entityData.define(RESKIN, false);
     }
 
     public abstract int getMaxLifetime();

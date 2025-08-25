@@ -16,11 +16,11 @@ public class CroissantDragonModel extends GeoModel<CroissantDragonEntity> {
 
     @Override
     public ResourceLocation getTextureResource(CroissantDragonEntity animatable) {
-        if (animatable.isAttacking()) {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, TPATH + animatable.getArmorName() + "_attack.png");
-        } else {
-            return new ResourceLocation(CompanionsCommon.MOD_ID, TPATH + animatable.getArmorName() + ".png");
+        if (animatable.hasCustomName()) {
+            return new ResourceLocation(CompanionsCommon.MOD_ID, TPATH + animatable.getArmorName() + "_reskin.png");
         }
+
+        return new ResourceLocation(CompanionsCommon.MOD_ID, TPATH + animatable.getArmorName() + ".png");
     }
 
     @Override

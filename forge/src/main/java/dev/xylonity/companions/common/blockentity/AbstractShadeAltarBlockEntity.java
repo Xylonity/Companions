@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.common.entity.projectile.ShadeAltarUpgradeHaloProjectile;
+import dev.xylonity.companions.common.item.ShadowBellItem;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -174,7 +175,7 @@ public abstract class AbstractShadeAltarBlockEntity extends BlockEntity implemen
         serverLevel.getChunkSource().chunkMap.getPlayers(new ChunkPos(worldPosition), false).forEach(p -> p.connection.send(pkt));
     }
 
-    public abstract @Nullable ShadeEntity spawnShade(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand);
+    public abstract @Nullable ShadeEntity spawnShade(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand, ShadowBellItem shadowBell);
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
