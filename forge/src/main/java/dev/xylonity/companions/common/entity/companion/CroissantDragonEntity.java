@@ -113,6 +113,8 @@ public class CroissantDragonEntity extends CompanionEntity {
 
                 nextEatenRecover = this.tickCount + this.level().getRandom().nextInt(201) + 100;
             }
+
+            if (isTame()) setMilkAmount(3);
         }
 
     }
