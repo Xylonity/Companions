@@ -32,6 +32,21 @@
 						{"origin": [-7, 3, -5], "size": [3, 9, 10], "uv": [15, 27], "mirror": true},
 						{"origin": [4, 3, -5], "size": [3, 9, 10], "uv": [15, 27]}
 					]
+				},
+				{
+					"name": "chains",
+					"parent": "body",
+					"pivot": [0, 7, 0],
+					"cubes": [
+						{"origin": [-5, 2.5, 5], "size": [10, 3, 3], "inflate": 0.2, "pivot": [0, 7, 0], "rotation": [90, 0, 0], "uv": [49, 5]},
+						{"origin": [-5, 7.5, 4], "size": [10, 3, 3], "inflate": 0.2, "pivot": [0, 7, -1], "rotation": [90, 0, 0], "uv": [49, 5]},
+						{"origin": [-5, 4.5, 5], "size": [10, 3, 3], "inflate": 0.2, "pivot": [0, 8, 0], "rotation": [180, 0, 0], "uv": [49, 5]},
+						{"origin": [-5, 9.5, 5], "size": [10, 3, 3], "inflate": 0.2, "pivot": [0, 8, 0], "rotation": [180, 0, 0], "uv": [49, 5]},
+						{"origin": [-5, 9.5, 5], "size": [10, 3, 3], "inflate": 0.2, "pivot": [0, 8, 0], "rotation": [-90, 0, 0], "uv": [49, 5]},
+						{"origin": [-5, 4.5, 4], "size": [10, 3, 3], "inflate": 0.2, "pivot": [0, 8, -1], "rotation": [-90, 0, 0], "uv": [49, 5]},
+						{"origin": [-5, 3.5, 5], "size": [10, 3, 3], "inflate": 0.2, "uv": [49, 5]},
+						{"origin": [-5, 8.5, 5], "size": [10, 3, 3], "inflate": 0.2, "uv": [49, 5]}
+					]
 				}
 			]
 		}

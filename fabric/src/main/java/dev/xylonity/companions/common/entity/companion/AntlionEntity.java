@@ -7,11 +7,11 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
-import dev.xylonity.companions.common.entity.ai.teddy.goal.TeddyApproachTargetGoal;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.mixin.FallingBlockEntityAccessor;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.api.TickScheduler;
 import net.minecraft.core.BlockPos;
@@ -95,6 +95,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.INT);
     // the base form has fur once per cycle
     private static final EntityDataAccessor<Boolean> HAS_FUR = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_LOCKED = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final int ANIMATION_BASE_DIG_IN_TICKS = 55;
     private static final int ANIMATION_BASE_DIG_OUT_TICKS = 15;
@@ -240,9 +241,11 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
             boolean nowNight = level().isNight();
             if (wasNight && !nowNight) {
-                cycleVariant();
+                if (!isPhaseLocked()) cycleVariant();
+                setHasFur(true);
                 setState(0);
             }
+
             wasNight = nowNight;
 
         }
@@ -326,7 +329,6 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
         spawnVariantParticles();
         updateStats();
-        setHasFur(true);
         playSound(CompanionsSounds.SPELL_RELEASE_SPEARS.get());
         if (getVariant() == 2) playSound(CompanionsSounds.ADULT_ANTLION_FLY.get());
     }
@@ -434,6 +436,14 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
                 .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
+    public boolean isPhaseLocked() {
+        return this.entityData.get(IS_LOCKED);
+    }
+
+    public void setIsPhaseLocked(boolean phase) {
+        this.entityData.set(IS_LOCKED, phase);
+    }
+
     public int getVariant() {
         return this.entityData.get(VARIANT);
     }
@@ -469,6 +479,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         this.entityData.define(VARIANT, 0);
         this.entityData.define(ATTACK_TYPE, 0);
         this.entityData.define(STATE, 0);
+        this.entityData.define(IS_LOCKED, false);
         this.entityData.define(HAS_FUR, true);
     }
 
@@ -483,6 +494,28 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
+        if (isTame() && player == getOwner() && item == CompanionsItems.NETHERITE_CHAINS.get() && !isPhaseLocked()) {
+
+            if (level().isClientSide) return InteractionResult.SUCCESS;
+
+            if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
+
+            for (int i = 0; i < 20; i++) {
+                double dx = (this.random.nextDouble() - 0.5) * 2.0;
+                double dy = (this.random.nextDouble() - 0.5) * 2.0;
+                double dz = (this.random.nextDouble() - 0.5) * 2.0;
+                if (this.level() instanceof ServerLevel level) {
+                    if (level.random.nextFloat() < 0.65f) level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.1);
+                    if (level.random.nextFloat() < 0.25f) level.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.2);
+                }
+            }
+
+            playSound(CompanionsSounds.SPELL_RELEASE_MARK.get());
+
+            setIsPhaseLocked(true);
+            return InteractionResult.SUCCESS;
+        }
+
         if (item == Items.SHEARS && isTame() && getOwner() != null && getOwner() == player && getVariant() == 0 && hasFur()) {
             if (level().isClientSide) return InteractionResult.SUCCESS;
 
@@ -495,7 +528,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
             return InteractionResult.SUCCESS;
         }
 
-        if (item == CompanionsItems.HOURGLASS.get() && isTame() && getOwner() != null && getOwner() == player) {
+        if (item == CompanionsItems.HOURGLASS.get() && isTame() && getOwner() != null && getOwner() == player && !isPhaseLocked()) {
             if (level().isClientSide) return InteractionResult.SUCCESS;
 
             itemstack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
@@ -527,6 +560,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+        setIsPhaseLocked(pCompound.getBoolean("IsVariantLocked"));
         if (pCompound.contains("Variant")) {
             this.setVariant(pCompound.getInt("Variant"));
         }
@@ -540,6 +574,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("Variant", getVariant());
         pCompound.putBoolean("HasFur", hasFur());
+        pCompound.putBoolean("IsVariantLocked", isPhaseLocked());
     }
 
     @Override

@@ -36,6 +36,15 @@
 					]
 				},
 				{
+					"name": "chains",
+					"parent": "neck",
+					"pivot": [0, 6, 5],
+					"cubes": [
+						{"origin": [-5, 6, -8], "size": [10, 8, 3], "inflate": 0.2, "uv": [21, 0]},
+						{"origin": [-5, 6, -14], "size": [10, 8, 3], "inflate": 0.2, "uv": [21, 0]}
+					]
+				},
+				{
 					"name": "head",
 					"parent": "neck",
 					"pivot": [-0.5, 9.08682, -15.6076],
