@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.blockentity;
 import dev.xylonity.companions.common.block.SoulFurnaceBlock;
 import dev.xylonity.companions.common.container.SoulFurnaceContainerMenu;
 import dev.xylonity.companions.common.recipe.SoulFurnaceRecipe;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.common.blockentity.GreatChaliceBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -100,6 +101,9 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
         if (currentState.hasProperty(SoulFurnaceBlock.LIT) && currentState.getValue(SoulFurnaceBlock.LIT) != lit) {
             level.setBlock(pos, currentState.setValue(SoulFurnaceBlock.LIT, lit), 3);
         }
+
+        if (CompanionsConfig.SOUL_FURNACE_CONSTANT_MAX_CHARGES) furnace.charges = SoulFurnaceBlockEntity.MAX_CHARGES;
+
     }
 
     private void handleGreatChaliceInteraction(Level level, BlockPos pos) {

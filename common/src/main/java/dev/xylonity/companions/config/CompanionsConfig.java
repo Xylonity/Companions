@@ -47,6 +47,12 @@ public final class CompanionsConfig {
     )
     public static int COMPANIONS_FOLLOW_OWNER_TELEPORT_DISTANCE = 20;
 
+    @ConfigEntry(
+            category = "General",
+            comment = "Should the soul furnace constantly have max charges without needing to fill it"
+    )
+    public static boolean SOUL_FURNACE_CONSTANT_MAX_CHARGES = false;
+
     /**
      * DINAMO
      */
