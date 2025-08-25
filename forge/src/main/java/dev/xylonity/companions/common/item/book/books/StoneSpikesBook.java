@@ -84,12 +84,12 @@ public class StoneSpikesBook extends AbstractMagicBook {
                 BlockPos pos = new BlockPos(x, y, z);
                 if (solid.test(level, pos)) return y;
             }
-            for (int y = yStart; y >= 0; y--) {
+            for (int y = yStart; y >= level.getMinBuildHeight(); y--) {
                 BlockPos pos = new BlockPos(x, y, z);
                 if (solid.test(level, pos)) return y;
             }
         } else {
-            for (int y = yStart; y >= 0; y--) {
+            for (int y = yStart; y >= level.getMinBuildHeight(); y--) {
                 BlockPos pos = new BlockPos(x, y, z);
                 if (solid.test(level, pos)) return y;
             }
