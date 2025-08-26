@@ -134,7 +134,7 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
                 if (dmg != null) dmg.setBaseValue(dmg.getBaseValue() * CompanionsConfig.SHADOW_SWORD_BLOOD_MULTIPLIER);
             }
 
-            if (pPlayer.getItemInHand(pUsedHand).hasTag()) {
+            if (pPlayer.getItemInHand(pUsedHand).hasCustomHoverName()) {
                 entity.setHasReskin(true);
             }
 
