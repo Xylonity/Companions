@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -44,6 +45,21 @@ public class FireRayPieceProjectile extends BaseProjectile {
         entityData.define(PARENT_UUID, Optional.empty());
         entityData.define(YAW, 0f);
         entityData.define(PITCH, 0f);
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return false;
+    }
+
+    @Override
+    public boolean save(CompoundTag compound) {
+        return false;
+    }
+
+    @Override
+    public boolean saveAsPassenger(CompoundTag compound) {
+        return false;
     }
 
     @Override

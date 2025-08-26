@@ -53,6 +53,21 @@ public class FireRayPieceProjectile extends BaseProjectile {
     }
 
     @Override
+    public boolean shouldBeSaved() {
+        return false;
+    }
+
+    @Override
+    public boolean save(CompoundTag compound) {
+        return false;
+    }
+
+    @Override
+    public boolean saveAsPassenger(CompoundTag compound) {
+        return false;
+    }
+
+    @Override
     protected int baseLifetime() {
         return 140;
     }

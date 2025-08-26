@@ -42,8 +42,23 @@ public class FireRayBeamEntity extends Entity implements GeoAnimatable {
 
     public FireRayBeamEntity(EntityType<? extends FireRayBeamEntity> type, Level level) {
         super(type, level);
-        this.noPhysics  = true;
+        this.noPhysics = true;
         this.pieceUUIDs = new UUID[0];
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return false;
+    }
+
+    @Override
+    public boolean save(CompoundTag compound) {
+        return false;
+    }
+
+    @Override
+    public boolean saveAsPassenger(CompoundTag compound) {
+        return false;
     }
 
     public FireRayBeamEntity(ServerLevel lvl, Vec3 origin, float yaw0, float pitch0, int rotTicks, int maxPieces, float sep, SacredPontiffEntity entity) {

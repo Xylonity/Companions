@@ -25,7 +25,18 @@
     "creature": {
       "bounding_box": "piece",
       "spawns": [
-
+        {
+          "type": "minecraft:pillager",
+          "maxCount": 1,
+          "minCount": 1,
+          "weight": 1
+        },
+        {
+          "type": "minecraft:witch",
+          "maxCount": 1,
+          "minCount": 1,
+          "weight": 1
+        }
       ]
     }
   }
