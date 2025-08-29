@@ -22,21 +22,24 @@ public class SoulMageMagicRayGoal extends AbstractSoulMageAttackGoal {
 
     @Override
     protected void performAttack(LivingEntity target) {
-        Vec3 baseDir = target.position().subtract(soulMage.position()).normalize();
+        if (target != null) {
+            Vec3 baseDir = target.position().subtract(soulMage.position()).normalize();
 
-        double traveled = 0d;
-        for (int i = 0; i < 30; i++) {
-            Vec3 piecePos = soulMage.getEyePosition(1f).add(baseDir).add(baseDir.scale(traveled));
-            traveled += 1;
+            double traveled = 0d;
+            for (int i = 0; i < 30; i++) {
+                Vec3 piecePos = soulMage.getEyePosition(1f).add(baseDir).add(baseDir.scale(traveled));
+                traveled += 1;
 
-            BlockPos blockPos = BlockPos.containing(piecePos);
-            if (!isPassableBlock(soulMage.level(), blockPos)) {
+                BlockPos blockPos = BlockPos.containing(piecePos);
+                if (!isPassableBlock(soulMage.level(), blockPos)) {
+                    spawnRayPiece(soulMage.level(), soulMage, piecePos, baseDir, (i == 0));
+                    break;
+                }
+
                 spawnRayPiece(soulMage.level(), soulMage, piecePos, baseDir, (i == 0));
-                break;
             }
-
-            spawnRayPiece(soulMage.level(), soulMage, piecePos, baseDir, (i == 0));
         }
+
     }
 
     private boolean isPassableBlock(Level level, BlockPos pos) {

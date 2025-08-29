@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "companions:shade_sword_altar",
-    "count": 1
+    "count": 1,
+    "id": "companions:shade_sword_altar"
   }
 }

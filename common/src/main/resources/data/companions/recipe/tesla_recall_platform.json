@@ -13,7 +13,7 @@
     }
   },
   "result": {
-    "item": "companions:recall_platform_block",
-    "count": 1
+    "count": 1,
+    "id": "companions:recall_platform_block"
   }
 }

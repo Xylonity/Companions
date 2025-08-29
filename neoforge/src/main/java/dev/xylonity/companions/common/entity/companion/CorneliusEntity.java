@@ -182,7 +182,7 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_ID_FLAGS, (byte) 0);
         builder.define(CAN_ATTACK, true);
@@ -214,9 +214,9 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-            if (!this.level().isClientSide && player instanceof ServerPlayer sp) {
+            if (!level().isClientSide && player instanceof ServerPlayer sp) {
                 sp.openMenu(new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
@@ -228,6 +228,7 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
                         return new CorneliusContainerMenu(i, inventory, CorneliusEntity.this);
                     }
                 }, buf -> buf.writeInt(this.getId()));
+
                 this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.5F, 1.0F);
             }
 

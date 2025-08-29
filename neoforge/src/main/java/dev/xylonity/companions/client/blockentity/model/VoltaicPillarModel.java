@@ -9,7 +9,7 @@ public class VoltaicPillarModel extends GeoModel<VoltaicPillarBlockEntity> {
 
     @Override
     public ResourceLocation getModelResource(VoltaicPillarBlockEntity animatable) {
-        if (animatable.isTop()) {
+        if (animatable.isTop() && !animatable.hasBlockOnTop()) {
             return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "geo/voltaic_pillar_top_block.geo.json");
         }
 
@@ -18,7 +18,7 @@ public class VoltaicPillarModel extends GeoModel<VoltaicPillarBlockEntity> {
 
     @Override
     public ResourceLocation getTextureResource(VoltaicPillarBlockEntity animatable) {
-        if (animatable.isTop()) {
+        if (animatable.isTop() && !animatable.hasBlockOnTop()) {
             if (animatable.isActive()) {
                 return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "textures/block/voltaic_pillar_top_block_on.png");
             }

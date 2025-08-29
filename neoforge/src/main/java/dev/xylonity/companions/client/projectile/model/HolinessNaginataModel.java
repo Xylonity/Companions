@@ -15,7 +15,7 @@ public class HolinessNaginataModel extends GeoModel<HolinessNaginataProjectile> 
 
     @Override
     public ResourceLocation getTextureResource(HolinessNaginataProjectile animatable) {
-        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/his_holiness.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/his_holiness_0.png");
     }
 
     @Override

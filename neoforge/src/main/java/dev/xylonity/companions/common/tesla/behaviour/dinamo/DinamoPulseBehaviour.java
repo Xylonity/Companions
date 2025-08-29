@@ -79,6 +79,7 @@ public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
         for (LivingEntity victim : entitiesToHurt) {
             if (ITeslaUtil.isEntityNearLine(origin, end, victim, 0.75D)) {
                 if (level instanceof ServerLevel sv && dinamo.getOwnerUUID() != null) {
+                    if (Util.areEntitiesLinked(dinamo, victim)) continue;
                     if (!Util.areEntitiesLinked(sv.getEntity(dinamo.getOwnerUUID()), victim)) {
                         victim.hurt(victim.level().damageSources().lightningBolt(), 7f);
                         victim.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK, 50, 0, false, true, true));

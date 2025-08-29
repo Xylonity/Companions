@@ -47,6 +47,12 @@ public final class CompanionsConfig {
     )
     public static int COMPANIONS_FOLLOW_OWNER_TELEPORT_DISTANCE = 20;
 
+    @ConfigEntry(
+            category = "General",
+            comment = "Should the soul furnace constantly have max charges without needing to fill it"
+    )
+    public static boolean SOUL_FURNACE_CONSTANT_MAX_CHARGES = false;
+
     /**
      * DINAMO
      */
@@ -189,6 +195,12 @@ public final class CompanionsConfig {
     )
     public static double CORNELIUS_MAX_LIFE = 70d;
 
+    @ConfigEntry(
+            category = "Cornelius",
+            comment = "Cornelius jackblack bets: [item; item; item; tag; item; ...] the order doesn't matter"
+    )
+    public static String CORNELIUS_JACKBLACK_BETS = "companions:copper_coin; companions:nether_coin; companions:end_coin";
+
     /**
      * CROISSANT DRAGON
      */
@@ -229,7 +241,7 @@ public final class CompanionsConfig {
     @ConfigEntry(
             category = "Teddy",
             comment = "Max life of the Teddy",
-            min = 0d, max = 65d
+            min = 0d, max = 5000d
     )
     public static double TEDDY_MAX_LIFE = 70d;
 
@@ -305,6 +317,13 @@ public final class CompanionsConfig {
     )
     public static double SHADOW_SWORD_DAMAGE = 8.0;
 
+    @ConfigEntry(
+            category = "Shadow Sword",
+            comment = "Shadow Sword stats multiplier on its blood state. For example, if set to 1.2, a default damage of 10 will be 12 when the blood upgrade is active. This is only applied to Health and Attack Damage attributes.",
+            min = 0.0, max = 10.0
+    )
+    public static double SHADOW_SWORD_BLOOD_MULTIPLIER = 1.2;
+
     /**
      * SHADE MAW
      */
@@ -330,6 +349,13 @@ public final class CompanionsConfig {
             min = 0.0, max = 500.0
     )
     public static double SHADOW_MAW_DAMAGE = 6.0;
+
+    @ConfigEntry(
+            category = "Shadow Maw",
+            comment = "Shadow Maw stats multiplier on its blood state. For example, if set to 1.2, a default damage of 10 will be 12 when the blood upgrade is active. This is only applied to Health and Attack Damage attributes.",
+            min = 0.0, max = 10.0
+    )
+    public static double SHADOW_MAW_BLOOD_MULTIPLIER = 1.2;
 
     /**
      * MINION
@@ -449,6 +475,38 @@ public final class CompanionsConfig {
             min = 0.0, max = 100.0
     )
     public static double PUPPET_GLOVE_DAMAGE = 6.5;
+
+    /**
+     * SACRED PONTIFF
+     */
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Max life of the Sacred Pontiff",
+            min = 0d, max = 5000d
+    )
+    public static double SACRED_PONTIFF_MAX_LIFE = 225d;
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Damage dealt by the Sacred Pontiff",
+            min = 0.0, max = 500.0
+    )
+    public static double SACRED_PONTIFF_DAMAGE = 7.0;
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Max life of His Holiness",
+            min = 0d, max = 5000d
+    )
+    public static double HIS_HOLINESS_MAX_LIFE = 350d;
+
+    @ConfigEntry(
+            category = "Sacred Pontiff",
+            comment = "Damage dealt by His Holiness",
+            min = 0.0, max = 500.0
+    )
+    public static double HIS_HOLINESS_DAMAGE = 9.0;
 
     /**
      * MAGIC BOOKS
@@ -606,7 +664,7 @@ public final class CompanionsConfig {
             category = "Armoury",
             comment = "Netherite Dagger stats: [miningLvl, durability, miningSpeed, baseDmg, enchantability]. Don't use negative values and stick to the format."
     )
-    public static String NETHERITE_DAGGER_STATS = "4, 1785, 6, 1, 15";
+    public static String NETHERITE_DAGGER_STATS = "4, 1300, 6, 1, 15";
 
     @ConfigEntry(
             category = "Armoury",
@@ -745,13 +803,13 @@ public final class CompanionsConfig {
             category = "Spawn Rates",
             comment = "Golden allay spawnrate: [weight, minAmount, maxAmount, biomes and tags... (as many as you want)]"
     )
-    public static String GOLDEN_ALLAY_SPAWN = "50, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
+    public static String GOLDEN_ALLAY_SPAWN = "20, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
 
     @ConfigEntry(
             category = "Spawn Rates",
             comment = "Cornelius spawnrate: [weight, minAmount, maxAmount, biomes and tags... (as many as you want)]"
     )
-    public static String CORNELIUS_SPAWN = "40, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
+    public static String CORNELIUS_SPAWN = "15, 1, 1, minecraft:swamp, minecraft:mangrove_swamp, #forge:is_swamp";
 
     @ConfigEntry(
             category = "Spawn Rates",
@@ -776,5 +834,53 @@ public final class CompanionsConfig {
             comment = "Should the antlion fur set the player on fire?"
     )
     public static boolean ANTLION_FUR_SHOULD_FIRE = true;
+
+    @ConfigEntry(
+            category = "Bonanza",
+            comment = "Bonanza item reward drops from 2 teddy heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]"
+    )
+    public static String BONANZA_2_TEDDY_HEADS_DROPS =
+            "minecraft:golden_apple, 1.0, 1;" +
+            "minecraft:feather, 1.0, 1-4;" +
+            "minecraft:ender_pearl, 0.5, 1;" +
+            "minecraft:enchanted_golden_apple, 0.25, 1;" +
+            "minecraft:netherite_scrap, 0.05, 1;" +
+            "minecraft:wither_skeleton_skull, 0.10, 1;" +
+            "minecraft:axolotl_bucket, 0.10, 1;" +
+            "minecraft:music_disc_pigstep, 0.05, 1;" +
+            "minecraft:diamond, 0.15, 1;" +
+            "minecraft:emerald, 0.20, 1-2;" +
+            "minecraft:experience_bottle, 0.10, 1-3;" +
+            "minecraft:nether_star, 0.005, 1";
+
+    @ConfigEntry(
+            category = "Bonanza",
+            comment = "Bonanza item reward drops from 3 teddy heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]"
+    )
+    public static String BONANZA_3_TEDDY_HEADS_DROPS =
+            "minecraft:golden_apple, 1.0, 1-3;" +
+            "minecraft:enchanted_golden_apple, 0.8, 1-3;" +
+            "minecraft:ender_pearl, 0.75, 1-2;" +
+            "minecraft:ender_eye, 0.75, 1-2;" +
+            "minecraft:diamond, 0.65, 1-9;" +
+            "minecraft:gold_ingot, 0.85, 1-19;" +
+            "minecraft:cake, 0.55, 1;" +
+            "minecraft:netherite_scrap, 0.30, 1;" +
+            "minecraft:netherite_ingot, 0.10, 1;" +
+            "minecraft:nether_star, 0.05, 1;" +
+            "minecraft:enchanted_book, 0.15, 1;" +
+            "minecraft:enchanted_book, 0.10, 1";
+
+    @ConfigEntry(
+            category = "Bonanza",
+            comment = "Bonanza entity spawns from 3 skull heads: [entity, amount; ...]"
+    )
+    public static String BONANZA_3_SKULL_DROP_ENTITIES = "minecraft:warden, 1";
+
+    @ConfigEntry(
+            category = "Bonanza",
+            comment = "Bonanza amount of tries per coin. The first number corresponds to the copper coin, the second to the nether coin and the third to the end coin. To clarify: [copper_coin, nether_coin, end_coin]"
+    )
+    public static String BONANZA_COIN_TRIES = "1, 3, 5";
 
 }

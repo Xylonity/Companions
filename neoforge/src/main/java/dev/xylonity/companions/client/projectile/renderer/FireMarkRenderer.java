@@ -1,6 +1,7 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.FireMarkModel;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class FireMarkRenderer extends GeoEntityRenderer<FireMarkProjectile> {
@@ -34,7 +36,7 @@ public class FireMarkRenderer extends GeoEntityRenderer<FireMarkProjectile> {
     }
 
     @Override
-    protected void applyRotations(FireMarkProjectile animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+    public void actuallyRender(PoseStack poseStack, FireMarkProjectile animatable, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
         if (camera != null) {
             double dx = camera.getPosition().x - animatable.getX();
@@ -62,7 +64,7 @@ public class FireMarkRenderer extends GeoEntityRenderer<FireMarkProjectile> {
             poseStack.mulPose(Axis.XP.rotationDegrees(desiredPitch));
         }
 
-        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
 }

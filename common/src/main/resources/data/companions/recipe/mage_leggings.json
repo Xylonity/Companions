@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "companions:mage_leggings",
-    "count": 1
+    "count": 1,
+    "id": "companions:mage_leggings"
   }
 }

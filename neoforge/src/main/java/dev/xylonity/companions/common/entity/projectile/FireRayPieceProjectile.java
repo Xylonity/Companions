@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -12,7 +13,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.*;
 
@@ -35,12 +35,27 @@ public class FireRayPieceProjectile extends BaseProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(INDEX, 0);
         builder.define(PARENT_UUID, Optional.empty());
         builder.define(YAW, 0f);
         builder.define(PITCH, 0f);
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return false;
+    }
+
+    @Override
+    public boolean save(CompoundTag compound) {
+        return false;
+    }
+
+    @Override
+    public boolean saveAsPassenger(CompoundTag compound) {
+        return false;
     }
 
     @Override
@@ -60,7 +75,7 @@ public class FireRayPieceProjectile extends BaseProjectile {
         float yaw = (float) (Mth.atan2(dir.z, dir.x) * Mth.RAD_TO_DEG) - 90f;
         float pitch = (float) (-Mth.atan2(dir.y, Math.sqrt(dir.x*dir.x + dir.z*dir.z)) * Mth.RAD_TO_DEG);
 
-        entityData.set(YAW,   yaw);
+        entityData.set(YAW, yaw);
         entityData.set(PITCH, pitch);
     }
 
@@ -90,8 +105,9 @@ public class FireRayPieceProjectile extends BaseProjectile {
             List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.25), e -> !e.equals(getOwner()));
 
             if (!entities.isEmpty()) {
-                LivingEntity victim = entities.getFirst();
-                victim.hurt(this.damageSources().indirectMagic(this, getOwner()), 0.1F);
+                LivingEntity victim = entities.get(0);
+                victim.hurt(this.damageSources().indirectMagic(this, getOwner()), 5f);
+                victim.setRemainingFireTicks(level().random.nextInt(1, 8) * 20);
             }
         }
 

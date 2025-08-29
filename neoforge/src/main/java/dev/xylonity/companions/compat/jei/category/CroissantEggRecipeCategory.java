@@ -77,7 +77,7 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CroissantEggRecipe rec, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addItemStack(rec.input);
     }
 
     private CroissantEggBlockEntity getOrCreateBlockEntity() {

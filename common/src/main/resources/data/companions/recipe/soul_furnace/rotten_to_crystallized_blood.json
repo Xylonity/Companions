@@ -1,0 +1,10 @@
+{
+  "type": "companions:soul_furnace",
+  "input": {
+    "item": "minecraft:rotten_flesh"
+  },
+  "required_charges": 2,
+  "process_time": 100,
+  "result_item": "companions:crystallized_blood",
+  "result_count": 1
+}

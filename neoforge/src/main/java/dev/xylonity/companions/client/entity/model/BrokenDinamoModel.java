@@ -29,6 +29,7 @@ public class BrokenDinamoModel extends GeoModel<BrokenDinamoEntity> {
 
     @Override
     public void setCustomAnimations(BrokenDinamoEntity animatable, long instanceId, AnimationState<BrokenDinamoEntity> animationState) {
+
         Entity camera = Minecraft.getInstance().getCameraEntity();
         if (camera == null) return;
 

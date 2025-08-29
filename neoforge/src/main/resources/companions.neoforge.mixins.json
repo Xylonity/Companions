@@ -9,8 +9,6 @@
     "MobMixin"
   ],
   "client": [
-    "EntityRendererAccessor",
-    "LivingEntityRendererMixin"
   ],
   "server": [],
   "injectors": {

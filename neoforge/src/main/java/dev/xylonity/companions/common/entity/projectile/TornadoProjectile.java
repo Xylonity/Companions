@@ -40,7 +40,7 @@ public class TornadoProjectile extends BaseProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(GROUNDY, 0f);
         builder.define(STARTX, 0f);

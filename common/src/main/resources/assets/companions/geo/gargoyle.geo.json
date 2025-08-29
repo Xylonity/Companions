@@ -47,6 +47,15 @@
 					]
 				},
 				{
+					"name": "chains",
+					"parent": "arm",
+					"pivot": [0, 23.5, 2],
+					"cubes": [
+						{"origin": [4, 14, -1], "size": [3, 5, 4], "inflate": 0.2, "uv": [0, 41]},
+						{"origin": [4, 9, -1], "size": [3, 5, 4], "inflate": 0.2, "uv": [0, 41]}
+					]
+				},
+				{
 					"name": "fore_arm",
 					"parent": "arm",
 					"pivot": [5.5, 10, 1],
@@ -87,6 +96,15 @@
 					"rotation": [19.80113, -2.15817, 9.78118],
 					"cubes": [
 						{"origin": [-7.5, -1, -4], "size": [4, 1, 6], "inflate": 0.01, "uv": [21, 8], "mirror": true}
+					]
+				},
+				{
+					"name": "chains2",
+					"parent": "arm2",
+					"pivot": [0, 23.5, 2],
+					"cubes": [
+						{"origin": [-7, 14, -1], "size": [3, 5, 4], "inflate": 0.2, "uv": [0, 41], "mirror": true},
+						{"origin": [-7, 9, -1], "size": [3, 5, 4], "inflate": 0.2, "uv": [0, 41], "mirror": true}
 					]
 				},
 				{

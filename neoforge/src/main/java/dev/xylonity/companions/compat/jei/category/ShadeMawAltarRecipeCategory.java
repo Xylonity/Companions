@@ -77,7 +77,7 @@ public final class ShadeMawAltarRecipeCategory implements IRecipeCategory<ShadeM
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ShadeMawAltarRecipe rec, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
     private ShadeMawAltarBlockEntity getOrCreateBlockEntity() {

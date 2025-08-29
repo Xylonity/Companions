@@ -16,11 +16,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 public class CloakRenderer extends GeoEntityRenderer<CloakEntity> {
 
     public CloakRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new CloakModel());
+        addRenderLayer(new AutoGlowingGeoLayer<>(this));
         this.shadowRadius = 1f;
     }
 

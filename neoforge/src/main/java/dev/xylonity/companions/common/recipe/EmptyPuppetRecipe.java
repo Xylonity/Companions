@@ -1,9 +1,8 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.knightlib.common.recipe.input.GenericRecipeInput;
+import dev.xylonity.companions.registry.CompanionsBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -12,23 +11,26 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record EmptyPuppetRecipe(ItemStack input) implements Recipe<GenericRecipeInput> {
+public final class EmptyPuppetRecipe implements Recipe<RecipeInput> {
 
     private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "empty_puppet_interaction");
 
     public static final RecipeSerializer<EmptyPuppetRecipe> SERIALIZER = new Serializer();
     public static final RecipeType<EmptyPuppetRecipe> RECIPE_TYPE = new Type();
 
+    public final ItemStack input = new ItemStack(CompanionsBlocks.EMPTY_PUPPET.get());
+
     @Override
-    public boolean matches(GenericRecipeInput genericRecipeInput, Level level) {
-        return ItemStack.isSameItem(genericRecipeInput.getItem(0), input);
+    public boolean matches(RecipeInput inv, @NotNull Level lvl) {
+        return ItemStack.isSameItem(inv.getItem(0), input);
     }
 
     @Override
-    public ItemStack assemble(GenericRecipeInput genericRecipeInput, HolderLookup.Provider provider) {
+    public @NotNull ItemStack assemble(@NotNull RecipeInput inv, @NotNull HolderLookup.Provider reg) {
         return ItemStack.EMPTY;
     }
 
@@ -37,12 +39,8 @@ public record EmptyPuppetRecipe(ItemStack input) implements Recipe<GenericRecipe
         return true;
     }
 
-    public static ResourceLocation getID() {
-        return ID;
-    }
-
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
+    public @NotNull ItemStack getResultItem(@NotNull HolderLookup.Provider reg) {
         return ItemStack.EMPTY;
     }
 
@@ -66,25 +64,16 @@ public record EmptyPuppetRecipe(ItemStack input) implements Recipe<GenericRecipe
     }
 
     public static final class Serializer implements RecipeSerializer<EmptyPuppetRecipe> {
-        public static final MapCodec<EmptyPuppetRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                i -> i.group(
-                        ItemStack.CODEC.fieldOf("ingredient").forGetter(EmptyPuppetRecipe::input)
-                ).apply(i, EmptyPuppetRecipe::new)
-        );
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, EmptyPuppetRecipe> STREAM_CODEC =
-                StreamCodec.composite(
-                        ItemStack.STREAM_CODEC, EmptyPuppetRecipe::input,
-                        EmptyPuppetRecipe::new
-                );
+        private static final MapCodec<EmptyPuppetRecipe> CODEC = MapCodec.unit(new EmptyPuppetRecipe());
+        private static final StreamCodec<RegistryFriendlyByteBuf, EmptyPuppetRecipe> STREAM_CODEC = StreamCodec.unit(new EmptyPuppetRecipe());
 
         @Override
-        public MapCodec<EmptyPuppetRecipe> codec() {
+        public @NotNull MapCodec<EmptyPuppetRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, EmptyPuppetRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, EmptyPuppetRecipe> streamCodec() {
             return STREAM_CODEC;
         }
     }

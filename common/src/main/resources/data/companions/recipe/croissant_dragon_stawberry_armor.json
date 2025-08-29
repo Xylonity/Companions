@@ -15,7 +15,7 @@
     }
   ],
   "result": {
-    "item": "companions:croissant_dragon_strawberry_armor",
-    "count": 1
+    "count": 1,
+    "id": "companions:croissant_dragon_strawberry_armor"
   }
 }

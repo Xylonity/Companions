@@ -15,7 +15,7 @@
     }
   ],
   "result": {
-    "item": "companions:crystallized_blood_sword",
-    "count": 1
+    "count": 1,
+    "id": "companions:crystallized_blood_sword"
   }
 }

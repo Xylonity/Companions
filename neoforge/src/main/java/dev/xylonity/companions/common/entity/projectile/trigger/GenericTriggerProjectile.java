@@ -21,8 +21,8 @@ public class GenericTriggerProjectile extends Projectile implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        ;;
     }
 
     @Override

@@ -1,0 +1,10 @@
+{
+  "type": "companions:soul_furnace",
+  "input": {
+    "item": "minecraft:diamond"
+  },
+  "required_charges": 3,
+  "process_time": 400,
+  "result_item": "companions:soul_gem",
+  "result_count": 1
+}

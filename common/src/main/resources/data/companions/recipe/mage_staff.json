@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "companions:mage_staff",
-    "count": 1
+    "count": 1,
+    "id": "companions:mage_staff"
   }
 }

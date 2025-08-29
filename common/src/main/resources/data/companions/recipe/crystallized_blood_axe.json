@@ -21,7 +21,7 @@
     }
   ],
   "result": {
-    "item": "companions:crystallized_blood_axe",
-    "count": 1
+    "count": 1,
+    "id": "companions:crystallized_blood_axe"
   }
 }

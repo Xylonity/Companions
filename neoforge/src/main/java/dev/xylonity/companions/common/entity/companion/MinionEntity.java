@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
 import dev.xylonity.companions.common.entity.ai.minion.tamable.gargoyle.GargoyleHealAttackGoal;
 import dev.xylonity.companions.common.entity.ai.minion.tamable.gargoyle.GargoyleSpellAttackGoal;
 import dev.xylonity.companions.common.entity.ai.minion.tamable.imp.ImpBraceAttackGoal;
@@ -13,10 +14,12 @@ import dev.xylonity.companions.common.entity.ai.minion.tamable.minion.MinionTorn
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -85,16 +88,6 @@ public class MinionEntity extends CompanionEntity {
         return new GroundNavigator(this, pLevel);
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (!isPhaseLocked()) {
-            updateVariantByDimension();
-        }
-
-    }
-
     public static AttributeSupplier setAttributes() {
         return Monster.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, CompanionsConfig.MINION_MAX_LIFE)
@@ -119,11 +112,15 @@ public class MinionEntity extends CompanionEntity {
         this.goalSelector.addGoal(3, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(3, new CompanionRandomStrollGoal(this, 0.43));
 
+        this.goalSelector.addGoal(6, new CompanionsLookAtPlayerGoal(this, Player.class, 6.0F));
+
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
     private void updateVariantByDimension() {
+        if (isPhaseLocked()) return;
+
         ResourceKey<Level> currentDim = this.level().dimension();
 
         if (currentDim.equals(lastDimension)) {
@@ -149,8 +146,12 @@ public class MinionEntity extends CompanionEntity {
 
         if (level().isClientSide) return InteractionResult.SUCCESS;
 
-        if (isTame() && player == getOwner() && player.getItemInHand(hand).getItem() == CompanionsItems.NETHERITE_CHAINS.get()) {
+        if (isTame() && player == getOwner() && player.getItemInHand(hand).getItem() == CompanionsItems.NETHERITE_CHAINS.get() && !isPhaseLocked()) {
+
             if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
+
+            tameParticles();
+            playSound(CompanionsSounds.SPELL_RELEASE_MARK.get());
 
             setIsPhaseLocked(true);
             return InteractionResult.SUCCESS;
@@ -219,6 +220,21 @@ public class MinionEntity extends CompanionEntity {
             pLevel.addFreshEntity(itementity);
         }
 
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!level().isClientSide) {
+            updateVariantByDimension();
+        }
+
+    }
+
+    @Override
+    public boolean fireImmune() {
+        return getVariant().equals(Variant.NETHER.getName());
     }
 
     private void rewardParticles() {
@@ -293,8 +309,18 @@ public class MinionEntity extends CompanionEntity {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        if (pCompound.contains("IsVariantLocked")) {
-            setIsPhaseLocked(pCompound.getBoolean("IsVariantLocked"));
+        setIsPhaseLocked(pCompound.getBoolean("IsVariantLocked"));
+        if (pCompound.contains("Variant", Tag.TAG_STRING)) {
+            setVariant(pCompound.getString("Variant"));
+        } else {
+            ResourceKey<Level> dim = this.level().dimension();
+            if (dim.equals(Level.NETHER)) {
+                setVariant(Variant.NETHER.getName());
+            } else if (dim.equals(Level.END)) {
+                setVariant(Variant.END.getName());
+            } else {
+                setVariant(Variant.OVERWORLD.getName());
+            }
         }
     }
 
@@ -302,12 +328,13 @@ public class MinionEntity extends CompanionEntity {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("IsVariantLocked", isPhaseLocked());
+        pCompound.putString("Variant", getVariant());
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(VARIANT, Variant.NETHER.getName());
+        builder.define(VARIANT, Variant.OVERWORLD.getName());
         builder.define(IS_LOCKED, false);
         builder.define(IS_FLYING, false);
         builder.define(ATTACK_TYPE, 0);
@@ -417,6 +444,19 @@ public class MinionEntity extends CompanionEntity {
         }
 
         return PlayState.CONTINUE;
+    }
+
+    private void tameParticles() {
+        for (int i = 0; i < 20; i++) {
+            double dx = (this.random.nextDouble() - 0.5) * 2.0;
+            double dy = (this.random.nextDouble() - 0.5) * 2.0;
+            double dz = (this.random.nextDouble() - 0.5) * 2.0;
+            if (this.level() instanceof ServerLevel level) {
+                if (level.random.nextFloat() < 0.65f) level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.1);
+                if (level.random.nextFloat() < 0.25f) level.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.2);
+            }
+        }
+
     }
 
     public enum Variant {

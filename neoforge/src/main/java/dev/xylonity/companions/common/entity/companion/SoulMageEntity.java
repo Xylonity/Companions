@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
 import dev.xylonity.companions.common.entity.ai.mage.goal.*;
 import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -122,6 +123,8 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
         this.goalSelector.addGoal(4, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(4, new CompanionRandomStrollGoal(this, 0.43));
 
+        this.goalSelector.addGoal(6, new CompanionsLookAtPlayerGoal(this, Player.class, 6.0F));
+
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
@@ -190,7 +193,7 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(SIT_VARIATION, 0);
         builder.define(IS_ATTACKING, false);

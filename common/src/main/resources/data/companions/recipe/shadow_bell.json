@@ -12,7 +12,7 @@
     }
   },
   "result": {
-    "item": "companions:shadow_bell",
-    "count": 1
+    "count": 1,
+    "id": "companions:shadow_bell"
   }
 }

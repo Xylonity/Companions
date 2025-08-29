@@ -84,7 +84,7 @@ public class FloorCakeCreamProjectile extends BaseProjectile implements GeoEntit
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(SIZE, 1.2f);
         builder.define(ARMOR_NAME, "default");

@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.entity.summon;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
-import dev.xylonity.companions.common.entity.ai.generic.CompanionSummonFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -17,6 +16,7 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
@@ -61,7 +61,7 @@ public class LivingCandleEntity extends CompanionSummonEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new CompanionSummonFollowOwnerGoal(this, 0.6D, 2.0F, 50.0F, false));
+        this.goalSelector.addGoal(1, new FollowOwnerGoal(this, 0.6D, 2.0F, 50.0F));
         this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.6D));
     }
 

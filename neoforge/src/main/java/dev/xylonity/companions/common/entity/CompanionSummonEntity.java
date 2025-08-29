@@ -40,6 +40,11 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
     }
 
     @Override
+    public boolean isFood(ItemStack itemStack) {
+        return false;
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -163,11 +168,6 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
         return super.mobInteract(pPlayer, pHand);
     }
 
-    @Override
-    public boolean isFood(ItemStack itemStack) {
-        return false;
-    }
-
     private void cycleOwners() {
         UUID cache = getOwnerUUID();
         this.setOwnerUUID(getSecondOwnerUUID());
@@ -228,7 +228,7 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ATTACK_TYPE, 0);
         builder.define(MAIN_ACTION, 0);

@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "companions:big_bread",
-    "count": 1
+    "count": 1,
+    "id": "companions:big_bread"
   }
 }

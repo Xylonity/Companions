@@ -13,7 +13,7 @@
     }
   },
   "result": {
-    "item": "companions:netherite_dagger",
-    "count": 1
+    "count": 1,
+    "id": "companions:netherite_dagger"
   }
 }

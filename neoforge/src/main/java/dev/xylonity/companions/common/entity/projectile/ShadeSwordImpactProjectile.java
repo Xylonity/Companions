@@ -67,7 +67,7 @@ public class ShadeSwordImpactProjectile extends BaseProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DIRECTION, Direction.NORTH);
     }

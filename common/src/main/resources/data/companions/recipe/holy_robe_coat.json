@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "companions:holy_robe_coat",
-    "count": 1
+    "count": 1,
+    "id": "companions:holy_robe_coat"
   }
 }

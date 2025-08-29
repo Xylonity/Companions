@@ -82,7 +82,7 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ShadeAltarRecipe rec, @NotNull IFocusGroup focuses) {
         this.cachedEntity = null;
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
     private ShadeMawAltarBlockEntity getOrCreateBlockEntity() {

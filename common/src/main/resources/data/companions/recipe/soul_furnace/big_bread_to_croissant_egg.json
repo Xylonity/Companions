@@ -1,0 +1,9 @@
+{
+  "type": "companions:soul_furnace",
+  "input": {
+    "item": "companions:big_bread"
+  },
+  "required_charges": 5,
+  "process_time": 2400,
+  "result_block": "companions:croissant_egg_block"
+}

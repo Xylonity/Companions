@@ -76,7 +76,7 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
     public void setRecipe(IRecipeLayoutBuilder builder, EmptyPuppetRecipe rec, @NotNull IFocusGroup focuses) {
         this.cachedEntity = null;
         this.cachedEntity2 = null;
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addItemStack(rec.input);
     }
 
     private PuppetGloveEntity getOrCreateEntity() {

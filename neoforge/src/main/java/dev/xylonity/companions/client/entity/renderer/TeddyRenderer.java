@@ -24,10 +24,8 @@ public class TeddyRenderer extends GeoEntityRenderer<TeddyEntity> {
 
     @Override
     public void renderRecursively(PoseStack poseStack, TeddyEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-
         if (bone.getName().equals("sword") && !animatable.isTame()) return;
 
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
-
 }

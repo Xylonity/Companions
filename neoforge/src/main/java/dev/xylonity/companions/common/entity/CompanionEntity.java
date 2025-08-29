@@ -2,6 +2,8 @@ package dev.xylonity.companions.common.entity;
 
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.knightlib.registry.KnightLibItems;
+import dev.xylonity.knightlib.registry.KnightLibParticles;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -42,6 +44,11 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     protected CompanionEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.noCulling = true;
+    }
+
+    @Override
+    public boolean isFood(ItemStack itemStack) {
+        return false;
     }
 
     @Override
@@ -103,7 +110,7 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(MAIN_ACTION, 1);
         builder.define(NO_MOVEMENT, false);
@@ -188,6 +195,7 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
         if (pCompound.contains("CompanionsSitVariation")) {
             setSitVariation(pCompound.getInt("CompanionsSitVariation"));
         }
+
     }
 
     @Override
@@ -222,16 +230,20 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
      * the default 'healing' items per se
      */
     public boolean handleDefaultMainActionAndHeal(Player pPlayer, InteractionHand hand) {
+        if (level().isClientSide) return true;
+
         ItemStack stack = pPlayer.getItemInHand(hand);
         Item item = stack.getItem();
 
         if (isTame() && pPlayer == getOwner()) {
-            if (item == KnightLibItems.SMALL_ESSENCE.get()) {
+            if (item == KnightLibItems.SMALL_ESSENCE.get() && getHealth() != getMaxHealth()) {
                 if (!pPlayer.getAbilities().instabuild) stack.shrink(1);
                 this.heal(getHealth() * 0.05f);
-            } else if (item == KnightLibItems.GREAT_ESSENCE.get()) {
+                summonHealParticles();
+            } else if (item == KnightLibItems.GREAT_ESSENCE.get() && getHealth() != getMaxHealth()) {
                 if (!pPlayer.getAbilities().instabuild) stack.shrink(1);
                 this.heal(getHealth() * 0.2f);
+                summonHealParticles();
             } else {
                 defaultMainActionInteraction(pPlayer);
             }
@@ -255,18 +267,25 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
         this.setOrderedToSit(true);
     }
 
+    private void summonHealParticles() {
+        for (int i = 0; i < 10; i++) {
+            double dx = (this.random.nextDouble() - 0.5) * 1.25;
+            double dy = (this.random.nextDouble() - 0.5) * 1.25;
+            double dz = (this.random.nextDouble() - 0.5) * 1.25;
+            if (this.level() instanceof ServerLevel level) {
+                if (level.random.nextFloat() < 0.45f) level.sendParticles(ParticleTypes.POOF, getX(), getY() + 0.15, getZ(), 1, dx, dy, dz, 0.1);
+                if (level.random.nextFloat() < 0.25f) level.sendParticles(KnightLibParticles.STARSET.get(), getX(), getY() + 0.15, getZ(), 1, dx, dy, dz, 0.1);
+            }
+        }
+    }
+
     protected abstract boolean canThisCompanionWork();
     protected abstract int sitAnimationsAmount();
     protected abstract boolean shouldKeepChunkLoaded();
 
     @Override
-    public boolean canChangeDimensions(@NotNull Level level1, @NotNull Level level2) {
+    public boolean canChangeDimensions(Level oldLevel, Level newLevel) {
         return true;
-    }
-
-    @Override
-    public boolean isFood(@NotNull ItemStack itemStack) {
-        return false;
     }
 
 }

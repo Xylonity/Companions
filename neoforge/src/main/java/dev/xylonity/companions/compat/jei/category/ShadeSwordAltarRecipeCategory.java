@@ -80,7 +80,7 @@ public final class ShadeSwordAltarRecipeCategory implements IRecipeCategory<Shad
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ShadeSwordAltarRecipe rec, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
     private ShadeSwordAltarBlockEntity getOrCreateBlockEntity() {

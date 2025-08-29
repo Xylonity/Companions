@@ -330,9 +330,8 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
         }
     }
 
-    @Override
-    protected EntityDimensions getDefaultDimensions(Pose pPose) {
-        return getState() != 2 ? super.getDefaultDimensions(pPose) : EntityDimensions.scalable(1F, 1F);
+    protected EntityDimensions getDefaultDimensions(Pose pose) {
+        return getState() != 2 ? super.getDefaultDimensions(pose) : EntityDimensions.scalable(1F, 1F);
     }
 
     public int getState() {

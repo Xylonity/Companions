@@ -119,9 +119,9 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         super.init();
 
         btnHit = addRenderableWidget(new ImageButtonWrapper(
-                        generalMarginLeft() + 80,
-                        generalMarginTop() + PLAYER_Y + 100,
-                        43, 29, 0, 227, 256, 256, TEX_TOP, b->
+                generalMarginLeft() + 80,
+                generalMarginTop() + PLAYER_Y + 100,
+                43, 29, 0, 227, 256, 256, TEX_TOP, b->
         {
             int c = 0;
             for (int i = 3; i <= 5; i++) {

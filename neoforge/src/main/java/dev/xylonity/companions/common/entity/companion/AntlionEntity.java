@@ -6,9 +6,11 @@ import dev.xylonity.companions.common.entity.ai.antlion.tamable.goal.*;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
+import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.api.TickScheduler;
 import net.minecraft.core.BlockPos;
@@ -89,15 +91,16 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.INT);
     // the base form has fur once per cycle
     private static final EntityDataAccessor<Boolean> HAS_FUR = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_LOCKED = SynchedEntityData.defineId(AntlionEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final int ANIMATION_BASE_DIG_IN_TICKS = 55;
     private static final int ANIMATION_BASE_DIG_OUT_TICKS = 15;
     private static final int ANIMATION_ADULT_HIT_GROUND_TICKS = 7;
     private static final int ANIMATION_ADULT_UNSTUCK_TICKS = 35;
     private static final int ANIMATION_ADULT_TURN_TICKS = 10;
-    private static final int MAX_FALL_TICKS = 7;
+    private static final int MAX_FALL_TICKS = 8;
     private static final int NO_TARGET_MAX_TICKS = 20;
-    private static final float MIN_SPEED_FOR_DESCENT = 0.4f;
+    private static final float MIN_SPEED_FOR_DESCENT = 0.3f;
     private static final float MAX_SPEED_FOR_DESCENT = 1.01f;
 
     private Vec3 vel = Vec3.ZERO;
@@ -234,9 +237,11 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
             boolean nowNight = level().isNight();
             if (wasNight && !nowNight) {
-                cycleVariant();
+                if (!isPhaseLocked()) cycleVariant();
+                setHasFur(true);
                 setState(0);
             }
+
             wasNight = nowNight;
 
         }
@@ -320,19 +325,31 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
         spawnVariantParticles();
         updateStats();
-        setHasFur(true);
         playSound(CompanionsSounds.SPELL_RELEASE_SPEARS.get());
         if (getVariant() == 2) playSound(CompanionsSounds.ADULT_ANTLION_FLY.get());
     }
 
     private void updateStats() {
         AttributeInstance maxHealth = this.getAttribute(Attributes.MAX_HEALTH);
-        if (maxHealth != null && getHealth() >= getMaxHealth() * 0.95) {
+        if (maxHealth != null) {
+            double prevHealth = getMaxHealth() * 0.95;
             switch (getVariant()) {
-                case 0 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_NORMAL_MAX_LIFE);
-                case 1 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_TANK_MAX_LIFE);
-                case 2 -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_FLYER_MAX_LIFE);
-                default -> maxHealth.setBaseValue(CompanionsConfig.ANTLION_SOLDIER_MAX_LIFE);
+                case 0 -> {
+                    maxHealth.setBaseValue(CompanionsConfig.ANTLION_NORMAL_MAX_LIFE);
+                    if (getHealth() >= prevHealth) setHealth((float) CompanionsConfig.ANTLION_NORMAL_MAX_LIFE);
+                }
+                case 1 -> {
+                    maxHealth.setBaseValue(CompanionsConfig.ANTLION_TANK_MAX_LIFE);
+                    if (getHealth() >= prevHealth) setHealth((float) CompanionsConfig.ANTLION_TANK_MAX_LIFE);
+                }
+                case 2 -> {
+                    maxHealth.setBaseValue(CompanionsConfig.ANTLION_FLYER_MAX_LIFE);
+                    if (getHealth() >= prevHealth) setHealth((float) CompanionsConfig.ANTLION_FLYER_MAX_LIFE);
+                }
+                default -> {
+                    maxHealth.setBaseValue(CompanionsConfig.ANTLION_SOLDIER_MAX_LIFE);
+                    if (getHealth() >= prevHealth) setHealth((float) CompanionsConfig.ANTLION_SOLDIER_MAX_LIFE);
+                }
             }
         }
 
@@ -385,6 +402,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         this.goalSelector.addGoal(2, new AntlionBaseAttackGoal(this, 20, 60));
         this.goalSelector.addGoal(2, new AntlionBaseLongAttackGoal(this, 20, 60));
         this.goalSelector.addGoal(2, new AntlionPupaAttackGoal(this, 20, 60));
+        this.goalSelector.addGoal(3, new AntlionPupaApproachTargetGoal(this, 0.475, 0.4f, 1.25f));
         this.goalSelector.addGoal(2, new AntlionAdultAttackGoal(this, 20, 60));
         this.goalSelector.addGoal(2, new AntlionSoldierAttackGoal(this, 20, 60));
         this.goalSelector.addGoal(2, new AntlionSoldierLongAttackGoal(this, 20, 60));
@@ -399,6 +417,8 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         });
         this.goalSelector.addGoal(4, new CompanionRandomStrollGoal(this, 0.43));
 
+        this.goalSelector.addGoal(6, new CompanionsLookAtPlayerGoal(this, Player.class, 6.0F));
+
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
@@ -410,6 +430,14 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
                 .add(Attributes.FOLLOW_RANGE, 35.0).build();
+    }
+
+    public boolean isPhaseLocked() {
+        return this.entityData.get(IS_LOCKED);
+    }
+
+    public void setIsPhaseLocked(boolean phase) {
+        this.entityData.set(IS_LOCKED, phase);
     }
 
     public int getVariant() {
@@ -442,11 +470,12 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(VARIANT, 0);
         builder.define(ATTACK_TYPE, 0);
         builder.define(STATE, 0);
+        builder.define(IS_LOCKED, false);
         builder.define(HAS_FUR, true);
     }
 
@@ -461,6 +490,28 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
+        if (isTame() && player == getOwner() && item == CompanionsItems.NETHERITE_CHAINS.get() && !isPhaseLocked()) {
+
+            if (level().isClientSide) return InteractionResult.SUCCESS;
+
+            if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
+
+            for (int i = 0; i < 20; i++) {
+                double dx = (this.random.nextDouble() - 0.5) * 2.0;
+                double dy = (this.random.nextDouble() - 0.5) * 2.0;
+                double dz = (this.random.nextDouble() - 0.5) * 2.0;
+                if (this.level() instanceof ServerLevel level) {
+                    if (level.random.nextFloat() < 0.65f) level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.1);
+                    if (level.random.nextFloat() < 0.25f) level.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), this.getX(), this.getY() + getBbHeight() * Math.random(), this.getZ(), 1, dx, dy, dz, 0.2);
+                }
+            }
+
+            playSound(CompanionsSounds.SPELL_RELEASE_MARK.get());
+
+            setIsPhaseLocked(true);
+            return InteractionResult.SUCCESS;
+        }
+
         if (item == Items.SHEARS && isTame() && getOwner() != null && getOwner() == player && getVariant() == 0 && hasFur()) {
             if (level().isClientSide) return InteractionResult.SUCCESS;
 
@@ -473,7 +524,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
             return InteractionResult.SUCCESS;
         }
 
-        if (item == CompanionsItems.HOURGLASS.get() && isTame() && getOwner() != null && getOwner() == player) {
+        if (item == CompanionsItems.HOURGLASS.get() && isTame() && getOwner() != null && getOwner() == player && !isPhaseLocked()) {
             if (level().isClientSide) return InteractionResult.SUCCESS;
 
             itemstack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
@@ -505,6 +556,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+        setIsPhaseLocked(pCompound.getBoolean("IsVariantLocked"));
         if (pCompound.contains("Variant")) {
             this.setVariant(pCompound.getInt("Variant"));
         }
@@ -514,15 +566,11 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     }
 
     @Override
-    public boolean isFood(@NotNull ItemStack itemStack) {
-        return false;
-    }
-
-    @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("Variant", getVariant());
         pCompound.putBoolean("HasFur", hasFur());
+        pCompound.putBoolean("IsVariantLocked", isPhaseLocked());
     }
 
     @Override
@@ -566,6 +614,11 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
         else throttle = Mth.lerp(0.20F, throttle, 0F);
 
         float speed = ((float) getAttributeValue(Attributes.MOVEMENT_SPEED)) * 1.1f * throttle;
+
+        if (onGround()) {
+            speed *= 0.05f;
+        }
+
         float speedMag = Math.abs(speed);
 
         Vec3 aim = rider.getLookAngle().normalize();
@@ -664,6 +717,22 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
+        controllerRegistrar.add(new AnimationController<>(this, "pupaController", 0, this::pupaPredicate));
+    }
+
+    private <T extends GeoAnimatable> PlayState pupaPredicate(AnimationState<T> event) {
+
+        if (getVariant() == 1) {
+            if (getAttackType() == 1) {
+                event.getController().setAnimation(ATTACK);
+            } else if (event.isMoving()) {
+                event.getController().setAnimation(WALK);
+            } else {
+                event.getController().setAnimation(IDLE);
+            }
+        }
+
+        return PlayState.CONTINUE;
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
@@ -688,17 +757,6 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
                     event.getController().setAnimation(IDLE);
                 }
             }
-            case 1 -> {
-                if (this.getMainAction() == 0) {
-                    event.getController().setAnimation(SIT);
-                } else if (getAttackType() == 1) {
-                    event.getController().setAnimation(DIG_ATTACK);
-                } else if (event.isMoving()) {
-                    event.getController().setAnimation(WALK);
-                } else {
-                    event.getController().setAnimation(IDLE);
-                }
-            }
             case 2 -> {
                 if (this.getMainAction() == 0) {
                     event.getController().setAnimation(SIT);
@@ -714,7 +772,7 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
                     event.getController().setAnimation(FLY);
                 }
             }
-            default -> {
+            case 3 -> {
                 if (this.getMainAction() == 0) {
                     event.getController().setAnimation(getSitVariation() == 0 ? SIT : SIT2);
                 } else if (getAttackType() == 1) {

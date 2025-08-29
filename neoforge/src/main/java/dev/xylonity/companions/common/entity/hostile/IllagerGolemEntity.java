@@ -38,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -84,11 +85,6 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
-    }
-
-    @Override
-    public void applyRaidBuffs(ServerLevel serverLevel, int i, boolean b) {
-
     }
 
     public static AttributeSupplier setAttributes() {
@@ -256,6 +252,11 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
         builder.define(ANIMATION_START_TICK, 0);
         builder.define(TEST_TIMER, 0);
         builder.define(TICKCOUNT, 0);
+    }
+
+    @Override
+    public void applyRaidBuffs(ServerLevel serverLevel, int i, boolean b) {
+
     }
 
     @Override

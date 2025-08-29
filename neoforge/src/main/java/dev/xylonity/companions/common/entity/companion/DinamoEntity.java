@@ -333,7 +333,7 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ACTIVE, false);
         builder.define(CYCLE_COUNTER, 0);

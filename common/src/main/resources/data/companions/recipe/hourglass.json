@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "companions:hourglass",
-    "count": 1
+    "count": 1,
+    "id": "companions:hourglass"
   }
 }

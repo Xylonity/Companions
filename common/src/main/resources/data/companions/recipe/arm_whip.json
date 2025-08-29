@@ -9,7 +9,7 @@
     }
   ],
   "result": {
-    "item": "companions:whip_arm",
-    "count": 1
+    "count": 1,
+    "id": "companions:whip_arm"
   }
 }

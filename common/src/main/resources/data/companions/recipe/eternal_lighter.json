@@ -15,7 +15,7 @@
     }
   ],
   "result": {
-    "item": "companions:eternal_lighter",
-    "count": 1
+    "count": 1,
+    "id": "companions:eternal_lighter"
   }
 }

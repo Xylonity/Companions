@@ -5,7 +5,6 @@ import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.registry.CompanionsParticles;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,7 +24,7 @@ public class LampPulseBehaviour implements ITeslaNodeBehaviour {
         if (lamp.cycleCounter >= 0) {
 
             // Particle decoration
-            if (lamp.isActive() && level instanceof ClientLevel && lamp.cycleCounter % 4 == 0) {
+            if (lamp.isActive() && lamp.cycleCounter % 4 == 0) {
                 for (int i = 0; i < 360; i += 120) {
                     if (new Random().nextFloat() < 0.6f) {
                         double radius = 0.2;

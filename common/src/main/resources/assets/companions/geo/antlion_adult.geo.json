@@ -32,6 +32,15 @@
 					]
 				},
 				{
+					"name": "chains",
+					"parent": "body",
+					"pivot": [0, 7, -13],
+					"cubes": [
+						{"origin": [-3, 6, -10], "size": [6, 7, 3], "inflate": 0.2, "uv": [62, 0]},
+						{"origin": [-3, 6, -1], "size": [6, 7, 3], "inflate": 0.2, "uv": [62, 0]}
+					]
+				},
+				{
 					"name": "wing",
 					"parent": "body",
 					"pivot": [3, 12, -6],

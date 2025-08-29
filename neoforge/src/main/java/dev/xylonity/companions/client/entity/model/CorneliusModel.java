@@ -14,6 +14,10 @@ public class CorneliusModel extends GeoModel<CorneliusEntity> {
 
     @Override
     public ResourceLocation getTextureResource(CorneliusEntity animatable) {
+        if (animatable.hasCustomName()) {
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/cornelius_reskin.png");
+        }
+
         return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/cornelius.png");
     }
 

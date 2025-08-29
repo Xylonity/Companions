@@ -7,7 +7,7 @@
     "item": "minecraft:chain"
   },
   "result": {
-    "item": "companions:netherite_chains"
+    "id": "companions:netherite_chains"
   },
   "template": {
     "item": "minecraft:netherite_upgrade_smithing_template"

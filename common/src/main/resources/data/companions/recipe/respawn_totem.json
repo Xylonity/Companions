@@ -18,7 +18,7 @@
     }
   ],
   "result": {
-    "item": "companions:respawn_totem_block",
-    "count": 1
+    "count": 1,
+    "id": "companions:respawn_totem_block"
   }
 }

@@ -1,7 +1,8 @@
 package dev.xylonity.companions.common.container;
 
-import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
+import dev.xylonity.companions.common.recipe.SoulFurnaceRecipe;
 import dev.xylonity.companions.registry.CompanionsMenuTypes;
+import dev.xylonity.companions.registry.CompanionsRecipes;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -9,6 +10,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 public class SoulFurnaceContainerMenu extends AbstractContainerMenu {
@@ -25,7 +27,7 @@ public class SoulFurnaceContainerMenu extends AbstractContainerMenu {
         this.addSlot(new Slot(furnaceInventory, 0, 56, 22) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return SoulFurnaceBlockEntity.isValidInput(stack);
+                return isValidInput(stack);
             }
         });
 
@@ -51,6 +53,19 @@ public class SoulFurnaceContainerMenu extends AbstractContainerMenu {
         addDataSlots(data);
     }
 
+    private boolean isValidInput(ItemStack stack) {
+        if (player == null) return false;
+
+        for (RecipeHolder<?> rec : player.level().getRecipeManager().getAllRecipesFor(CompanionsRecipes.SOUL_FURNACE_TYPE.get())) {
+            if (rec.value() instanceof SoulFurnaceRecipe r && r.input().test(stack)) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
     @Override
     public boolean stillValid(@NotNull Player player) {
         return furnaceInventory.stillValid(player);
@@ -71,7 +86,6 @@ public class SoulFurnaceContainerMenu extends AbstractContainerMenu {
             } else if (!this.moveItemStackTo(stackInSlot, 0, containerSlotCount, false)) {
                 return ItemStack.EMPTY;
             }
-
             if (stackInSlot.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {

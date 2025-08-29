@@ -5,13 +5,22 @@ import dev.xylonity.knightlib.registry.KnightLibBlocks;
 import dev.xylonity.knightlib.registry.KnightLibItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class CompanionsCreativeModeTabs {
 
     public static void init() { ;; }
+
+    private static final List<Supplier<Item>> spawnEggs = new ArrayList<>();
+
+    public static void populateSpawnEgg(Supplier<Item> item) {
+        spawnEggs.add(item);
+    }
 
     public static final Supplier<CreativeModeTab> COMPANIONS_TAB =
             CompanionsCommon.COMMON_PLATFORM.registerCreativeModeTab("companions_tab",
@@ -94,6 +103,10 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get());
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get());
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get());
+
+                                for (Supplier<Item> sup : spawnEggs) {
+                                    output.accept(sup.get());
+                                }
 
                             })
                             .build());

@@ -73,7 +73,7 @@ public class EmberPoleEntity extends CompanionSummonEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(IS_EXPLODING, false);
     }
