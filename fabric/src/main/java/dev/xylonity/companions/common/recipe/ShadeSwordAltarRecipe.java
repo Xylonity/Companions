@@ -1,49 +1,47 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.knightlib.common.recipe.input.GenericRecipeInput;
+import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record ShadeSwordAltarRecipe(ItemStack input) implements Recipe<GenericRecipeInput> {
+public final class ShadeSwordAltarRecipe implements Recipe<RecipeInput> {
 
     private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "shade_sword_altar_interaction");
 
     public static final RecipeSerializer<ShadeSwordAltarRecipe> SERIALIZER = new Serializer();
     public static final RecipeType<ShadeSwordAltarRecipe> RECIPE_TYPE = new Type();
 
-    @Override
-    public boolean matches(GenericRecipeInput genericRecipeInput, Level level) {
-        return ItemStack.isSameItem(genericRecipeInput.getItem(0), input);
-    }
-
-    public static ResourceLocation getID() {
-        return ID;
-    }
+    public final ItemStack input = new ItemStack(CompanionsItems.SHADOW_BELL.get());
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
-        return ItemStack.EMPTY;
+    public boolean matches(RecipeInput inv, @NotNull Level lvl) {
+        return ItemStack.isSameItem(inv.getItem(0), input);
     }
 
     @Override
-    public ItemStack assemble(GenericRecipeInput genericRecipeInput, HolderLookup.Provider provider) {
+    public @NotNull ItemStack assemble(@NotNull RecipeInput inv, @NotNull HolderLookup.Provider reg) {
         return ItemStack.EMPTY;
     }
 
     @Override
     public boolean canCraftInDimensions(int w, int h) {
         return true;
+    }
+
+    @Override
+    public @NotNull ItemStack getResultItem(@NotNull HolderLookup.Provider reg) {
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -66,25 +64,16 @@ public record ShadeSwordAltarRecipe(ItemStack input) implements Recipe<GenericRe
     }
 
     public static final class Serializer implements RecipeSerializer<ShadeSwordAltarRecipe> {
-        public static final MapCodec<ShadeSwordAltarRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                i -> i.group(
-                        ItemStack.CODEC.fieldOf("ingredient").forGetter(ShadeSwordAltarRecipe::input)
-                ).apply(i, ShadeSwordAltarRecipe::new)
-        );
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, ShadeSwordAltarRecipe> STREAM_CODEC =
-                StreamCodec.composite(
-                        ItemStack.STREAM_CODEC, ShadeSwordAltarRecipe::input,
-                        ShadeSwordAltarRecipe::new
-                );
+        private static final MapCodec<ShadeSwordAltarRecipe> CODEC = MapCodec.unit(new ShadeSwordAltarRecipe());
+        private static final StreamCodec<RegistryFriendlyByteBuf, ShadeSwordAltarRecipe> STREAM_CODEC = StreamCodec.unit(new ShadeSwordAltarRecipe());
 
         @Override
-        public MapCodec<ShadeSwordAltarRecipe> codec() {
+        public @NotNull MapCodec<ShadeSwordAltarRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ShadeSwordAltarRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, ShadeSwordAltarRecipe> streamCodec() {
             return STREAM_CODEC;
         }
     }

@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.event;
 
 import dev.xylonity.companions.common.entity.companion.*;
 import dev.xylonity.companions.common.entity.hostile.*;
-import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
+import dev.xylonity.companions.common.entity.summon.*;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
@@ -36,6 +36,11 @@ public final class CompanionsServerEvents {
         FabricDefaultAttributeRegistry.register(CompanionsEntities.SACRED_PONTIFF, SacredPontiffEntity.setAttributes());
         FabricDefaultAttributeRegistry.register(CompanionsEntities.WILD_ANTLION, WildAntlionEntity.setAttributes());
         FabricDefaultAttributeRegistry.register(CompanionsEntities.HOSTILE_IMP, HostileImpEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(CompanionsEntities.FIREWORK_TOAD, FireworkToadEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(CompanionsEntities.NETHER_BULLFROG, NetherBullfrogEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(CompanionsEntities.ENDER_FROG, EnderFrogEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(CompanionsEntities.EMBER_POLE, EmberPoleEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(CompanionsEntities.BUBBLE_FROG, BubbleFrogEntity.setAttributes());
 
         // Demon flesh drop fallback when the destination entity doesn't have a loot table json defined
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
@@ -44,7 +49,7 @@ public final class CompanionsServerEvents {
             if (!entity.getType().is(CompanionsTags.DEMON_FLESH_DROP)) return;
 
             String file = entity.getType().getDefaultLootTable().location().getPath().substring("entities/".length());
-            if (!world.getServer().getResourceManager().listResources("loot_tables/entities", id -> id.getPath().equals(file + ".json")).isEmpty()) {
+            if (!world.getServer().getResourceManager().listResources("loot_table/entities", id -> id.getPath().equals(file + ".json")).isEmpty()) {
                 return;
             }
 

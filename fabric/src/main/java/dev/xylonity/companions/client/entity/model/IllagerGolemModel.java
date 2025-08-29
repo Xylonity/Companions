@@ -28,6 +28,7 @@ public class IllagerGolemModel extends GeoModel<IllagerGolemEntity> {
 
     @Override
     public void setCustomAnimations(IllagerGolemEntity animatable, long instanceId, AnimationState<IllagerGolemEntity> animationState) {
+
         Entity camera = Minecraft.getInstance().getCameraEntity();
         if (camera == null) return;
 

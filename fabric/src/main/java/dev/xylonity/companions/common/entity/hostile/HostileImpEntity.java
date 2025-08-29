@@ -151,10 +151,14 @@ public class HostileImpEntity extends HostileEntity {
                 level().addFreshEntity(halo);
             }
 
-            return InteractionResult.PASS;
         }
 
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double pDistanceToClosestPlayer) {
+        return false;
     }
 
     private void tameParticles() {
@@ -192,7 +196,7 @@ public class HostileImpEntity extends HostileEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ATTACK_TYPE, 0);
         builder.define(ANGRY, false);

@@ -170,13 +170,13 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
     }
 
-    public static AttributeSupplier.Builder setAttributes() {
+    public static AttributeSupplier setAttributes() {
         return Raider.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, CompanionsConfig.DINAMO_MAX_LIFE)
                 .add(Attributes.ATTACK_DAMAGE, 5f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
-                .add(Attributes.FOLLOW_RANGE, 35.0);
+                .add(Attributes.FOLLOW_RANGE, 35.0).build();
     }
 
     @Override
@@ -333,7 +333,7 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ACTIVE, false);
         builder.define(CYCLE_COUNTER, 0);

@@ -86,11 +86,6 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
     }
 
-    @Override
-    public void applyRaidBuffs(ServerLevel serverLevel, int i, boolean b) {
-
-    }
-
     public static AttributeSupplier.Builder setAttributes() {
         return Raider.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 40)
@@ -256,6 +251,11 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
         builder.define(ANIMATION_START_TICK, 0);
         builder.define(TEST_TIMER, 0);
         builder.define(TICKCOUNT, 0);
+    }
+
+    @Override
+    public void applyRaidBuffs(ServerLevel serverLevel, int i, boolean b) {
+
     }
 
     @Override

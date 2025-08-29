@@ -8,6 +8,7 @@ import dev.xylonity.companions.common.entity.projectile.BloodSlashProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +29,7 @@ public class BloodSlashRenderer extends GeoEntityRenderer<BloodSlashProjectile> 
             poseStack.mulPose(Axis.XP.rotationDegrees(-((float) (Mth.atan2(motion.y, Mth.sqrt((float) (motion.x * motion.x + motion.z * motion.z))) * Mth.RAD_TO_DEG))));
         }
 
+
         super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 
@@ -37,4 +39,8 @@ public class BloodSlashRenderer extends GeoEntityRenderer<BloodSlashProjectile> 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
+    @Override
+    public RenderType getRenderType(BloodSlashProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
+    }
 }

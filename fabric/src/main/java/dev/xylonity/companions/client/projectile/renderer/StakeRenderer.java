@@ -28,4 +28,11 @@ public class StakeRenderer extends GeoEntityRenderer<StakeProjectile> {
         poseStack.mulPose(interpolated);
     }
 
+    //@Override
+    //public void render(StakeProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    //    poseStack.pushPose();
+    //    super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    //    poseStack.popPose();
+    //}
+
 }

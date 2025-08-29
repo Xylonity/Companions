@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
 import dev.xylonity.companions.common.entity.ai.teddy.control.TeddyMoveControl;
 import dev.xylonity.companions.common.entity.ai.teddy.goal.*;
 import dev.xylonity.companions.common.util.Util;
@@ -24,6 +25,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -147,12 +149,27 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             }
         });
 
+        this.goalSelector.addGoal(6, new CompanionsLookAtPlayerGoal(this, Player.class, 6.0F) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && getMainAction() != 0 && getPhase() == 1;
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && getMainAction() != 0 && getPhase() == 1;
+            }
+        });
+
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+
+        if (getPhase() == 2 && source.is(DamageTypes.IN_WALL)) return false;
+
         boolean ret = super.hurt(source, amount);
 
         if (!level().isClientSide && amount > 4.0f && getPhase() == 2 && getTarget() != null) {
@@ -235,7 +252,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(PHASE, 1);
         builder.define(SECOND_PHASE_COUNTER, 0);
@@ -334,8 +351,8 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     }
 
     @Override
-    protected EntityDimensions getDefaultDimensions(Pose pPose) {
-        return getPhase() == 1 ? super.getDefaultDimensions(pPose) : EntityDimensions.scalable(1F, 2F);
+    protected EntityDimensions getDefaultDimensions(Pose pose) {
+        return getPhase() == 1 ? super.getDefaultDimensions(pose) : EntityDimensions.scalable(1F, 2F);
     }
 
     @Override

@@ -87,7 +87,6 @@ public class ShadowBellItem extends TooltipItem {
         }
 
         if (altar.getCharges() <= 0) {
-            pStack.shrink(1);
             return;
         }
 
@@ -107,28 +106,30 @@ public class ShadowBellItem extends TooltipItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
         CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         CompoundTag t = customData.copyTag();
         if (t == null || !t.contains(ST_DIM) || !t.contains(ST_X) ||!t.contains(ST_Y) || !t.contains(ST_Z)) {
-            tooltipComponents.add(Component.translatable("tooltip.item.companions.shadow_bell.default").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+            tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.default").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
             return;
         }
 
         if (t.contains(BELL_CURR) && t.contains(ALTAR_NAME)) {
-            tooltipComponents.add(Component.translatable("tooltip.item.companions.shadow_bell.linked_to", t.getString(ALTAR_NAME)));
-            tooltipComponents.add(Component.translatable("tooltip.item.companions.shadow_bell.charges_remaining", t.getInt(BELL_CURR)));
+            tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.linked_to", t.getString(ALTAR_NAME)));
+            tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.charges_remaining", t.getInt(BELL_CURR)));
 
             if (t.hasUUID(UUID_SHADE)) {
                 Entity e = CompanionsEntityTracker.getEntityByUUID(t.getUUID(UUID_SHADE));
                 if (e instanceof ShadeEntity shade) {
-                    tooltipComponents.add(Component.translatable("tooltip.item.companions.shadow_bell.lifetime", shade.getLifetime() / 20));
+                    tooltip.add(Component.translatable("tooltip.item.companions.shadow_bell.lifetime", shade.getLifetime() / 20));
                 } else {
                     t.remove(UUID_SHADE);
                     stack.set(DataComponents.CUSTOM_DATA, CustomData.of(t));
                 }
             }
         }
+
+        super.appendHoverText(stack, context, tooltip, tooltipFlag);
     }
 
     @Override
@@ -139,15 +140,19 @@ public class ShadowBellItem extends TooltipItem {
     // If the interaction is done on an altar, its relevant data is written in memory
     @Override
     public @NotNull InteractionResult useOn(UseOnContext ctx) {
-        Level world = ctx.getLevel();
+        Level level = ctx.getLevel();
         BlockPos pos = ctx.getClickedPos();
         ItemStack stack = ctx.getItemInHand();
 
-        if (world.isClientSide) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
 
-        if (!(world.getBlockEntity(pos) instanceof AbstractShadeAltarBlockEntity altar)) {
+        if (!(level.getBlockEntity(pos) instanceof AbstractShadeAltarBlockEntity altar)) {
+            if (ctx.getPlayer() != null) {
+                return this.use(level, ctx.getPlayer(), ctx.getHand()).getResult();
+            }
+
             return InteractionResult.PASS;
         }
 
@@ -155,19 +160,17 @@ public class ShadowBellItem extends TooltipItem {
             if (ctx.getPlayer() != null) {
                 ctx.getPlayer().displayClientMessage(Component.translatable("shadow_bell.companions.client_message.altar_empty"), true);
             }
-
-            return InteractionResult.FAIL;
         }
 
         CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         CompoundTag tag = customData.copyTag();
-        tag.putString(ST_DIM, world.dimension().location().toString());
+        tag.putString(ST_DIM, level.dimension().location().toString());
         tag.putInt(ST_X, pos.getX());
         tag.putInt(ST_Y, pos.getY());
         tag.putInt(ST_Z, pos.getZ());
         tag.putInt(BELL_CURR, altar.getCharges());
         tag.putInt(BELL_MAX, altar.getMaxCharges());
-        tag.putString(ALTAR_NAME, world.getBlockState(pos).getBlock().getName().getString());
+        tag.putString(ALTAR_NAME, level.getBlockState(pos).getBlock().getName().getString());
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
 
         if (ctx.getPlayer() != null) {
@@ -181,13 +184,17 @@ public class ShadowBellItem extends TooltipItem {
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack pStack, @NotNull Player pPlayer, @NotNull LivingEntity pInteractionTarget, @NotNull InteractionHand pUsedHand) {
         CustomData customData = pStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         CompoundTag tag = customData.copyTag();
-        if (tag != null && tag.hasUUID(UUID_SHADE)) {
-            if (pInteractionTarget.getUUID().equals(tag.getUUID(UUID_SHADE)) && pInteractionTarget instanceof ShadeEntity) {
+        if (tag != null) {
+            if (pInteractionTarget instanceof ShadeEntity shade && shade.getOwnerUUID() != null && shade.getOwnerUUID().equals(pPlayer.getUUID())) {
                 pInteractionTarget.discard();
-                tag.remove(UUID_SHADE);
-                pStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+                if (tag.hasUUID(UUID_SHADE) && pInteractionTarget.getUUID().equals(tag.getUUID(UUID_SHADE)) && pInteractionTarget instanceof ShadeEntity) {
+                    tag.remove(UUID_SHADE);
+                    pStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+                }
+
                 return InteractionResult.SUCCESS;
             }
+
         }
 
         return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
@@ -217,7 +224,6 @@ public class ShadowBellItem extends TooltipItem {
 
             if (altar.getCharges() <= 0) {
                 pPlayer.displayClientMessage(Component.translatable("shadow_bell.companions.client_message.no_charges"), true);
-                clearLink(stack);
                 return InteractionResultHolder.pass(stack);
             }
 
@@ -231,7 +237,7 @@ public class ShadowBellItem extends TooltipItem {
                 altar.activeShadeUUID = null;
             }
 
-            ShadeEntity entity = altar.spawnShade(pPlayer.level(), pPlayer, pUsedHand);
+            ShadeEntity entity = altar.spawnShade(pPlayer.level(), pPlayer, pUsedHand, this);
             if (entity != null) {
                 tag.putUUID(UUID_SHADE, entity.getUUID());
                 stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));

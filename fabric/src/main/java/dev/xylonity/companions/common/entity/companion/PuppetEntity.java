@@ -3,13 +3,9 @@ package dev.xylonity.companions.common.entity.companion;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
-import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.goal.*;
-import dev.xylonity.companions.common.entity.projectile.MagicRayCircleProjectile;
-import dev.xylonity.companions.common.entity.projectile.MagicRayPieceProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -33,6 +29,7 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -43,7 +40,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -65,8 +61,8 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<String> ATTACK_ANIMATION_NAME = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
-    // 0 none, 1 left, 2 right
-    private static final EntityDataAccessor<Integer> IS_ATTACKING = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING_RIGHT = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING_LEFT = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.BOOLEAN);
     // 0 none, 1 left, 2 right, 3 both
     private static final EntityDataAccessor<Integer> ACTIVE_ARMS = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.INT);
     // none,none -> left/right
@@ -111,14 +107,18 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
-        this.goalSelector.addGoal(2, new PuppetCannonAttackGoal(this, 30, 50));
-        this.goalSelector.addGoal(2, new PuppetBladeAttackGoal(this, 30, 50));
-        this.goalSelector.addGoal(2, new PuppetMutantAttackGoal(this, 30, 50));
-        this.goalSelector.addGoal(2, new PuppetWhipAttackGoal(this, 30, 50));
+        this.goalSelector.addGoal(2, new PuppetRightCannonAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetRightBladeAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetRightMutantAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetRightWhipAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetLeftCannonAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetLeftBladeAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetLeftMutantAttackGoal(this, 10, 50));
+        this.goalSelector.addGoal(2, new PuppetLeftWhipAttackGoal(this, 10, 50));
 
         this.goalSelector.addGoal(3, new PuppetApproachTargetGoal(this, 0.5, 0.4f, 1.25f));
 
-        this.goalSelector.addGoal(4, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
@@ -209,12 +209,20 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
         return this.entityData.get(ACTIVE_ARMS);
     }
 
-    public int isAttacking() {
-        return this.entityData.get(IS_ATTACKING);
+    public boolean isAttackingRight() {
+        return this.entityData.get(IS_ATTACKING_RIGHT);
     }
 
-    public void setAttacking(int attacking) {
-        this.entityData.set(IS_ATTACKING, attacking);
+    public void setAttackingRight(boolean attacking) {
+        this.entityData.set(IS_ATTACKING_RIGHT, attacking);
+    }
+
+    public boolean isAttackingLeft() {
+        return this.entityData.get(IS_ATTACKING_LEFT);
+    }
+
+    public void setAttackingLeft(boolean attacking) {
+        this.entityData.set(IS_ATTACKING_LEFT, attacking);
     }
 
     public void setArmNames(String armNames) {
@@ -226,9 +234,10 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(IS_ATTACKING, 0);
+        builder.define(IS_ATTACKING_RIGHT, false);
+        builder.define(IS_ATTACKING_LEFT, false);
         builder.define(DATA_ID_FLAGS, (byte)0);
         builder.define(ATTACK_ANIMATION_NAME, "");
         builder.define(ACTIVE_ARMS, 0);
@@ -253,8 +262,6 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!this.level().isClientSide) {
                 player.openMenu(new ExtendedScreenHandlerFactory<>() {
@@ -316,33 +323,8 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     }
 
     @Override
-    public void aiStep() {
-        setNoMovement(isAttacking() == 1 || isAttacking() == 2);
-        super.aiStep();
-    }
-
-    @Override
     public void performRangedAttack(@NotNull LivingEntity target, float v) {
-        if (!level().isClientSide) {
-            Vec3 startPos = this.getEyePosition(1.0F);
-            Vec3 direction = target.getEyePosition(1.0F).subtract(startPos).normalize();
 
-            double traveled = 0d;
-            double increment = 1d;
-            int maxSteps = (int)(30 / increment);
-
-            for (int i = 0; i < maxSteps; i++) {
-                Vec3 piecePos = startPos.add(direction).add(direction.scale(traveled));
-                traveled += increment;
-
-                if (!isPassableBlock(level(), BlockPos.containing(piecePos))) {
-                    spawnRayPiece(level(), piecePos, direction, (i == 0));
-                    break;
-                }
-
-                spawnRayPiece(level(), piecePos, direction, (i == 0));
-            }
-        }
 
     }
 
@@ -355,37 +337,6 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     @Override
     protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         playSound(CompanionsSounds.PUPPET_WALK.get(), 0.45f, 1f);
-    }
-
-    private boolean isPassableBlock(Level level, BlockPos pos) {
-        return level.getBlockState(pos).getCollisionShape(level, pos).isEmpty();
-    }
-
-    private void spawnRayPiece(Level pLevel, Vec3 piecePos, Vec3 direction, boolean isFirstPiece) {
-        if (isFirstPiece) {
-            MagicRayCircleProjectile circle = CompanionsEntities.MAGIC_RAY_PIECE_CIRCLE_PROJECTILE.create(pLevel);
-            if (circle != null) {
-                circle.setPos(piecePos.x, piecePos.y, piecePos.z);
-                setProjectileRotation(circle, direction);
-                pLevel.addFreshEntity(circle);
-            }
-        } else {
-            MagicRayPieceProjectile rayPiece = CompanionsEntities.MAGIC_RAY_PIECE_PROJECTILE.create(pLevel);
-            if (rayPiece != null) {
-                rayPiece.setPos(piecePos.x, piecePos.y, piecePos.z);
-                setProjectileRotation(rayPiece, direction);
-                pLevel.addFreshEntity(rayPiece);
-            }
-        }
-    }
-
-    private void setProjectileRotation(MagicRayPieceProjectile projectile, Vec3 direction) {
-        Vec3 dir = direction.normalize();
-        float yaw = (float) (Math.atan2(dir.z, dir.x) * (180.0F / Math.PI)) - 90.0F;
-        float pitch = (float) (-(Math.atan2(dir.y, Math.sqrt(dir.x * dir.x + dir.z * dir.z))) * (180.0F / Math.PI));
-
-        projectile.setPitch(pitch);
-        projectile.setYaw(yaw);
     }
 
     @Override
@@ -483,14 +434,24 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "rightAttackcontroller", 1, this::rightAttackPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "leftAttackcontroller", 1, this::leftAttackPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "controller", 1, this::predicate));
-        controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 1, this::attackPredicate));
     }
 
-    private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
-        if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttacking() != 0) {
+    private <T extends GeoAnimatable> PlayState rightAttackPredicate(AnimationState<T> event) {
+        if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttackingRight()) {
             event.getController().forceAnimationReset();
-            event.setAnimation(isAttacking() == 1 ? ATTACK_R : ATTACK_L);
+            event.setAnimation(ATTACK_R);
+        }
+
+        return PlayState.CONTINUE;
+    }
+
+    private <T extends GeoAnimatable> PlayState leftAttackPredicate(AnimationState<T> event) {
+        if (event.getController().getAnimationState().equals(AnimationController.State.STOPPED) && isAttackingLeft()) {
+            event.getController().forceAnimationReset();
+            event.setAnimation(ATTACK_L);
         }
 
         return PlayState.CONTINUE;

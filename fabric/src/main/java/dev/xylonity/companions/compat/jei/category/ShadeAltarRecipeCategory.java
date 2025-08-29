@@ -82,7 +82,7 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ShadeAltarRecipe rec, @NotNull IFocusGroup focuses) {
         this.cachedEntity = null;
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
     private ShadeMawAltarBlockEntity getOrCreateBlockEntity() {
@@ -169,8 +169,8 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
         pose.mulPose(Axis.ZP.rotationDegrees(180f));
 
         Matrix3f normalMat = pose.last().normal();
-        Vector3f up = new Vector3f(-1, 10, -1);
-        Vector3f front = new Vector3f(-1, 3, -1);
+        Vector3f up = new Vector3f(0, 1, 0);
+        Vector3f front = new Vector3f(0, 0, -1);
         normalMat.transform(up).normalize();
         normalMat.transform(front).normalize();
 

@@ -1,17 +1,16 @@
 package dev.xylonity.companions.common.entity.ai.puppet.goal;
 
-import dev.xylonity.companions.common.entity.ai.puppet.AbstractPuppetAttackGoal;
+import dev.xylonity.companions.common.entity.ai.puppet.AbstractPuppetRightAttackGoal;
 import dev.xylonity.companions.common.entity.companion.PuppetEntity;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 
-public class PuppetWhipAttackGoal extends AbstractPuppetAttackGoal {
+public class PuppetRightWhipAttackGoal extends AbstractPuppetRightAttackGoal {
 
-    public PuppetWhipAttackGoal(PuppetEntity puppet, int minCd, int maxCd) {
+    public PuppetRightWhipAttackGoal(PuppetEntity puppet, int minCd, int maxCd) {
         super(puppet, minCd, maxCd, "BLADE");
     }
 
@@ -20,6 +19,7 @@ public class PuppetWhipAttackGoal extends AbstractPuppetAttackGoal {
         if (target != null) {
             puppet.doHurtTarget(target);
             target.addEffect(new MobEffectInstance(MobEffects.POISON, puppet.getRandom().nextInt(20, 200), 0, true, true, true));
+            target.knockback(0.75f, -(target.getX() - puppet.getX()), -(target.getZ() - puppet.getZ()));
         }
 
     }
@@ -36,15 +36,8 @@ public class PuppetWhipAttackGoal extends AbstractPuppetAttackGoal {
     }
 
     @Override
-    protected int hasRequiredArm() {
-        for (int i = 0; i < puppet.inventory.getContainerSize(); i++) {
-            ItemStack stack = puppet.inventory.getItem(i);
-            if (stack.getItem() == CompanionsItems.WHIP_ARM.get()) {
-                return i + 1;
-            }
-        }
-
-        return 0;
+    protected boolean hasRequiredArm() {
+        return puppet.inventory.getItem(0).is(CompanionsItems.WHIP_ARM.get());
     }
 
 }

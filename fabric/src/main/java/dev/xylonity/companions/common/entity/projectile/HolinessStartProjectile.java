@@ -143,7 +143,7 @@ public class HolinessStartProjectile extends BaseProjectile {
             }
         } else {
             for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                Companions.PROXY.shakePlayerCamera(player, 20, 0.1f, 0.1f, 0.1f, 10);
+                Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
             }
         }
 
@@ -213,7 +213,7 @@ public class HolinessStartProjectile extends BaseProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(RED, false);
     }

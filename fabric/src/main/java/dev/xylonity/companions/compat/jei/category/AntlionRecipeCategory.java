@@ -71,7 +71,7 @@ public class AntlionRecipeCategory implements IRecipeCategory<HourglassRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, HourglassRecipe rec, @NotNull IFocusGroup focuses) {
         this.cachedEntity = null;
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
     private AntlionEntity getOrCreateEntity() {

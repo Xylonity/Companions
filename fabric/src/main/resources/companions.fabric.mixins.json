@@ -10,9 +10,7 @@
     "MobMixin"
   ],
   "client": [
-    "EntityRendererAccessor",
     "ItemRendererMixin",
-    "LivingEntityRendererMixin",
     "ModelBakeryMixin"
   ],
   "server": [],

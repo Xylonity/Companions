@@ -8,12 +8,10 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomHopStroll
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -184,7 +182,7 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_ID_FLAGS, (byte) 0);
         builder.define(CAN_ATTACK, true);
@@ -216,16 +214,11 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
             if (player instanceof ServerPlayer sv) sv.openMenu(this);
 
             this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.5F, 1.0F);
-            return InteractionResult.SUCCESS;
-        }
-
-        if (!isTame() && player.getItemInHand(hand).is(CompanionsBlocks.COPPER_COIN.get().asItem())) {
-            tameInteraction(player);
             return InteractionResult.SUCCESS;
         }
 
@@ -321,11 +314,6 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         return new CorneliusContainerMenu(i, inventory, this);
-    }
-
-    @Override
-    public @NotNull Component getDisplayName() {
-        return super.getName();
     }
 
 }

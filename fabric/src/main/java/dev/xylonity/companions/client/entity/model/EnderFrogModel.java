@@ -30,14 +30,12 @@ public class EnderFrogModel extends GeoModel<EnderFrogEntity> {
     @Override
     public void setCustomAnimations(EnderFrogEntity animatable, long instanceId, AnimationState<EnderFrogEntity> animationState) {
         GeoBone head = getAnimationProcessor().getBone("head");
+        EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
 
-        if (head != null) {
-            EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+        if (head != null && entityData != null) {
             head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
             head.setRotY((entityData.netHeadYaw() * 0.5f) * Mth.DEG_TO_RAD);
         }
-
-        super.setCustomAnimations(animatable, instanceId, animationState);
     }
 
 }

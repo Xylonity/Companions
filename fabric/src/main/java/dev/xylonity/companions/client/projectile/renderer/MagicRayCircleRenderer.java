@@ -35,9 +35,25 @@ public class MagicRayCircleRenderer extends GeoEntityRenderer<MagicRayCircleProj
     }
 
     @Override
+    public void render(MagicRayCircleProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+
+
+
+
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+
+
+    }
+
+    @Override
     public void actuallyRender(PoseStack poseStack, MagicRayCircleProjectile animatable, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+        poseStack.pushPose();
+
         poseStack.scale(2, 2, 2);
+
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+
+        poseStack.popPose();
     }
 
     @Override

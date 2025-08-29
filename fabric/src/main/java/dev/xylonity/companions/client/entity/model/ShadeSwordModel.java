@@ -14,6 +14,14 @@ public class ShadeSwordModel extends GeoModel<ShadeSwordEntity> {
 
     @Override
     public ResourceLocation getTextureResource(ShadeSwordEntity animatable) {
+        if (animatable.hasReskin()) {
+            if (animatable.isBlood()) {
+                return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/shade_sword_blood_reskin.png");
+            }
+
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/shade_sword_reskin.png");
+        }
+
         if (animatable.isBlood()) {
             return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/shade_sword_blood.png");
         }

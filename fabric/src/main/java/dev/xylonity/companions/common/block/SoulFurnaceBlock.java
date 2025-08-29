@@ -10,7 +10,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -47,7 +46,7 @@ public class SoulFurnaceBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
@@ -57,8 +56,8 @@ public class SoulFurnaceBlock extends Block implements EntityBlock {
     }
 
     protected void openContainer(Level pLevel, BlockPos pPos, Player pPlayer) {
-        BlockEntity $$3 = pLevel.getBlockEntity(pPos);
-        if ($$3 instanceof SoulFurnaceBlockEntity soulFurnaceBlockEntity) {
+        BlockEntity be = pLevel.getBlockEntity(pPos);
+        if (be instanceof SoulFurnaceBlockEntity soulFurnaceBlockEntity) {
             pPlayer.openMenu(soulFurnaceBlockEntity);
         }
 

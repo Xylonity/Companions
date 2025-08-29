@@ -27,16 +27,11 @@ public class FloorCakeCreamRenderer extends GeoEntityRenderer<FloorCakeCreamProj
     public void actuallyRender(PoseStack poseStack, FloorCakeCreamProjectile animatable, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         poseStack.scale(animatable.getSize(), animatable.getSize(), animatable.getSize());
 
-        BakedGeoModel model2 = this.model.getBakedModel(this.model.getModelResource(animatable, this));
-
-        RenderType renderType2 = RenderType.entityTranslucent(getTextureLocation(animatable));
-        VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType2);
-
         int a = Math.round(alpha(animatable) * 255);
         int rgb = 0x00FFFFFF;
         int colour2 = (a << 24) | rgb;
 
-        reRender(model2, poseStack, bufferSource, animatable, renderType2, vertexConsumer, partialTick, packedLight, getPackedOverlay(animatable, 0, partialTick), colour2);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, getPackedOverlay(animatable, 0, partialTick), colour2);
     }
 
     private float alpha(FloorCakeCreamProjectile entity) {

@@ -3,6 +3,7 @@ package dev.xylonity.companions.common.entity.companion;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
 import dev.xylonity.companions.common.entity.ai.mage.allay.control.GoldenAllayMoveControl;
 import dev.xylonity.companions.common.entity.ai.mage.allay.goal.GoldenAllayRandomMoveGoal;
 import dev.xylonity.companions.common.entity.projectile.SoulMageBookEntity;
@@ -148,7 +149,7 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
         }
 
         if (level().isClientSide) {
-            Companions.PROXY.spawnGoldenAllayRibbonTrail(this, level(), getX(), getY(), getZ(), 1, 1, 160/255f, 0, getBbHeight() * 0.175f);
+            Companions.PROXY.spawnGoldenAllayRibbonTrail(this, level(), getX(), getY(), getZ(), 1, 1, 160/255f, 0, 0.1225f);
         }
 
     }
@@ -190,6 +191,8 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
 
         this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Monster.class, 6.0F, 0.6f, 1));
+
+        this.goalSelector.addGoal(6, new CompanionsLookAtPlayerGoal(this, Player.class, 6.0F));
     }
 
     @Nullable
@@ -211,7 +214,7 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(STATE, 0);
     }

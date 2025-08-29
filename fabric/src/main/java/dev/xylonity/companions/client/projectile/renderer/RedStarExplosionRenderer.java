@@ -22,5 +22,4 @@ public class RedStarExplosionRenderer extends GeoEntityRenderer<RedStarExplosion
         poseStack.scale(1.5f, 1.5f, 1.5f);
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
-
 }

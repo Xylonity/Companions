@@ -132,6 +132,8 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
     public void tick() {
         super.tick();
 
+        this.setAirSupply(this.getMaxAirSupply());
+
         if (this.level().isClientSide) {
             Companions.PROXY.tickShadeMaw(this);
         }
@@ -196,8 +198,9 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
     public void travel(@NotNull Vec3 travelVec) {
         LivingEntity rider = getControllingPassenger();
         if (rider == null && !level().getFluidState(this.blockPosition()).isEmpty()) {
-            this.setDeltaMovement(Vec3.ZERO);
+            this.setDeltaMovement(getDeltaMovement().scale(0.80));
             this.setSwimming(true);
+            super.travel(Vec3.ZERO);
             return;
         }
 
@@ -209,23 +212,51 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
             float forward = rider.zza;
             if (forward < 0F) forward *= 0.25F;
 
-            if (Math.abs(forward) > 1.0e-3F) {
+            if (Math.abs(forward) > 1.0e-3F || Math.abs(strafe) > 1.0e-3F) {
                 throttle = Mth.clamp(throttle + ACCEL, 0F, 1F);
             } else {
-                throttle = 0F;
+                throttle = Mth.clamp(throttle - ACCEL * 1.5F, 0F, 1F);
             }
 
-            if (horizontalCollision) {
-                throttle = 0F;
+            if (horizontalCollision && !isInAnyFluid()) {
+                throttle = 0.3525F;
                 setDeltaMovement(getDeltaMovement().multiply(0, 1, 0));
             }
 
             if (isInAnyFluid()) {
-                float speed = (float) getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.6F;
+                float speed = (float)getAttributeValue(Attributes.MOVEMENT_SPEED) * (0.60F + 0.20F * throttle);
+
                 Vec3 lookDir = rider.getLookAngle().normalize();
                 Vec3 motion = lookDir.scale(speed * forward);
                 if (Math.abs(strafe) > 1.0e-3F) {
                     motion = motion.add(new Vec3(0, 1, 0).cross(lookDir).normalize().scale(speed * strafe));
+                }
+
+                if (isOnLiquidSurface() && forward > 0.05F) {
+                    Vec3 fHoriz = new Vec3(lookDir.x, 0, lookDir.z).normalize();
+                    BlockPos inFront = BlockPos.containing(
+                            this.getX() + fHoriz.x * 0.8D,
+                            this.getY() + 0.2D,
+                            this.getZ() + fHoriz.z * 0.8D
+                    );
+
+                    if (level().getFluidState(inFront).isEmpty()) {
+                        motion = motion.add(0, 0.26D, 0).add(fHoriz.scale(0.05D));
+                    } else {
+                        motion = motion.add(0, 0.03D, 0);
+                    }
+
+                }
+
+                if (horizontalCollision) {
+                    double upAmount = isOnLiquidSurface() ? Math.max(0.22D, speed * 0.35D) : Math.max(0.12D, speed * 0.25D);
+                    Vec3 right = new Vec3(0, 1, 0).cross(lookDir).normalize();
+                    motion = motion.add(0, upAmount, 0).add(right.scale(speed * 0.20F * (strafe >= 0 ? 1 : -1)));
+                }
+
+                double len = motion.length();
+                if (len > 0.90D) {
+                    motion = motion.scale(0.90D / len);
                 }
 
                 setXRot((float)(-Math.toDegrees(Math.atan2(motion.y, Math.sqrt(motion.x * motion.x + motion.z * motion.z)))));
@@ -244,7 +275,6 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
         super.travel(travelVec);
     }
 
-
     @Override
     protected void tickRidden(@NotNull Player rider, @NotNull Vec3 travelVector) {
         super.tickRidden(rider, travelVector);
@@ -259,7 +289,6 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
 
         if (rider.isInWater()) {
             rider.setAirSupply(rider.getMaxAirSupply());
-            this.setAirSupply(this.getMaxAirSupply());
         }
 
         if (rider.isInLava()) {
@@ -319,7 +348,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         if (!player.isSecondaryUseActive() && !player.isShiftKeyDown() && getOwner() != null && player.equals(getOwner())) {
-            if (!this.level().isClientSide) {
+            if (!this.level().isClientSide && !isSpawning()) {
                 player.startRiding(this, true);
             }
 
@@ -332,7 +361,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
     @Override
     protected void positionRider(@NotNull Entity pPassenger, @NotNull MoveFunction pCallback) {
         if (this.hasPassenger(pPassenger)) {
-            double baseY = this.getY();
+            double baseY = this.getY() + 1.5;
 
             if (isInAnyFluid()) {
                 baseY -= 1.35;
@@ -430,7 +459,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
         controllerRegistrar.add(new AnimationController<>(this, "attackcontroller", 2, this::attackPredicate));
     }
 
-    private boolean isInAnyFluid() {
+    public boolean isInAnyFluid() {
         Vec3 eyePos = this.getEyePosition(1.0F);
         return !level().getFluidState(new BlockPos((int) eyePos.x, (int) eyePos.y, (int) eyePos.z)).isEmpty();
     }

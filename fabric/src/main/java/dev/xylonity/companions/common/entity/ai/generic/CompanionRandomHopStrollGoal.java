@@ -17,10 +17,6 @@ public class CompanionRandomHopStrollGoal extends Goal {
     protected boolean forceTrigger;
     private boolean checkNoActionTime;
 
-    private int cycleCounter;
-    private static final int MOVE_DURATION = 11;
-    private static final int CYCLE_DURATION = 20;
-
     public CompanionRandomHopStrollGoal(CorneliusEntity pMob, double pSpeedModifier) {
         this(pMob, pSpeedModifier, 120);
         this.checkNoActionTime = false;
@@ -36,7 +32,6 @@ public class CompanionRandomHopStrollGoal extends Goal {
         this.interval = pInterval;
         this.checkNoActionTime = pCheckNoActionTime;
         this.setFlags(EnumSet.of(Flag.MOVE));
-        this.cycleCounter = 0;
     }
 
     @Override
@@ -82,7 +77,6 @@ public class CompanionRandomHopStrollGoal extends Goal {
     @Override
     public void start() {
         this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, this.speedModifier);
-        this.cycleCounter = 0;
     }
 
     @Override

@@ -53,11 +53,11 @@ public class FireRayBeamEntity extends Entity implements GeoAnimatable {
         entityData.set(ORIGIN_Y, (float) origin.y);
         entityData.set(ORIGIN_Z, (float) origin.z);
 
-        entityData.set(START_YAW,   yaw0);
+        entityData.set(START_YAW, yaw0);
         entityData.set(START_PITCH, pitch0);
-        entityData.set(ROT_TICKS,   rotTicks);
-        entityData.set(MAX_PIECES,  maxPieces);
-        entityData.set(SEPARATION,  sep);
+        entityData.set(ROT_TICKS, rotTicks);
+        entityData.set(MAX_PIECES, maxPieces);
+        entityData.set(SEPARATION, sep);
 
         this.pieceUUIDs = new UUID[maxPieces];
         spawnPieces(lvl, entity);
@@ -97,6 +97,21 @@ public class FireRayBeamEntity extends Entity implements GeoAnimatable {
             }
         }
 
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return false;
+    }
+
+    @Override
+    public boolean save(CompoundTag compound) {
+        return false;
+    }
+
+    @Override
+    public boolean saveAsPassenger(CompoundTag compound) {
+        return false;
     }
 
     @Override

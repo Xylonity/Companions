@@ -20,7 +20,7 @@ public class BloodTornadoRenderer extends GeoEntityRenderer<BloodTornadoProjecti
 
     @Override
     public RenderType getRenderType(BloodTornadoProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
     }
 
     @Override

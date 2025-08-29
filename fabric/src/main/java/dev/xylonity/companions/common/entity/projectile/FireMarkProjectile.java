@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
@@ -26,22 +25,21 @@ public class FireMarkProjectile extends Projectile implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
-        Entity owner = this.getOwner();
+        if (getOwner() == null) {
+            this.remove(RemovalReason.KILLED);
+            return;
+        }
 
-        if (owner == null) this.remove(RemovalReason.DISCARDED);
+        if (!level().isClientSide && !((LivingEntity) getOwner()).hasEffect(CompanionsEffects.FIRE_MARK)) {
+            this.remove(RemovalReason.DISCARDED);
+            return;
+        }
 
-        if (!level().isClientSide && owner != null && !((LivingEntity) owner).hasEffect(CompanionsEffects.FIRE_MARK)) this.remove(RemovalReason.DISCARDED);
-
-        if (owner != null && !owner.isRemoved()) {
-            Vec3 targetPos = new Vec3(owner.getX(), owner.getY() + owner.getBbHeight() + 0.5, owner.getZ());
+        if (!getOwner().isRemoved()) {
+            Vec3 targetPos = new Vec3(getOwner().getX(), getOwner().getY() + getOwner().getBbHeight() + 0.5, getOwner().getZ());
             Vec3 offset = targetPos.subtract(this.position());
             Vec3 velocity = this.getDeltaMovement();
 
@@ -54,6 +52,11 @@ public class FireMarkProjectile extends Projectile implements GeoEntity {
             this.setDeltaMovement(velocity);
             this.move(MoverType.SELF, velocity);
         }
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        ;;
     }
 
     @Override

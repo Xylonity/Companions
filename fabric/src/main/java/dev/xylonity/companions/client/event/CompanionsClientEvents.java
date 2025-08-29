@@ -9,10 +9,7 @@ import dev.xylonity.companions.client.gui.screen.SoulFurnaceScreen;
 import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
 import dev.xylonity.companions.client.projectile.renderer.*;
 import dev.xylonity.companions.common.particle.*;
-import dev.xylonity.companions.registry.CompanionsBlockEntities;
-import dev.xylonity.companions.registry.CompanionsEntities;
-import dev.xylonity.companions.registry.CompanionsMenuTypes;
-import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.api.BossBarBuilder;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
@@ -96,6 +93,7 @@ public class CompanionsClientEvents {
         EntityRendererRegistry.register(CompanionsEntities.FROG_EGG_PROJECTILE, FrogEggRenderer::new);
         EntityRendererRegistry.register(CompanionsEntities.ANTLION_SAND_PROJECTILE, AntlionSandProjectileRenderer::new);
         EntityRendererRegistry.register(CompanionsEntities.BLOOD_SLASH_PROJECTILE, BloodSlashRenderer::new);
+        EntityRendererRegistry.register(CompanionsEntities.FIRE_GEISER_PROJECTILE, FireGeiserProjectileRenderer::new);
 
         EntityRendererRegistry.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE, GenericTriggerProjectileRenderer::new);
         EntityRendererRegistry.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE, GenericTriggerProjectileRenderer::new);

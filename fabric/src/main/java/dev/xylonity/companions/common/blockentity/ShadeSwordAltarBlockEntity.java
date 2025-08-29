@@ -2,13 +2,18 @@ package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.ShadeEntity;
+import dev.xylonity.companions.common.item.ShadowBellItem;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -86,7 +91,7 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
     }
 
     @Override
-    public ShadeEntity spawnShade(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
+    public ShadeEntity spawnShade(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand, ShadowBellItem shadowBell) {
         ShadeEntity entity = CompanionsEntities.SHADE_SWORD.create(pLevel);
         if (entity != null) {
             entity.tame(pPlayer);
@@ -118,6 +123,20 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
 
             if (isBloodUpgradeActive()) {
                 entity.setIsBlood(true);
+
+                AttributeInstance maxHealth = entity.getAttribute(Attributes.MAX_HEALTH);
+                if (maxHealth != null) {
+                    float updatedHealth = (float) (maxHealth.getBaseValue() * CompanionsConfig.SHADOW_SWORD_BLOOD_MULTIPLIER);
+                    maxHealth.setBaseValue(updatedHealth);
+                    entity.setHealth(updatedHealth);
+                }
+
+                AttributeInstance dmg = entity.getAttribute(Attributes.ATTACK_DAMAGE);
+                if (dmg != null) dmg.setBaseValue(dmg.getBaseValue() * CompanionsConfig.SHADOW_SWORD_BLOOD_MULTIPLIER);
+            }
+
+            if (pPlayer.getItemInHand(pUsedHand).has(DataComponents.CUSTOM_NAME)) {
+                entity.setHasReskin(true);
             }
 
             double dx = pPlayer.getX() - px;

@@ -5,10 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
-import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
 import dev.xylonity.companions.common.recipe.SoulFurnaceEntityRecipe;
 import dev.xylonity.companions.registry.CompanionsBlocks;
-import dev.xylonity.companions.registry.CompanionsEntities;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -22,16 +20,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<SoulFurnaceEntityRecipe> {
     public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, "soul_furnace_entity_interaction");
@@ -42,9 +44,13 @@ public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<So
     private final IDrawable icon;
 
     private SoulFurnaceBlockEntity cachedBlockEntity;
-    private LivingCandleEntity cachedEntity;
 
     private long lastUpdateTime = 0;
+
+    private static long GLOBAL_LAST_TIME = 0;
+    private static int GLOBAL_TICK = 0;
+
+    private final Map<SoulFurnaceEntityRecipe, Entity> entityCache = new WeakHashMap<>();
 
     public SoulFurnaceEntityRecipeCategory(IGuiHelper gui) {
         this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.SOUL_FURNACE.get()));
@@ -77,7 +83,7 @@ public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<So
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SoulFurnaceEntityRecipe rec, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
     private SoulFurnaceBlockEntity getOrCreateBlockEntity() {
@@ -88,13 +94,16 @@ public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<So
         return cachedBlockEntity;
     }
 
-    private LivingCandleEntity getOrCreateEntity() {
-        if (cachedEntity == null) {
-            cachedEntity = new LivingCandleEntity(CompanionsEntities.LIVING_CANDLE, Minecraft.getInstance().level);
-            cachedEntity.setNoAi(true);
+    private Entity getOrCreateEntity(SoulFurnaceEntityRecipe rec) {
+        Entity entity = entityCache.get(rec);
+        if (entity == null || entity.getType() != rec.entityType) {
+            if (Minecraft.getInstance().level != null) {
+                entity = rec.entityType.create(Minecraft.getInstance().level);
+                entityCache.put(rec, entity);
+            }
         }
 
-        return cachedEntity;
+        return entity;
     }
 
     private void updateAnimation() {
@@ -107,7 +116,18 @@ public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<So
             lastUpdateTime = currentTime;
         }
 
-        if (cachedEntity != null) cachedEntity.tickCount = (int)(System.currentTimeMillis() / 50);
+        long nowTicks;
+        if (Minecraft.getInstance().level != null) {
+            nowTicks = Minecraft.getInstance().level.getGameTime();
+        } else {
+            nowTicks = currentTime / 50L;
+        }
+
+        if (currentTime - GLOBAL_LAST_TIME >= 50) {
+            GLOBAL_LAST_TIME = currentTime;
+            GLOBAL_TICK = (int)nowTicks;
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -128,10 +148,11 @@ public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<So
         updateAnimation();
 
         SoulFurnaceBlockEntity be = getOrCreateBlockEntity();
-        LivingCandleEntity maw = getOrCreateEntity();
+        Entity maw = getOrCreateEntity(recipe);
+        if (maw != null) maw.tickCount = GLOBAL_TICK;
 
         GeoBlockRenderer<SoulFurnaceBlockEntity> renderer = (GeoBlockRenderer<SoulFurnaceBlockEntity>) Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(be);
-        GeoEntityRenderer<LivingCandleEntity> mawRenderer = (GeoEntityRenderer<LivingCandleEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(maw);
+
         if (renderer == null) return;
 
         PoseStack pose = guiGraphics.pose();
@@ -147,8 +168,8 @@ public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<So
 
         Matrix3f normalMat = pose.last().normal();
 
-        Vector3f up = new Vector3f(-1, 10, -1);
-        Vector3f front = new Vector3f(-1, 3, -1);
+        Vector3f up = new Vector3f(0, 1, 0);
+        Vector3f front = new Vector3f(0, 0, -1);
 
         normalMat.transform(up).normalize();
         normalMat.transform(front).normalize();
@@ -156,16 +177,24 @@ public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<So
         RenderSystem.setupGui3DDiffuseLighting(up, front);
 
         try {
-            float partialTicks = (float)((System.currentTimeMillis() - lastUpdateTime) / 50.0);
+            float partialTicks = 0f;
 
             renderer.render(be, partialTicks, pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
-        } catch (Exception e) {
-            renderer.render(be, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
+        }
+        catch (Exception e) {
+            renderer.render(be, 0f, pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         }
 
         pose.popPose();
 
-        // shade maw
+        EntityRenderer<? super Entity> entityRenderer = null;
+        if (maw != null) {
+            entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(maw);
+        }
+
+        if (entityRenderer == null) return;
+
+        // entity
         pose.pushPose();
         pose.translate(132, 65, 20);
         pose.scale(28, 28, 28);
@@ -175,8 +204,8 @@ public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<So
 
         Matrix3f normalMat2 = pose.last().normal();
 
-        Vector3f up2 = new Vector3f(-1, 10, -1);
-        Vector3f front2 = new Vector3f(-1, 3, -1);
+        Vector3f up2 = new Vector3f(1, 0, 0);
+        Vector3f front2 = new Vector3f(0, 1, 0);
 
         normalMat2.transform(up2).normalize();
         normalMat2.transform(front2).normalize();
@@ -184,11 +213,10 @@ public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<So
         RenderSystem.setupGui3DDiffuseLighting(up2, front2);
 
         try {
-            float partialTicks = (float)((System.currentTimeMillis() - lastUpdateTime) / 50.0);
-
-            mawRenderer.render(maw, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
+            float partialTicks = 0f;
+            entityRenderer.render(maw, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
         } catch (Exception e) {
-            mawRenderer.render(maw, 0f, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(), pose, buffer, LightTexture.pack(15, 15));
+            entityRenderer.render(maw, 0f, 0f, pose, buffer, LightTexture.pack(15, 15));
         }
 
         pose.popPose();

@@ -7,6 +7,8 @@ import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
@@ -27,17 +29,21 @@ public class CroissantDragonRenderer extends GeoEntityRenderer<CroissantDragonEn
             return;
         }
 
+        if (!animatable.isAttacking() && bone.getName().equals("attack_head")) {
+            return;
+        }
+
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
     @Override
-    public void render(CroissantDragonEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        float scale = entity.getMilkAmount() == 0 ? 0.3f
-                : entity.getMilkAmount() == 1 ? 0.5f
-                : entity.getMilkAmount() == 2 ? 0.7f
+    public void actuallyRender(PoseStack poseStack, CroissantDragonEntity animatable, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+        float scale = animatable.getMilkAmount() == 0 ? 0.3f
+                : animatable.getMilkAmount() == 1 ? 0.5f
+                : animatable.getMilkAmount() == 2 ? 0.7f
                 : 1f;
         poseStack.scale(scale, scale, scale);
 
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 }

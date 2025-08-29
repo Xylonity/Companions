@@ -80,7 +80,7 @@ public final class ShadeSwordAltarRecipeCategory implements IRecipeCategory<Shad
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ShadeSwordAltarRecipe rec, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input());
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
     private ShadeSwordAltarBlockEntity getOrCreateBlockEntity() {
@@ -167,8 +167,8 @@ public final class ShadeSwordAltarRecipeCategory implements IRecipeCategory<Shad
 
         Matrix3f normalMat = pose.last().normal();
 
-        Vector3f up = new Vector3f(-1, 10, -1);
-        Vector3f front = new Vector3f(-1, 3, -1);
+        Vector3f up = new Vector3f(1, 0, 0);
+        Vector3f front = new Vector3f(0, 1, 0);
 
         normalMat.transform(up).normalize();
         normalMat.transform(front).normalize();

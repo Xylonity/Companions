@@ -18,7 +18,7 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
 
     @Override
     public ResourceLocation getModelResource(SacredPontiffEntity animatable) {
-        if (animatable.getPhase() == 2) {
+        if (animatable.getState() >= 5) {
             return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "geo/his_holiness.geo.json");
         }
 
@@ -27,7 +27,7 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
 
     @Override
     public ResourceLocation getTextureResource(SacredPontiffEntity animatable) {
-        if (animatable.getPhase() == 2) {
+        if (animatable.getState() >= 5) {
             if (animatable.isDeadOrDying()) {
                 int frames = 21;
                 int perTick = 10;
@@ -36,15 +36,15 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
                 return ResourceLocation.fromNamespaceAndPath(Companions.MOD_ID, String.format("textures/entity/his_holiness_petrification%d.png", frameIndex));
             }
 
-            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/his_holiness.png");
+            return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/his_holiness_" + ((animatable.tickCount / 2) % 10) + ".png");
         }
 
-        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/sacred_pontiff.png");
+        return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/entity/sacred_pontiff_" + ((animatable.tickCount / 2) % 5) + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(SacredPontiffEntity animatable) {
-        if (animatable.getPhase() == 2) {
+        if (animatable.getState() >= 5) {
             return ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "animations/his_holiness.animation.json");
         }
 
@@ -54,9 +54,9 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
     @Override
     public void setCustomAnimations(SacredPontiffEntity animatable, long instanceId, AnimationState<SacredPontiffEntity> animationState) {
         GeoBone head = getAnimationProcessor().getBone("head");
+        EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
 
-        if (head != null) {
-            EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+        if (head != null && entityData != null) {
             head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
             head.setRotY((entityData.netHeadYaw() * 0.5f) * Mth.DEG_TO_RAD);
         }

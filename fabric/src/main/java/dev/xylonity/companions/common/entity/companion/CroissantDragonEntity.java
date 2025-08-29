@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.companion;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.croissant.CroissantDragonAttackGoal;
@@ -30,6 +31,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -39,6 +41,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
@@ -60,6 +63,10 @@ public class CroissantDragonEntity extends CompanionEntity {
     private static final EntityDataAccessor<Integer> EATEN_AMOUNT = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> HAS_BEEN_EATEN = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> MILK_AMOUNT = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.INT);
+    // Cream particle conical velocity fallback (and impl) as a hotfix. Will probably change this in the future
+    private static final EntityDataAccessor<Float> VIEW_VEC_X = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> VIEW_VEC_Y = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> VIEW_VEC_Z = SynchedEntityData.defineId(CroissantDragonEntity.class, EntityDataSerializers.FLOAT);
 
     private final int EATEN_DELAY = 10;
     private int nextEatenRecover = 0;
@@ -75,6 +82,7 @@ public class CroissantDragonEntity extends CompanionEntity {
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
         this.goalSelector.addGoal(2, new CroissantDragonAttackGoal(this));
@@ -90,6 +98,8 @@ public class CroissantDragonEntity extends CompanionEntity {
     public void tick() {
         super.tick();
 
+        if (isAttacking()) Companions.PROXY.updateCreamParticle(getStoredViewVector());
+
         if (!this.level().isClientSide) {
             if (getEatenAmount() > 0 && this.tickCount >= nextEatenRecover) {
                 setEatenAmount(getEatenAmount() - 1);
@@ -100,6 +110,8 @@ public class CroissantDragonEntity extends CompanionEntity {
 
                 nextEatenRecover = this.tickCount + this.level().getRandom().nextInt(201) + 100;
             }
+
+            if (isTame()) setMilkAmount(3);
         }
 
     }
@@ -179,13 +191,26 @@ public class CroissantDragonEntity extends CompanionEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(IS_ATTACKING, false);
         builder.define(ARMOR_NAME, "default");
         builder.define(EATEN_AMOUNT, 0);
         builder.define(HAS_BEEN_EATEN, false);
         builder.define(MILK_AMOUNT, 0);
+        builder.define(VIEW_VEC_X, 0f);
+        builder.define(VIEW_VEC_Y, 0f);
+        builder.define(VIEW_VEC_Z, 0f);
+    }
+
+    public void setStoredViewVector(Vec3 vec) {
+        this.entityData.set(VIEW_VEC_X, (float) vec.x);
+        this.entityData.set(VIEW_VEC_Y, (float) vec.y);
+        this.entityData.set(VIEW_VEC_Z, (float) vec.z);
+    }
+
+    public Vec3 getStoredViewVector() {
+        return new Vec3(this.entityData.get(VIEW_VEC_X), this.entityData.get(VIEW_VEC_Y), this.entityData.get(VIEW_VEC_Z));
     }
 
     @Override
@@ -290,7 +315,7 @@ public class CroissantDragonEntity extends CompanionEntity {
 
                 setMilkAmount(getMilkAmount() + 1);
 
-                player.level().playSound(null, this.blockPosition(), SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                player.level().playSound(null, this.blockPosition(), SoundEvents.HONEY_DRINK, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
                 return InteractionResult.SUCCESS;
             }

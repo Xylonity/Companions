@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.SoulMageBookModel;
 import dev.xylonity.companions.common.entity.projectile.SoulMageBookEntity;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -22,11 +21,6 @@ public class SoulMageBookRenderer extends GeoEntityRenderer<SoulMageBookEntity> 
     public SoulMageBookRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SoulMageBookModel());
         this.addRenderLayer(new SoulMageBookGlowLayer(this));
-    }
-
-    @Override
-    public void render(@NotNull SoulMageBookEntity entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, entity.isInWall() ? LightTexture.FULL_SKY : packedLight);
     }
 
     @Override

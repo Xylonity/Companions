@@ -7,7 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 public class AntlionPupaAttackGoal extends AbstractAntlionAttackGoal {
 
     public AntlionPupaAttackGoal(AntlionEntity antlion, int minCd, int maxCd) {
-        super(antlion, 15, minCd, maxCd);
+        super(antlion, 16, minCd, maxCd);
     }
 
     @Override

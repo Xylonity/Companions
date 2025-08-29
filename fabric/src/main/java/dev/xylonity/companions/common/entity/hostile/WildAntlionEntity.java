@@ -214,7 +214,7 @@ public class WildAntlionEntity extends HostileEntity implements PlayerRideable {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ATTACK_TYPE, 0);
         builder.define(STATE, 0);

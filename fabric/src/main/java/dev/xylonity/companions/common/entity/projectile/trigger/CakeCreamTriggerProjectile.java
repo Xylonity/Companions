@@ -43,7 +43,7 @@ public class CakeCreamTriggerProjectile extends GenericTriggerProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ARMOR_NAME, "default");
     }

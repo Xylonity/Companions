@@ -7,6 +7,7 @@ import dev.xylonity.companions.common.entity.projectile.RespawnTotemRingProjecti
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -23,4 +24,8 @@ public class RespawnTotemRingRenderer extends GeoEntityRenderer<RespawnTotemRing
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
+    @Override
+    public RenderType getRenderType(RespawnTotemRingProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
+    }
 }

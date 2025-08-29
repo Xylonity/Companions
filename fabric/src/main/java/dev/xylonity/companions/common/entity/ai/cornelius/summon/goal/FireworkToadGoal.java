@@ -4,9 +4,10 @@ import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.summon.AbstractCorneliusSummonAttackGoal;
 import dev.xylonity.companions.common.entity.summon.FireworkToadEntity;
 import dev.xylonity.companions.common.util.Util;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -15,8 +16,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.FireworkExplosion;
+import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
 import java.util.Random;
 
 public class FireworkToadGoal extends AbstractCorneliusSummonAttackGoal {
@@ -140,45 +144,28 @@ public class FireworkToadGoal extends AbstractCorneliusSummonAttackGoal {
     }
 
     private static void rocket(ServerLevel world, Vec3 where, RandomSource r) {
-        CompoundTag fwTag = new CompoundTag();
-        fwTag.putByte("Flight", (byte)1);
-
         double rand = r.nextDouble();
-        int shape;
-        if (rand < 0.3) {
-            // circle
-            shape = r.nextBoolean() ? 0 : 1;
-        } else if (rand < 0.6) {
-            // star
-            shape = 2;
-        } else {
-            // burst
-            shape = 4;
-        }
-
-        CompoundTag exp = new CompoundTag();
-        exp.putByte("Type", (byte) shape);
-        exp.putBoolean("Trail", false);
-        exp.putBoolean("Flicker", true);
+        FireworkExplosion.Shape shape = rand < 0.3 ? (r.nextBoolean() ? FireworkExplosion.Shape.SMALL_BALL : FireworkExplosion.Shape.LARGE_BALL) : rand < 0.6 ? FireworkExplosion.Shape.STAR : FireworkExplosion.Shape.BURST;
 
         int cr = 128 + r.nextInt(128);
         int cg = 128 + r.nextInt(128);
         int cb = 128 + r.nextInt(128);
         int color = (cr << 16) | (cg << 8) | cb;
 
-        exp.putIntArray("Colors", new int[]{ color });
-        exp.putIntArray("FadeColors", new int[]{ color });
+        IntList colors = new IntArrayList(new int[]{
+                color
+        });
 
-        ListTag expls = new ListTag();
-        expls.add(exp);
-        fwTag.put("Explosions", expls);
+        IntList fades = new IntArrayList(new int[]{
+                color
+        });
 
         ItemStack stack = new ItemStack(Items.FIREWORK_ROCKET);
-        //stack.addTagElement("Fireworks", fwTag);
+        stack.set(DataComponents.FIREWORKS, new Fireworks(1, List.of(new FireworkExplosion(shape, colors, fades, false, true))));
 
         FireworkRocketEntity rocket = new FireworkRocketEntity(world, where.x, where.y, where.z, stack);
-
         world.addFreshEntity(rocket);
+
         world.broadcastEntityEvent(rocket, (byte) 17);
 
         rocket.remove(RemovalReason.DISCARDED);
