@@ -361,7 +361,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
     @Override
     protected void positionRider(@NotNull Entity pPassenger, @NotNull MoveFunction pCallback) {
         if (this.hasPassenger(pPassenger)) {
-            double baseY = this.getY();
+            double baseY = this.getY() + 1.5;
 
             if (isInAnyFluid()) {
                 baseY -= 1.35;

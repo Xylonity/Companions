@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.xylonity.companions.config.CompanionsConfig;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
@@ -44,7 +43,7 @@ public class CompanionsAddItemModifier extends LootModifier {
             }
         }
 
-        if (context.getRandom().nextFloat() <= CompanionsConfig.DEMON_FLESH_DROP_RATE) {
+        if (context.getRandom().nextFloat() <= chance) {
             generatedLoot.add(new ItemStack(this.item));
         }
 
