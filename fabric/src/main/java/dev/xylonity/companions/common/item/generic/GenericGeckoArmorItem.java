@@ -34,15 +34,13 @@ public class GenericGeckoArmorItem extends ArmorItem implements GeoItem {
             private GenericArmorItemRenderer renderer;
 
             @Override
-            public @Nullable <T extends LivingEntity> GenericArmorItemRenderer getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
+            public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
+
                 if (this.renderer == null)
                     this.renderer = new GenericArmorItemRenderer(resourceKey);
 
-                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-
                 return this.renderer;
             }
-
         });
     }
 
