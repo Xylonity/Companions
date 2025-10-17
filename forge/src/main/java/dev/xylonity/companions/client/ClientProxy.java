@@ -7,7 +7,7 @@ import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProj
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.CompanionsParticles;
-import dev.xylonity.knightlib.api.CameraShakeManager;
+import dev.xylonity.knightlib.api.camera.CameraShakeManager;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

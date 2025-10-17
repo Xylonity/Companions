@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.particle;
 
 import dev.xylonity.companions.CompanionsCommon;
-import dev.xylonity.knightlib.common.particle.AbstractRibbonTrailParticle;
+import dev.xylonity.knightlib.client.particle.AbstractRibbonTrailParticle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;

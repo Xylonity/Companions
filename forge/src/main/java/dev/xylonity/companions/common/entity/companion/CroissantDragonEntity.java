@@ -10,7 +10,7 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import dev.xylonity.knightlib.api.TickScheduler;
+import dev.xylonity.knightlib.api.scheduler.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

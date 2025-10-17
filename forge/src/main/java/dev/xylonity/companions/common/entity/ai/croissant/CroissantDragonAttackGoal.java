@@ -6,7 +6,7 @@ import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import dev.xylonity.knightlib.api.TickScheduler;
+import dev.xylonity.knightlib.api.scheduler.TickScheduler;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;

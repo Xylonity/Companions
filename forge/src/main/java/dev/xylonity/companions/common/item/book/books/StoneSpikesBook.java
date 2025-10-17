@@ -6,7 +6,7 @@ import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
-import dev.xylonity.knightlib.api.TickScheduler;
+import dev.xylonity.knightlib.api.scheduler.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;

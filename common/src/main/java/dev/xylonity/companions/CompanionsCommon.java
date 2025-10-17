@@ -2,6 +2,7 @@ package dev.xylonity.companions;
 
 import dev.xylonity.companions.platform.CompanionsPlatform;
 import dev.xylonity.companions.registry.*;
+import dev.xylonity.knightlib.KnightLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;

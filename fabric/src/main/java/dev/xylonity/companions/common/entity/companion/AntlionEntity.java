@@ -13,7 +13,7 @@ import dev.xylonity.companions.mixin.FallingBlockEntityAccessor;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import dev.xylonity.knightlib.api.TickScheduler;
+import dev.xylonity.knightlib.api.scheduler.TickScheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;

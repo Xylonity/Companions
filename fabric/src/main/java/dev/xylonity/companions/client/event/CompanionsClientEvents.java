@@ -10,7 +10,7 @@ import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
 import dev.xylonity.companions.client.projectile.renderer.*;
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.registry.*;
-import dev.xylonity.knightlib.api.BossBarBuilder;
+import dev.xylonity.knightlib.api.bossbar.BossBarBuilder;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -144,8 +144,8 @@ public class CompanionsClientEvents {
 
         // Pontiff
         BossBarBuilder
-                .matcher(boss -> boss.getName().getString().contains("Sacred Pontiff") && !boss.getName().getString().equalsIgnoreCase("Sacred Pontiff Invisible"))
-                .renderer((gui, boss, x, y) -> {
+                .legacyMatcher(boss -> boss.getName().getString().contains("Sacred Pontiff") && !boss.getName().getString().equalsIgnoreCase("Sacred Pontiff Invisible"))
+                .legacyRenderer((gui, boss, x, y) -> {
                     // background
                     gui.blit(PONTIFF_BACKGROUND, x, y + 22, 0, 0, 183, 5);
 
@@ -168,15 +168,15 @@ public class CompanionsClientEvents {
 
         // Invisible
         BossBarBuilder
-                .matcher(boss -> boss.getName().getString().contains("Sacred Pontiff Invisible"))
-                .renderer((gui, boss, x, y) -> { ;; })
+                .legacyMatcher(boss -> boss.getName().getString().contains("Sacred Pontiff Invisible"))
+                .legacyRenderer((gui, boss, x, y) -> { ;; })
                 .hideVanillaName()
                 .register();
 
         // Holiness
         BossBarBuilder
-                .matcher(boss -> boss.getName().getString().contains("His Holiness"))
-                .renderer((gui, boss, x, y) -> {
+                .legacyMatcher(boss -> boss.getName().getString().contains("His Holiness"))
+                .legacyRenderer((gui, boss, x, y) -> {
                     // background
                     gui.blit(HOLINESS_BACKGROUND, x - 2, y + 15, 0, 0, 185, 5);
 

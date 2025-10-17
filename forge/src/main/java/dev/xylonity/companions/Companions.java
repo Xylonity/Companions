@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.CommonProxy;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.*;
+import dev.xylonity.knightlib.KnightLib;
 import dev.xylonity.knightlib.config.ConfigComposer;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
@@ -36,8 +37,9 @@ public class Companions {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Companions.MOD_ID);
 
     public Companions() {
-
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        KnightLib.initialize();
 
         CompanionsLootModifier.LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
         CompanionsBlockEntities.BLOCK_ENTITY.register(modEventBus);

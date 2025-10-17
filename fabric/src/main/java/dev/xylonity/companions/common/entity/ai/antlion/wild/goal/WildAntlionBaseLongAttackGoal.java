@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.entity.ai.antlion.wild.goal;
 
 import dev.xylonity.companions.common.entity.ai.antlion.wild.AbstractWildAntlionAttackGoal;
 import dev.xylonity.companions.common.entity.hostile.WildAntlionEntity;
-import dev.xylonity.knightlib.api.TickScheduler;
+import dev.xylonity.knightlib.api.scheduler.TickScheduler;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;

@@ -5,10 +5,8 @@ import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.entity.projectile.PontiffFireRingProjectile;
 import dev.xylonity.companions.common.entity.projectile.trigger.FireRayBeamEntity;
 import dev.xylonity.companions.registry.CompanionsEntities;
-import dev.xylonity.knightlib.api.TickScheduler;
-import net.minecraft.core.particles.ParticleTypes;
+import dev.xylonity.knightlib.api.scheduler.TickScheduler;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
