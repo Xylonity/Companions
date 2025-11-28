@@ -6,7 +6,7 @@ plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
     id 'net.darkhax.curseforgegradle' version '1.1.26'
-    id "com.modrinth.minotaur" version "2.+"
+    id "com.modrinth.minotaur" version "2.8.10"
 }
 
 repositories {
@@ -150,4 +150,9 @@ modrinth {
     versionType = "release"
 
     changelog = changelogSection
+
+    dependencies {
+        required.project "knight-lib"
+        required.project "geckolib"
+    }
 }

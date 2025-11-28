@@ -154,4 +154,9 @@ modrinth {
     versionType = "release"
 
     changelog = changelogSection
+    dependencies {
+        required.project "knight-lib"
+        required.project "geckolib"
+    }
+
 }
