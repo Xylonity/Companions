@@ -867,9 +867,7 @@ public final class CompanionsConfig {
             "minecraft:cake, 0.55, 1;" +
             "minecraft:netherite_scrap, 0.30, 1;" +
             "minecraft:netherite_ingot, 0.10, 1;" +
-            "minecraft:nether_star, 0.05, 1;" +
-            "minecraft:enchanted_book, 0.15, 1;" +
-            "minecraft:enchanted_book, 0.10, 1";
+            "minecraft:nether_star, 0.05, 1;";
 
     @ConfigEntry(
             category = "Bonanza",
