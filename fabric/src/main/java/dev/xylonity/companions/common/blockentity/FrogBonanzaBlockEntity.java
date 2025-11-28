@@ -480,17 +480,17 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
         Item item = stack.getItem();
 
         if (spinsRemaining <= 0) {
-            if (item == CompanionsBlocks.COPPER_COIN.get().asItem()) {
-                spinsRemaining = Integer.parseInt(CompanionsConfig.BONANZA_COIN_TRIES.split(",")[0].trim());
-            } else if (item == CompanionsBlocks.NETHER_COIN.get().asItem()) {
-                spinsRemaining = Integer.parseInt(CompanionsConfig.BONANZA_COIN_TRIES.split(",")[1].trim());
-            } else if (item == CompanionsBlocks.END_COIN.get().asItem()) {
-                spinsRemaining = Integer.parseInt(CompanionsConfig.BONANZA_COIN_TRIES.split(",")[2].trim());
-            } else {
+            int tries = getSpinsForCurrencyItem(item);
+
+            if (tries <= 0) {
                 return ItemInteractionResult.FAIL;
             }
 
-            if (!player.getAbilities().instabuild) stack.shrink(1);
+            spinsRemaining = tries;
+
+            if (!player.getAbilities().instabuild) {
+                stack.shrink(1);
+            }
 
             triggerAnim("coin_controller", "coin");
             sync();
@@ -520,6 +520,54 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             return false;
         }
 
+    }
+
+    private static Map<Item, Integer> parseBonanzaCurrencies(String configEntry) {
+        Map<Item, Integer> map = new ConcurrentHashMap<>();
+
+        if (configEntry == null || configEntry.isBlank()) {
+            return map;
+        }
+
+        for (String part : configEntry.split(";")) {
+            String[] entry = part.trim().split(",");
+            if (entry.length != 2) {
+                continue;
+            }
+
+            String idString = entry[0].trim();
+            String triesString = entry[1].trim();
+
+            ResourceLocation id;
+            try {
+                id = ResourceLocation.parse(idString);
+            }
+            catch (Exception ignore) {
+                continue;
+            }
+
+            Item item = BuiltInRegistries.ITEM.get(id);
+
+            int tries;
+            try {
+                tries = Integer.parseInt(triesString);
+            }
+            catch (Exception ignore) {
+                continue;
+            }
+
+            if (tries > 0) {
+                map.put(item, tries);
+            }
+
+        }
+
+        return map;
+    }
+
+    private static int getSpinsForCurrencyItem(Item item) {
+        Map<Item, Integer> currencies = parseBonanzaCurrencies(CompanionsConfig.BONANZA_CURRENCY_TYPES);
+        return currencies.getOrDefault(item, 0);
     }
 
     @Override

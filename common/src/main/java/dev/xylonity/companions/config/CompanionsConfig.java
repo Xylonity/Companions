@@ -879,8 +879,8 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Bonanza",
-            comment = "Bonanza amount of tries per coin. The first number corresponds to the copper coin, the second to the nether coin and the third to the end coin. To clarify: [copper_coin, nether_coin, end_coin]"
+            comment = "Bonanza curency-amount pair. The first value corresponds to the item used as currency, and the latter value indicates how many attempts that item provides. For example: minecraft:iron_ingot, 1; minecraft:gold_ingot, 2; ..."
     )
-    public static String BONANZA_COIN_TRIES = "1, 3, 5";
+    public static String BONANZA_CURRENCY_TYPES = "companions:copper_coin, 1; companions:nether_coin, 3; companions:end_coin, 5";
 
 }
