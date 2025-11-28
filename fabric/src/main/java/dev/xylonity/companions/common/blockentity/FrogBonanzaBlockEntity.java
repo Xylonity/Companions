@@ -547,6 +547,9 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             }
 
             Item item = BuiltInRegistries.ITEM.get(id);
+            if (item == null) {
+                continue;
+            }
 
             int tries;
             try {
