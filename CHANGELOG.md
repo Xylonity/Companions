@@ -7,6 +7,8 @@
 - Sacred Pontiff is now respawnable by interacting on a respawn totem with a nether star
 - Increased Sacred Pontiff randomized loot amount
 - Now the illager golem spawns once per even raid wave
+- Bonanza currency is now configurable through the config file
+- Deleted BONANZA_COIN_TRIES config entry
 
 # 1.1.2
 - Added compat with knightlib 1.4.0
