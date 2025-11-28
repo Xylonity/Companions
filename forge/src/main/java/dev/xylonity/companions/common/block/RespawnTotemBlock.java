@@ -18,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -125,8 +126,9 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
 
         if (pLevel.isClientSide) return InteractionResult.SUCCESS;
 
-        Item item = pPlayer.getItemInHand(pHand).getItem();
-        if (item != CompanionsItems.RELIC_GOLD.get() && item != CompanionsItems.OLD_CLOTH.get()) {
+        ItemStack stack = pPlayer.getItemInHand(pHand);
+        Item item = stack.getItem();
+        if (item != CompanionsItems.RELIC_GOLD.get() && item != CompanionsItems.OLD_CLOTH.get() && item != Items.NETHER_STAR) {
             return InteractionResult.PASS;
         }
 
@@ -135,17 +137,25 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
         pLevel.setBlock(lowerPos, Blocks.AIR.defaultBlockState(), 35);
         pLevel.setBlock(lowerPos.above(), Blocks.AIR.defaultBlockState(), 35);
 
-        CompanionEntity entity = null;
+        LivingEntity entity = null;
         if (item == CompanionsItems.RELIC_GOLD.get()) {
             entity = CompanionsEntities.MANKH.get().create(pLevel);
-        } else if (item == CompanionsItems.OLD_CLOTH.get()) {
+        }
+        else if (item == CompanionsItems.OLD_CLOTH.get()) {
             entity = CompanionsEntities.CLOAK.get().create(pLevel);
+        }
+        else if (item == Items.NETHER_STAR) {
+            entity = CompanionsEntities.SACRED_PONTIFF.get().create(pLevel);
         }
 
         if (entity != null) {
             entity.moveTo(lowerPos.getX() + 0.5, lowerPos.getY(), lowerPos.getZ() + 0.5, pLevel.random.nextFloat() * 360F, 0);
 
-            entity.tameInteraction(pPlayer);
+            if (entity instanceof CompanionEntity companionEntity) {
+                companionEntity.tameInteraction(pPlayer);
+            }
+
+            stack.shrink(1);
 
             double dx = pPlayer.getX() - pPos.getX();
             double dy = (pPlayer.getY() + pPlayer.getEyeHeight()) - (pPos.getY() + entity.getEyeHeight());
@@ -176,7 +186,6 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
         pLevel.playSound(null, lowerPos, SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.BLOCKS, 1F, 1F);
 
         return InteractionResult.SUCCESS;
-
     }
 
     @Override
