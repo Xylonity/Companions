@@ -51,7 +51,7 @@ public class RecallPlatformBlockEntity extends AbstractTeslaBlockEntity {
     }
 
     public void onStepped(ServerPlayer player) {
-        if (cooldown > 0) return;
+        if (cooldown > 0 || !isActive()) return;
 
         if (getLevel() == null) return;
 
