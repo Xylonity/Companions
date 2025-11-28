@@ -450,8 +450,8 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         if (this.deathTime >= ANIMATION_PHASE2_DEAD_MAX_TICKS && !this.level().isClientSide() && !this.isRemoved()) {
             this.level().broadcastEntityEvent(this, (byte) 60);
 
-            spawnAtLocation(new ItemStack(CompanionsItems.RELIC_GOLD.get(), getRandom().nextInt(2, 6)));
-            spawnAtLocation(new ItemStack(CompanionsItems.OLD_CLOTH.get(), getRandom().nextInt(2, 6)));
+            spawnAtLocation(new ItemStack(CompanionsItems.RELIC_GOLD.get(), getRandom().nextInt(2, 10)));
+            spawnAtLocation(new ItemStack(CompanionsItems.OLD_CLOTH.get(), getRandom().nextInt(2, 10)));
 
             this.remove(RemovalReason.KILLED);
         }
