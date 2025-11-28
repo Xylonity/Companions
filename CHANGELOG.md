@@ -5,3 +5,4 @@
 - Fixed respawn totem not spawning neither mankh nor cloak
 - Fixed mankh and cloak spawning not consuming their respective item
 - Sacred Pontiff is now respawnable by interacting on a respawn totem with a nether star
+- Increased Sacred Pontiff randomized loot amount
