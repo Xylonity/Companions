@@ -137,18 +137,22 @@ public class CompanionsNeoForgePlatform implements CompanionsPlatform {
     public <T extends Item> Supplier<T> registerArmorItem(String id, Holder<ArmorMaterial> armorMaterial, ArmorItem.Type armorType, boolean isGeckoArmor) {
         if (isGeckoArmor) {
             if (armorMaterial == ArmorMaterials.CRYSTALLIZED_BLOOD) {
-                return (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(armorMaterial, armorType, new Item.Properties().fireResistant().durability(getDurabilityMultiplier(CompanionsConfig.CRYSTALLIZED_BLOOD_SET_STATS)), id));
-            } else if (armorMaterial == ArmorMaterials.MAGE) {
-                return (Supplier<T>) registerItem(id, () -> new GeckoMageArmorItem(armorMaterial, armorType, new Item.Properties().durability(getDurabilityMultiplier(CompanionsConfig.MAGE_SET_STATS)), id));
-            } else { // HOLY_ROBE
-                return (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(armorMaterial, armorType, new Item.Properties().fireResistant().durability(getDurabilityMultiplier(CompanionsConfig.HOLY_ROBE_SET_STATS)), id));
+                return (Supplier<T>) registerItem(id, () -> new GeckoBloodArmorItem(armorMaterial, armorType, new Item.Properties().fireResistant().durability(armorType.getDurability(getDurabilityMultiplier(CompanionsConfig.CRYSTALLIZED_BLOOD_SET_STATS))), id));
             }
-        } else {
+            else if (armorMaterial == ArmorMaterials.MAGE) {
+                return (Supplier<T>) registerItem(id, () -> new GeckoMageArmorItem(armorMaterial, armorType, new Item.Properties().durability(armorType.getDurability(getDurabilityMultiplier(CompanionsConfig.MAGE_SET_STATS))), id));
+            }
+            else { // HOLY_ROBE
+                return (Supplier<T>) registerItem(id, () -> new GeckoHolyRobeArmorItem(armorMaterial, armorType, new Item.Properties().fireResistant().durability(armorType.getDurability(getDurabilityMultiplier(CompanionsConfig.HOLY_ROBE_SET_STATS))), id));
+            }
+        }
+        else {
             if (armorMaterial == ArmorMaterials.CRYSTALLIZED_BLOOD) {
-                return (Supplier<T>) registerItem(id, () -> new BloodArmorItem(armorMaterial, armorType, new Item.Properties().fireResistant().durability(getDurabilityMultiplier(CompanionsConfig.CRYSTALLIZED_BLOOD_SET_STATS))));
+                return (Supplier<T>) registerItem(id, () -> new BloodArmorItem(armorMaterial, armorType, new Item.Properties().fireResistant().durability(armorType.getDurability(getDurabilityMultiplier(CompanionsConfig.CRYSTALLIZED_BLOOD_SET_STATS)))));
             } else {
                 return (Supplier<T>) registerItem(id, () -> new ArmorItem(armorMaterial, armorType, new Item.Properties().durability(35)));
             }
+
         }
 
     }

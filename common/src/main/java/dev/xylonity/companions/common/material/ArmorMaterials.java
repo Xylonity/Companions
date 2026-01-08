@@ -46,6 +46,7 @@ public final class ArmorMaterials {
                         toughness, knockback
                 )
         );
+
     }
 
 }

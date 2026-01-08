@@ -1,3 +1,7 @@
+# 1.2.1
+- Fixed armor set durabilities defaulted to 35 instead of their real values
+- Buffed the armors
+
 # 1.2.0
 - Fixed non-capitalized item names
 - Fixed recall platforms working without electricity
