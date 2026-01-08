@@ -1,6 +1,6 @@
 # 1.2.1
 - Fixed armor set durabilities defaulted to 35 instead of their real values
-- Buffed the armors
+- Buffed holy robe and crystallized blood armor sets defense values
 
 # 1.2.0
 - Fixed non-capitalized item names

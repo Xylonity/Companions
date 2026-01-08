@@ -646,7 +646,7 @@ public final class CompanionsConfig {
             category = "Armoury",
             comment = "Crystallized Blood armor stats: [helmet, chest, legs, boots, toughness, knockbackRes, durabilityMult]. Don't use negative values and stick to the format."
     )
-    public static String CRYSTALLIZED_BLOOD_SET_STATS = "3, 8, 6, 3, 2.5, 0.05, 35";
+    public static String CRYSTALLIZED_BLOOD_SET_STATS = "4, 9, 7, 3, 3.5, 0.15, 40";
 
     @ConfigEntry(
             category = "Armoury",
@@ -658,7 +658,7 @@ public final class CompanionsConfig {
             category = "Armoury",
             comment = "Holy Robe armor stats: [helmet, chest, legs, boots, toughness, knockbackRes, durabilityMult]. Don't use negative values and stick to the format."
     )
-    public static String HOLY_ROBE_SET_STATS = "3, 8, 6, 3, 2.5, 0.05, 35";
+    public static String HOLY_ROBE_SET_STATS = "5, 9, 7, 4, 3.75, 0.2, 42";
 
     @ConfigEntry(
             category = "Armoury",
