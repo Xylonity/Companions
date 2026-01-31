@@ -1,3 +1,6 @@
+# 1.2.2
+- Black hole is now summonable
+
 # 1.2.1
 - Buffed holy robe and crystallized blood armor sets defense values
 
