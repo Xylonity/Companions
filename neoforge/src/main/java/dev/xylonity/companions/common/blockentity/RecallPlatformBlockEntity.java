@@ -86,9 +86,12 @@ public class RecallPlatformBlockEntity extends AbstractTeslaBlockEntity {
     }
 
     public void updatePartners(Set<BlockPos> newPartners) {
+        if (partnerPositions.equals(newPartners)) {
+            return;
+        }
+
         partnerPositions.clear();
         partnerPositions.addAll(newPartners);
-        setChanged();
     }
 
     @Override

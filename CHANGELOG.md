@@ -1,4 +1,5 @@
 # 1.2.2
+- Attempt to fix recall platform loop crash
 - Black hole is now summonable
 
 # 1.2.1
