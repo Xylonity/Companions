@@ -119,7 +119,7 @@ publishing {
     }
     repositories {
         maven {
-            url System.getenv('local_maven_url')
+            url = uri("file:///C:/maven")
         }
     }
 }
