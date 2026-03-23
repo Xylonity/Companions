@@ -1,7 +1,7 @@
 package dev.xylonity.companions.config;
 
-import dev.xylonity.knightlib.config.api.AutoConfig;
-import dev.xylonity.knightlib.config.api.ConfigEntry;
+import dev.xylonity.knightlib.api.config.AutoConfig;
+import dev.xylonity.knightlib.api.config.ConfigEntry;
 
 @AutoConfig(file = "companions")
 public final class CompanionsConfig {

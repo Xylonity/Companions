@@ -13,6 +13,14 @@ plugins {
 base {
     archivesName = "${mod_id}-fabric-${minecraft_version}"
 }
+
+repositories {
+    maven {
+        name = "Terraformers"
+        url = "https://maven.terraformersmc.com/"
+    }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.layered {
@@ -23,6 +31,8 @@ dependencies {
     modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
 
     modImplementation("dev.xylonity.knightlib:knightlib-fabric-${minecraft_version}:${knightlib_version}")
+
+    modImplementation "com.terraformersmc:modmenu:7.2.2"
 
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
