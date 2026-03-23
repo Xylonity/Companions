@@ -29,6 +29,7 @@ public class Companions {
         CompanionsRecipeSerializers.RECIPE_SERIALIZERS.init();
 
         CompanionsEntitySpawns.init();
+        CompanionsEntityDrops.init();
     }
 
     public static ResourceLocation of(final String path) {

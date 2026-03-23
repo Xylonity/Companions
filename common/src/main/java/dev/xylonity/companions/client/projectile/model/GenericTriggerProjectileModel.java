@@ -5,20 +5,20 @@ import dev.xylonity.companions.common.entity.projectile.trigger.GenericTriggerPr
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-public class GenericTriggerProjectileModel extends GeoModel<GenericTriggerProjectile> {
+public class GenericTriggerProjectileModel<T extends GenericTriggerProjectile> extends GeoModel<T> {
 
     @Override
-    public ResourceLocation getModelResource(GenericTriggerProjectile animatable) {
+    public ResourceLocation getModelResource(T animatable) {
         return new ResourceLocation(Companions.MOD_ID, "geo/generic.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(GenericTriggerProjectile animatable) {
+    public ResourceLocation getTextureResource(T animatable) {
         return new ResourceLocation(Companions.MOD_ID, "textures/entity/generic.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(GenericTriggerProjectile animatable) {
+    public ResourceLocation getAnimationResource(T animatable) {
         return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
     }
 
