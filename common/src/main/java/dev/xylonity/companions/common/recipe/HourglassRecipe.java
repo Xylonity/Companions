@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.google.gson.JsonObject;
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class HourglassRecipe implements Recipe<SimpleContainer> {
 
-    private static final ResourceLocation ID = new ResourceLocation(CompanionsFabric.MOD_ID, "hourglass_interaction");
+    private static final ResourceLocation ID = Companions.of("hourglass_interaction");
 
     public static final RecipeSerializer<HourglassRecipe> SERIALIZER = new Serializer();
     public static final RecipeType<HourglassRecipe> RECIPE_TYPE = new Type();

@@ -33,13 +33,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Xylonity
  */
 public class TeslaConnectionManager {
+
     private static TeslaConnectionManager instance;
+
     private final Map<ConnectionNode, Set<ConnectionNode>> outgoing = new ConcurrentHashMap<>();
     private final Map<ConnectionNode, Set<ConnectionNode>> incoming = new ConcurrentHashMap<>();
     private final Map<ConnectionNode, AbstractTeslaBlockEntity> blockEntities = new ConcurrentHashMap<>();
 
     public static TeslaConnectionManager getInstance() {
-        if (instance == null) instance = new TeslaConnectionManager();
+        if (instance == null) {
+            instance = new TeslaConnectionManager();
+        }
+
         return instance;
     }
 
