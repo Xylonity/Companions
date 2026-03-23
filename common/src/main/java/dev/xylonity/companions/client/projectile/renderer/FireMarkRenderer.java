@@ -25,7 +25,7 @@ public class FireMarkRenderer extends GeoEntityRenderer<FireMarkProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull FireMarkProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/fire_mark.png");
+        return Companions.of("textures/entity/fire_mark.png");
     }
 
     @Override
@@ -34,9 +34,8 @@ public class FireMarkRenderer extends GeoEntityRenderer<FireMarkProjectile> {
     }
 
     @Override
-    protected void applyRotations(FireMarkProjectile entity, PoseStack poseStack,
-                                  float ageInTicks, float rotationYaw, float partialTicks) {
-        Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+    protected void applyRotations(FireMarkProjectile entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
+        final Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
         if (camera != null) {
             double dx = camera.getPosition().x - entity.getX();
             double dz = camera.getPosition().z - entity.getZ();
@@ -56,12 +55,17 @@ public class FireMarkRenderer extends GeoEntityRenderer<FireMarkProjectile> {
             float pitchFactor = 0.5F;
             float desiredPitch = rawPitch * pitchFactor;
             float maxPitch = 5.0F;
-            if (desiredPitch > maxPitch) desiredPitch = maxPitch;
-            if (desiredPitch < -maxPitch) desiredPitch = -maxPitch;
+            if (desiredPitch > maxPitch) {
+                desiredPitch = maxPitch;
+            }
+            if (desiredPitch < -maxPitch) {
+                desiredPitch = -maxPitch;
+            }
 
             poseStack.mulPose(Axis.YP.rotationDegrees(desiredYaw));
             poseStack.mulPose(Axis.XP.rotationDegrees(desiredPitch));
         }
+
         super.applyRotations(entity, poseStack, ageInTicks, rotationYaw, partialTicks);
     }
 

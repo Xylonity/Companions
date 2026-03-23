@@ -11,21 +11,21 @@ public class TeslaCoilModel extends GeoModel<TeslaCoilBlockEntity> {
     @Override
     public ResourceLocation getModelResource(TeslaCoilBlockEntity animatable) {
         String dirName = animatable.getBlockState().getValue(AbstractTeslaBlock.FACING).getName();
-        return new ResourceLocation(Companions.MOD_ID, "geo/tesla_coil_block_" + dirName + ".geo.json");
+        return Companions.of("geo/tesla_coil_block_" + dirName + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(TeslaCoilBlockEntity animatable) {
         if (animatable.isActive()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/block/tesla_coil_block_on.png");
+            return Companions.of("textures/block/tesla_coil_block_on.png");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/tesla_coil_block.png");
+        return Companions.of("textures/block/tesla_coil_block.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(TeslaCoilBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

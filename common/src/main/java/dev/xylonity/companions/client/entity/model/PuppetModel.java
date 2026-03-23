@@ -9,17 +9,17 @@ public class PuppetModel extends GeoModel<PuppetEntity> {
 
     @Override
     public ResourceLocation getModelResource(PuppetEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/puppet.geo.json");
+        return Companions.of("geo/puppet.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(PuppetEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/puppet.png");
+        return Companions.of("textures/entity/puppet.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(PuppetEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/puppet.animation.json");
+        return Companions.of("animations/puppet.animation.json");
     }
 
 }

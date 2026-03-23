@@ -18,13 +18,13 @@ import net.minecraft.resources.ResourceLocation;
 
 public class CompanionsClientEvents {
 
-    private static final ResourceLocation PONTIFF_BACKGROUND = new ResourceLocation(Companions.MOD_ID, "textures/gui/pontiff_bar_background.png");
-    private static final ResourceLocation PONTIFF_HEALTH = new ResourceLocation(Companions.MOD_ID, "textures/gui/pontiff_bar_health.png");
-    private static final ResourceLocation PONTIFF_OVERLAY = new ResourceLocation(Companions.MOD_ID, "textures/gui/pontiff_bar_overlay.png");
+    private static final ResourceLocation PONTIFF_BACKGROUND = Companions.of("textures/gui/pontiff_bar_background.png");
+    private static final ResourceLocation PONTIFF_HEALTH = Companions.of("textures/gui/pontiff_bar_health.png");
+    private static final ResourceLocation PONTIFF_OVERLAY = Companions.of("textures/gui/pontiff_bar_overlay.png");
 
-    private static final ResourceLocation HOLINESS_BACKGROUND = new ResourceLocation(Companions.MOD_ID, "textures/gui/holiness_bar_background.png");
-    private static final ResourceLocation HOLINESS_HEALTH = new ResourceLocation(Companions.MOD_ID, "textures/gui/holiness_bar_health.png");
-    private static final ResourceLocation HOLINESS_OVERLAY = new ResourceLocation(Companions.MOD_ID, "textures/gui/holiness_bar_overlay.png");
+    private static final ResourceLocation HOLINESS_BACKGROUND = Companions.of("textures/gui/holiness_bar_background.png");
+    private static final ResourceLocation HOLINESS_HEALTH = Companions.of("textures/gui/holiness_bar_health.png");
+    private static final ResourceLocation HOLINESS_OVERLAY = Companions.of("textures/gui/holiness_bar_overlay.png");
 
     @RegisterEvent
     public static void registerEntityRenderers(final EntityRendererRegistrationEvent event) {

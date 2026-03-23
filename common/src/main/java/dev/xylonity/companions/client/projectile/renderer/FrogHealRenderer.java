@@ -18,6 +18,7 @@ public class FrogHealRenderer extends GeoEntityRenderer<FrogHealProjectile> {
 
     @Override
     public RenderType getRenderType(FrogHealProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getGeoModel().getTextureResource(animatable));
     }
+
 }

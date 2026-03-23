@@ -27,22 +27,6 @@ public class CloakRenderer extends GeoEntityRenderer<CloakEntity> {
     }
 
     @Override
-    public void render(@NotNull CloakEntity entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        if (entity instanceof IPhantomEffectEntity phantomEntity && phantomEntity.isPhantomEffectActive()) {
-            Player player = Minecraft.getInstance().player;
-
-            if (player != null) {
-                if (getPhantomVisibility(entity, player) == PhantomVisibility.INVISIBLE) {
-                    return;
-                }
-            }
-
-        }
-
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-    }
-
-    @Override
     public RenderType getRenderType(CloakEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
         if (animatable instanceof IPhantomEffectEntity phantomEntity && phantomEntity.isPhantomEffectActive()) {
             Player player = Minecraft.getInstance().player;
@@ -50,7 +34,7 @@ public class CloakRenderer extends GeoEntityRenderer<CloakEntity> {
             if (player != null) {
                 switch (getPhantomVisibility(animatable, player)) {
                     case TRANSLUCENT:
-                        return RenderType.entityTranslucent(getTextureLocation(animatable));
+                        return RenderType.entityTranslucent(model.getTextureResource(animatable));
                     case INVISIBLE:
                         return null;
                     case NORMAL:
@@ -69,14 +53,16 @@ public class CloakRenderer extends GeoEntityRenderer<CloakEntity> {
             Player player = Minecraft.getInstance().player;
 
             if (player != null) {
-                PhantomVisibility visibility = getPhantomVisibility(animatable, player);
-
+                final PhantomVisibility visibility = getPhantomVisibility(animatable, player);
                 if (visibility == PhantomVisibility.TRANSLUCENT) {
                     alpha = 0.35f;
-                } else if (visibility == PhantomVisibility.INVISIBLE) {
+                }
+                else if (visibility == PhantomVisibility.INVISIBLE) {
                     return;
                 }
+
             }
+
         }
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);

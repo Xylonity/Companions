@@ -14,17 +14,17 @@ public class NetherBullfrogModel extends GeoModel<NetherBullfrogEntity> {
 
     @Override
     public ResourceLocation getModelResource(NetherBullfrogEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/nether_bullfrog.geo.json");
+        return Companions.of("geo/nether_bullfrog.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(NetherBullfrogEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/nether_bullfrog.png");
+        return Companions.of("textures/entity/nether_bullfrog.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(NetherBullfrogEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/nether_bullfrog.animation.json");
+        return Companions.of("animations/nether_bullfrog.animation.json");
     }
 
     @Override

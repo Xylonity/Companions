@@ -9,23 +9,23 @@ public class FloorCakeCreamModel extends GeoModel<FloorCakeCreamProjectile> {
 
     @Override
     public ResourceLocation getModelResource(FloorCakeCreamProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/floor_cake_cream.geo.json");
+        return Companions.of("geo/floor_cake_cream.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(FloorCakeCreamProjectile animatable) {
         if (animatable.getArmorName().equals("chocolate")) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/floor_cake_cream_chocolate.png");
+            return Companions.of("textures/entity/floor_cake_cream_chocolate.png");
         } else if (animatable.getArmorName().equals("strawberry")) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/floor_cake_cream_strawberry.png");
+            return Companions.of("textures/entity/floor_cake_cream_strawberry.png");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/floor_cake_cream.png");
+        return Companions.of("textures/entity/floor_cake_cream.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(FloorCakeCreamProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

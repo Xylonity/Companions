@@ -14,17 +14,17 @@ public class GoldenAllayModel extends GeoModel<GoldenAllayEntity> {
 
     @Override
     public ResourceLocation getModelResource(GoldenAllayEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/golden_allay.geo.json");
+        return Companions.of("geo/golden_allay.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(GoldenAllayEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/golden_allay.png");
+        return Companions.of("textures/entity/golden_allay.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(GoldenAllayEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/golden_allay.animation.json");
+        return Companions.of("animations/golden_allay.animation.json");
     }
 
     @Override

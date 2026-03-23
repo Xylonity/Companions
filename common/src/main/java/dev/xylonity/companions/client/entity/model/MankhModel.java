@@ -14,17 +14,17 @@ public class MankhModel extends GeoModel<MankhEntity> {
 
     @Override
     public ResourceLocation getModelResource(MankhEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/mankh.geo.json");
+        return Companions.of("geo/mankh.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(MankhEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/mankh.png");
+        return Companions.of("textures/entity/mankh.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(MankhEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/mankh.animation.json");
+        return Companions.of("animations/mankh.animation.json");
     }
 
     @Override

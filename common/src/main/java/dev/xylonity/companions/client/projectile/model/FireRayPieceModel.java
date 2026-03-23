@@ -9,17 +9,17 @@ public class FireRayPieceModel extends GeoModel<FireRayPieceProjectile> {
 
     @Override
     public ResourceLocation getModelResource(FireRayPieceProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/fire_ray_piece.geo.json");
+        return Companions.of("geo/fire_ray_piece.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(FireRayPieceProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/fire_ray_piece.png");
+        return Companions.of("textures/entity/fire_ray_piece.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(FireRayPieceProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/fire_ray_piece.animation.json");
+        return Companions.of("animations/fire_ray_piece.animation.json");
     }
 
 }

@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class SoulFurnaceScreen extends AbstractContainerScreen<SoulFurnaceContainerMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/gui/soul_furnace_gui.png");
+    private static final ResourceLocation TEXTURE = Companions.of("textures/gui/soul_furnace_gui.png");
 
     private static final int FRAME_WIDTH = 10;
     private static final int FRAME_HEIGHT = 9;

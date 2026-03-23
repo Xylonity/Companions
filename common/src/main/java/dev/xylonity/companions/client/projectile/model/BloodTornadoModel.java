@@ -9,17 +9,17 @@ public class BloodTornadoModel extends GeoModel<BloodTornadoProjectile> {
 
     @Override
     public ResourceLocation getModelResource(BloodTornadoProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/blood_tornado.geo.json");
+        return Companions.of("geo/blood_tornado.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BloodTornadoProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/blood_tornado.png");
+        return Companions.of("textures/entity/blood_tornado.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(BloodTornadoProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/blood_tornado.animation.json");
+        return Companions.of("animations/blood_tornado.animation.json");
     }
 
 }

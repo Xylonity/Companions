@@ -26,17 +26,21 @@ public class PuppetRenderer extends GeoEntityRenderer<PuppetEntity> {
         if (bone.getName().endsWith("arm_left")) {
             if (!bone.getName().trim().startsWith("arm_left") && leftArm.trim().equals("none")) {
                 return;
-            } else if (!bone.getName().trim().contains(leftArm) && leftArm.trim().equals(leftArm) && !leftArm.trim().equals("none")) {
+            }
+            else if (!bone.getName().trim().contains(leftArm) && leftArm.trim().equals(leftArm) && !leftArm.trim().equals("none")) {
                 return;
             }
+
         }
 
         if (bone.getName().endsWith("arm_right")) {
             if (!bone.getName().trim().startsWith("arm_right") && rightArm.trim().equals("none")) {
                 return;
-            } else if (!bone.getName().trim().contains(rightArm) && rightArm.trim().equals(rightArm) && !rightArm.trim().equals("none")) {
+            }
+            else if (!bone.getName().trim().contains(rightArm) && rightArm.trim().equals(rightArm) && !rightArm.trim().equals("none")) {
                 return;
             }
+
         }
 
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);

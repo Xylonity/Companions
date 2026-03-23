@@ -18,6 +18,6 @@ public class FrogLevitateRenderer extends GeoEntityRenderer<FrogLevitateProjecti
 
     @Override
     public RenderType getRenderType(FrogLevitateProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getGeoModel().getTextureResource(animatable));
     }
 }

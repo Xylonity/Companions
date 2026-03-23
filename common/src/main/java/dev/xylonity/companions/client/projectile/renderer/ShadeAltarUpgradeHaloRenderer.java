@@ -18,6 +18,6 @@ public class ShadeAltarUpgradeHaloRenderer extends GeoEntityRenderer<ShadeAltarU
 
     @Override
     public RenderType getRenderType(ShadeAltarUpgradeHaloProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getGeoModel().getTextureResource(animatable));
     }
 }

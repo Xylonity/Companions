@@ -20,15 +20,6 @@ public class FireRayPieceRenderer extends GeoEntityRenderer<FireRayPieceProjecti
     }
 
     @Override
-    public void render(FireRayPieceProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        poseStack.pushPose();
-
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-
-        poseStack.popPose();
-    }
-
-    @Override
     protected void applyRotations(FireRayPieceProjectile entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
         super.applyRotations(entity, poseStack, ageInTicks, rotationYaw, partialTick);
         float yaw = Mth.rotLerp(partialTick, entity.getPieceYaw(), entity.getPieceYaw());
@@ -40,6 +31,7 @@ public class FireRayPieceRenderer extends GeoEntityRenderer<FireRayPieceProjecti
 
     @Override
     public RenderType getRenderType(FireRayPieceProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getGeoModel().getTextureResource(animatable));
     }
+
 }

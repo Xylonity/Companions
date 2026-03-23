@@ -33,7 +33,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
         super(renderManager, new DinamoModel());
         addRenderLayer(new AutoGlowingGeoLayer<>(this));
         addRenderLayer(new ElectricConnectionLayer(this,
-                new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"),
+                Companions.of("textures/misc/electric_arch.png"),
                 totalFrames,
                 ticksPerFrame
         ));
@@ -42,6 +42,11 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
 
     public DinamoRenderer(EntityRendererProvider.Context renderManager) {
         this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(DinamoEntity dinamoEntity) {
+        return getGeoModel().getTextureResource(animatable, this);
     }
 
     private static class ElectricConnectionLayer extends GeoRenderLayer<DinamoEntity> {

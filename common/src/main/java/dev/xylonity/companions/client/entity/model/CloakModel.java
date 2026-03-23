@@ -14,17 +14,17 @@ public class CloakModel extends GeoModel<CloakEntity> {
 
     @Override
     public ResourceLocation getModelResource(CloakEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/cloak.geo.json");
+        return Companions.of("geo/cloak.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(CloakEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/cloak_" + ((animatable.tickCount / 2) % 5) + ".png");
+        return Companions.of("textures/entity/cloak_" + ((animatable.tickCount / 2) % 5) + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(CloakEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/cloak.animation.json");
+        return Companions.of("animations/cloak.animation.json");
     }
 
     @Override

@@ -9,17 +9,17 @@ public class PuppetGloveModel extends GeoModel<PuppetGloveEntity> {
 
     @Override
     public ResourceLocation getModelResource(PuppetGloveEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/puppet_glove.geo.json");
+        return Companions.of("geo/puppet_glove.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(PuppetGloveEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/puppet_glove.png");
+        return Companions.of("textures/entity/puppet_glove.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(PuppetGloveEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/puppet_glove.animation.json");
+        return Companions.of("animations/puppet_glove.animation.json");
     }
 
 }

@@ -9,17 +9,17 @@ public class MagicRayCircleModel extends GeoModel<MagicRayCircleProjectile> {
 
     @Override
     public ResourceLocation getModelResource(MagicRayCircleProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/magic_ray_circle.geo.json");
+        return Companions.of("geo/magic_ray_circle.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(MagicRayCircleProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/magic_ray_circle.png");
+        return Companions.of("textures/entity/magic_ray_circle.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(MagicRayCircleProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/magic_ray_circle.animation.json");
+        return Companions.of("animations/magic_ray_circle.animation.json");
     }
 
 }

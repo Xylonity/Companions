@@ -9,17 +9,17 @@ public class FrogEggModel extends GeoModel<FrogEggProjectile> {
 
     @Override
     public ResourceLocation getModelResource(FrogEggProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/frog_egg.geo.json");
+        return Companions.of("geo/frog_egg.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(FrogEggProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/frog_egg.png");
+        return Companions.of("textures/entity/frog_egg.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(FrogEggProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

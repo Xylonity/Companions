@@ -9,17 +9,17 @@ public class HolinessNaginataModel extends GeoModel<HolinessNaginataProjectile> 
 
     @Override
     public ResourceLocation getModelResource(HolinessNaginataProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/holiness_naginata.geo.json");
+        return Companions.of("geo/holiness_naginata.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(HolinessNaginataProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/his_holiness_0.png");
+        return Companions.of("textures/entity/his_holiness_0.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(HolinessNaginataProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

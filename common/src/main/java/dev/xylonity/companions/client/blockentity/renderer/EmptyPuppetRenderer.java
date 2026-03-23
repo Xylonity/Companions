@@ -14,9 +14,4 @@ public class EmptyPuppetRenderer extends GeoBlockRenderer<EmptyPuppetBlockEntity
         super(new EmptyPuppetModel());
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull EmptyPuppetBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/empty_puppet_block.png");
-    }
-
 }

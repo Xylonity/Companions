@@ -19,7 +19,7 @@ public class HealRingRenderer extends GeoEntityRenderer<HealRingProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull HealRingProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/heal_ring.png");
+        return Companions.of("textures/entity/heal_ring.png");
     }
 
     @Override

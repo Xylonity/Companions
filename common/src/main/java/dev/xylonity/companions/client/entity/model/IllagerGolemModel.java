@@ -15,15 +15,15 @@ public class IllagerGolemModel extends GeoModel<IllagerGolemEntity> {
 
     @Override
     public ResourceLocation getModelResource(IllagerGolemEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/illager_golem.geo.json");
+        return Companions.of("geo/illager_golem.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(IllagerGolemEntity animatable) {
         if (animatable.isActive())
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/illager_golem_charge.png");
+            return Companions.of("textures/entity/illager_golem_charge.png");
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/illager_golem.png");
+        return Companions.of("textures/entity/illager_golem.png");
     }
 
     @Override
@@ -66,7 +66,7 @@ public class IllagerGolemModel extends GeoModel<IllagerGolemEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(IllagerGolemEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/illager_golem.animation.json");
+        return Companions.of("animations/illager_golem.animation.json");
     }
 
 }

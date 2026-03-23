@@ -9,17 +9,17 @@ public class StakeModel extends GeoModel<StakeProjectile> {
 
     @Override
     public ResourceLocation getModelResource(StakeProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/stake.geo.json");
+        return Companions.of("geo/stake.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(StakeProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/stake.png");
+        return Companions.of("textures/entity/stake.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(StakeProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

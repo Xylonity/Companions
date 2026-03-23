@@ -15,17 +15,17 @@ public class GenericItemModel extends GeoModel<GenericGeckoItem> {
 
     @Override
     public ResourceLocation getModelResource(GenericGeckoItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/" + resourceKey + ".geo.json");
+        return Companions.of("geo/" + resourceKey + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(GenericGeckoItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/item/" + resourceKey + ".png");
+        return Companions.of("textures/item/" + resourceKey + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(GenericGeckoItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

@@ -1,6 +1,7 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.client.projectile.model.TornadoModel;
 import dev.xylonity.companions.common.entity.projectile.TornadoProjectile;
 import net.minecraft.client.renderer.LightTexture;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class TornadoRenderer extends GeoEntityRenderer<TornadoProjectile> {
@@ -20,13 +22,13 @@ public class TornadoRenderer extends GeoEntityRenderer<TornadoProjectile> {
 
     @Override
     public RenderType getRenderType(TornadoProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucent(getGeoModel().getTextureResource(animatable));
     }
 
     @Override
-    public void render(TornadoProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        poseStack.scale(2,2,2);
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, entity.isInWall() ? LightTexture.FULL_SKY : packedLight);
+    public void actuallyRender(PoseStack poseStack, TornadoProjectile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        poseStack.scale(2, 2, 2);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, animatable.isInWall() ? LightTexture.FULL_SKY : packedLight, packedOverlay, red, green, blue, alpha);
     }
 
 }

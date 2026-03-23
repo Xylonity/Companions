@@ -9,21 +9,21 @@ public class CorneliusModel extends GeoModel<CorneliusEntity> {
 
     @Override
     public ResourceLocation getModelResource(CorneliusEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/cornelius.geo.json");
+        return Companions.of("geo/cornelius.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(CorneliusEntity animatable) {
         if (animatable.hasCustomName()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/cornelius_reskin.png");
+            return Companions.of("textures/entity/cornelius_reskin.png");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/cornelius.png");
+        return Companions.of("textures/entity/cornelius.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(CorneliusEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/cornelius.animation.json");
+        return Companions.of("animations/cornelius.animation.json");
     }
 
 }

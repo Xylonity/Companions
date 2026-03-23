@@ -11,21 +11,21 @@ public class PlasmaLampModel extends GeoModel<PlasmaLampBlockEntity> {
     @Override
     public ResourceLocation getModelResource(PlasmaLampBlockEntity animatable) {
         String dirName = animatable.getBlockState().getValue(AbstractTeslaBlock.FACING).getName();
-        return new ResourceLocation(Companions.MOD_ID, "geo/plasma_lamp_block_" + dirName + ".geo.json");
+        return Companions.of("geo/plasma_lamp_block_" + dirName + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(PlasmaLampBlockEntity animatable) {
         if (animatable.isActive()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/block/plasma_lamp_block_on.png");
+            return Companions.of("textures/block/plasma_lamp_block_on.png");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/plasma_lamp_block.png");
+        return Companions.of("textures/block/plasma_lamp_block.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(PlasmaLampBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

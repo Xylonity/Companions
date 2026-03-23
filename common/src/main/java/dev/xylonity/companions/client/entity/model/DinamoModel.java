@@ -9,23 +9,23 @@ public class DinamoModel extends GeoModel<DinamoEntity> {
 
     @Override
     public ResourceLocation getModelResource(DinamoEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/illager_golem.geo.json");
+        return Companions.of("geo/illager_golem.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(DinamoEntity animatable) {
         if (animatable.getMainAction() == 0 && animatable.isActive()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
+            return Companions.of("textures/entity/dinamo_charge.png");
         } else if (animatable.getMainAction() != 0 && animatable.isActiveForAttack() && !animatable.entitiesToAttack.isEmpty()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo_charge.png");
+            return Companions.of("textures/entity/dinamo_charge.png");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
+        return Companions.of("textures/entity/dinamo.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(DinamoEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/illager_golem.animation.json");
+        return Companions.of("animations/illager_golem.animation.json");
     }
 
 }

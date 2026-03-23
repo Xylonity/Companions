@@ -14,17 +14,17 @@ public class EnderFrogModel extends GeoModel<EnderFrogEntity> {
 
     @Override
     public ResourceLocation getModelResource(EnderFrogEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/ender_frog.geo.json");
+        return Companions.of("geo/ender_frog.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(EnderFrogEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/ender_frog.png");
+        return Companions.of("textures/entity/ender_frog.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(EnderFrogEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/ender_frog.animation.json");
+        return Companions.of("animations/ender_frog.animation.json");
     }
 
     @Override

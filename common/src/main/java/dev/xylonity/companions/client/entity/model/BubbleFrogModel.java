@@ -9,17 +9,17 @@ public class BubbleFrogModel extends GeoModel<BubbleFrogEntity> {
 
     @Override
     public ResourceLocation getModelResource(BubbleFrogEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/bubble_frog.geo.json");
+        return Companions.of("geo/bubble_frog.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BubbleFrogEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/bubble_frog.png");
+        return Companions.of("textures/entity/bubble_frog.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(BubbleFrogEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/bubble_frog.animation.json");
+        return Companions.of("animations/bubble_frog.animation.json");
     }
 
 }

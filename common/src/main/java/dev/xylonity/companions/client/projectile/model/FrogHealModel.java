@@ -9,17 +9,17 @@ public class FrogHealModel extends GeoModel<FrogHealProjectile> {
 
     @Override
     public ResourceLocation getModelResource(FrogHealProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/frog_heal.geo.json");
+        return Companions.of("geo/frog_heal.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(FrogHealProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/frog_heal.png");
+        return Companions.of("textures/entity/frog_heal.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(FrogHealProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/frog_heal.animation.json");
+        return Companions.of("animations/frog_heal.animation.json");
     }
 
 }

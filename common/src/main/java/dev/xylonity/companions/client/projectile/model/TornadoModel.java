@@ -9,17 +9,17 @@ public class TornadoModel extends GeoModel<TornadoProjectile> {
 
     @Override
     public ResourceLocation getModelResource(TornadoProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/ice_tornado.geo.json");
+        return Companions.of("geo/ice_tornado.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(TornadoProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/ice_tornado.png");
+        return Companions.of("textures/entity/ice_tornado.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(TornadoProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/ice_tornado.animation.json");
+        return Companions.of("animations/ice_tornado.animation.json");
     }
 
 }

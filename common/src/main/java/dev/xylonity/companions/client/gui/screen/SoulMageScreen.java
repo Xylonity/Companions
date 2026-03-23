@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SoulMageScreen extends AbstractContainerScreen<SoulMageContainerMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/gui/soul_mage_gui.png");
+    private static final ResourceLocation TEXTURE = Companions.of("textures/gui/soul_mage_gui.png");
 
     public SoulMageScreen(SoulMageContainerMenu container, Inventory inv, Component title) {
         super(container, inv, title);

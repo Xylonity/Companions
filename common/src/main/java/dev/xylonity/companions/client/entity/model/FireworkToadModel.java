@@ -14,17 +14,17 @@ public class FireworkToadModel extends GeoModel<FireworkToadEntity> {
 
     @Override
     public ResourceLocation getModelResource(FireworkToadEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/firework_toad.geo.json");
+        return Companions.of("geo/firework_toad.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(FireworkToadEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/firework_toad.png");
+        return Companions.of("textures/entity/firework_toad.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(FireworkToadEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/firework_toad.animation.json");
+        return Companions.of("animations/firework_toad.animation.json");
     }
 
     @Override

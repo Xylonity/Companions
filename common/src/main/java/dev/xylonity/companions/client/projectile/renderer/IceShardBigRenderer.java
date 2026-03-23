@@ -20,7 +20,7 @@ public class IceShardBigRenderer extends GeoEntityRenderer<BigIceShardProjectile
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull BigIceShardProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/ice_shard_big.png");
+        return Companions.of("textures/entity/ice_shard_big.png");
     }
 
     @Override
@@ -43,7 +43,8 @@ public class IceShardBigRenderer extends GeoEntityRenderer<BigIceShardProjectile
         Vector3f axis = defaultForward.cross(velocityVec);
         if (axis.length() < 1.0E-4F) {
             axis.set(0.0F, 1.0F, 0.0F);
-        } else {
+        }
+        else {
             axis.normalize();
         }
 

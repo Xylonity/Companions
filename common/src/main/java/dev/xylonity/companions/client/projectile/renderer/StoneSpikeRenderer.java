@@ -1,6 +1,7 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.projectile.model.StoneSpikeModel;
 import dev.xylonity.companions.common.entity.projectile.StoneSpikeProjectile;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class StoneSpikeRenderer extends GeoEntityRenderer<StoneSpikeProjectile> {
@@ -20,18 +22,18 @@ public class StoneSpikeRenderer extends GeoEntityRenderer<StoneSpikeProjectile> 
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull StoneSpikeProjectile animatable) {
-        int l = animatable.getLifetime();
-        int remaining = l - animatable.tickCount;
-
+        final int lifetime = animatable.getLifetime();
+        final int remaining = lifetime - animatable.tickCount;
         return switch (remaining) {
-            case 12, 11 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike1.png");
-            case 10, 9 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike2.png");
-            case 8, 7 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike3.png");
-            case 6, 5 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike4.png");
-            case 4, 3 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike5.png");
-            case 2, 1 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike6.png");
-            default -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike0.png");
+            case 12, 11 -> Companions.of("textures/entity/stone_spike1.png");
+            case 10, 9 -> Companions.of("textures/entity/stone_spike2.png");
+            case 8, 7 -> Companions.of("textures/entity/stone_spike3.png");
+            case 6, 5 -> Companions.of("textures/entity/stone_spike4.png");
+            case 4, 3 -> Companions.of("textures/entity/stone_spike5.png");
+            case 2, 1 -> Companions.of("textures/entity/stone_spike6.png");
+            default -> Companions.of("textures/entity/stone_spike0.png");
         };
+
     }
 
     @Override
@@ -40,8 +42,9 @@ public class StoneSpikeRenderer extends GeoEntityRenderer<StoneSpikeProjectile> 
     }
 
     @Override
-    public void render(StoneSpikeProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void actuallyRender(PoseStack poseStack, StoneSpikeProjectile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.scale(1.3F, 1.3F, 1.3F);
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
+
 }

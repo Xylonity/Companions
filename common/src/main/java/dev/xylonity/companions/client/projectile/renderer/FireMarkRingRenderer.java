@@ -1,6 +1,7 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.projectile.model.FireMarkRingModel;
 import dev.xylonity.companions.common.entity.projectile.FireMarkRingProjectile;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class FireMarkRingRenderer extends GeoEntityRenderer<FireMarkRingProjectile> {
@@ -23,7 +25,7 @@ public class FireMarkRingRenderer extends GeoEntityRenderer<FireMarkRingProjecti
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull FireMarkRingProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/fire_mark_ring.png");
+        return Companions.of("textures/entity/fire_mark_ring.png");
     }
 
     @Override
@@ -32,13 +34,13 @@ public class FireMarkRingRenderer extends GeoEntityRenderer<FireMarkRingProjecti
     }
 
     @Override
-    public void render(@NotNull FireMarkRingProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+    public void actuallyRender(PoseStack poseStack, FireMarkRingProjectile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         float desiredRadius = (float) CompanionsConfig.FIRE_MARK_EFFECT_RADIUS;
         float scale = desiredRadius / MODEL_ORIGINAL_SIZE;
 
         poseStack.scale(scale, scale, scale);
 
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
 }

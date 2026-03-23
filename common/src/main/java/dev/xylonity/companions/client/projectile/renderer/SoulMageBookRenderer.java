@@ -25,17 +25,18 @@ public class SoulMageBookRenderer extends GeoEntityRenderer<SoulMageBookEntity> 
     }
 
     @Override
-    public void render(@NotNull SoulMageBookEntity entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, entity.isInWall() ? LightTexture.FULL_SKY : packedLight);
+    public void actuallyRender(PoseStack poseStack, SoulMageBookEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, animatable.isInWall() ? LightTexture.FULL_SKY : packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull SoulMageBookEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/soul_mage_book.png");
+        return Companions.of("textures/entity/soul_mage_book.png");
     }
 
     static class SoulMageBookGlowLayer extends GeoRenderLayer<SoulMageBookEntity> {
-        private static final ResourceLocation EMB_TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/entity/soul_mage_book_glow.png");
+
+        private static final ResourceLocation EMB_TEXTURE = Companions.of("textures/entity/soul_mage_book_glow.png");
 
         public SoulMageBookGlowLayer(GeoRenderer<SoulMageBookEntity> entityRenderer) {
             super(entityRenderer);
@@ -53,6 +54,7 @@ public class SoulMageBookRenderer extends GeoEntityRenderer<SoulMageBookEntity> 
 
             getRenderer().reRender(bakedModel, poseStack, bufferSource, entity, glowRenderType, glowBuffer, partialTick, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1.0f);
         }
+
     }
 
 }

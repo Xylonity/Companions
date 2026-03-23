@@ -26,7 +26,8 @@ public class ShadeMawRenderer extends GeoEntityRenderer<ShadeMawEntity> {
     public void actuallyRender(PoseStack poseStack, ShadeMawEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (animatable.getLifetime() >= animatable.getMaxLifetime() - 124) {
             this.shadowRadius = 0.3f;
-        } else {
+        }
+        else {
             this.shadowRadius = 2f;
         }
 

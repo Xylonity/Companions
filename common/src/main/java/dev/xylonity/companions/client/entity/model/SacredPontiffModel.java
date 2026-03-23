@@ -18,10 +18,10 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
     @Override
     public ResourceLocation getModelResource(SacredPontiffEntity animatable) {
         if (animatable.getState() >= 5) {
-            return new ResourceLocation(Companions.MOD_ID, "geo/his_holiness.geo.json");
+            return Companions.of("geo/his_holiness.geo.json");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "geo/sacred_pontiff.geo.json");
+        return Companions.of("geo/sacred_pontiff.geo.json");
     }
 
     @Override
@@ -32,22 +32,22 @@ public class SacredPontiffModel extends GeoModel<SacredPontiffEntity> {
                 int perTick = 10;
 
                 int frameIndex = (animatable.deathTime / perTick) % frames;
-                return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/his_holiness_petrification%d.png", frameIndex));
+                return Companions.of(String.format("textures/entity/his_holiness_petrification%d.png", frameIndex));
             }
 
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/his_holiness_" + ((animatable.tickCount / 2) % 10) + ".png");
+            return Companions.of("textures/entity/his_holiness_" + ((animatable.tickCount / 2) % 10) + ".png");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/sacred_pontiff_" + ((animatable.tickCount / 2) % 5) + ".png");
+        return Companions.of("textures/entity/sacred_pontiff_" + ((animatable.tickCount / 2) % 5) + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(SacredPontiffEntity animatable) {
         if (animatable.getState() >= 5) {
-            return new ResourceLocation(Companions.MOD_ID, "animations/his_holiness.animation.json");
+            return Companions.of("animations/his_holiness.animation.json");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "animations/sacred_pontiff.animation.json");
+        return Companions.of("animations/sacred_pontiff.animation.json");
     }
 
     @Override

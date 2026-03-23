@@ -14,17 +14,17 @@ public class GenericBlockItemModel extends GeoModel<GenericBlockItem> {
 
     @Override
     public ResourceLocation getModelResource(GenericBlockItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/" + name + ".geo.json");
+        return Companions.of("geo/" + name + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(GenericBlockItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/" + name + ".png");
+        return Companions.of("textures/block/" + name + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(GenericBlockItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

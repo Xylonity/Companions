@@ -9,17 +9,17 @@ public class ScrollModel extends GeoModel<ScrollProjectile> {
 
     @Override
     public ResourceLocation getModelResource(ScrollProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/scroll.geo.json");
+        return Companions.of("geo/scroll.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(ScrollProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/scroll.png");
+        return Companions.of("textures/entity/scroll.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(ScrollProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/scroll.animation.json");
+        return Companions.of("animations/scroll.animation.json");
     }
 
 }

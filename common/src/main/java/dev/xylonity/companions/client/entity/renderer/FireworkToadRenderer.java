@@ -25,7 +25,8 @@ public class FireworkToadRenderer extends GeoEntityRenderer<FireworkToadEntity> 
             poseStack.mulPose(Axis.YP.rotationDegrees((float) (Math.toDegrees(Math.atan2(look.z, look.x)) - 90.0)));
             poseStack.mulPose(Axis.XP.rotationDegrees((float)(-Math.toDegrees(Math.atan2(look.y, Math.sqrt(look.x*look.x + look.z*look.z))))));
             poseStack.translate(0.0, -tamable.getBbHeight() / 2.0f, 0.0);
-        } else {
+        }
+        else {
             super.applyRotations(tamable, poseStack, ageInTicks, rotationYaw, partialTicks);
         }
 

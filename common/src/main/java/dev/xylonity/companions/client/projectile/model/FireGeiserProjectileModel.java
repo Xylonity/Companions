@@ -10,17 +10,17 @@ public class FireGeiserProjectileModel extends GeoModel<FireGeiserProjectile> {
 
     @Override
     public ResourceLocation getModelResource(FireGeiserProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/fire_geiser.geo.json");
+        return Companions.of("geo/fire_geiser.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(FireGeiserProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/eternal_fire.png");
+        return Companions.of("textures/block/eternal_fire.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(FireGeiserProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/fire_geiser.animation.json");
+        return Companions.of("animations/fire_geiser.animation.json");
     }
 
 }

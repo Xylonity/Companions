@@ -18,21 +18,14 @@ public class StakeRenderer extends GeoEntityRenderer<StakeProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull StakeProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/stake.png");
+        return Companions.of("textures/entity/stake.png");
     }
 
     @Override
     protected void applyRotations(StakeProjectile entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
-        Quaternionf interpolated = new Quaternionf();
+        final Quaternionf interpolated = new Quaternionf();
         entity.getPrevRotation().slerp(entity.getCurrentRotation(), partialTicks, interpolated);
         poseStack.mulPose(interpolated);
     }
-
-    //@Override
-    //public void render(StakeProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-    //    poseStack.pushPose();
-    //    super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-    //    poseStack.popPose();
-    //}
 
 }

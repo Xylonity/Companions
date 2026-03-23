@@ -9,17 +9,17 @@ public class GenericTriggerProjectileModel<T extends GenericTriggerProjectile> e
 
     @Override
     public ResourceLocation getModelResource(T animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/generic.geo.json");
+        return Companions.of("geo/generic.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(T animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/generic.png");
+        return Companions.of("textures/entity/generic.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(T animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

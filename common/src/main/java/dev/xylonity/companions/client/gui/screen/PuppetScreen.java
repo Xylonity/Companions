@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PuppetScreen extends AbstractContainerScreen<PuppetContainerMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/gui/puppet_gui.png");
+    private static final ResourceLocation TEXTURE = Companions.of("textures/gui/puppet_gui.png");
 
     public PuppetScreen(PuppetContainerMenu container, Inventory inv, Component title) {
         super(container, inv, title);

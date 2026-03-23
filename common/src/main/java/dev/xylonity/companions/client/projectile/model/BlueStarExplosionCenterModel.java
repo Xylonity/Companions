@@ -9,7 +9,7 @@ public class BlueStarExplosionCenterModel extends GeoModel<BlueStarExplosionCent
 
     @Override
     public ResourceLocation getModelResource(BlueStarExplosionCenter animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/blue_star_explosion_center.geo.json");
+        return Companions.of("geo/blue_star_explosion_center.geo.json");
     }
 
     @Override
@@ -18,12 +18,12 @@ public class BlueStarExplosionCenterModel extends GeoModel<BlueStarExplosionCent
         int perTick = 1;
 
         int frameIndex = (animatable.tickCount / perTick) % frames;
-        return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/blue_star_explosion_center_%d.png", frameIndex));
+        return Companions.of(String.format("textures/entity/blue_star_explosion_center_%d.png", frameIndex));
     }
 
     @Override
     public ResourceLocation getAnimationResource(BlueStarExplosionCenter animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

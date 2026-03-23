@@ -21,19 +21,12 @@ public class FloorCakeCreamRenderer extends GeoEntityRenderer<FloorCakeCreamProj
 
     @Override
     public RenderType getRenderType(FloorCakeCreamProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucent(getGeoModel().getTextureResource(animatable));
     }
 
     @Override
-    public void render(@NotNull FloorCakeCreamProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        poseStack.scale(entity.getSize(), entity.getSize(), entity.getSize());
-
-        BakedGeoModel model = this.model.getBakedModel(this.model.getModelResource(animatable));
-
-        RenderType renderType = RenderType.entityTranslucent(getTextureLocation(entity));
-        VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
-
-        reRender(model, poseStack, bufferSource, entity, renderType, vertexConsumer, partialTick, packedLight, getPackedOverlay(entity, 0), 1.0F, 1.0F, 1.0F, alpha(entity));
+    public void actuallyRender(PoseStack poseStack, FloorCakeCreamProjectile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha(animatable));
     }
 
     private float alpha(FloorCakeCreamProjectile entity) {
@@ -42,12 +35,15 @@ public class FloorCakeCreamRenderer extends GeoEntityRenderer<FloorCakeCreamProj
 
         if (entity.tickCount <= fadeIn) {
             return entity.tickCount / (float)fadeIn;
-        } else if (entity.tickCount >= fadeOut) {
+        }
+        else if (entity.tickCount >= fadeOut) {
             float fadeOutProgress = (entity.tickCount - fadeOut) / (float)(entity.getLifetime() - fadeOut);
             return 1.0f - fadeOutProgress;
-        } else {
+        }
+        else {
             return 1.0f;
         }
+
     }
 
 }

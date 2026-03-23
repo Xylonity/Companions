@@ -1,6 +1,7 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.client.projectile.model.HolinessStarModel;
 import dev.xylonity.companions.common.entity.projectile.HealRingProjectile;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class HolinessStarRenderer extends GeoEntityRenderer<HolinessStartProjectile> {
@@ -22,9 +24,9 @@ public class HolinessStarRenderer extends GeoEntityRenderer<HolinessStartProject
     }
 
     @Override
-    public void render(@NotNull HolinessStartProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void actuallyRender(PoseStack poseStack, HolinessStartProjectile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.scale(2.5f, 2.5f, 2.5f);
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
@@ -44,6 +46,7 @@ public class HolinessStarRenderer extends GeoEntityRenderer<HolinessStartProject
 
     @Override
     public RenderType getRenderType(HolinessStartProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getGeoModel().getTextureResource(animatable));
     }
+
 }

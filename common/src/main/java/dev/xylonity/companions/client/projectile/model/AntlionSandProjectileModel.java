@@ -9,17 +9,17 @@ public class AntlionSandProjectileModel extends GeoModel<AntlionSandProjectile> 
 
     @Override
     public ResourceLocation getModelResource(AntlionSandProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/antlion_sand_projectile.geo.json");
+        return Companions.of("geo/antlion_sand_projectile.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(AntlionSandProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/antlion_sand_projectile.png");
+        return Companions.of("textures/entity/antlion_sand_projectile.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(AntlionSandProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

@@ -9,17 +9,17 @@ public class FireMarkRingModel extends GeoModel<FireMarkRingProjectile> {
 
     @Override
     public ResourceLocation getModelResource(FireMarkRingProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/fire_mark_ring.geo.json");
+        return Companions.of("geo/fire_mark_ring.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(FireMarkRingProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/fire_mark_ring.png");
+        return Companions.of("textures/entity/fire_mark_ring.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(FireMarkRingProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/fire_mark_ring.animation.json");
+        return Companions.of("animations/fire_mark_ring.animation.json");
     }
 
 }

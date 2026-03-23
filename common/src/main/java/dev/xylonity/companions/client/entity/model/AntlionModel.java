@@ -14,17 +14,17 @@ public class AntlionModel extends GeoModel<AntlionEntity> {
 
     @Override
     public ResourceLocation getModelResource(AntlionEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/antlion" + prefix(animatable) + ".geo.json");
+        return Companions.of("geo/antlion" + prefix(animatable) + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(AntlionEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/antlion" + prefix(animatable) + ((animatable.hasFur() && animatable.getVariant() == 0) ? "_hair" : "") + ".png");
+        return Companions.of("textures/entity/antlion" + prefix(animatable) + ((animatable.hasFur() && animatable.getVariant() == 0) ? "_hair" : "") + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(AntlionEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/antlion" + prefix(animatable) + ".animation.json");
+        return Companions.of("animations/antlion" + prefix(animatable) + ".animation.json");
     }
 
     private String prefix(AntlionEntity animatable) {

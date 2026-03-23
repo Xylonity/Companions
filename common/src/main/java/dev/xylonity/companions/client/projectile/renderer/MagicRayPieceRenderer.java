@@ -1,6 +1,7 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.projectile.model.MagicRayPieceModel;
@@ -12,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class MagicRayPieceRenderer extends GeoEntityRenderer<MagicRayPieceProjectile> {
@@ -22,7 +24,7 @@ public class MagicRayPieceRenderer extends GeoEntityRenderer<MagicRayPieceProjec
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull MagicRayPieceProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/magic_ray_piece.png");
+        return Companions.of("textures/entity/magic_ray_piece.png");
     }
 
     @Override
@@ -31,21 +33,14 @@ public class MagicRayPieceRenderer extends GeoEntityRenderer<MagicRayPieceProjec
     }
 
     @Override
-    public void render(MagicRayPieceProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        poseStack.pushPose();
-
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-
-        poseStack.popPose();
-    }
-
-    @Override
     protected void applyRotations(MagicRayPieceProjectile entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
         super.applyRotations(entity, poseStack, ageInTicks, rotationYaw, partialTick);
-        float yaw = Mth.rotLerp(partialTick, entity.getYaw(), entity.getYaw());
-        float pitch = Mth.lerp(partialTick, entity.getPitch(), entity.getPitch());
+
+        final float yaw = Mth.rotLerp(partialTick, entity.getYaw(), entity.getYaw());
+        final float pitch = Mth.lerp(partialTick, entity.getPitch(), entity.getPitch());
 
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
         poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
     }
+
 }

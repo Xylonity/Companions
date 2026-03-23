@@ -11,21 +11,21 @@ public class VoltaicRelayModel extends GeoModel<VoltaicRelayBlockEntity> {
     @Override
     public ResourceLocation getModelResource(VoltaicRelayBlockEntity animatable) {
         String dirName = animatable.getBlockState().getValue(AbstractTeslaBlock.FACING).getName();
-        return new ResourceLocation(Companions.MOD_ID, "geo/voltaic_relay_block_" + dirName + ".geo.json");
+        return Companions.of("geo/voltaic_relay_block_" + dirName + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(VoltaicRelayBlockEntity animatable) {
         if (animatable.isActive()) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/block/voltaic_relay_block_on.png");
+            return Companions.of("textures/block/voltaic_relay_block_on.png");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/voltaic_relay_block.png");
+        return Companions.of("textures/block/voltaic_relay_block.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(VoltaicRelayBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

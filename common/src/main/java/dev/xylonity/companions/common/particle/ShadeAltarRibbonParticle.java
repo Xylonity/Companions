@@ -8,7 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.resources.ResourceLocation;
 
 public class ShadeAltarRibbonParticle extends AbstractRibbonTrailParticle {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/particle/trail2.png");
+    private static final ResourceLocation TEXTURE = Companions.of("textures/particle/trail2.png");
 
     private static final Vec3 DARK_RED = new Vec3(74/255f, 0, 0);
 

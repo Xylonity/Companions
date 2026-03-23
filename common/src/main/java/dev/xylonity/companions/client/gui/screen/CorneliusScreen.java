@@ -31,8 +31,8 @@ import java.util.stream.Stream;
 
 public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerMenu> {
 
-    private static final ResourceLocation TEX_TOP = new ResourceLocation(Companions.MOD_ID, "textures/gui/cornelius_gui_top.png");
-    private static final ResourceLocation TEX_BOTTOM = new ResourceLocation(Companions.MOD_ID, "textures/gui/cornelius_gui_bottom.png");
+    private static final ResourceLocation TEX_TOP = Companions.of("textures/gui/cornelius_gui_top.png");
+    private static final ResourceLocation TEX_BOTTOM = Companions.of("textures/gui/cornelius_gui_bottom.png");
 
     private static final int ANIM_TICKS = 8;
     private static final int DEAL_INTERVAL_TICKS = 6;

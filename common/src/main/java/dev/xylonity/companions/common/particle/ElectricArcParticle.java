@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ElectricArcParticle extends AbstractRibbonTrailParticle {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/particle/trail.png");
+    private static final ResourceLocation TEXTURE = Companions.of("textures/particle/trail.png");
 
     private static final int TRAIL_SEGMS = 12;
 

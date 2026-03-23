@@ -4,8 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.blockentity.model.VoltaicPillarModel;
 import dev.xylonity.companions.client.layer.StaticElectricConnectionLayer;
+import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +17,7 @@ public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEn
 
     public VoltaicPillarRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new VoltaicPillarModel());
-        addRenderLayer(new StaticElectricConnectionLayer<>(this, new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch_wall.png"), totalFrames, ticksPerFrame));
+        addRenderLayer(new StaticElectricConnectionLayer<>(this, Companions.of("textures/misc/electric_arch_wall.png"), totalFrames, ticksPerFrame));
     }
 
     public VoltaicPillarRenderer(BlockEntityRendererProvider.Context renderManager) {
@@ -25,6 +27,12 @@ public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEn
     @Override
     protected void rotateBlock(Direction facing, PoseStack poseStack) {
         ;;
+    }
+
+    @Override
+    public void render(VoltaicPillarBlockEntity voltaicPillarBlockEntity, float v, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int i1) {
+        this.animatable = voltaicPillarBlockEntity;
+        defaultRender(poseStack, this.animatable, multiBufferSource, null, null, 0, i, i1);
     }
 
     @Override

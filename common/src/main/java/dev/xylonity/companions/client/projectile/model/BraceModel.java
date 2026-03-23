@@ -9,17 +9,17 @@ public class BraceModel extends GeoModel<BraceProjectile> {
 
     @Override
     public ResourceLocation getModelResource(BraceProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/brace.geo.json");
+        return Companions.of("geo/brace.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BraceProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/brace.png");
+        return Companions.of("textures/entity/brace.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(BraceProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/fire_mark.animation.json");
+        return Companions.of("animations/fire_mark.animation.json");
     }
 
 }

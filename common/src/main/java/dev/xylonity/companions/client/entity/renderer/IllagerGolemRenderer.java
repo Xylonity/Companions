@@ -27,7 +27,7 @@ public class IllagerGolemRenderer extends GeoEntityRenderer<IllagerGolemEntity> 
         super(renderManager, new IllagerGolemModel());
         addRenderLayer(new AutoGlowingGeoLayer<>(this));
         addRenderLayer(new ElectricConnectionLayer(this,
-                new ResourceLocation(Companions.MOD_ID, "textures/misc/illager_golem_electric_arch.png"),
+                Companions.of("textures/misc/illager_golem_electric_arch.png"),
                 totalFrames,
                 ticksPerFrame
         ));

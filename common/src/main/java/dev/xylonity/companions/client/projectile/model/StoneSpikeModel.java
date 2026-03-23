@@ -9,7 +9,7 @@ public class StoneSpikeModel extends GeoModel<StoneSpikeProjectile> {
 
     @Override
     public ResourceLocation getModelResource(StoneSpikeProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/stone_spike.geo.json");
+        return Companions.of("geo/stone_spike.geo.json");
     }
 
     @Override
@@ -18,19 +18,19 @@ public class StoneSpikeModel extends GeoModel<StoneSpikeProjectile> {
         int remaining = l - animatable.tickCount;
 
         return switch (remaining) {
-            case 12, 11 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike1.png");
-            case 10, 9 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike2.png");
-            case 8, 7 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike3.png");
-            case 6, 5 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike4.png");
-            case 4, 3 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike5.png");
-            case 2, 1 -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike6.png");
-            default -> new ResourceLocation(Companions.MOD_ID, "textures/entity/stone_spike0.png");
+            case 12, 11 -> Companions.of("textures/entity/stone_spike1.png");
+            case 10, 9 -> Companions.of("textures/entity/stone_spike2.png");
+            case 8, 7 -> Companions.of("textures/entity/stone_spike3.png");
+            case 6, 5 -> Companions.of("textures/entity/stone_spike4.png");
+            case 4, 3 -> Companions.of("textures/entity/stone_spike5.png");
+            case 2, 1 -> Companions.of("textures/entity/stone_spike6.png");
+            default -> Companions.of("textures/entity/stone_spike0.png");
         };
     }
 
     @Override
     public ResourceLocation getAnimationResource(StoneSpikeProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/stone_spike.animation.json");
+        return Companions.of("animations/stone_spike.animation.json");
     }
 
 }

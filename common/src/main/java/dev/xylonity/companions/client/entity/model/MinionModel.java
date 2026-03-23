@@ -14,17 +14,17 @@ public class MinionModel extends GeoModel<MinionEntity> {
 
     @Override
     public ResourceLocation getModelResource(MinionEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/" + animatable.getVariant() + ".geo.json");
+        return Companions.of("geo/" + animatable.getVariant() + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(MinionEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/" + animatable.getVariant() + ".png");
+        return Companions.of("textures/entity/" + animatable.getVariant() + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(MinionEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/" + animatable.getVariant() + ".animation.json");
+        return Companions.of("animations/" + animatable.getVariant() + ".animation.json");
     }
 
     @Override

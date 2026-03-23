@@ -1,18 +1,21 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.projectile.model.BraceModel;
 import dev.xylonity.companions.common.entity.projectile.BraceProjectile;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class BraceRenderer extends GeoEntityRenderer<BraceProjectile> {
@@ -23,7 +26,7 @@ public class BraceRenderer extends GeoEntityRenderer<BraceProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull BraceProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/brace.png");
+        return Companions.of("textures/entity/brace.png");
     }
 
     @Override
@@ -49,9 +52,9 @@ public class BraceRenderer extends GeoEntityRenderer<BraceProjectile> {
     }
 
     @Override
-    public void render(BraceProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void actuallyRender(PoseStack poseStack, BraceProjectile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.scale(0.75f, 0.75f, 0.75f);
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, 15728880);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, LightTexture.FULL_BRIGHT, packedOverlay, red, green, blue, alpha);
     }
 
 }

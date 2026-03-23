@@ -17,6 +17,7 @@ public class FrogEggRenderer extends GeoEntityRenderer<FrogEggProjectile> {
 
     @Override
     public RenderType getRenderType(FrogEggProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucent(getGeoModel().getTextureResource(animatable));
     }
+
 }

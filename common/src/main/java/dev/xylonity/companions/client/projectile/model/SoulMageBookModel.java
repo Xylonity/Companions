@@ -14,12 +14,12 @@ public class SoulMageBookModel extends GeoModel<SoulMageBookEntity> {
 
     @Override
     public ResourceLocation getModelResource(SoulMageBookEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/soul_mage_book.geo.json");
+        return Companions.of("geo/soul_mage_book.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SoulMageBookEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/soul_mage_book.png");
+        return Companions.of("textures/entity/soul_mage_book.png");
     }
 
     @Override
@@ -53,6 +53,6 @@ public class SoulMageBookModel extends GeoModel<SoulMageBookEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(SoulMageBookEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/soul_mage_book.animation.json");
+        return Companions.of("animations/soul_mage_book.animation.json");
     }
 }

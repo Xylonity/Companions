@@ -9,7 +9,7 @@ public class LaserRingModel extends GeoModel<LaserRingProjectile> {
 
     @Override
     public ResourceLocation getModelResource(LaserRingProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/pontiff_fire_ring.geo.json");
+        return Companions.of("geo/pontiff_fire_ring.geo.json");
     }
 
     @Override
@@ -18,12 +18,12 @@ public class LaserRingModel extends GeoModel<LaserRingProjectile> {
         int perTick = 2;
 
         int frameIndex = (animatable.tickCount / perTick) % frames;
-        return new ResourceLocation(Companions.MOD_ID, String.format("textures/entity/pontiff_fire_ring_%d.png", frameIndex));
+        return Companions.of(String.format("textures/entity/pontiff_fire_ring_%d.png", frameIndex));
     }
 
     @Override
     public ResourceLocation getAnimationResource(LaserRingProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

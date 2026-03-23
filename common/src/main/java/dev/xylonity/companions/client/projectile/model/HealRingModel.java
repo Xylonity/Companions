@@ -9,17 +9,17 @@ public class HealRingModel extends GeoModel<HealRingProjectile> {
 
     @Override
     public ResourceLocation getModelResource(HealRingProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/heal_ring.geo.json");
+        return Companions.of("geo/heal_ring.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(HealRingProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/heal_ring.png");
+        return Companions.of("textures/entity/heal_ring.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(HealRingProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/heal_ring.animation.json");
+        return Companions.of("animations/heal_ring.animation.json");
     }
 
 }

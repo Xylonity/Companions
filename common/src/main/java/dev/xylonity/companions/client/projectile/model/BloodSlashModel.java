@@ -9,17 +9,17 @@ public class BloodSlashModel extends GeoModel<BloodSlashProjectile> {
 
     @Override
     public ResourceLocation getModelResource(BloodSlashProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/blood_slash.geo.json");
+        return Companions.of("geo/blood_slash.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BloodSlashProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/blood_slash.png");
+        return Companions.of("textures/entity/blood_slash.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(BloodSlashProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return Companions.of("animations/generic.animation.json");
     }
 
 }

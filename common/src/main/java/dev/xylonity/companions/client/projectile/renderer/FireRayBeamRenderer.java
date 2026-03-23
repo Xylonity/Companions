@@ -18,6 +18,7 @@ public class FireRayBeamRenderer extends GeoEntityRenderer<FireRayBeamEntity> {
 
     @Override
     public RenderType getRenderType(FireRayBeamEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucentEmissive(getTextureLocation(animatable));
+        return RenderType.entityTranslucentEmissive(getGeoModel().getTextureResource(animatable));
     }
+
 }

@@ -15,16 +15,16 @@ public class BrokenDinamoModel extends GeoModel<BrokenDinamoEntity> {
 
     @Override
     public ResourceLocation getModelResource(BrokenDinamoEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/broken_dinamo.geo.json");
+        return Companions.of("geo/broken_dinamo.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BrokenDinamoEntity animatable) {
         if (animatable.getState() >= 4) {
-            return new ResourceLocation(Companions.MOD_ID, "textures/entity/dinamo.png");
+            return Companions.of("textures/entity/dinamo.png");
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/illager_golem.png");
+        return Companions.of("textures/entity/illager_golem.png");
     }
 
     @Override
@@ -73,7 +73,7 @@ public class BrokenDinamoModel extends GeoModel<BrokenDinamoEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(BrokenDinamoEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/illager_golem.animation.json");
+        return Companions.of("animations/illager_golem.animation.json");
     }
 
 }
