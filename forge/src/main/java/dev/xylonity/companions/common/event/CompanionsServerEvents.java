@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.event;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.companion.*;
 import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.summon.*;
@@ -12,14 +12,13 @@ import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 public class CompanionsServerEvents {
 
-    @Mod.EventBusSubscriber(modid = CompanionsCommon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = Companions.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class CompanionsServerModBus {
 
         @SubscribeEvent
@@ -71,7 +70,7 @@ public class CompanionsServerEvents {
 
     }
 
-    @Mod.EventBusSubscriber(modid = CompanionsCommon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @Mod.EventBusSubscriber(modid = Companions.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class CompanionsServerForgeBus {
         ;;
     }

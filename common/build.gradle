@@ -35,7 +35,7 @@ dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     implementation 'com.electronwill.night-config:toml:3.6.6'
     implementation "dev.xylonity.knightlib:knightlib-common-${minecraft_version}:${knightlib_version}"
-
+    implementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}"
 }
 
 publishing {

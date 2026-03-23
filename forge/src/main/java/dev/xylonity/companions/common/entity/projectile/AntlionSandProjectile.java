@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -33,7 +33,7 @@ public class AntlionSandProjectile extends FrogLevitateProjectile {
 
     @Override
     public void spawnRibbon() {
-        Companions.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), 255/255f, 217/255f, 144/255f, 0, 0.35f);
+        CompanionsForge.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), 255/255f, 217/255f, 144/255f, 0, 0.35f);
     }
 
     @Override

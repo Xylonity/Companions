@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.particle;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.knightlib.client.particle.AbstractRibbonTrailParticle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LightTexture;
@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ElectricArcParticle extends AbstractRibbonTrailParticle {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(CompanionsCommon.MOD_ID, "textures/particle/trail.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/particle/trail.png");
 
     private static final int TRAIL_SEGMS = 12;
 

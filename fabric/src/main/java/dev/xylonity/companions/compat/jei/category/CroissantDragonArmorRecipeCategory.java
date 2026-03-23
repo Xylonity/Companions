@@ -3,7 +3,7 @@ package dev.xylonity.companions.compat.jei.category;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
 import dev.xylonity.companions.common.recipe.CroissantDragonArmorRecipe;
 import dev.xylonity.companions.registry.CompanionsBlocks;
@@ -30,10 +30,10 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class CroissantDragonArmorRecipeCategory implements IRecipeCategory<CroissantDragonArmorRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "croissant_dragon_armor_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(CompanionsFabric.MOD_ID, "croissant_dragon_armor_interaction");
     public static final RecipeType<CroissantDragonArmorRecipe> TYPE = new RecipeType<>(UID, CroissantDragonArmorRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(CompanionsFabric.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 

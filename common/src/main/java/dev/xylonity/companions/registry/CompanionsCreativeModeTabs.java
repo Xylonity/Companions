@@ -1,6 +1,6 @@
 package dev.xylonity.companions.registry;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.knightlib.registry.KnightLibBlocks;
 import dev.xylonity.knightlib.registry.KnightLibItems;
 import net.minecraft.network.chat.Component;
@@ -23,8 +23,8 @@ public class CompanionsCreativeModeTabs {
     }
 
     public static final Supplier<CreativeModeTab> COMPANIONS_TAB =
-            CompanionsCommon.COMMON_PLATFORM.registerCreativeModeTab("companions_tab",
-                    () -> CompanionsCommon.COMMON_PLATFORM.creativeTabBuilder()
+            Companions.COMMON_PLATFORM.registerCreativeModeTab("companions_tab",
+                    () -> Companions.COMMON_PLATFORM.creativeTabBuilder()
                             .icon(() -> new ItemStack(CompanionsBlocks.CROISSANT_EGG.get()))
                             .title(Component.translatable("creativetab.companions.title"))
                             .displayItems((itemDisplayParameters, output) -> {

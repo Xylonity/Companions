@@ -1,6 +1,6 @@
 package dev.xylonity.companions.platform;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.block.*;
 import dev.xylonity.companions.common.item.*;
 import dev.xylonity.companions.common.item.armor.*;
@@ -36,7 +36,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
 
     @Override
     public <T extends Item> Supplier<T> registerItem(String id, Supplier<T> item) {
-        return Companions.ITEMS.register(id, item);
+        return CompanionsForge.ITEMS.register(id, item);
     }
 
     @Override
@@ -94,21 +94,21 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
     @Override
     public <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, CompanionsBlocks.BlockType blockType, CompanionsBlocks.BlockItem blockItem) {
         RegistryObject<T> tr = switch (blockType) {
-            case COIN_BLOCK -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new CoinBlock(properties));
-            case SOUL_FURNACE -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new SoulFurnaceBlock(properties.lightLevel((v) -> v.getValue(SoulFurnaceBlock.LIT) ? 13 : 0)));
-            case CROISSANT_EGG -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new CroissantEggBlock(properties));
-            case PLASMA_LAMP -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new PlasmaLampBlock(properties.lightLevel((v) -> v.getValue(PlasmaLampBlock.LIT) ? 15 : 0)));
-            case VOLTAIC_PILLAR -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new VoltaicPillarBlock(properties));
-            case EMPTY_PUPPET -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new EmptyPuppetBlock(properties));
-            case RESPAWN_TOTEM -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new RespawnTotemBlock(properties.lightLevel((v) -> v.getValue(RespawnTotemBlock.LIT) ? 13 : 0)));
-            case SHADE_SWORD_ALTAR -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new ShadeSwordAltarBlock(properties));
-            case SHADE_MAW_ALTAR -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new ShadeMawAltarBlock(properties));
-            case RECALL_PLATFORM -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new RecallPlatformBlock(properties));
-            case VOLTAIC_RELAY -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new VoltaicRelayBlock(properties));
-            case FROG_BONANZA -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new FrogBonanzaBlock(properties));
-            case ETERNAL_FIRE -> (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new EternalFireBlock(properties));
+            case COIN_BLOCK -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new CoinBlock(properties));
+            case SOUL_FURNACE -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new SoulFurnaceBlock(properties.lightLevel((v) -> v.getValue(SoulFurnaceBlock.LIT) ? 13 : 0)));
+            case CROISSANT_EGG -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new CroissantEggBlock(properties));
+            case PLASMA_LAMP -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new PlasmaLampBlock(properties.lightLevel((v) -> v.getValue(PlasmaLampBlock.LIT) ? 15 : 0)));
+            case VOLTAIC_PILLAR -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new VoltaicPillarBlock(properties));
+            case EMPTY_PUPPET -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new EmptyPuppetBlock(properties));
+            case RESPAWN_TOTEM -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new RespawnTotemBlock(properties.lightLevel((v) -> v.getValue(RespawnTotemBlock.LIT) ? 13 : 0)));
+            case SHADE_SWORD_ALTAR -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new ShadeSwordAltarBlock(properties));
+            case SHADE_MAW_ALTAR -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new ShadeMawAltarBlock(properties));
+            case RECALL_PLATFORM -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new RecallPlatformBlock(properties));
+            case VOLTAIC_RELAY -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new VoltaicRelayBlock(properties));
+            case FROG_BONANZA -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new FrogBonanzaBlock(properties));
+            case ETERNAL_FIRE -> (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new EternalFireBlock(properties));
             default -> // TESLA_RECEIVER
-                    (RegistryObject<T>) Companions.BLOCKS.register(id, () -> new TeslaCoilBlock(properties));
+                    (RegistryObject<T>) CompanionsForge.BLOCKS.register(id, () -> new TeslaCoilBlock(properties));
         };
 
         Supplier<Item> item = switch (blockItem) {
@@ -173,22 +173,22 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
 
     @Override
     public <T extends MobEffect> Supplier<T> registerEffect(String id, Supplier<T> effect) {
-        return Companions.MOB_EFFECTS.register(id, effect);
+        return CompanionsForge.MOB_EFFECTS.register(id, effect);
     }
 
     @Override
     public <T extends ParticleType<?>> Supplier<T> registerParticle(String id, boolean overrideLimiter) {
-        return Companions.PARTICLES.register(id, () -> (T) new SimpleParticleType(overrideLimiter));
+        return CompanionsForge.PARTICLES.register(id, () -> (T) new SimpleParticleType(overrideLimiter));
     }
 
     @Override
     public <T extends SoundEvent> Supplier<T> registerSound(String id, Supplier<T> sound) {
-        return Companions.SOUNDS.register(id, sound);
+        return CompanionsForge.SOUNDS.register(id, sound);
     }
 
     @Override
     public <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(String id, Supplier<T> tab) {
-        return Companions.CREATIVE_TABS.register(id, tab);
+        return CompanionsForge.CREATIVE_TABS.register(id, tab);
     }
 
     @Override

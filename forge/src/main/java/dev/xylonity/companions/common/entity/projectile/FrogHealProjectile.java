@@ -1,12 +1,10 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import dev.xylonity.knightlib.KnightLib;
 import dev.xylonity.knightlib.registry.KnightLibParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -68,7 +66,7 @@ public class FrogHealProjectile extends BaseProjectile {
     }
 
     public void spawnRibbon() {
-        Companions.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), 225/255f, 1, 218/255f, 0, 0.35f);
+        CompanionsForge.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), 225/255f, 1, 218/255f, 0, 0.35f);
     }
 
     public void spawnParticles() {

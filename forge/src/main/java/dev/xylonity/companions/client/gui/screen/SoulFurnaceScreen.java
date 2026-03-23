@@ -1,7 +1,7 @@
 package dev.xylonity.companions.client.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
 import dev.xylonity.companions.common.container.SoulFurnaceContainerMenu;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class SoulFurnaceScreen extends AbstractContainerScreen<SoulFurnaceContainerMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/gui/soul_furnace_gui.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/soul_furnace_gui.png");
 
     private static final int FRAME_WIDTH = 10;
     private static final int FRAME_HEIGHT = 9;

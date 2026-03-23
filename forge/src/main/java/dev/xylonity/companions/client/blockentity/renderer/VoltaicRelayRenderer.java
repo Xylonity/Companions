@@ -1,7 +1,7 @@
 package dev.xylonity.companions.client.blockentity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.client.blockentity.model.VoltaicRelayModel;
 import dev.xylonity.companions.client.layer.ElectricConnectionLayer;
 import dev.xylonity.companions.common.blockentity.VoltaicRelayBlockEntity;
@@ -15,7 +15,7 @@ public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEnti
 
     public VoltaicRelayRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new VoltaicRelayModel());
-        addRenderLayer(new ElectricConnectionLayer<>(this, new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"), totalFrames, ticksPerFrame));
+        addRenderLayer(new ElectricConnectionLayer<>(this, new ResourceLocation(CompanionsForge.MOD_ID, "textures/misc/electric_arch.png"), totalFrames, ticksPerFrame));
     }
 
     public VoltaicRelayRenderer(BlockEntityRendererProvider.Context renderManager) {

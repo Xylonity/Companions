@@ -1,6 +1,6 @@
 package dev.xylonity.companions.platform;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.block.*;
 import dev.xylonity.companions.common.item.*;
 import dev.xylonity.companions.common.item.armor.BloodArmorItem;
@@ -216,7 +216,7 @@ public class CompanionsFabricPlatform implements CompanionsPlatform {
 
     private static <T, R extends Registry<? super T>> Supplier<T> registerSupplier(R registry, String id, Supplier<T> factory) {
         T value = factory.get();
-        Registry.register((Registry<T>) registry, new ResourceLocation(Companions.MOD_ID, id), value);
+        Registry.register((Registry<T>) registry, new ResourceLocation(CompanionsFabric.MOD_ID, id), value);
         return () -> value;
     }
 

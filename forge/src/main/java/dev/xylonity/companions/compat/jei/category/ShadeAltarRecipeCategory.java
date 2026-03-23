@@ -3,7 +3,7 @@ package dev.xylonity.companions.compat.jei.category;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.blockentity.ShadeMawAltarBlockEntity;
 import dev.xylonity.companions.common.entity.projectile.ShadeAltarUpgradeHaloProjectile;
 import dev.xylonity.companions.common.recipe.ShadeAltarRecipe;
@@ -36,9 +36,9 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecipe> {
 
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_altar_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(CompanionsForge.MOD_ID, "shade_altar_interaction");
     public static final RecipeType<ShadeAltarRecipe> TYPE = new RecipeType<>(UID, ShadeAltarRecipe.class);
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/sprites.png");
 
     private ShadeMawAltarBlockEntity cachedBlockEntity;
     private ShadeAltarUpgradeHaloProjectile cachedEntity;

@@ -1,6 +1,6 @@
 package dev.xylonity.companions.registry;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
 import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.container.PuppetContainerMenu;
@@ -24,7 +24,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class CompanionsMenuTypes {
 
-    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Companions.MOD_ID);
+    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, CompanionsForge.MOD_ID);
 
     public static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenu(String name, MenuFactory<T> factory) {
         return MENU_TYPES.register(name,

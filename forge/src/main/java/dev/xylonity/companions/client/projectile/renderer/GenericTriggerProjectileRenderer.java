@@ -1,6 +1,6 @@
 package dev.xylonity.companions.client.projectile.renderer;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.client.projectile.model.GenericTriggerProjectileModel;
 import dev.xylonity.companions.common.entity.projectile.trigger.GenericTriggerProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,7 +19,7 @@ public class GenericTriggerProjectileRenderer extends GeoEntityRenderer<GenericT
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull GenericTriggerProjectile animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/generic.png");
+        return new ResourceLocation(CompanionsForge.MOD_ID, "textures/entity/generic.png");
     }
 
     @Override

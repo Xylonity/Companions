@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.google.gson.JsonObject;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record SoulFurnaceItemRecipe(ItemStack input, ItemStack output) implements Recipe<SimpleContainer> {
 
-    private static final ResourceLocation ID = new ResourceLocation(Companions.MOD_ID, "soul_furnace_item_interaction");
+    private static final ResourceLocation ID = new ResourceLocation(CompanionsForge.MOD_ID, "soul_furnace_item_interaction");
     public static final RecipeSerializer<SoulFurnaceItemRecipe> SERIALIZER = new Serializer();
     public static final RecipeType<SoulFurnaceItemRecipe> RECIPE_TYPE = new Type();
 

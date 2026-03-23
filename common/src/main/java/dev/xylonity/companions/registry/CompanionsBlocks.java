@@ -1,6 +1,6 @@
 package dev.xylonity.companions.registry;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -169,7 +169,7 @@ public class CompanionsBlocks {
     }
 
     private static <T extends Block> Supplier<T> registerBlock(String id, BlockBehaviour.Properties properties, BlockType blockType, BlockItem blockItem) {
-        return CompanionsCommon.COMMON_PLATFORM.registerBlock(id, properties, blockType, blockItem);
+        return Companions.COMMON_PLATFORM.registerBlock(id, properties, blockType, blockItem);
     }
 
     public enum BlockType {

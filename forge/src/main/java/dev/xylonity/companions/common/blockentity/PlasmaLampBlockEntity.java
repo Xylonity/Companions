@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.blockentity;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.block.AbstractTeslaBlock;
 import dev.xylonity.companions.common.tesla.behaviour.lamp.LampPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
@@ -33,7 +33,7 @@ public class PlasmaLampBlockEntity extends AbstractTeslaBlockEntity implements G
         lamp.pulseBehaviour.process(lamp, level, blockPos, blockState);
 
         if (lamp.isActive() && lamp.whenToSpawnParticles == 0 && level.isClientSide) {
-            Companions.PROXY.spawnPlasmaLampElectricArc(lamp, level, blockPos);
+            CompanionsForge.PROXY.spawnPlasmaLampElectricArc(lamp, level, blockPos);
         }
 
         if (lamp.whenToSpawnParticles == 0) {

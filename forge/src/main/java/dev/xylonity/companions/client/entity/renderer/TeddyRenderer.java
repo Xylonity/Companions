@@ -2,15 +2,12 @@ package dev.xylonity.companions.client.entity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.entity.model.TeddyModel;
 import dev.xylonity.companions.common.entity.companion.TeddyEntity;
-import dev.xylonity.companions.common.entity.projectile.TornadoProjectile;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;

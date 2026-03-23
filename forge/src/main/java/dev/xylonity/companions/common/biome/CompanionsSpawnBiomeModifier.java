@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.biome;
 
 import com.mojang.serialization.Codec;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.registry.CompanionsSpawns;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -14,9 +14,9 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class CompanionsSpawnBiomeModifier implements BiomeModifier {
 
-    public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, Companions.MOD_ID);
+    public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, CompanionsForge.MOD_ID);
 
-    private static final RegistryObject<Codec<? extends BiomeModifier>> SERIALIZER = RegistryObject.create(new ResourceLocation(Companions.MOD_ID, "companions_mob_spawns"), ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, Companions.MOD_ID);
+    private static final RegistryObject<Codec<? extends BiomeModifier>> SERIALIZER = RegistryObject.create(new ResourceLocation(CompanionsForge.MOD_ID, "companions_mob_spawns"), ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, CompanionsForge.MOD_ID);
 
     @Override
     public void modify(Holder<Biome> holder, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {

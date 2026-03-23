@@ -1,6 +1,6 @@
 package dev.xylonity.companions.platform;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.platform.services.IPlatformHelper;
 
 import java.util.ServiceLoader;
@@ -13,7 +13,7 @@ public class CompanionsServices {
         final T loadedService = ServiceLoader.load(clazz)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
-        CompanionsCommon.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
+        Companions.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
 
         return loadedService;
     }

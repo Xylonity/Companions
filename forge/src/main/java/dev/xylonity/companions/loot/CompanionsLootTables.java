@@ -1,6 +1,6 @@
 package dev.xylonity.companions.loot;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +16,7 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = CompanionsCommon.MOD_ID)
+@Mod.EventBusSubscriber(modid = Companions.MOD_ID)
 public class CompanionsLootTables {
 
     @SubscribeEvent

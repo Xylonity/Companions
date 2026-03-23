@@ -1,7 +1,7 @@
 package dev.xylonity.companions.client.blockentity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.client.blockentity.model.TeslaCoilModel;
 import dev.xylonity.companions.client.layer.ElectricConnectionLayer;
 import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
@@ -15,7 +15,7 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> im
 
     public TeslaCoilRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new TeslaCoilModel());
-        addRenderLayer(new ElectricConnectionLayer<>(this, new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"), totalFrames, ticksPerFrame));
+        addRenderLayer(new ElectricConnectionLayer<>(this, new ResourceLocation(CompanionsForge.MOD_ID, "textures/misc/electric_arch.png"), totalFrames, ticksPerFrame));
     }
 
     public TeslaCoilRenderer(BlockEntityRendererProvider.Context renderManager) {

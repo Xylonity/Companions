@@ -1,6 +1,6 @@
 package dev.xylonity.companions.registry;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.entity.companion.*;
 import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.projectile.*;
@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 public class CompanionsEntities {
 
-    public static final DeferredRegister<EntityType<?>> ENTITY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Companions.MOD_ID);
+    public static final DeferredRegister<EntityType<?>> ENTITY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, CompanionsForge.MOD_ID);
 
     public static final RegistryObject<EntityType<CorneliusEntity>> CORNELIUS;
     public static final RegistryObject<EntityType<TeddyEntity>> TEDDY;
@@ -207,12 +207,12 @@ public class CompanionsEntities {
                 }
             }
 
-            return builder.build(new ResourceLocation(Companions.MOD_ID, name).toString());
+            return builder.build(new ResourceLocation(CompanionsForge.MOD_ID, name).toString());
         });
     }
 
     private static RegistryObject<Item> registerSpawnEggItem(String id, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryEggColour, int secondaryEggColour) {
-        RegistryObject<Item> item = Companions.ITEMS.register(id, () -> new ForgeSpawnEggItem(entityType, primaryEggColour, secondaryEggColour, new Item.Properties()));
+        RegistryObject<Item> item = CompanionsForge.ITEMS.register(id, () -> new ForgeSpawnEggItem(entityType, primaryEggColour, secondaryEggColour, new Item.Properties()));
         CompanionsCreativeModeTabs.populateSpawnEgg(item);
         return item;
     }

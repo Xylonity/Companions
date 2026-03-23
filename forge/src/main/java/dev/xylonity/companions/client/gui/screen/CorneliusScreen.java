@@ -2,7 +2,7 @@ package dev.xylonity.companions.client.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -31,8 +31,8 @@ import java.util.stream.Stream;
 
 public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerMenu> {
 
-    private static final ResourceLocation TEX_TOP = new ResourceLocation(Companions.MOD_ID, "textures/gui/cornelius_gui_top.png");
-    private static final ResourceLocation TEX_BOTTOM = new ResourceLocation(Companions.MOD_ID, "textures/gui/cornelius_gui_bottom.png");
+    private static final ResourceLocation TEX_TOP = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/cornelius_gui_top.png");
+    private static final ResourceLocation TEX_BOTTOM = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/cornelius_gui_bottom.png");
 
     private static final int ANIM_TICKS = 8;
     private static final int DEAL_INTERVAL_TICKS = 6;

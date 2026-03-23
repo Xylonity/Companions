@@ -1,6 +1,6 @@
 package dev.xylonity.companions.mixin;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -33,10 +33,10 @@ public abstract class ModelBakeryMixin {
 
     static {
         companions$MODELS = List.of(
-                new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_axe_3d", "inventory"),
-                new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_scythe_3d","inventory"),
-                new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_sword_3d", "inventory"),
-                new ModelResourceLocation(CompanionsCommon.MOD_ID, "mage_staff_3d", "inventory")
+                new ModelResourceLocation(Companions.MOD_ID, "crystallized_blood_axe_3d", "inventory"),
+                new ModelResourceLocation(Companions.MOD_ID, "crystallized_blood_scythe_3d","inventory"),
+                new ModelResourceLocation(Companions.MOD_ID, "crystallized_blood_sword_3d", "inventory"),
+                new ModelResourceLocation(Companions.MOD_ID, "mage_staff_3d", "inventory")
         );
     }
 

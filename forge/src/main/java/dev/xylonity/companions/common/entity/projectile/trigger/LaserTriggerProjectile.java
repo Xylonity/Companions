@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile.trigger;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.companion.MankhEntity;
 import dev.xylonity.companions.common.util.Util;
@@ -103,7 +103,7 @@ public class LaserTriggerProjectile extends BaseProjectile {
         }
 
         if (level().isClientSide) {
-            Companions.PROXY.tickLaserTriggerProjectile(this);
+            CompanionsForge.PROXY.tickLaserTriggerProjectile(this);
         }
 
     }

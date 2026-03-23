@@ -3,7 +3,7 @@ package dev.xylonity.companions.compat.jei.category;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.blockentity.ShadeMawAltarBlockEntity;
 import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
 import dev.xylonity.companions.common.recipe.ShadeMawAltarRecipe;
@@ -34,10 +34,10 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class ShadeMawAltarRecipeCategory implements IRecipeCategory<ShadeMawAltarRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_maw_altar_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(CompanionsForge.MOD_ID, "shade_maw_altar_interaction");
     public static final RecipeType<ShadeMawAltarRecipe> TYPE = new RecipeType<>(UID, ShadeMawAltarRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 

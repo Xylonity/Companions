@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -79,7 +79,7 @@ public class BraceProjectile extends BaseProjectile {
                 float r = 250f / 255f;
                 float g = (203 + level().random.nextInt(10)) / 255f;
                 float b = (138 + level().random.nextInt(10)) / 255f;
-                Companions.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), r, g, b, 0, 0.35f);
+                CompanionsForge.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), r, g, b, 0, 0.35f);
             }
         }
 

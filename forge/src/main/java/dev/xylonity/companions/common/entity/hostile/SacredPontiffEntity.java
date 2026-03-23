@@ -1,13 +1,16 @@
 package dev.xylonity.companions.common.entity.hostile;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import dev.xylonity.knightlib.api.music.IBossMusicProvider;
+import dev.xylonity.knightlib.KnightLib;
+import dev.xylonity.knightlib.api.camera.ShakeSettings;
+import dev.xylonity.knightlib.api.sound.music.IBossMusicProvider;
+import dev.xylonity.knightlib.network.packets.CameraShakeS2C;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -176,11 +179,9 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         // phase 1 transformation
         if (getState() >= 3 && getState() <= 5) {
             if (getState() == 3) {
-                if (level().isClientSide && transformationCounter == 130) {
+                if (!level().isClientSide && transformationCounter == 130) {
                     for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                        if (level().isClientSide) {
-                            Companions.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
-                        }
+                        KnightLib.NETWORK.sendTo((ServerPlayer) player, CameraShakeS2C.TYPE.base(), new CameraShakeS2C(ShakeSettings.builder().build(), true)); 50, 0.045f, 0.045f, 0.045f, 30);
                     }
                 }
                 else if (!level().isClientSide && transformationCounter == 120) {
@@ -205,7 +206,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
                 if (level().isClientSide && attackCounter == 35) {
                     for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
                         if (level().isClientSide) {
-                            Companions.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
+                            CompanionsForge.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
                         }
                     }
                 } else if (!level().isClientSide && attackCounter == 35) {
@@ -220,7 +221,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
             if (SHAKE_TICKS.contains(getStateCounter())) {
                 for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
                     if (level().isClientSide) {
-                        Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+                        CompanionsForge.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
                     } else {
                         playSound(CompanionsSounds.HOLINESS_HIT_CHEST.get(), 2f, 1f);
                     }

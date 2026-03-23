@@ -1,9 +1,8 @@
 package dev.xylonity.companions.client.blockentity.model;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
 import software.bernie.geckolib.model.GeoModel;
 
 public class GenericBlockItemModel extends GeoModel<GenericBlockItem> {
@@ -15,17 +14,17 @@ public class GenericBlockItemModel extends GeoModel<GenericBlockItem> {
 
     @Override
     public ResourceLocation getModelResource(GenericBlockItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/" + name + ".geo.json");
+        return new ResourceLocation(CompanionsForge.MOD_ID, "geo/" + name + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(GenericBlockItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/" + name + ".png");
+        return new ResourceLocation(CompanionsForge.MOD_ID, "textures/block/" + name + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(GenericBlockItem animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/generic.animation.json");
+        return new ResourceLocation(CompanionsForge.MOD_ID, "animations/generic.animation.json");
     }
 
 }

@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.google.gson.JsonObject;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class CroissantEggRecipe implements Recipe<SimpleContainer> {
 
-    private static final ResourceLocation ID = new ResourceLocation(Companions.MOD_ID, "croissant_egg_interaction");
+    private static final ResourceLocation ID = new ResourceLocation(CompanionsForge.MOD_ID, "croissant_egg_interaction");
 
     public static final RecipeSerializer<CroissantEggRecipe> SERIALIZER = new Serializer();
     public static final RecipeType<CroissantEggRecipe> RECIPE_TYPE = new Type();

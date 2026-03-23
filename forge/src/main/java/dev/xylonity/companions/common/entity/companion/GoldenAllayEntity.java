@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.companion;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
@@ -148,7 +148,7 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
         }
 
         if (level().isClientSide) {
-            Companions.PROXY.spawnGoldenAllayRibbonTrail(this, level(), getX(), getY(), getZ(), 1, 1, 160/255f, 0, 0.1225f);
+            CompanionsForge.PROXY.spawnGoldenAllayRibbonTrail(this, level(), getX(), getY(), getZ(), 1, 1, 160/255f, 0, 0.1225f);
         }
 
     }

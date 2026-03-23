@@ -1,6 +1,6 @@
 package dev.xylonity.companions.compat.jei;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.recipe.*;
 import dev.xylonity.companions.compat.jei.category.*;
 import dev.xylonity.companions.registry.CompanionsBlocks;
@@ -24,7 +24,7 @@ import java.util.List;
 @JeiPlugin
 public final class CompanionsPlugin implements IModPlugin {
 
-    private static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "jei_plugin");
+    private static final ResourceLocation UID = new ResourceLocation(CompanionsFabric.MOD_ID, "jei_plugin");
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {

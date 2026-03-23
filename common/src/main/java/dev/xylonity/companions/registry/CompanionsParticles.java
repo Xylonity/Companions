@@ -1,6 +1,6 @@
 package dev.xylonity.companions.registry;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import net.minecraft.core.particles.SimpleParticleType;
 
 import java.util.function.Supplier;
@@ -33,7 +33,7 @@ public class CompanionsParticles {
     public static final Supplier<SimpleParticleType> RESPAWN_TOTEM = registerParticle("respawn_totem", true);
 
     private static <T extends SimpleParticleType> Supplier<T> registerParticle(String id, boolean overrideLimiter) {
-        return CompanionsCommon.COMMON_PLATFORM.registerParticle(id, overrideLimiter);
+        return Companions.COMMON_PLATFORM.registerParticle(id, overrideLimiter);
     }
 
 }

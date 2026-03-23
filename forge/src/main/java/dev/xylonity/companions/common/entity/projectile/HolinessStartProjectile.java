@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -134,7 +134,7 @@ public class HolinessStartProjectile extends BaseProjectile {
         if (this.onGround()) discard();
 
         if (level().isClientSide && (tickCount % 20 == 0 || tickCount == 1)) {
-            Companions.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), isRed() ? 204/255f : 25/255f, isRed() ? 50/255f : 139/255f, isRed() ? 50/255f : 86/255f, 0, 0.35f);
+            CompanionsForge.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), isRed() ? 204/255f : 25/255f, isRed() ? 50/255f : 139/255f, isRed() ? 50/255f : 86/255f, 0, 0.35f);
         }
 
     }
@@ -149,7 +149,7 @@ public class HolinessStartProjectile extends BaseProjectile {
             }
         } else {
             for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+                CompanionsForge.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
             }
         }
 

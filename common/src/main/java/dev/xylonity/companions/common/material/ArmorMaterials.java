@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.material;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.Util;
 import net.minecraft.sounds.SoundEvent;
@@ -72,7 +72,7 @@ public enum ArmorMaterials implements ArmorMaterial {
 
     @Override
     public @NotNull String getName() {
-        return CompanionsCommon.MOD_ID + ":" + name;
+        return Companions.MOD_ID + ":" + name;
     }
 
     @Override

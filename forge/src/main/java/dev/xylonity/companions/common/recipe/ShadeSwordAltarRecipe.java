@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.recipe;
 
 import com.google.gson.JsonObject;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class ShadeSwordAltarRecipe implements Recipe<SimpleContainer> {
 
-    private static final ResourceLocation ID = new ResourceLocation(Companions.MOD_ID, "shade_sword_altar_interaction");
+    private static final ResourceLocation ID = new ResourceLocation(CompanionsForge.MOD_ID, "shade_sword_altar_interaction");
 
     public static final RecipeSerializer<ShadeSwordAltarRecipe> SERIALIZER = new Serializer();
     public static final RecipeType<ShadeSwordAltarRecipe> RECIPE_TYPE = new Type();

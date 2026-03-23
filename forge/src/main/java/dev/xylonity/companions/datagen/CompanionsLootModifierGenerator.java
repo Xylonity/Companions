@@ -1,6 +1,6 @@
 package dev.xylonity.companions.datagen;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.tag.CompanionsTags;
@@ -14,7 +14,7 @@ import net.minecraftforge.common.data.GlobalLootModifierProvider;
 public class CompanionsLootModifierGenerator extends GlobalLootModifierProvider {
 
     public CompanionsLootModifierGenerator(PackOutput output) {
-        super(output, Companions.MOD_ID);
+        super(output, CompanionsForge.MOD_ID);
     }
 
     @Override

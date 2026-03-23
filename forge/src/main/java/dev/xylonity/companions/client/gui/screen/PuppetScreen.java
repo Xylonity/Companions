@@ -1,7 +1,7 @@
 package dev.xylonity.companions.client.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PuppetScreen extends AbstractContainerScreen<PuppetContainerMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/gui/puppet_gui.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/puppet_gui.png");
 
     public PuppetScreen(PuppetContainerMenu container, Inventory inv, Component title) {
         super(container, inv, title);

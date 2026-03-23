@@ -1,6 +1,6 @@
 package dev.xylonity.companions.mixin;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.registry.CompanionsItems;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -48,10 +48,10 @@ public abstract class ItemRendererMixin {
 
     static {
         companions$MODELS_3D = Map.of(
-                CompanionsItems.CRYSTALLIZED_BLOOD_AXE.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_axe_3d", "inventory"),
-                CompanionsItems.CRYSTALLIZED_BLOOD_SCYTHE.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_scythe_3d","inventory"),
-                CompanionsItems.CRYSTALLIZED_BLOOD_SWORD.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "crystallized_blood_sword_3d", "inventory"),
-                CompanionsItems.MAGE_STAFF.get(), new ModelResourceLocation(CompanionsCommon.MOD_ID, "mage_staff_3d", "inventory")
+                CompanionsItems.CRYSTALLIZED_BLOOD_AXE.get(), new ModelResourceLocation(Companions.MOD_ID, "crystallized_blood_axe_3d", "inventory"),
+                CompanionsItems.CRYSTALLIZED_BLOOD_SCYTHE.get(), new ModelResourceLocation(Companions.MOD_ID, "crystallized_blood_scythe_3d","inventory"),
+                CompanionsItems.CRYSTALLIZED_BLOOD_SWORD.get(), new ModelResourceLocation(Companions.MOD_ID, "crystallized_blood_sword_3d", "inventory"),
+                CompanionsItems.MAGE_STAFF.get(), new ModelResourceLocation(Companions.MOD_ID, "mage_staff_3d", "inventory")
         );
 
     }

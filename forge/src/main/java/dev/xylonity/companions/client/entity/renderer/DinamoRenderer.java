@@ -2,7 +2,7 @@ package dev.xylonity.companions.client.entity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.client.entity.model.DinamoModel;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
@@ -33,7 +33,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
         super(renderManager, new DinamoModel());
         addRenderLayer(new AutoGlowingGeoLayer<>(this));
         addRenderLayer(new ElectricConnectionLayer(this,
-                new ResourceLocation(Companions.MOD_ID, "textures/misc/electric_arch.png"),
+                new ResourceLocation(CompanionsForge.MOD_ID, "textures/misc/electric_arch.png"),
                 totalFrames,
                 ticksPerFrame
         ));

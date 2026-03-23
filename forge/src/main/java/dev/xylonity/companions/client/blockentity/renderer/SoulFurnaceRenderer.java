@@ -1,6 +1,6 @@
 package dev.xylonity.companions.client.blockentity.renderer;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.client.blockentity.model.SoulFurnaceModel;
 import dev.xylonity.companions.common.block.SoulFurnaceBlock;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
@@ -21,11 +21,11 @@ public class SoulFurnaceRenderer extends GeoBlockRenderer<SoulFurnaceBlockEntity
         if (animatable.getLevel() != null) {
             BlockState state = animatable.getLevel().getBlockState(animatable.getBlockPos());
             if (state.hasProperty(SoulFurnaceBlock.LIT) && state.getValue(SoulFurnaceBlock.LIT)) {
-                return new ResourceLocation(Companions.MOD_ID, "textures/block/soul_furnace_on_block.png");
+                return new ResourceLocation(CompanionsForge.MOD_ID, "textures/block/soul_furnace_on_block.png");
             }
         }
 
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/soul_furnace_block.png");
+        return new ResourceLocation(CompanionsForge.MOD_ID, "textures/block/soul_furnace_block.png");
     }
 
 }

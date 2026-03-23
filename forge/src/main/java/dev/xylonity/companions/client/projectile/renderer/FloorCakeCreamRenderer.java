@@ -2,7 +2,6 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.xylonity.companions.CompanionsCommon;
 import dev.xylonity.companions.client.projectile.model.FloorCakeCreamModel;
 import dev.xylonity.companions.common.entity.projectile.FloorCakeCreamProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;

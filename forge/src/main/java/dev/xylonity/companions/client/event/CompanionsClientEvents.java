@@ -1,6 +1,6 @@
 package dev.xylonity.companions.client.event;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.client.blockentity.renderer.*;
 import dev.xylonity.companions.client.entity.renderer.*;
 import dev.xylonity.companions.client.gui.screen.CorneliusScreen;
@@ -26,16 +26,16 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CompanionsClientEvents {
 
-    @Mod.EventBusSubscriber(modid = Companions.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = CompanionsForge.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class CompanionsClientModBus {
 
-        private static final ResourceLocation PONTIFF_BACKGROUND = new ResourceLocation(Companions.MOD_ID, "textures/gui/pontiff_bar_background.png");
-        private static final ResourceLocation PONTIFF_HEALTH = new ResourceLocation(Companions.MOD_ID, "textures/gui/pontiff_bar_health.png");
-        private static final ResourceLocation PONTIFF_OVERLAY = new ResourceLocation(Companions.MOD_ID, "textures/gui/pontiff_bar_overlay.png");
+        private static final ResourceLocation PONTIFF_BACKGROUND = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/pontiff_bar_background.png");
+        private static final ResourceLocation PONTIFF_HEALTH = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/pontiff_bar_health.png");
+        private static final ResourceLocation PONTIFF_OVERLAY = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/pontiff_bar_overlay.png");
 
-        private static final ResourceLocation HOLINESS_BACKGROUND = new ResourceLocation(Companions.MOD_ID, "textures/gui/holiness_bar_background.png");
-        private static final ResourceLocation HOLINESS_HEALTH = new ResourceLocation(Companions.MOD_ID, "textures/gui/holiness_bar_health.png");
-        private static final ResourceLocation HOLINESS_OVERLAY = new ResourceLocation(Companions.MOD_ID, "textures/gui/holiness_bar_overlay.png");
+        private static final ResourceLocation HOLINESS_BACKGROUND = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/holiness_bar_background.png");
+        private static final ResourceLocation HOLINESS_HEALTH = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/holiness_bar_health.png");
+        private static final ResourceLocation HOLINESS_OVERLAY = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/holiness_bar_overlay.png");
 
         @SubscribeEvent
         public static void registerEntityRenderers(FMLClientSetupEvent event) {
@@ -213,7 +213,7 @@ public class CompanionsClientEvents {
 
     }
 
-    @Mod.EventBusSubscriber(modid = Companions.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = CompanionsForge.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
     public static class CompanionsClientForgeBus {
         ;;
     }

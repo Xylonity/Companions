@@ -1,6 +1,6 @@
 package dev.xylonity.companions.mixin;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
@@ -34,7 +34,7 @@ public abstract class IllagerGolemRaidMixin {
 
         int illagerGolemAmount = 1;
         for (int i = 0; i < illagerGolemAmount; i++) {
-            Raider raider = CompanionsCommon.COMMON_PLATFORM.getIllagerGolemEntity().create(this.getLevel());
+            Raider raider = Companions.COMMON_PLATFORM.getIllagerGolemEntity().create(this.getLevel());
             if (raider == null) {
                 continue;
             }

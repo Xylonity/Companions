@@ -1,6 +1,6 @@
 package dev.xylonity.companions.client.blockentity.renderer;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.client.blockentity.model.CroissantEggModel;
 import dev.xylonity.companions.common.blockentity.CroissantEggBlockEntity;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -16,7 +16,7 @@ public class CroissantEggRenderer extends GeoBlockRenderer<CroissantEggBlockEnti
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull CroissantEggBlockEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/block/croissant_egg_block.png");
+        return new ResourceLocation(CompanionsForge.MOD_ID, "textures/block/croissant_egg_block.png");
     }
 
 }

@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -59,10 +59,10 @@ public class BloodSlashProjectile extends FrogHealProjectile {
         double y = this.getY();
 
         Vec3 left = new Vec3(this.getX(), y, this.getZ()).subtract(perp);
-        Companions.PROXY.spawnSidedRibbonTrail(this, level(), left.x, left.y, left.z, 145/255f, 20/255f, 20/255f, 0, 0.1725f, 0);
+        CompanionsForge.PROXY.spawnSidedRibbonTrail(this, level(), left.x, left.y, left.z, 145/255f, 20/255f, 20/255f, 0, 0.1725f, 0);
 
         Vec3 right = new Vec3(this.getX(), y, this.getZ()).add(perp);
-        Companions.PROXY.spawnSidedRibbonTrail(this, level(), right.x, right.y, right.z, 145/255f, 20/255f, 20/255f, 0, 0.1725f, 1);
+        CompanionsForge.PROXY.spawnSidedRibbonTrail(this, level(), right.x, right.y, right.z, 145/255f, 20/255f, 20/255f, 0, 0.1725f, 1);
     }
 
     @Override

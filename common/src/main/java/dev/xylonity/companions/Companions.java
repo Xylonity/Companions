@@ -1,0 +1,31 @@
+package dev.xylonity.companions;
+
+import dev.xylonity.companions.platform.CompanionsPlatform;
+import dev.xylonity.companions.registry.*;
+import net.minecraft.resources.ResourceLocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ServiceLoader;
+
+public class Companions {
+
+    public static final String MOD_ID = "companions";
+    public static final Logger LOGGER = LoggerFactory.getLogger("Companions!");
+
+    public static final CompanionsPlatform COMMON_PLATFORM = ServiceLoader.load(CompanionsPlatform.class).findFirst().orElseThrow();
+
+    public static void init() {
+        CompanionsItems.init();
+        CompanionsBlocks.init();
+        CompanionsCreativeModeTabs.init();
+        CompanionsEffects.init();
+        CompanionsParticles.init();
+        CompanionsSounds.init();
+    }
+
+    public static ResourceLocation of(final String path) {
+        return new ResourceLocation(MOD_ID, path);
+    }
+
+}

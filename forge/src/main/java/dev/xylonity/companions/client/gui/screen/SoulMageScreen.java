@@ -1,7 +1,7 @@
 package dev.xylonity.companions.client.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SoulMageScreen extends AbstractContainerScreen<SoulMageContainerMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Companions.MOD_ID, "textures/gui/soul_mage_gui.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(CompanionsForge.MOD_ID, "textures/gui/soul_mage_gui.png");
 
     public SoulMageScreen(SoulMageContainerMenu container, Inventory inv, Component title) {
         super(container, inv, title);

@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -139,7 +139,7 @@ public class BloodTornadoProjectile extends BaseProjectile {
         if (level().isClientSide) {
             if ((this.tickCount % 35 == 0 || this.tickCount == 1)) {
                 for (int i = 0; i < 3; i++) {
-                    Companions.PROXY.spawnBaseProjectileTrail(this, this.getBbHeight() - 0.25f, getBbHeight(), 135/255f, 0, 0);
+                    CompanionsForge.PROXY.spawnBaseProjectileTrail(this, this.getBbHeight() - 0.25f, getBbHeight(), 135/255f, 0, 0);
                 }
 
             }

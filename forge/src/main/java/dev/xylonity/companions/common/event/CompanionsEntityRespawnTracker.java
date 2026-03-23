@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.event;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.blockentity.RespawnTotemBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = Companions.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = CompanionsForge.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CompanionsEntityRespawnTracker {
 
     @SubscribeEvent

@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.sounds.SoundEvents;
@@ -91,7 +91,7 @@ public class HolinessNaginataProjectile extends ThrownTrident implements GeoEnti
     protected void doShake() {
         if (level().isClientSide) {
             for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+                CompanionsForge.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
             }
         }
     }

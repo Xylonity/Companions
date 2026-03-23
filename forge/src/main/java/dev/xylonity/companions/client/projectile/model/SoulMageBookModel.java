@@ -1,6 +1,6 @@
 package dev.xylonity.companions.client.projectile.model;
 
-import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import dev.xylonity.companions.common.entity.projectile.SoulMageBookEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -14,12 +14,12 @@ public class SoulMageBookModel extends GeoModel<SoulMageBookEntity> {
 
     @Override
     public ResourceLocation getModelResource(SoulMageBookEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "geo/soul_mage_book.geo.json");
+        return new ResourceLocation(CompanionsForge.MOD_ID, "geo/soul_mage_book.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SoulMageBookEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "textures/entity/soul_mage_book.png");
+        return new ResourceLocation(CompanionsForge.MOD_ID, "textures/entity/soul_mage_book.png");
     }
 
     @Override
@@ -53,6 +53,6 @@ public class SoulMageBookModel extends GeoModel<SoulMageBookEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(SoulMageBookEntity animatable) {
-        return new ResourceLocation(Companions.MOD_ID, "animations/soul_mage_book.animation.json");
+        return new ResourceLocation(CompanionsForge.MOD_ID, "animations/soul_mage_book.animation.json");
     }
 }
