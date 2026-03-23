@@ -44,8 +44,8 @@ public class CompanionsForge {
         CompanionsLootModifier.LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
         CompanionsBlockEntities.BLOCK_ENTITY.register(modEventBus);
         CompanionsMenuTypes.MENU_TYPES.register(modEventBus);
-        CompanionsRecipes.TYPES.register(modEventBus);
-        CompanionsRecipes.SERIALIZERS.register(modEventBus);
+        CompanionsRecipeTypes.TYPES.register(modEventBus);
+        CompanionsRecipeTypes.SERIALIZERS.register(modEventBus);
         CompanionsEntities.ENTITY.register(modEventBus);
         CompanionsSpawnBiomeModifier.BIOME_MODIFIER.register(modEventBus);
 

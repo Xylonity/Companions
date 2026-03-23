@@ -17,7 +17,7 @@ public class PuppetContainerMenu extends AbstractContainerMenu {
     private final Container entityInventory;
 
     public PuppetContainerMenu(int windowId, Inventory playerInv, PuppetEntity puppet) {
-        super(CompanionsMenuTypes.PUPPET_CONTAINER.get(), windowId);
+        super(CompanionsMenuTypes.PUPPET_MENU.get(), windowId);
         this.puppet = puppet;
         this.entityInventory = puppet.inventory;
 

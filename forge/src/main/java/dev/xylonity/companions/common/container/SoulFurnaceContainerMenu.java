@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.container;
 
 import dev.xylonity.companions.common.recipe.SoulFurnaceRecipe;
 import dev.xylonity.companions.registry.CompanionsMenuTypes;
-import dev.xylonity.companions.registry.CompanionsRecipes;
+import dev.xylonity.companions.registry.CompanionsRecipeTypes;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -13,15 +13,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public class SoulFurnaceContainerMenu extends AbstractContainerMenu {
     private final Container furnaceInventory;
     private final ContainerData data;
     private final Player player;
 
     public SoulFurnaceContainerMenu(int id, Inventory playerInventory, Container furnaceInventory, ContainerData data) {
-        super(CompanionsMenuTypes.SOUL_FURNACE.get(), id);
+        super(CompanionsMenuTypes.SOUL_FURNACE_MENU.get(), id);
         this.furnaceInventory = furnaceInventory;
         this.data = data;
         this.player = playerInventory.player;
@@ -58,7 +56,7 @@ public class SoulFurnaceContainerMenu extends AbstractContainerMenu {
     private boolean isValidInput(ItemStack stack) {
         if (player == null) return false;
 
-        for (Recipe<?> rec : player.level().getRecipeManager().getAllRecipesFor(CompanionsRecipes.SOUL_FURNACE_TYPE.get())) {
+        for (Recipe<?> rec : player.level().getRecipeManager().getAllRecipesFor(CompanionsRecipeTypes.SOUL_FURNACE_TYPE.get())) {
             if (rec instanceof SoulFurnaceRecipe r && r.input().test(stack)) {
                 return true;
             }

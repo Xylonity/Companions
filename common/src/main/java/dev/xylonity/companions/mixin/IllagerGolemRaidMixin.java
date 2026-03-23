@@ -34,7 +34,7 @@ public abstract class IllagerGolemRaidMixin {
 
         int illagerGolemAmount = 1;
         for (int i = 0; i < illagerGolemAmount; i++) {
-            Raider raider = Companions.COMMON_PLATFORM.getIllagerGolemEntity().create(this.getLevel());
+            Raider raider = Companions.PLATFORM.getIllagerGolemEntity().create(this.getLevel());
             if (raider == null) {
                 continue;
             }

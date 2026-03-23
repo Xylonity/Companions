@@ -112,10 +112,10 @@ public class CompanionsClientEvents {
         BlockEntityRendererRegistry.register(CompanionsBlockEntities.VOLTAIC_RELAY, VoltaicRelayRenderer::new);
         BlockEntityRendererRegistry.register(CompanionsBlockEntities.FROG_BONANZA, FrogBonanzaRenderer::new);
 
-        MenuScreens.register(CompanionsMenuTypes.SOUL_FURNACE, SoulFurnaceScreen::new);
-        MenuScreens.register(CompanionsMenuTypes.SOUL_MAGE_CONTAINER, SoulMageScreen::new);
-        MenuScreens.register(CompanionsMenuTypes.PUPPET_CONTAINER, PuppetScreen::new);
-        MenuScreens.register(CompanionsMenuTypes.CORNELIUS_CONTAINER, CorneliusScreen::new);
+        MenuScreens.register(CompanionsMenuTypes.SOUL_FURNACE_MENU, SoulFurnaceScreen::new);
+        MenuScreens.register(CompanionsMenuTypes.SOUL_MAGE_MENU, SoulMageScreen::new);
+        MenuScreens.register(CompanionsMenuTypes.PUPPET_MENU, PuppetScreen::new);
+        MenuScreens.register(CompanionsMenuTypes.CORNELIUS_MENU, CorneliusScreen::new);
 
         //ItemBlockRenderTypes.(CompanionsBlocks.ETERNAL_FIRE, RenderType.cutout());
 

@@ -22,7 +22,7 @@ import net.minecraft.core.RegistryAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import dev.xylonity.companions.registry.CompanionsRecipes;
+import dev.xylonity.companions.registry.CompanionsRecipeTypes;
 
 public class SoulFurnaceRecipe implements Recipe<Container> {
 
@@ -122,12 +122,12 @@ public class SoulFurnaceRecipe implements Recipe<Container> {
 
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return CompanionsRecipes.SOUL_FURNACE_SERIALIZER.get();
+        return CompanionsRecipeTypes.SOUL_FURNACE_SERIALIZER.get();
     }
 
     @Override
     public @NotNull RecipeType<?> getType() {
-        return CompanionsRecipes.SOUL_FURNACE_TYPE.get();
+        return CompanionsRecipeTypes.SOUL_FURNACE_TYPE.get();
     }
 
     @Override

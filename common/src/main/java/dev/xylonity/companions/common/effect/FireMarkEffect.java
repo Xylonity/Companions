@@ -18,7 +18,7 @@ public class FireMarkEffect extends MobEffect {
 
     public void addAttributeModifiers(@NotNull LivingEntity entity, @NotNull AttributeMap pAttributeMap, int pAmplifier) {
         super.addAttributeModifiers(entity, pAttributeMap, pAmplifier);
-        Projectile fireMark = (Projectile) Companions.COMMON_PLATFORM.getFireMarkProjectile().create(entity.level());
+        Projectile fireMark = (Projectile) Companions.PLATFORM.getFireMarkProjectile().create(entity.level());
         if (fireMark != null) {
             fireMark.moveTo(entity.getX(), entity.getY(), entity.getZ());
             fireMark.setOwner(entity);

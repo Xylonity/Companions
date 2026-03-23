@@ -5,7 +5,7 @@ import dev.xylonity.companions.common.recipe.*;
 import dev.xylonity.companions.compat.jei.category.*;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsItems;
-import dev.xylonity.companions.registry.CompanionsRecipes;
+import dev.xylonity.companions.registry.CompanionsRecipeTypes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
@@ -59,7 +59,7 @@ public final class CompanionsPlugin implements IModPlugin {
         if (lvl != null) {
             List<SoulFurnaceItemRecipe> itemRecipes = new ArrayList<>();
             List<SoulFurnaceEntityRecipe> entityRecipes = new ArrayList<>();
-            for (Recipe<?> base : lvl.getRecipeManager().getAllRecipesFor(CompanionsRecipes.SOUL_FURNACE_TYPE.get())) {
+            for (Recipe<?> base : lvl.getRecipeManager().getAllRecipesFor(CompanionsRecipeTypes.SOUL_FURNACE_TYPE.get())) {
                 if (!(base instanceof SoulFurnaceRecipe r)) continue;
 
                 ItemStack[] inputs = r.input().getItems();

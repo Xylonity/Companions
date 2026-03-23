@@ -5,7 +5,7 @@ import dev.xylonity.companions.common.container.SoulFurnaceContainerMenu;
 import dev.xylonity.companions.common.recipe.SoulFurnaceRecipe;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
-import dev.xylonity.companions.registry.CompanionsRecipes;
+import dev.xylonity.companions.registry.CompanionsRecipeTypes;
 import dev.xylonity.knightlib.common.blockentity.GreatChaliceBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -203,7 +203,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     @Nullable
     private SoulFurnaceRecipe findRecipe(Level level, ItemStack input) {
         if (input.isEmpty()) return null;
-        List<? extends Recipe<?>> list = level.getRecipeManager().getAllRecipesFor(CompanionsRecipes.SOUL_FURNACE_TYPE);
+        List<? extends Recipe<?>> list = level.getRecipeManager().getAllRecipesFor(CompanionsRecipeTypes.SOUL_FURNACE_TYPE);
         for (Recipe<?> rec : list) {
             if (rec instanceof SoulFurnaceRecipe r) {
                 if (r.input().test(input) && this.charges >= r.requiredCharges()) return r;

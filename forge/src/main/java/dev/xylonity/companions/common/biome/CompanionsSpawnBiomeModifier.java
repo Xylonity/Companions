@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.biome;
 
 import com.mojang.serialization.Codec;
 import dev.xylonity.companions.CompanionsForge;
-import dev.xylonity.companions.registry.CompanionsSpawns;
+import dev.xylonity.companions.registry.CompanionsEntitySpawns;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -21,7 +21,7 @@ public class CompanionsSpawnBiomeModifier implements BiomeModifier {
     @Override
     public void modify(Holder<Biome> holder, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (phase == Phase.ADD) {
-            CompanionsSpawns.addBiomeSpawns(holder, builder);
+            //CompanionsEntitySpawns.addBiomeSpawns(holder, builder);
         }
 
     }

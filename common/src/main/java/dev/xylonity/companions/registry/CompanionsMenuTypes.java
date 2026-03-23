@@ -1,6 +1,6 @@
 package dev.xylonity.companions.registry;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
 import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.container.PuppetContainerMenu;
@@ -9,9 +9,11 @@ import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import dev.xylonity.companions.common.entity.companion.PuppetEntity;
 import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import dev.xylonity.knightlib.api.registrar.ResourceDispatcher;
+import dev.xylonity.knightlib.api.registrar.ResourceEntry;
+import dev.xylonity.knightlib.api.registrar.ResourceRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -19,62 +21,50 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CompanionsMenuTypes {
 
-    public static void init() { ;; }
+    public static final ResourceRegistry<MenuType<?>> MENUS = ResourceDispatcher.create(BuiltInRegistries.MENU, Companions.MOD_ID);
 
-    public static final MenuType<SoulFurnaceContainerMenu> SOUL_FURNACE =
-            ScreenHandlerRegistry.registerExtended(
-                    new ResourceLocation(CompanionsFabric.MOD_ID, "soul_furnace_container_menu"),
-                    (syncId, inv, buf) -> {
-                        BlockPos pos = buf.readBlockPos();
-                        BlockEntity be = inv.player.level().getBlockEntity(pos);
-                        if (be instanceof SoulFurnaceBlockEntity furnace) {
-                            return new SoulFurnaceContainerMenu(syncId, inv, furnace, new SimpleContainerData(3));
-                        }
+    public static final ResourceEntry<MenuType<SoulFurnaceContainerMenu>> SOUL_FURNACE_MENU =
+            MENUS.registerMenu("soul_furnace_container_menu", (syncId, playerInv, buf) -> {
+                final BlockPos pos = buf.readBlockPos();
+                final BlockEntity blockEntity = playerInv.player.level().getBlockEntity(pos);
+                if (blockEntity instanceof SoulFurnaceBlockEntity furnace) {
+                    return new SoulFurnaceContainerMenu(syncId, playerInv, furnace, new SimpleContainerData(3));
+                }
 
-                        throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
-                    }
-            );
+                throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
+            });
 
-    public static final MenuType<SoulMageContainerMenu> SOUL_MAGE_CONTAINER =
-            ScreenHandlerRegistry.registerExtended(
-                    new ResourceLocation(CompanionsFabric.MOD_ID, "soul_mage_container_menu"),
-                    (syncId, inv, buf) -> {
-                        int entityId = buf.readInt();
-                        Entity e = inv.player.level().getEntity(entityId);
-                        if (e instanceof SoulMageEntity mage) {
-                            return new SoulMageContainerMenu(syncId, inv, mage);
-                        }
+    public static final ResourceEntry<MenuType<SoulMageContainerMenu>> SOUL_MAGE_MENU =
+            MENUS.registerMenu("soul_mage_container_menu", (syncId, playerInv, buf) -> {
+                final int entityId = buf.readInt();
+                final Entity entity = playerInv.player.level().getEntity(entityId);
+                if (entity instanceof SoulMageEntity mage) {
+                    return new SoulMageContainerMenu(syncId, playerInv, mage);
+                }
 
-                        throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
-                    }
-            );
+                throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
+            });
 
-    public static final MenuType<PuppetContainerMenu> PUPPET_CONTAINER =
-            ScreenHandlerRegistry.registerExtended(
-                    new ResourceLocation(CompanionsFabric.MOD_ID, "puppet_container_menu"),
-                    (syncId, inv, buf) -> {
-                        int entityId = buf.readInt();
-                        Entity e = inv.player.level().getEntity(entityId);
-                        if (e instanceof PuppetEntity puppet) {
-                            return new PuppetContainerMenu(syncId, inv, puppet);
-                        }
+    public static final ResourceEntry<MenuType<PuppetContainerMenu>> PUPPET_MENU =
+            MENUS.registerMenu("puppet_container_menu", (syncId, playerInv, buf) -> {
+                final int entityId = buf.readInt();
+                final Entity entity = playerInv.player.level().getEntity(entityId);
+                if (entity instanceof PuppetEntity puppet) {
+                    return new PuppetContainerMenu(syncId, playerInv, puppet);
+                }
 
-                        throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
-                    }
-            );
+                throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
+            });
 
-    public static final MenuType<CorneliusContainerMenu> CORNELIUS_CONTAINER =
-            ScreenHandlerRegistry.registerExtended(
-                    new ResourceLocation(CompanionsFabric.MOD_ID, "cornelius_container_menu"),
-                    (syncId, inv, buf) -> {
-                        int entityId = buf.readInt();
-                        Entity e = inv.player.level().getEntity(entityId);
-                        if (e instanceof CorneliusEntity cor) {
-                            return new CorneliusContainerMenu(syncId, inv, cor);
-                        }
+    public static final ResourceEntry<MenuType<CorneliusContainerMenu>> CORNELIUS_MENU =
+            MENUS.registerMenu("cornelius_container_menu", (syncId, playerInv, buf) -> {
+                final int entityId = buf.readInt();
+                final Entity entity = playerInv.player.level().getEntity(entityId);
+                if (entity instanceof CorneliusEntity cor) {
+                    return new CorneliusContainerMenu(syncId, playerInv, cor);
+                }
 
-                        throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
-                    }
-            );
+                throw new IllegalStateException("[Companions!] Tried to open a menu for a wrong entity: " + syncId);
+            });
 
 }

@@ -30,8 +30,8 @@ public class CompanionsFabric implements ModInitializer, ClientModInitializer {
 
         CompanionsEntities.init();
         CompanionsBlockEntities.init();
-        CompanionsRecipes.init();
-        CompanionsSpawns.init();
+        CompanionsRecipeTypes.init();
+        CompanionsEntitySpawns.init();
         CompanionsMenuTypes.init();
 
         CompanionsCommonEvents.init();

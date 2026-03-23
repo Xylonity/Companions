@@ -16,7 +16,7 @@ public class SoulMageContainerMenu extends AbstractContainerMenu {
     private final Container entityInventory;
 
     public SoulMageContainerMenu(int windowId, Inventory playerInv, SoulMageEntity mage) {
-        super(CompanionsMenuTypes.SOUL_MAGE_CONTAINER.get(), windowId);
+        super(CompanionsMenuTypes.SOUL_MAGE_MENU.get(), windowId);
         this.soulMage = mage;
         this.entityInventory = mage.inventory;
 

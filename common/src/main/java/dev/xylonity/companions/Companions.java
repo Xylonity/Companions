@@ -13,15 +13,22 @@ public class Companions {
     public static final String MOD_ID = "companions";
     public static final Logger LOGGER = LoggerFactory.getLogger("Companions!");
 
-    public static final CompanionsPlatform COMMON_PLATFORM = ServiceLoader.load(CompanionsPlatform.class).findFirst().orElseThrow();
+    public static final CompanionsPlatform PLATFORM = ServiceLoader.load(CompanionsPlatform.class).findFirst().orElseThrow();
 
     public static void init() {
-        CompanionsItems.init();
-        CompanionsBlocks.init();
-        CompanionsCreativeModeTabs.init();
-        CompanionsEffects.init();
-        CompanionsParticles.init();
-        CompanionsSounds.init();
+        CompanionsItems.ITEMS.init();
+        CompanionsBlocks.BLOCKS.init();
+        CompanionsEntities.ENTITIES.init();
+        CompanionsBlockEntities.BLOCK_ENTITIES.init();
+        CompanionsCreativeModeTabs.CREATIVE_TABS.init();
+        CompanionsEffects.EFFECTS.init();
+        CompanionsParticles.PARTICLES.init();
+        CompanionsSounds.SOUNDS.init();
+        CompanionsMenuTypes.MENUS.init();
+        CompanionsRecipeTypes.RECIPE_TYPES.init();
+        CompanionsRecipeSerializers.RECIPE_SERIALIZERS.init();
+
+        CompanionsEntitySpawns.init();
     }
 
     public static ResourceLocation of(final String path) {

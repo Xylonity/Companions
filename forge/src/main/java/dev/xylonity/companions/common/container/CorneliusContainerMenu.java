@@ -39,7 +39,7 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
     private static String cachedBets = null;
 
     public CorneliusContainerMenu(int windowId, Inventory playerInv, CorneliusEntity cornelius) {
-        super(CompanionsMenuTypes.CORNELIUS_CONTAINER.get(), windowId);
+        super(CompanionsMenuTypes.CORNELIUS_MENU.get(), windowId);
         this.cornelius = cornelius;
         this.entityInventory = cornelius.inventory;
 

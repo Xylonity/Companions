@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.recipe;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import dev.xylonity.companions.registry.CompanionsRecipes;
+import dev.xylonity.companions.registry.CompanionsRecipeTypes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -121,12 +121,12 @@ public class SoulFurnaceRecipe implements Recipe<Container> {
 
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return CompanionsRecipes.SOUL_FURNACE_SERIALIZER;
+        return CompanionsRecipeTypes.SOUL_FURNACE_SERIALIZER;
     }
 
     @Override
     public @NotNull RecipeType<?> getType() {
-        return CompanionsRecipes.SOUL_FURNACE_TYPE;
+        return CompanionsRecipeTypes.SOUL_FURNACE_TYPE;
     }
 
     @Override

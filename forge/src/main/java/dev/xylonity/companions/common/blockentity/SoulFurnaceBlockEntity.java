@@ -27,7 +27,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -203,7 +202,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     @Nullable
     private SoulFurnaceRecipe findRecipe(Level level, ItemStack input) {
         if (input.isEmpty()) return null;
-        List<? extends Recipe<?>> list = level.getRecipeManager().getAllRecipesFor(CompanionsRecipes.SOUL_FURNACE_TYPE.get());
+        List<? extends Recipe<?>> list = level.getRecipeManager().getAllRecipesFor(CompanionsRecipeTypes.SOUL_FURNACE_TYPE.get());
         for (Recipe<?> rec : list) {
             if (rec instanceof SoulFurnaceRecipe r) {
                 if (r.input().test(input) && this.charges >= r.requiredCharges()) return r;

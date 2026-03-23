@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.container;
 
 import dev.xylonity.companions.common.recipe.SoulFurnaceRecipe;
 import dev.xylonity.companions.registry.CompanionsMenuTypes;
-import dev.xylonity.companions.registry.CompanionsRecipes;
+import dev.xylonity.companions.registry.CompanionsRecipeTypes;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +19,7 @@ public class SoulFurnaceContainerMenu extends AbstractContainerMenu {
     private final Player player;
 
     public SoulFurnaceContainerMenu(int id, Inventory playerInventory, Container furnaceInventory, ContainerData data) {
-        super(CompanionsMenuTypes.SOUL_FURNACE, id);
+        super(CompanionsMenuTypes.SOUL_FURNACE_MENU, id);
         this.furnaceInventory = furnaceInventory;
         this.data = data;
         this.player = playerInventory.player;
@@ -56,7 +56,7 @@ public class SoulFurnaceContainerMenu extends AbstractContainerMenu {
     private boolean isValidInput(ItemStack stack) {
         if (player == null) return false;
 
-        for (Recipe<?> rec : player.level().getRecipeManager().getAllRecipesFor(CompanionsRecipes.SOUL_FURNACE_TYPE)) {
+        for (Recipe<?> rec : player.level().getRecipeManager().getAllRecipesFor(CompanionsRecipeTypes.SOUL_FURNACE_TYPE)) {
             if (rec instanceof SoulFurnaceRecipe r && r.input().test(stack)) {
                 return true;
             }
