@@ -1,4 +1,5 @@
 # 1.3.0
+- Armor effects now apply to any entity wearing armor, not just players
 - In Fabric, the respawn totem can now respawn any tamable entity, not just companions
 - The code has been rewritten to ensure loader parity
 

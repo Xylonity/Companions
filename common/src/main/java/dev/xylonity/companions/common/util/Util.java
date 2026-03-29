@@ -10,6 +10,7 @@ import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
@@ -197,14 +198,16 @@ public class Util {
     /**
      * Checks how many pieces of an armor set are equipped
      */
-    public static int hasFullSetOn(Player player, ArmorMaterials material) {
+    public static int hasFullSetOn(LivingEntity livingEntity, ArmorMaterials material) {
         int amount = 0;
-        for (ItemStack armorStack : player.getInventory().armor) {
+        for (ItemStack armorStack : livingEntity.getArmorSlots()) {
             if (!armorStack.isEmpty() && armorStack.getItem() instanceof ArmorItem armorItem) {
                 if (armorItem.getMaterial() == material) {
                     amount++;
                 }
+
             }
+
         }
 
         return amount;

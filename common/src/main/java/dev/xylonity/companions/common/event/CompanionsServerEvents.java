@@ -3,7 +3,11 @@ package dev.xylonity.companions.common.event;
 import dev.xylonity.companions.common.blockentity.RespawnTotemBlockEntity;
 import dev.xylonity.companions.common.entity.companion.*;
 import dev.xylonity.companions.common.entity.hostile.*;
+import dev.xylonity.companions.common.entity.projectile.PontiffFireRingProjectile;
 import dev.xylonity.companions.common.entity.summon.*;
+import dev.xylonity.companions.common.material.ArmorMaterials;
+import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
@@ -18,7 +22,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
@@ -82,6 +88,53 @@ public final class CompanionsServerEvents {
     @RegisterEvent
     public static void onEntityJoinLevelEvent(final ServerEntityJoinLevelEvent event) {
         CompanionsEntityTracker.ENTITIES.put(event.getEntity().getUUID(), new WeakReference<>(event.getEntity()));
+    }
+
+    @RegisterEvent
+    public static void onLivingHurt(final LivingHurtEvent event) {
+        final LivingEntity livingEntity = event.getEntity();
+
+        final float amount = event.getAmount();
+
+        final int amountHoly = Util.hasFullSetOn(livingEntity, ArmorMaterials.HOLY_ROBE);
+        final int amountMage = Util.hasFullSetOn(livingEntity, ArmorMaterials.MAGE);
+        final int amountBlood = Util.hasFullSetOn(livingEntity, ArmorMaterials.CRYSTALLIZED_BLOOD);
+
+        // Crystallized blood set reduction
+        if (amountBlood != 0 && livingEntity.getHealth() <= livingEntity.getMaxHealth() * CompanionsConfig.CRYSTALLIZED_BLOOD_SET_MIN_HEALTH) {
+            float reduction = (float) CompanionsConfig.CRYSTALLIZED_BLOOD_SET_REDUCTION * amountBlood;
+            event.setAmount(applyDamageRedution(amount, reduction));
+        }
+
+        // Magic set reduction
+        if (amountMage != 0 && event.getSource().is(DamageTypes.MAGIC)) {
+            float reduction = (float) CompanionsConfig.MAGE_SET_DAMAGE_REDUCTION * amountMage;
+            event.setAmount(applyDamageRedution(amount, reduction));
+        }
+
+        // Holy robe set reduction
+        if (amountHoly != 0) {
+            float reduction = (float) CompanionsConfig.HOLY_ROBE_DAMAGE_REDUCTION * amountHoly;
+            event.setAmount(applyDamageRedution(amount, reduction));
+
+            // Ocassionally summons a fire ring
+            if (livingEntity.getRandom().nextFloat() <= CompanionsConfig.HOLY_ROBE_FIRE_RING_SPAWN_CHANCE * amountHoly) {
+                if (!livingEntity.level().isClientSide && (event.getSource().getEntity() != null || event.getSource().is(DamageTypes.EXPLOSION))) {
+                    PontiffFireRingProjectile ring = CompanionsEntities.PONTIFF_FIRE_RING.get().create(livingEntity.level());
+                    if (ring != null) {
+                        ring.moveTo(livingEntity.position());
+                        ring.setOwner(livingEntity);
+                        livingEntity.level().addFreshEntity(ring);
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    private static float applyDamageRedution(float amount, float reduction) {
+        return amount * (1f - reduction);
     }
 
     @RegisterEvent
