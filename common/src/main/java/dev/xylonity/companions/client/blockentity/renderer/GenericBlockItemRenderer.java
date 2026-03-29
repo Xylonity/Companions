@@ -5,6 +5,7 @@ import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class GenericBlockItemRenderer extends GeoItemRenderer<GenericBlockItem> {
+
     public GenericBlockItemRenderer(String name) {
         super(new GenericBlockItemModel(name));
     }

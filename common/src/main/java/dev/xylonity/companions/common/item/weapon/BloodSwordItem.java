@@ -1,6 +1,5 @@
 package dev.xylonity.companions.common.item.weapon;
 
-import dev.xylonity.companions.client.item.renderer.GenericAxeItemRenderer;
 import dev.xylonity.companions.client.item.renderer.GenericSwordItemRenderer;
 import dev.xylonity.companions.common.entity.projectile.BloodSlashProjectile;
 import dev.xylonity.companions.common.entity.projectile.HolinessStartProjectile;

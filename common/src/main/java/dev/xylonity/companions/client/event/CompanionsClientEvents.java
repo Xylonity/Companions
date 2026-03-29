@@ -14,6 +14,7 @@ import dev.xylonity.knightlib.api.bossbar.BossBarBuilder;
 import dev.xylonity.knightlib.api.event.RegisterEvent;
 import dev.xylonity.knightlib.api.event.impl.client.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
 public class CompanionsClientEvents {
@@ -152,6 +153,14 @@ public class CompanionsClientEvents {
         event.register(CompanionsParticles.BLINK.get(), BlinkParticle.Provider::new);
         event.register(CompanionsParticles.LASER_SPARK.get(), IllagerGolemSparkParticle.Provider::new);
         event.register(CompanionsParticles.EMBER_POLE_EXPLOSION.get(), TeddyTransformationParticle.Provider::new);
+    }
+
+    @RegisterEvent
+    public static void registerAdditionalModels(final AdditionalModelsRegistrationEvent event) {
+        event.register(new ModelResourceLocation(Companions.MOD_ID, "crystallized_blood_axe_icon", "inventory"));
+        event.register(new ModelResourceLocation(Companions.MOD_ID, "crystallized_blood_scythe_icon", "inventory"));
+        event.register(new ModelResourceLocation(Companions.MOD_ID, "crystallized_blood_sword_icon", "inventory"));
+        event.register(new ModelResourceLocation(Companions.MOD_ID, "mage_staff_icon", "inventory"));
     }
 
     @RegisterEvent

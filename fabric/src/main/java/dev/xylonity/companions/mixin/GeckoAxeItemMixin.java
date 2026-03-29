@@ -4,6 +4,7 @@ import dev.xylonity.companions.common.item.gecko.GeckoArmorItem;
 import dev.xylonity.companions.common.item.gecko.GeckoAxeItem;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -40,15 +41,12 @@ public abstract class GeckoAxeItemMixin implements GeoItem {
     private void companions$createRenderer(Consumer<Object> consumer, CallbackInfo ci) {
         consumer.accept(new RenderProvider() {
 
-            private GeoArmorRenderer<GeckoArmorItem> renderer;
+            private BlockEntityWithoutLevelRenderer renderer;
 
             @Override
-            @SuppressWarnings("unchecked")
-            public HumanoidModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null)
-                    this.renderer = (GeoArmorRenderer<GeckoArmorItem>) createGeckoRenderer().get();
-
-                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+                    this.renderer = (BlockEntityWithoutLevelRenderer) createGeckoRenderer().get();
 
                 return this.renderer;
             }
