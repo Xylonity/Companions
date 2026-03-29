@@ -2,6 +2,7 @@ package dev.xylonity.companions.client.blockentity.model;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.block.AbstractTeslaBlock;
+import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;

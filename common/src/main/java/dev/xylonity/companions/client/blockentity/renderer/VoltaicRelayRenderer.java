@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
-public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEntity> implements ITeslaUtil {
+public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEntity> {
 
     public VoltaicRelayRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new VoltaicRelayModel());
@@ -24,18 +24,12 @@ public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEnti
     }
 
     public VoltaicRelayRenderer(BlockEntityRendererProvider.Context renderManager) {
-        this(renderManager, 8, ELECTRICAL_CHARGE_DURATION / 8);
+        this(renderManager, 8, ITeslaUtil.ELECTRICAL_CHARGE_DURATION / 8);
     }
 
     @Override
     protected void rotateBlock(Direction facing, PoseStack poseStack) {
         ;;
-    }
-
-    @Override
-    public void render(VoltaicRelayBlockEntity voltaicRelayBlockEntity, float v, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int i1) {
-        this.animatable = voltaicRelayBlockEntity;
-        defaultRender(poseStack, this.animatable, multiBufferSource, null, null, 0, i, i1);
     }
 
     @Override

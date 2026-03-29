@@ -3,6 +3,7 @@ package dev.xylonity.companions.compat.jei.category;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
 import dev.xylonity.companions.common.recipe.CroissantDragonArmorRecipe;
@@ -30,10 +31,10 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class CroissantDragonArmorRecipeCategory implements IRecipeCategory<CroissantDragonArmorRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(CompanionsFabric.MOD_ID, "croissant_dragon_armor_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "croissant_dragon_armor_interaction");
     public static final RecipeType<CroissantDragonArmorRecipe> TYPE = new RecipeType<>(UID, CroissantDragonArmorRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(CompanionsFabric.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
@@ -83,7 +84,7 @@ public final class CroissantDragonArmorRecipeCategory implements IRecipeCategory
 
     private CroissantDragonEntity getOrCreateEntity() {
         if (cachedEntity == null) {
-            cachedEntity = new CroissantDragonEntity(CompanionsEntities.CROISSANT_DRAGON, Minecraft.getInstance().level);
+            cachedEntity = new CroissantDragonEntity(CompanionsEntities.CROISSANT_DRAGON.get(), Minecraft.getInstance().level);
             cachedEntity.setMilkAmount(3);
             cachedEntity.setNoAi(true);
         }
@@ -93,7 +94,7 @@ public final class CroissantDragonArmorRecipeCategory implements IRecipeCategory
 
     private CroissantDragonEntity getOrCreateEntity2() {
         if (cachedEntity2 == null) {
-            cachedEntity2 = new CroissantDragonEntity(CompanionsEntities.CROISSANT_DRAGON, Minecraft.getInstance().level);
+            cachedEntity2 = new CroissantDragonEntity(CompanionsEntities.CROISSANT_DRAGON.get(), Minecraft.getInstance().level);
             cachedEntity2.setMilkAmount(3);
 
             String armorName;

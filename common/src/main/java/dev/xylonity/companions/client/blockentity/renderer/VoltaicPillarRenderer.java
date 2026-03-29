@@ -13,7 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
-public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEntity> implements ITeslaUtil {
+public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEntity> {
 
     public VoltaicPillarRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new VoltaicPillarModel());
@@ -21,18 +21,12 @@ public class VoltaicPillarRenderer extends GeoBlockRenderer<VoltaicPillarBlockEn
     }
 
     public VoltaicPillarRenderer(BlockEntityRendererProvider.Context renderManager) {
-        this(renderManager, 4, ELECTRICAL_CHARGE_DURATION / 4);
+        this(renderManager, 4, ITeslaUtil.ELECTRICAL_CHARGE_DURATION / 4);
     }
 
     @Override
     protected void rotateBlock(Direction facing, PoseStack poseStack) {
         ;;
-    }
-
-    @Override
-    public void render(VoltaicPillarBlockEntity voltaicPillarBlockEntity, float v, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int i1) {
-        this.animatable = voltaicPillarBlockEntity;
-        defaultRender(poseStack, this.animatable, multiBufferSource, null, null, 0, i, i1);
     }
 
     @Override

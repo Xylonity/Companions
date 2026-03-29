@@ -3,6 +3,7 @@ package dev.xylonity.companions.compat.jei.category;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.blockentity.RespawnTotemBlockEntity;
 import dev.xylonity.companions.common.entity.projectile.RespawnTotemRingProjectile;
@@ -35,9 +36,9 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class RespawnTotemRecipeCategory implements IRecipeCategory<HourglassRecipe> {
 
-    public static final ResourceLocation UID = new ResourceLocation(CompanionsFabric.MOD_ID, "respawn_totem_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "respawn_totem_interaction");
     public static final RecipeType<HourglassRecipe> TYPE = new RecipeType<>(UID, HourglassRecipe.class);
-    public static final ResourceLocation SHADOW = new ResourceLocation(CompanionsFabric.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private RespawnTotemBlockEntity cachedBlockEntity;
     private RespawnTotemRingProjectile cachedEntity;
@@ -95,7 +96,7 @@ public class RespawnTotemRecipeCategory implements IRecipeCategory<HourglassReci
         if (cachedEntity == null) {
             Minecraft mc = Minecraft.getInstance();
             if (mc.level != null) {
-                cachedEntity = new RespawnTotemRingProjectile(CompanionsEntities.RESPAWN_TOTEM_RING_PROJECTILE, mc.level);
+                cachedEntity = new RespawnTotemRingProjectile(CompanionsEntities.RESPAWN_TOTEM_RING_PROJECTILE.get(), mc.level);
                 cachedEntity.setNoGravity(true);
             }
         }

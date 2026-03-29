@@ -23,9 +23,6 @@
         ],
         "jei_mod_plugin": [
             "dev.xylonity.companions.compat.jei.CompanionsPlugin"
-        ],
-        "fabric-datagen": [
-            "dev.xylonity.companions.datagen.CompanionsLootModifierGenerator"
         ]
     },
     "mixins": [
@@ -37,7 +34,7 @@
         "fabric": "*",
         "minecraft": "~${minecraft_version}",
         "java": ">=17",
-        "knightlib": ">=1.4.0"
+        "knightlib": "*"
     },
     "suggests": {
         "another-mod": "*"

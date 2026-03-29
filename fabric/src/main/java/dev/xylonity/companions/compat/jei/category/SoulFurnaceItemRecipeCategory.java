@@ -3,6 +3,7 @@ package dev.xylonity.companions.compat.jei.category;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
 import dev.xylonity.companions.common.recipe.SoulFurnaceItemRecipe;
@@ -31,10 +32,10 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public final class SoulFurnaceItemRecipeCategory implements IRecipeCategory<SoulFurnaceItemRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(CompanionsFabric.MOD_ID, "soul_furnace_item_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "soul_furnace_item_interaction");
     public static final RecipeType<SoulFurnaceItemRecipe> TYPE = new RecipeType<>(UID, SoulFurnaceItemRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(CompanionsFabric.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 

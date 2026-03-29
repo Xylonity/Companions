@@ -49,7 +49,7 @@ public class CakeCreamTriggerProjectile extends GenericTriggerProjectile {
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         if (pCompound.contains("ArmorName")) {
             setArmorName(pCompound.getString("ArmorName"));
@@ -57,7 +57,7 @@ public class CakeCreamTriggerProjectile extends GenericTriggerProjectile {
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putString("ArmorName", getArmorName());
     }

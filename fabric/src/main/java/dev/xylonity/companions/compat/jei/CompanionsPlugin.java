@@ -1,5 +1,6 @@
 package dev.xylonity.companions.compat.jei;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.recipe.*;
 import dev.xylonity.companions.compat.jei.category.*;
@@ -24,7 +25,7 @@ import java.util.List;
 @JeiPlugin
 public final class CompanionsPlugin implements IModPlugin {
 
-    private static final ResourceLocation UID = new ResourceLocation(CompanionsFabric.MOD_ID, "jei_plugin");
+    private static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "jei_plugin");
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -59,7 +60,7 @@ public final class CompanionsPlugin implements IModPlugin {
         if (lvl != null) {
             List<SoulFurnaceItemRecipe> itemRecipes = new ArrayList<>();
             List<SoulFurnaceEntityRecipe> entityRecipes = new ArrayList<>();
-            for (Recipe<?> base : lvl.getRecipeManager().getAllRecipesFor(CompanionsRecipeTypes.SOUL_FURNACE_TYPE)) {
+            for (Recipe<?> base : lvl.getRecipeManager().getAllRecipesFor(CompanionsRecipeTypes.SOUL_FURNACE_TYPE.get())) {
                 if (!(base instanceof SoulFurnaceRecipe r)) continue;
 
                 ItemStack[] inputs = r.input().getItems();

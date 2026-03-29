@@ -4,7 +4,9 @@ import dev.xylonity.companions.common.blockentity.RespawnTotemBlockEntity;
 import dev.xylonity.companions.common.entity.companion.*;
 import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.summon.*;
+import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
+import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.knightlib.api.entity.data.PersistentData;
 import dev.xylonity.knightlib.api.event.RegisterEvent;
 import dev.xylonity.knightlib.api.event.impl.server.*;
@@ -20,7 +22,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.lang.ref.WeakReference;
 import java.util.UUID;
@@ -72,6 +82,46 @@ public final class CompanionsServerEvents {
     @RegisterEvent
     public static void onEntityJoinLevelEvent(final ServerEntityJoinLevelEvent event) {
         CompanionsEntityTracker.ENTITIES.put(event.getEntity().getUUID(), new WeakReference<>(event.getEntity()));
+    }
+
+    @RegisterEvent
+    public static void onLootTableModify(final LootTableModifyEvent event) {
+        if (event.isChestTable() && !event.getId().getNamespace().equals("minecraft")) {
+            float chance;
+            NumberProvider count;
+            Item coin;
+            String path = event.getId().getPath();
+            if (path.contains("nether")) {
+                chance = 0.45f;
+                count = UniformGenerator.between(1, 3);
+                coin = CompanionsBlocks.NETHER_COIN.get().asItem();
+            }
+            else if (path.contains("end")) {
+                chance = 0.8f;
+                count = ConstantValue.exactly(1);
+                coin = CompanionsBlocks.END_COIN.get().asItem();
+            }
+            else {
+                chance = 0.075f;
+                count = UniformGenerator.between(1, 5);
+                coin = CompanionsBlocks.COPPER_COIN.get().asItem();
+            }
+
+            final LootPool.Builder pool = LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1))
+                    .add(LootItem.lootTableItem(coin)
+                            .apply(SetItemCountFunction.setCount(count))
+                            .when(LootItemRandomChanceCondition.randomChance(chance)))
+                    .add(LootItem.lootTableItem(CompanionsItems.BOOK_BLACK_HOLE.get())
+                            .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+                            .when(LootItemRandomChanceCondition.randomChance(0.045f)))
+                    .add(LootItem.lootTableItem(CompanionsItems.BOOK_MAGIC_RAY.get())
+                            .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+                            .when(LootItemRandomChanceCondition.randomChance(0.045f)));
+
+            event.addPool(pool);
+        }
+
     }
 
     @RegisterEvent

@@ -3,6 +3,7 @@ package dev.xylonity.companions.compat.jei.category;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.blockentity.ShadeMawAltarBlockEntity;
 import dev.xylonity.companions.common.entity.projectile.ShadeAltarUpgradeHaloProjectile;
@@ -36,9 +37,9 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecipe> {
 
-    public static final ResourceLocation UID = new ResourceLocation(CompanionsFabric.MOD_ID, "shade_altar_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_altar_interaction");
     public static final RecipeType<ShadeAltarRecipe> TYPE = new RecipeType<>(UID, ShadeAltarRecipe.class);
-    public static final ResourceLocation SHADOW = new ResourceLocation(CompanionsFabric.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private ShadeMawAltarBlockEntity cachedBlockEntity;
     private ShadeAltarUpgradeHaloProjectile cachedEntity;
@@ -98,7 +99,7 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
         if (cachedEntity == null && spawnCooldown == 0) {
             Minecraft mc = Minecraft.getInstance();
             if (mc.level != null) {
-                cachedEntity = new ShadeAltarUpgradeHaloProjectile(CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO, mc.level);
+                cachedEntity = new ShadeAltarUpgradeHaloProjectile(CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.get(), mc.level);
                 cachedEntity.setNoGravity(true);
                 cachedEntity.tickCount = 0;
             }

@@ -3,6 +3,7 @@ package dev.xylonity.companions.compat.jei.category;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.entity.companion.PuppetEntity;
 import dev.xylonity.companions.common.entity.companion.PuppetGloveEntity;
@@ -31,10 +32,10 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(CompanionsFabric.MOD_ID, "puppet_interaction");
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "puppet_interaction");
     public static final RecipeType<EmptyPuppetRecipe> TYPE = new RecipeType<>(UID, EmptyPuppetRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(CompanionsFabric.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
@@ -81,7 +82,7 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
 
     private PuppetGloveEntity getOrCreateEntity() {
         if (cachedEntity == null) {
-            cachedEntity = new PuppetGloveEntity(CompanionsEntities.PUPPET_GLOVE, Minecraft.getInstance().level);
+            cachedEntity = new PuppetGloveEntity(CompanionsEntities.PUPPET_GLOVE.get(), Minecraft.getInstance().level);
             cachedEntity.setNoAi(true);
         }
 
@@ -90,7 +91,7 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
 
     private PuppetEntity getOrCreateEntity2() {
         if (cachedEntity2 == null) {
-            cachedEntity2 = new PuppetEntity(CompanionsEntities.PUPPET, Minecraft.getInstance().level);
+            cachedEntity2 = new PuppetEntity(CompanionsEntities.PUPPET.get(), Minecraft.getInstance().level);
             cachedEntity2.setNoAi(true);
         }
 

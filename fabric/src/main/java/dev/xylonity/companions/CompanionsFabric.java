@@ -1,10 +1,11 @@
 package dev.xylonity.companions;
 
 import dev.xylonity.companions.common.CommonProxy;
+import dev.xylonity.companions.common.event.CompanionsServerEvents;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.datagen.CompanionsLootModifierGenerator;
 import dev.xylonity.knightlib.KnightLib;
 import dev.xylonity.knightlib.api.config.ConfigComposer;
+import dev.xylonity.knightlib.api.event.KnightLibEvents;
 import net.fabricmc.api.ModInitializer;
 
 public class CompanionsFabric implements ModInitializer {
@@ -17,7 +18,7 @@ public class CompanionsFabric implements ModInitializer {
 
         ConfigComposer.registerConfig(Companions.MOD_ID, CompanionsConfig.class);
 
-        CompanionsLootModifierGenerator.init();
+        KnightLibEvents.SERVER.register(CompanionsServerEvents.class);
 
         Companions.init();
     }

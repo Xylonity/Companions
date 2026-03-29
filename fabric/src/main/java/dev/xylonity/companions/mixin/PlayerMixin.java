@@ -46,7 +46,7 @@ public class PlayerMixin {
             // Ocassionally summon fire ring
             if (self.getRandom().nextFloat() <= CompanionsConfig.HOLY_ROBE_FIRE_RING_SPAWN_CHANCE * amountHoly) {
                 if (!self.level().isClientSide && (pSource.getEntity() != null || pSource.is(DamageTypes.EXPLOSION))) {
-                    PontiffFireRingProjectile ring = CompanionsEntities.PONTIFF_FIRE_RING.create(self.level());
+                    PontiffFireRingProjectile ring = CompanionsEntities.PONTIFF_FIRE_RING.get().create(self.level());
                     if (ring != null) {
                         ring.moveTo(self.position());
                         ring.setOwner(self);
