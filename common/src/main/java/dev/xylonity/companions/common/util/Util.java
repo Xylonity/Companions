@@ -3,7 +3,7 @@ package dev.xylonity.companions.common.util;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
 import dev.xylonity.companions.common.material.ArmorMaterials;
-import dev.xylonity.companions.mixin.CompanionsLevelAccessor;
+import dev.xylonity.companions.mixin.LevelAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.FloatTag;
@@ -13,7 +13,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
@@ -167,7 +166,7 @@ public class Util {
                 result.add(ownerUuid);
 
                 Entity owner = current.level().getPlayerByUUID(ownerUuid);
-                if (owner == null && current.level() instanceof CompanionsLevelAccessor acc) {
+                if (owner == null && current.level() instanceof LevelAccessor acc) {
                     owner = acc.companions$getEntities().get(ownerUuid);
                 }
                 collectOwners(owner, result, visited);

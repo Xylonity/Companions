@@ -5,10 +5,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Projectile.class)
-public interface CompanionsProjectileAccessor {
+public interface ProjectileAccessor {
+
     @Accessor("leftOwner")
-    boolean getLeftOwner();
+    boolean companions$getLeftOwner();
 
     @Accessor("leftOwner")
     void setLeftOwner(boolean leftOwner);
+
 }

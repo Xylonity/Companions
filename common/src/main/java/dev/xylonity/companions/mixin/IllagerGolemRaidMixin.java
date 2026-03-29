@@ -1,6 +1,5 @@
 package dev.xylonity.companions.mixin;
 
-import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.raid.Raid;

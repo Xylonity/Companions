@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.mixin.ProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -42,11 +43,12 @@ public class FrogLevitateProjectile extends FrogHealProjectile {
 
         if (!pTarget.canBeHitByProjectile()) {
             return false;
-        } else {
-            Entity entity = this.getOwner();
-            //return entity == null || ((CompanionsProjectileAccessor) this).getLeftOwner() || !entity.isPassengerOfSameVehicle(pTarget);
-            return entity == null || !entity.isPassengerOfSameVehicle(pTarget);
         }
+        else {
+            Entity entity = this.getOwner();
+            return entity == null || ((ProjectileAccessor) this).companions$getLeftOwner() || !entity.isPassengerOfSameVehicle(pTarget);
+        }
+
     }
 
     @Override
@@ -54,6 +56,7 @@ public class FrogLevitateProjectile extends FrogHealProjectile {
         if (tickCount % 8 == 0) {
             level().addParticle(ParticleTypes.END_ROD, getX(), getY() + getBbHeight() * 0.5, getZ(), 0, 0, 0);
         }
+
     }
 
     @Override

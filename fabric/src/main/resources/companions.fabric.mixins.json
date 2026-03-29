@@ -13,15 +13,11 @@
         "GeckoSwordItemMixin"
     ],
     "mixins": [
-        "CompanionsProjectileAccessor",
-        "LivingEntityMixin",
-        "MobMixin",
-        "PlayerMixin"
     ],
     "server": [
     ],
     "injectors": {
         "defaultRequire": 1
     }
-  }
+}
   

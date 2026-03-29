@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @SuppressWarnings("all")
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements IPhantomEffectEntity {
+
     @Unique
     private static final EntityDataAccessor<Boolean> companions$PHANTOM_FLAG;
 
@@ -23,12 +24,12 @@ public abstract class LivingEntityMixin implements IPhantomEffectEntity {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void syncPhantomFlag(CallbackInfo ci) {
-        boolean curr = ((LivingEntity)(Object) this).hasEffect(CompanionsEffects.PHANTOM.get());
-
-        if (curr != companions$lastPhantomState) {
-            ((LivingEntity) (Object) this).getEntityData().set(companions$PHANTOM_FLAG, curr);
-            companions$lastPhantomState = curr;
+        final boolean hasPhantomEffect = ((LivingEntity)(Object) this).hasEffect(CompanionsEffects.PHANTOM.get());
+        if (hasPhantomEffect != companions$lastPhantomState) {
+            ((LivingEntity) (Object) this).getEntityData().set(companions$PHANTOM_FLAG, hasPhantomEffect);
+            companions$lastPhantomState = hasPhantomEffect;
         }
+
     }
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))

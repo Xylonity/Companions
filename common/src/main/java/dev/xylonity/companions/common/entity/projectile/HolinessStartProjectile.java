@@ -4,6 +4,7 @@ import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.mixin.ProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.nbt.CompoundTag;
@@ -69,8 +70,7 @@ public class HolinessStartProjectile extends BaseProjectile {
             return false;
         } else {
             Entity entity = this.getOwner();
-            //return entity == null || ((CompanionsProjectileAccessor) this).getLeftOwner() || !entity.isPassengerOfSameVehicle(pTarget);
-            return entity == null || !entity.isPassengerOfSameVehicle(pTarget);
+            return entity == null || ((ProjectileAccessor) this).companions$getLeftOwner() || !entity.isPassengerOfSameVehicle(pTarget);
         }
     }
 
