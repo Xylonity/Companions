@@ -65,7 +65,7 @@ public class CroissantEggBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.CROISSANT_EGG.create(pos, state);
+        return CompanionsBlockEntities.CROISSANT_EGG.get().create(pos, state);
     }
 
     @Nullable

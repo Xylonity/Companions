@@ -9,7 +9,7 @@ import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal
 import dev.xylonity.companions.common.util.interfaces.IFrogJumpUtil;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import dev.xylonity.knightlib.KnightLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -51,7 +51,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class CorneliusEntity extends CompanionEntity implements ContainerListener, IFrogJumpUtil {
+public class CorneliusEntity extends CompanionEntity implements ContainerListener, IFrogJumpUtil, MenuProvider {
 
     public SimpleContainer inventory;
 
@@ -221,27 +221,16 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     }
 
     @Override
+    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return new CorneliusContainerMenu(i, inventory, this);
+    }
+
+    @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!level().isClientSide) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.openMenu(new ExtendedScreenHandlerFactory() {
-                            @Override
-                            public void writeScreenOpeningData(ServerPlayer p, FriendlyByteBuf buf) {
-                                buf.writeInt(CorneliusEntity.this.getId());
-                            }
-
-                            @Override
-                            public @NotNull Component getDisplayName() {
-                                return CorneliusEntity.this.getName();
-                            }
-
-                            @Override
-                            public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                                return new CorneliusContainerMenu(i, inventory, CorneliusEntity.this);
-                            }
-                        }
-                    );
+                    KnightLib.PLATFORM.openMenu(serverPlayer, this, friendlyByteBuf -> friendlyByteBuf.writeInt(getId()));
                 }
 
                 this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
@@ -318,15 +307,20 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
         if (this.getMainAction() == 0) {
             event.setAnimation(getSitVariation() == 0 ? SIT : SIT2);
-        } else if (getAttackType() == 1) {
+        }
+        else if (getAttackType() == 1) {
             event.setAnimation(SUMMON);
-        } else if (getAttackType() == 2) {
+        }
+        else if (getAttackType() == 2) {
             event.setAnimation(SUMMON2);
-        } else if (getAttackType() == 3) {
+        }
+        else if (getAttackType() == 3) {
             event.setAnimation(SUMMON3);
-        } else if (getCycleCount() >= 0) {
+        }
+        else if (getCycleCount() >= 0) {
             event.setAnimation(WALK);
-        } else {
+        }
+        else {
             event.setAnimation(IDLE);
         }
 

@@ -1,7 +1,9 @@
 package dev.xylonity.companions.common.effect;
 
 import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.common.entity.projectile.FireMarkProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +20,7 @@ public class FireMarkEffect extends MobEffect {
 
     public void addAttributeModifiers(@NotNull LivingEntity entity, @NotNull AttributeMap pAttributeMap, int pAmplifier) {
         super.addAttributeModifiers(entity, pAttributeMap, pAmplifier);
-        Projectile fireMark = (Projectile) Companions.PLATFORM.getFireMarkProjectile().create(entity.level());
+        final FireMarkProjectile fireMark = CompanionsEntities.FIRE_MARK_PROJECTILE.get().create(entity.level());
         if (fireMark != null) {
             fireMark.moveTo(entity.getX(), entity.getY(), entity.getZ());
             fireMark.setOwner(entity);

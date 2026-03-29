@@ -1,10 +1,9 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.mixin.CompanionsProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.nbt.CompoundTag;
@@ -70,7 +69,8 @@ public class HolinessStartProjectile extends BaseProjectile {
             return false;
         } else {
             Entity entity = this.getOwner();
-            return entity == null || ((CompanionsProjectileAccessor) this).getLeftOwner() || !entity.isPassengerOfSameVehicle(pTarget);
+            //return entity == null || ((CompanionsProjectileAccessor) this).getLeftOwner() || !entity.isPassengerOfSameVehicle(pTarget);
+            return entity == null || !entity.isPassengerOfSameVehicle(pTarget);
         }
     }
 
@@ -134,7 +134,7 @@ public class HolinessStartProjectile extends BaseProjectile {
         if (this.onGround()) discard();
 
         if (level().isClientSide && (tickCount % 20 == 0 || tickCount == 1)) {
-            CompanionsFabric.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), isRed() ? 204/255f : 25/255f, isRed() ? 50/255f : 139/255f, isRed() ? 50/255f : 86/255f, 0, 0.35f);
+            Companions.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), isRed() ? 204/255f : 25/255f, isRed() ? 50/255f : 139/255f, isRed() ? 50/255f : 86/255f, 0, 0.35f);
         }
 
     }
@@ -149,7 +149,7 @@ public class HolinessStartProjectile extends BaseProjectile {
             }
         } else {
             for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                CompanionsFabric.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+                Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
             }
         }
 
@@ -157,12 +157,12 @@ public class HolinessStartProjectile extends BaseProjectile {
     }
 
     private void redExplosion() {
-        RedStarExplosion explosion = CompanionsEntities.RED_STAR_EXPLOSION.create(level());
+        RedStarExplosion explosion = CompanionsEntities.RED_STAR_EXPLOSION.get().create(level());
         if (explosion != null) {
             explosion.moveTo(position());
             level().addFreshEntity(explosion);
         }
-        RedStarExplosionCenter explosion2 = CompanionsEntities.RED_STAR_EXPLOSION_CENTER.create(level());
+        RedStarExplosionCenter explosion2 = CompanionsEntities.RED_STAR_EXPLOSION_CENTER.get().create(level());
         if (explosion2 != null) {
             explosion2.moveTo(position());
             level().addFreshEntity(explosion2);
@@ -172,12 +172,12 @@ public class HolinessStartProjectile extends BaseProjectile {
     }
 
     private void blueExplosion() {
-        BlueStarExplosion explosion = CompanionsEntities.BLUE_STAR_EXPLOSION.create(level());
+        BlueStarExplosion explosion = CompanionsEntities.BLUE_STAR_EXPLOSION.get().create(level());
         if (explosion != null) {
             explosion.moveTo(position());
             level().addFreshEntity(explosion);
         }
-        BlueStarExplosionCenter explosion2 = CompanionsEntities.BLUE_STAR_EXPLOSION_CENTER.create(level());
+        BlueStarExplosionCenter explosion2 = CompanionsEntities.BLUE_STAR_EXPLOSION_CENTER.get().create(level());
         if (explosion2 != null) {
             explosion2.moveTo(position());
             level().addFreshEntity(explosion2);

@@ -3,7 +3,12 @@ package dev.xylonity.companions.config;
 import dev.xylonity.knightlib.api.config.AutoConfig;
 import dev.xylonity.knightlib.api.config.ConfigEntry;
 
-@AutoConfig(file = "companions")
+@AutoConfig(
+        file = "companions",
+        title = "Companions! Common Config",
+        description = "Core config of the Companions! mod",
+        accentColor = 0xFF9932CC
+)
 public final class CompanionsConfig {
 
     @ConfigEntry(

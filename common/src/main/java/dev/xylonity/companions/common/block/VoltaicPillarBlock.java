@@ -49,7 +49,7 @@ public class VoltaicPillarBlock extends AbstractTeslaBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.VOLTAIC_PILLAR.create(pos, state);
+        return CompanionsBlockEntities.VOLTAIC_PILLAR.get().create(pos, state);
     }
 
     @Nullable

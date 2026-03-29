@@ -58,7 +58,7 @@ public class ShadeSwordAltarBlock extends AbstractShadeAltarBlock implements Ent
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.SHADE_SWORD_ALTAR.create(pos, state);
+        return CompanionsBlockEntities.SHADE_SWORD_ALTAR.get().create(pos, state);
     }
 
     @Nullable

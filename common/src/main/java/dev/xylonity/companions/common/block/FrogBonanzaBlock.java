@@ -182,7 +182,7 @@ public class FrogBonanzaBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? CompanionsBlockEntities.FROG_BONANZA.create(pos, state) : null;
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? CompanionsBlockEntities.FROG_BONANZA.get().create(pos, state) : null;
     }
 
     @Nullable

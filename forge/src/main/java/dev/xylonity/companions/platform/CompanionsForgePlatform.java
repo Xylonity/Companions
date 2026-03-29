@@ -4,7 +4,7 @@ import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.common.block.*;
 import dev.xylonity.companions.common.item.*;
 import dev.xylonity.companions.common.item.armor.*;
-import dev.xylonity.companions.common.item.generic.*;
+import dev.xylonity.companions.common.item.gecko.*;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.companions.common.item.book.books.*;
@@ -55,7 +55,7 @@ public class CompanionsForgePlatform implements CompanionsPlatform {
                 return (Supplier<T>) registerItem(id, () -> new NeedleItem(properties));
             }
             case GENERIC -> {
-                return (Supplier<T>) registerItem(id, () -> new GenericGeckoItem(properties, id));
+                return (Supplier<T>) registerItem(id, () -> new GeckoItem(properties, id));
             }
             default -> // SHADOW_BELL
             {

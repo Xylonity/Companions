@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import net.minecraft.world.entity.EntityType;
@@ -51,7 +51,7 @@ public class LaserRingProjectile extends BaseProjectile {
         }
 
         if (level().isClientSide && new Random().nextFloat() < 0.3f) {
-            CompanionsFabric.PROXY.spawnLaserRingElectricArc(this, level(), 7);
+            Companions.PROXY.spawnLaserRingElectricArc(this, level(), 7);
         }
 
     }

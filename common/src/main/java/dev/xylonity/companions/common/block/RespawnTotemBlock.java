@@ -135,13 +135,13 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
 
         LivingEntity entity = null;
         if (item == CompanionsItems.RELIC_GOLD.get()) {
-            entity = CompanionsEntities.MANKH.create(pLevel);
+            entity = CompanionsEntities.MANKH.get().create(pLevel);
         }
         else if (item == CompanionsItems.OLD_CLOTH.get()) {
-            entity = CompanionsEntities.CLOAK.create(pLevel);
+            entity = CompanionsEntities.CLOAK.get().create(pLevel);
         }
         else if (item == Items.NETHER_STAR) {
-            entity = CompanionsEntities.SACRED_PONTIFF.create(pLevel);
+            entity = CompanionsEntities.SACRED_PONTIFF.get().create(pLevel);
         }
 
         if (entity != null) {
@@ -250,7 +250,7 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? CompanionsBlockEntities.RESPAWN_TOTEM.create(pos, state) : null;
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? CompanionsBlockEntities.RESPAWN_TOTEM.get().create(pos, state) : null;
     }
 
     @Nullable

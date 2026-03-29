@@ -1,6 +1,8 @@
 package dev.xylonity.companions.common.item.weapon;
 
-import dev.xylonity.companions.common.item.generic.GenericGeckoPickaxeItem;
+import dev.xylonity.companions.client.item.renderer.GenericAxeItemRenderer;
+import dev.xylonity.companions.client.item.renderer.GenericPickaxeItemRenderer;
+import dev.xylonity.companions.common.item.gecko.GeckoPickaxeItem;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.ChatFormatting;
@@ -13,11 +15,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-public class BloodScytheItem extends GenericGeckoPickaxeItem {
+public class BloodScytheItem extends GeckoPickaxeItem {
 
     public BloodScytheItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
         super(properties, resourceKey, material, extraDamage, extraSpeed);
+    }
+
+    @Override
+    protected Supplier<Object> createGeckoRenderer() {
+        return () -> new GenericPickaxeItemRenderer(resourceKey);
     }
 
     @Override

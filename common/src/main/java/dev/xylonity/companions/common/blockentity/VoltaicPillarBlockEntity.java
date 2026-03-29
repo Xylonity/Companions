@@ -27,7 +27,7 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
     private boolean hasBlockOnTop;
 
     public VoltaicPillarBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.VOLTAIC_PILLAR, pos, state);
+        super(CompanionsBlockEntities.VOLTAIC_PILLAR.get(), pos, state);
         this.pulseBehaviour = new PillarPulseBehaviour();
         this.isTop = false;
         this.hasBlockOnTop = false;

@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -124,7 +124,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
                 float r = (190 + level().random.nextInt(30)) / 255f;
                 float g = (240 + level().random.nextInt(10)) / 255f;
                 float b = (247 + level().random.nextInt(5)) / 255f;
-                CompanionsFabric.PROXY.spawnBaseProjectileTrail(this, 0, getBbHeight() * 0.5f, r, g, b);
+                Companions.PROXY.spawnBaseProjectileTrail(this, 0, getBbHeight() * 0.5f, r, g, b);
             }
         }
 

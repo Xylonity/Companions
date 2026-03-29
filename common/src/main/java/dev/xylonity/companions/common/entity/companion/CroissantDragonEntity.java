@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.companion;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.croissant.CroissantDragonAttackGoal;
@@ -102,7 +102,7 @@ public class CroissantDragonEntity extends CompanionEntity {
     public void tick() {
         super.tick();
 
-        if (isAttacking()) CompanionsFabric.PROXY.updateCreamParticle(getStoredViewVector());
+        if (isAttacking()) Companions.PROXY.updateCreamParticle(getStoredViewVector());
 
         if (!this.level().isClientSide) {
             if (getEatenAmount() > 0 && this.tickCount >= nextEatenRecover) {

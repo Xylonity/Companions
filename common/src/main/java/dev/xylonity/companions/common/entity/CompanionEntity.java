@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class CompanionEntity extends TamableAnimal implements GeoEntity {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     // 0 sitting, 1 following, 2 wander, 3 work

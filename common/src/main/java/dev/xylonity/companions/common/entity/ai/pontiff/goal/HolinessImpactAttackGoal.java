@@ -116,7 +116,7 @@ public class HolinessImpactAttackGoal extends AbstractSacredPontiffAttackGoal {
                 double x = randPos.getX() + pontiff.getRandom().nextDouble();
                 double z = randPos.getZ() + pontiff.getRandom().nextDouble();
 
-                FireGeiserProjectile geiser = CompanionsEntities.FIRE_GEISER_PROJECTILE.create(serverLevel);
+                FireGeiserProjectile geiser = CompanionsEntities.FIRE_GEISER_PROJECTILE.get().create(serverLevel);
                 if (geiser != null && serverLevel.random.nextFloat() < 0.35f) {
                     geiser.moveTo(x, randPos.getY() + 0.75, z, 0f, 0f);
                     geiser.setOwner(pontiff);

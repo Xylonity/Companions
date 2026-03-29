@@ -77,7 +77,7 @@ public class TeslaCoilBlock extends AbstractTeslaBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.TESLA_COIL.create(pos, state);
+        return CompanionsBlockEntities.TESLA_COIL.get().create(pos, state);
     }
 
     @Nullable

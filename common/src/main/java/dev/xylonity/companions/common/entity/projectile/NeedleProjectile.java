@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -81,7 +81,7 @@ public class NeedleProjectile extends HolinessNaginataProjectile implements GeoE
     protected void doShake() {
         if (level().isClientSide) {
             for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                CompanionsFabric.PROXY.shakePlayerCamera(player, 5, 0.02f, 0.02f, 0.02f, 10);
+                Companions.PROXY.shakePlayerCamera(player, 5, 0.02f, 0.02f, 0.02f, 10);
             }
         }
 

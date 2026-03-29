@@ -3,12 +3,10 @@ package dev.xylonity.companions.common.block;
 import dev.xylonity.companions.common.blockentity.SoulFurnaceBlockEntity;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import dev.xylonity.knightlib.KnightLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,9 +14,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -38,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SoulFurnaceBlock extends Block implements EntityBlock {
+
     private static final VoxelShape SHAPE_N = Block.box(0, 0, 0, 16, 16, 16);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
@@ -62,24 +59,12 @@ public class SoulFurnaceBlock extends Block implements EntityBlock {
     }
 
     protected void openContainer(Level pLevel, BlockPos pPos, Player pPlayer) {
-        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-        if (blockEntity instanceof SoulFurnaceBlockEntity furnace) {
-            pPlayer.openMenu(new ExtendedScreenHandlerFactory() {
-                @Override
-                public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf friendlyByteBuf) {
-                    friendlyByteBuf.writeBlockPos(pPos);
-                }
+        if (!pLevel.isClientSide && pPlayer instanceof ServerPlayer serverPlayer) {
+            BlockEntity be = pLevel.getBlockEntity(pPos);
+            if (be instanceof SoulFurnaceBlockEntity furnaceBlockEntity) {
+                KnightLib.PLATFORM.openMenu(serverPlayer, furnaceBlockEntity, buf -> buf.writeBlockPos(pPos));
+            }
 
-                @Override
-                public @NotNull Component getDisplayName() {
-                    return SoulFurnaceBlock.this.getName();
-                }
-
-                @Override
-                public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                    return furnace.createMenu(i, inventory, player);
-                }
-            });
         }
 
     }
@@ -121,7 +106,7 @@ public class SoulFurnaceBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.SOUL_FURNACE.create(pos, state);
+        return CompanionsBlockEntities.SOUL_FURNACE.get().create(pos, state);
     }
 
     @Nullable

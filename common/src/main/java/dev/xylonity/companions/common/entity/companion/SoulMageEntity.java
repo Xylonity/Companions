@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity.companion;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
+import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import dev.xylonity.companions.common.container.SoulMageContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
@@ -11,7 +12,7 @@ import dev.xylonity.companions.common.entity.ai.mage.goal.*;
 import dev.xylonity.companions.common.entity.summon.LivingCandleEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import dev.xylonity.knightlib.KnightLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -54,8 +55,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class SoulMageEntity extends CompanionEntity implements ContainerListener {
-    public SimpleContainer inventory;
+public class SoulMageEntity extends CompanionEntity implements ContainerListener, MenuProvider {
 
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
@@ -71,6 +71,8 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
 
     public static final int MAX_CANDLES_COUNT = 6;
     public List<LivingCandleEntity> candles = new LinkedList<>();
+
+    public SimpleContainer inventory;
 
     public static final Map<String, int[]> ATTACK_COLORS = Map.of(
             "MAGIC_RAY", new int[]{173, 216, 230},
@@ -219,30 +221,18 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
     }
 
     @Override
+    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return new SoulMageContainerMenu(i, inventory, this);
+    }
+
+    @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
 
         if (level().isClientSide) return InteractionResult.SUCCESS;
 
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-            if (!level().isClientSide) {
-                player.openMenu(new ExtendedScreenHandlerFactory() {
-                        @Override
-                        public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                            return new SoulMageContainerMenu(i, inventory, SoulMageEntity.this);
-                        }
-
-                        @Override
-                        public Component getDisplayName() {
-                            return SoulMageEntity.this.getName();
-                        }
-
-                        @Override
-                        public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf buf) {
-                            buf.writeInt(SoulMageEntity.this.getId());
-                        }
-                    }
-                );
-
+            if (!level().isClientSide && player instanceof ServerPlayer serverPlayer) {
+                KnightLib.PLATFORM.openMenu(serverPlayer, this, friendlyByteBuf -> friendlyByteBuf.writeInt(getBookId()));
                 this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
             }
 

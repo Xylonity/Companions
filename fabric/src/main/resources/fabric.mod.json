@@ -19,7 +19,7 @@
             "dev.xylonity.companions.CompanionsFabric"
         ],
         "client": [
-            "dev.xylonity.companions.CompanionsFabric"
+            "dev.xylonity.companions.CompanionsFabricClient"
         ],
         "jei_mod_plugin": [
             "dev.xylonity.companions.compat.jei.CompanionsPlugin"

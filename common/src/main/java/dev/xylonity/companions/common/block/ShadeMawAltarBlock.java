@@ -58,7 +58,7 @@ public class ShadeMawAltarBlock extends AbstractShadeAltarBlock implements Entit
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.SHADE_MAW_ALTAR.create(pos, state);
+        return CompanionsBlockEntities.SHADE_MAW_ALTAR.get().create(pos, state);
     }
 
     @Nullable

@@ -30,7 +30,7 @@ public class RecallPlatformBlockEntity extends AbstractTeslaBlockEntity {
     private final ITeslaNodeBehaviour pulseBehaviour;
 
     public RecallPlatformBlockEntity(BlockPos pos, BlockState st) {
-        super(CompanionsBlockEntities.RECALL_PLATFORM, pos, st);
+        super(CompanionsBlockEntities.RECALL_PLATFORM.get(), pos, st);
         this.pulseBehaviour = new RecallPlatformPulseBehaviour();
     }
 

@@ -1,21 +1,19 @@
 package dev.xylonity.companions.common.entity.companion;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
+import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.goal.*;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import dev.xylonity.knightlib.KnightLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -57,8 +55,7 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.Optional;
 
-public class PuppetEntity extends CompanionEntity implements RangedAttackMob, ContainerListener {
-    public SimpleContainer inventory;
+public class PuppetEntity extends CompanionEntity implements RangedAttackMob, ContainerListener, MenuProvider {
 
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
     private final RawAnimation WALK = RawAnimation.begin().thenPlay("walk");
@@ -76,6 +73,8 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     private static final EntityDataAccessor<String> ARM_NAMES = SynchedEntityData.defineId(PuppetEntity.class, EntityDataSerializers.STRING);
 
     private final ItemStack[] lastStacks = new ItemStack[] { ItemStack.EMPTY.copy(), ItemStack.EMPTY.copy() };
+
+    public SimpleContainer inventory;
 
     public PuppetEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -268,26 +267,15 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
     }
 
     @Override
+    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return new PuppetContainerMenu(i, inventory, this);
+    }
+
+    @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-            if (!level().isClientSide) {
-                player.openMenu(new ExtendedScreenHandlerFactory() {
-                    @Override
-                    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                        return new PuppetContainerMenu(i, inventory, PuppetEntity.this);
-                    }
-
-                    @Override
-                    public Component getDisplayName() {
-                        return PuppetEntity.this.getName();
-                    }
-
-                    @Override
-                    public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf buf) {
-                        buf.writeInt(PuppetEntity.this.getId());
-                    }
-                });
-
+            if (!level().isClientSide && player instanceof ServerPlayer serverPlayer) {
+                KnightLib.PLATFORM.openMenu(serverPlayer, this, friendlyByteBuf -> friendlyByteBuf.writeInt(getId()));
                 this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
             }
 

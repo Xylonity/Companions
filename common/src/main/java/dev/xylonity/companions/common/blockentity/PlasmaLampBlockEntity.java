@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.blockentity;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.block.AbstractTeslaBlock;
 import dev.xylonity.companions.common.tesla.behaviour.lamp.LampPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
@@ -22,7 +22,7 @@ public class PlasmaLampBlockEntity extends AbstractTeslaBlockEntity implements G
     private int whenToSpawnParticles;
 
     public PlasmaLampBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.PLASMA_LAMP, pos, state);
+        super(CompanionsBlockEntities.PLASMA_LAMP.get(), pos, state);
         this.pulseBehaviour = new LampPulseBehaviour();
         this.whenToSpawnParticles = new Random().nextInt(100, 360);
     }
@@ -33,7 +33,7 @@ public class PlasmaLampBlockEntity extends AbstractTeslaBlockEntity implements G
         lamp.pulseBehaviour.process(lamp, level, blockPos, blockState);
 
         if (lamp.isActive() && lamp.whenToSpawnParticles == 0 && level.isClientSide) {
-            CompanionsFabric.PROXY.spawnPlasmaLampElectricArc(lamp, level, blockPos);
+            Companions.PROXY.spawnPlasmaLampElectricArc(lamp, level, blockPos);
         }
 
         if (lamp.whenToSpawnParticles == 0) {

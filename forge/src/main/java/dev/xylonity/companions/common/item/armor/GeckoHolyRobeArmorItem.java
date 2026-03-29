@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.item.armor;
 
-import dev.xylonity.companions.common.item.generic.GenericGeckoArmorItem;
+import dev.xylonity.companions.common.item.gecko.GeckoArmorItem;
 import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GeckoHolyRobeArmorItem extends GenericGeckoArmorItem {
+public class GeckoHolyRobeArmorItem extends GeckoArmorItem {
 
     public GeckoHolyRobeArmorItem(ArmorMaterial armorMaterial, Type type, Properties properties, String resourceKey) {
         super(armorMaterial, type, properties, resourceKey);

@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -12,18 +13,14 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class SoulMageBookEntity extends Projectile implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class SoulMageBookEntity extends BaseProjectile {
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation OPEN = RawAnimation.begin().thenPlay("open");
@@ -129,7 +126,7 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("TargetRed", this.entityData.get(TARGET_RED));
         pCompound.putInt("TargetGreen", this.entityData.get(TARGET_GREEN));
@@ -140,7 +137,7 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         if (pCompound.contains("TargetRed")) {
             this.entityData.set(TARGET_RED, pCompound.getInt("TargetRed"));
@@ -161,6 +158,11 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
         controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
         controllerRegistrar.add(new AnimationController<>(this, "attackController", 1, this::attackPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "sizeController", 1, this::sizePredicate));
+    }
+
+    @Override
+    protected int baseLifetime() {
+        return -1;
     }
 
     private <T extends GeoAnimatable> PlayState attackPredicate(AnimationState<T> event) {
@@ -189,11 +191,6 @@ public class SoulMageBookEntity extends Projectile implements GeoEntity {
         }
 
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
     }
 
 }

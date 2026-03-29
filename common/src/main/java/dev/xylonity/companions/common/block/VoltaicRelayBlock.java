@@ -101,7 +101,7 @@ public class VoltaicRelayBlock extends AbstractTeslaBlock implements EntityBlock
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.VOLTAIC_RELAY.create(pos, state);
+        return CompanionsBlockEntities.VOLTAIC_RELAY.get().create(pos, state);
     }
 
     @Nullable

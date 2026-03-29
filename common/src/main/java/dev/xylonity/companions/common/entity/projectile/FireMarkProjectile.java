@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,8 +18,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class FireMarkProjectile extends Projectile implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class FireMarkProjectile extends BaseProjectile {
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
 
@@ -58,16 +58,18 @@ public class FireMarkProjectile extends Projectile implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() { ;; }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
+    protected void defineSynchedData() {
+        ;;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
+    }
+
+    @Override
+    protected int baseLifetime() {
+        return -1;
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {

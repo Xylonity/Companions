@@ -80,7 +80,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
     private static final String TAG_TOTAL = "Total";
 
     public FrogBonanzaBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.FROG_BONANZA, pos, state);
+        super(CompanionsBlockEntities.FROG_BONANZA.get(), pos, state);
         this.tickCount = 0;
         this.spinStartTick = -1;
     }

@@ -94,6 +94,6 @@ public class PlasmaLampBlock extends AbstractTeslaBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.PLASMA_LAMP.create(pos, state);
+        return CompanionsBlockEntities.PLASMA_LAMP.get().create(pos, state);
     }
 }

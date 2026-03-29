@@ -29,7 +29,7 @@ public class StakeProjectile extends AbstractArrow implements GeoEntity {
     }
 
     public StakeProjectile(Level pLevel, LivingEntity pShooter) {
-        super(CompanionsEntities.STAKE_PROJECTILE, pShooter, pLevel);
+        super(CompanionsEntities.STAKE_PROJECTILE.get(), pShooter, pLevel);
         this.noPhysics = false;
     }
 

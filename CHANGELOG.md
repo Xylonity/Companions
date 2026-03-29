@@ -1,3 +1,7 @@
+# 1.3.0
+- In Fabric, the respawn totem can now respawn any tamable entity, not just companions
+- The code has been rewritten to ensure loader parity
+
 # 1.2.2
 - Attempt to fix recall platform loop crash
 - Black hole is now summonable

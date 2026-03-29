@@ -51,7 +51,7 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
     private int captureCooldown;
 
     public RespawnTotemBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.RESPAWN_TOTEM, pos, state);
+        super(CompanionsBlockEntities.RESPAWN_TOTEM.get(), pos, state);
         this.isCapturing = false;
         this.charges = 0;
         this.captureCooldown = 0;
@@ -238,7 +238,7 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
                     sv.sendParticles(ParticleTypes.POOF, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, dx, dy, dz, 0.1);
                 }
 
-                RespawnTotemRingProjectile ring = CompanionsEntities.RESPAWN_TOTEM_RING_PROJECTILE.create(level);
+                RespawnTotemRingProjectile ring = CompanionsEntities.RESPAWN_TOTEM_RING_PROJECTILE.get().create(level);
                 if (ring != null) {
                     ring.setPos(pos.getX() + 0.5, t.getRingSpawnY(level, pos) + 0.015, pos.getZ() + 0.5);
                     level.addFreshEntity(ring);

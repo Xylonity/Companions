@@ -99,8 +99,8 @@ public class CroissantDragonAttackGoal extends Goal {
                 level.sendParticles(particle, spawnPos.x, spawnPos.y, spawnPos.z, 12, 0.0, 0.0, 0.0, 0.0);
             }
 
-            if (!dragon.level().isClientSide() && tickCount % 2 == 0) {
-                CakeCreamTriggerProjectile projectile = new CakeCreamTriggerProjectile(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE, dragon.level());
+            if (tickCount % 2 == 0) {
+                CakeCreamTriggerProjectile projectile = new CakeCreamTriggerProjectile(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE.get(), dragon.level());
                 projectile.setPos(spawnPos.x, spawnPos.y + new Random().nextDouble(0, 1), spawnPos.z);
                 projectile.setArmorName(dragon.getArmorName());
                 projectile.setOwner(dragon);

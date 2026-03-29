@@ -142,7 +142,7 @@ public class PuppetGloveEntity extends CompanionEntity {
     }
 
     private void tameGlove(LivingEntity player) {
-        PuppetEntity puppet = CompanionsEntities.PUPPET.create(level());
+        PuppetEntity puppet = CompanionsEntities.PUPPET.get().create(level());
         if (puppet != null) {
             puppet.moveTo(position());
 

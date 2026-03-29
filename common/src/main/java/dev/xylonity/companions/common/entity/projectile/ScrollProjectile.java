@@ -75,11 +75,11 @@ public class ScrollProjectile extends BaseProjectile {
 
     private CompanionSummonEntity getEntityToSpawn() {
         return switch (this.entityData.get(ENTITY_TO_SPAWN)) {
-            case 1 -> CompanionsEntities.FIREWORK_TOAD.create(level());
-            case 2 -> CompanionsEntities.NETHER_BULLFROG.create(level());
-            case 3 -> CompanionsEntities.ENDER_FROG.create(level());
-            case 4 -> CompanionsEntities.EMBER_POLE.create(level());
-            case 5 -> CompanionsEntities.BUBBLE_FROG.create(level());
+            case 1 -> CompanionsEntities.FIREWORK_TOAD.get().create(level());
+            case 2 -> CompanionsEntities.NETHER_BULLFROG.get().create(level());
+            case 3 -> CompanionsEntities.ENDER_FROG.get().create(level());
+            case 4 -> CompanionsEntities.EMBER_POLE.get().create(level());
+            case 5 -> CompanionsEntities.BUBBLE_FROG.get().create(level());
             default -> null;
         };
     }

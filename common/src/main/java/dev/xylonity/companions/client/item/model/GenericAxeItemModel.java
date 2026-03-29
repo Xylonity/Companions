@@ -1,11 +1,11 @@
 package dev.xylonity.companions.client.item.model;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.common.item.generic.GenericGeckoAxeItem;
+import dev.xylonity.companions.common.item.gecko.GeckoAxeItem;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-public class GenericAxeItemModel extends GeoModel<GenericGeckoAxeItem> {
+public class GenericAxeItemModel extends GeoModel<GeckoAxeItem> {
 
     private final String resourceKey;
 
@@ -14,17 +14,17 @@ public class GenericAxeItemModel extends GeoModel<GenericGeckoAxeItem> {
     }
 
     @Override
-    public ResourceLocation getModelResource(GenericGeckoAxeItem animatable) {
+    public ResourceLocation getModelResource(GeckoAxeItem animatable) {
         return Companions.of("geo/" + resourceKey + ".geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(GenericGeckoAxeItem animatable) {
+    public ResourceLocation getTextureResource(GeckoAxeItem animatable) {
         return Companions.of("textures/item/" + resourceKey + ".png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(GenericGeckoAxeItem animatable) {
+    public ResourceLocation getAnimationResource(GeckoAxeItem animatable) {
         return Companions.of("animations/generic.animation.json");
     }
 

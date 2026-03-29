@@ -61,7 +61,7 @@ public class StoneSpikesBook extends AbstractMagicBook {
             int iz = Mth.floor(line.z);
             int iy = Mth.floor(line.y);
 
-            StoneSpikeProjectile spike = CompanionsEntities.STONE_SPIKE_PROJECTILE.create(player.level());
+            StoneSpikeProjectile spike = CompanionsEntities.STONE_SPIKE_PROJECTILE.get().create(player.level());
             if (spike != null) {
                 spike.moveTo(ix + 0.5, findSpikeH(player.level(), ix, iy, iz, Math.toRadians(player.getXRot()) < 0) + 1, iz + 0.5, player.getYRot(), 0.0F);
                 spike.setOwner(player);

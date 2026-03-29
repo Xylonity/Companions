@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.hostile;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
@@ -179,7 +179,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
                 if (level().isClientSide && transformationCounter == 130) {
                     for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
                         if (level().isClientSide) {
-                            CompanionsFabric.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
+                            Companions.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
                         }
                     }
                 }
@@ -205,7 +205,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
                 if (level().isClientSide && attackCounter == 35) {
                     for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
                         if (level().isClientSide) {
-                            CompanionsFabric.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
+                            Companions.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
                         }
                     }
                 } else if (!level().isClientSide && attackCounter == 35) {
@@ -220,7 +220,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
             if (SHAKE_TICKS.contains(getStateCounter())) {
                 for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
                     if (level().isClientSide) {
-                        CompanionsFabric.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+                        Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
                     } else {
                         playSound(CompanionsSounds.HOLINESS_HIT_CHEST.get(), 2f, 1f);
                     }

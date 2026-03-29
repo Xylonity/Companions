@@ -109,7 +109,7 @@ public abstract class AbstractShadeAltarBlockEntity extends BlockEntity implemen
         super.setChanged();
         if (this.level != null) {
             if (hasIncreasedFromPrevInteraction()) {
-                ShadeAltarUpgradeHaloProjectile halo = CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.create(level);
+                ShadeAltarUpgradeHaloProjectile halo = CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.get().create(level);
                 if (halo != null) {
                     halo.setPos(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 0.015, this.getBlockPos().getZ() + 0.5);
                     level.addFreshEntity(halo);

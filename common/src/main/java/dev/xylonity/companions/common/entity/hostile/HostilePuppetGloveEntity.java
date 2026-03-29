@@ -181,7 +181,7 @@ public class HostilePuppetGloveEntity extends Monster implements GeoEntity {
 
                     TickScheduler.scheduleServer(level(), () -> {
 
-                        PuppetGloveEntity glove = CompanionsEntities.PUPPET_GLOVE.create(level());
+                        PuppetGloveEntity glove = CompanionsEntities.PUPPET_GLOVE.get().create(level());
                         if (glove != null) {
                             for (int i = 0; i < 50; i++) {
                                 double dx = (this.random.nextDouble() - 0.5) * 2.0;

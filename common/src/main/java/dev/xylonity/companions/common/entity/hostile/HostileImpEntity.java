@@ -149,7 +149,7 @@ public class HostileImpEntity extends HostileEntity {
             setAngry(true);
             failureParticles();
 
-            ShadeAltarUpgradeHaloProjectile halo = CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.create(level());
+            ShadeAltarUpgradeHaloProjectile halo = CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.get().create(level());
             if (halo != null) {
                 halo.moveTo(position());
                 level().addFreshEntity(halo);
@@ -190,7 +190,7 @@ public class HostileImpEntity extends HostileEntity {
     }
 
     private void tameImp(Player player) {
-        MinionEntity minion = CompanionsEntities.MINION.create(level());
+        MinionEntity minion = CompanionsEntities.MINION.get().create(level());
         if (minion != null) {
             minion.moveTo(position());
             minion.tameInteraction(player);

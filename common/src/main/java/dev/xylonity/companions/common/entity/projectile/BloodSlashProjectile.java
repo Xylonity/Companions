@@ -1,10 +1,9 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.mixin.CompanionsProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -59,10 +58,10 @@ public class BloodSlashProjectile extends FrogHealProjectile {
         double y = this.getY();
 
         Vec3 left = new Vec3(this.getX(), y, this.getZ()).subtract(perp);
-        CompanionsFabric.PROXY.spawnSidedRibbonTrail(this, level(), left.x, left.y, left.z, 145/255f, 20/255f, 20/255f, 0, 0.1725f, 0);
+        Companions.PROXY.spawnSidedRibbonTrail(this, level(), left.x, left.y, left.z, 145/255f, 20/255f, 20/255f, 0, 0.1725f, 0);
 
         Vec3 right = new Vec3(this.getX(), y, this.getZ()).add(perp);
-        CompanionsFabric.PROXY.spawnSidedRibbonTrail(this, level(), right.x, right.y, right.z, 145/255f, 20/255f, 20/255f, 0, 0.1725f, 1);
+        Companions.PROXY.spawnSidedRibbonTrail(this, level(), right.x, right.y, right.z, 145/255f, 20/255f, 20/255f, 0, 0.1725f, 1);
     }
 
     @Override
@@ -75,7 +74,8 @@ public class BloodSlashProjectile extends FrogHealProjectile {
             return false;
         } else {
             Entity entity = this.getOwner();
-            return entity == null || ((CompanionsProjectileAccessor) this).getLeftOwner() || !entity.isPassengerOfSameVehicle(pTarget);
+            return entity == null || !entity.isPassengerOfSameVehicle(pTarget);
+            //return entity == null || ((CompanionsProjectileAccessor) this).getLeftOwner() || !entity.isPassengerOfSameVehicle(pTarget);
         }
     }
 

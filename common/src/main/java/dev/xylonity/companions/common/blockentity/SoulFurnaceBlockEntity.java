@@ -61,7 +61,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     public boolean isLit;
 
     public SoulFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.SOUL_FURNACE, pos, state);
+        super(CompanionsBlockEntities.SOUL_FURNACE.get(), pos, state);
         this.isLit = false;
     }
 
@@ -203,7 +203,7 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
     @Nullable
     private SoulFurnaceRecipe findRecipe(Level level, ItemStack input) {
         if (input.isEmpty()) return null;
-        List<? extends Recipe<?>> list = level.getRecipeManager().getAllRecipesFor(CompanionsRecipeTypes.SOUL_FURNACE_TYPE);
+        List<? extends Recipe<?>> list = level.getRecipeManager().getAllRecipesFor(CompanionsRecipeTypes.SOUL_FURNACE_TYPE.get());
         for (Recipe<?> rec : list) {
             if (rec instanceof SoulFurnaceRecipe r) {
                 if (r.input().test(input) && this.charges >= r.requiredCharges()) return r;
@@ -270,17 +270,30 @@ public class SoulFurnaceBlockEntity extends BlockEntity implements GeoBlockEntit
         return new SoulFurnaceContainerMenu(id, inventory, this, new ContainerData() {
             @Override
             public int get(int index) {
-                if (index == 0) return charges;
-                if (index == 1) return currentProgress;
-                if (index == 2) return processingTime;
+                if (index == 0) {
+                    return charges;
+                }
+                if (index == 1) {
+                    return currentProgress;
+                }
+                if (index == 2) {
+                    return processingTime;
+                }
+
                 return 0;
             }
 
             @Override
             public void set(int index, int value) {
-                if (index == 0) charges = value;
-                else if (index == 1) currentProgress = value;
-                else if (index == 2) processingTime = value;
+                if (index == 0) {
+                    charges = value;
+                }
+                else if (index == 1) {
+                    currentProgress = value;
+                }
+                else if (index == 2) {
+                    processingTime = value;
+                }
             }
 
             @Override

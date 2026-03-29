@@ -163,7 +163,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
 
     private void tameDinamo(Entity e) {
         if (e instanceof Player player) {
-            DinamoEntity dinamo = CompanionsEntities.DINAMO.create(level());
+            DinamoEntity dinamo = CompanionsEntities.DINAMO.get().create(level());
             if (dinamo != null) {
                 dinamo.moveTo(position());
                 dinamo.tameInteraction(player);

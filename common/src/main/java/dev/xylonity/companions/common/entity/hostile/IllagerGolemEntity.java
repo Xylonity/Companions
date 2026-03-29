@@ -189,7 +189,7 @@ public class IllagerGolemEntity extends Raider implements GeoEntity {
         if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
             this.level().broadcastEntityEvent(this, (byte) 60);
 
-            BrokenDinamoEntity dinamo = CompanionsEntities.BROKEN_DINAMO.create(level());
+            BrokenDinamoEntity dinamo = CompanionsEntities.BROKEN_DINAMO.get().create(level());
             if (dinamo != null && level().random.nextFloat() < 0.15f && !level().isClientSide) {
                 dinamo.moveTo(position());
                 dinamo.setLifetime(new Random().nextInt(6000, 10000));

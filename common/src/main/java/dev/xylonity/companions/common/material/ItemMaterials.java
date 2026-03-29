@@ -15,7 +15,6 @@ public enum ItemMaterials implements Tier {
             () -> Ingredient.of(Items.NETHERITE_SCRAP),
             CompanionsConfig.NETHERITE_DAGGER_STATS
     ),
-
     CRYSTALLIZED_BLOOD(
             "crystallized_blood",
             () -> Ingredient.of(Items.NETHERITE_INGOT),

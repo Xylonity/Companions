@@ -1,7 +1,7 @@
 package dev.xylonity.companions.common.item.weapon;
 
 import dev.xylonity.companions.common.entity.projectile.BloodTornadoProjectile;
-import dev.xylonity.companions.common.item.generic.GenericGeckoAxeItem;
+import dev.xylonity.companions.common.item.gecko.GeckoAxeItem;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BloodAxeItem extends GenericGeckoAxeItem {
+public class BloodAxeItem extends GeckoAxeItem {
 
     public BloodAxeItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
         super(properties, resourceKey, material, extraDamage, extraSpeed);

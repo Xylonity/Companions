@@ -17,7 +17,7 @@ public class VoltaicRelayBlockEntity extends AbstractTeslaBlockEntity {
     private final ITeslaNodeBehaviour pulseBehaviour;
 
     public VoltaicRelayBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.VOLTAIC_RELAY, pos, state);
+        super(CompanionsBlockEntities.VOLTAIC_RELAY.get(), pos, state);
         this.pulseBehaviour = new CoilPulseBehaviour();
     }
 

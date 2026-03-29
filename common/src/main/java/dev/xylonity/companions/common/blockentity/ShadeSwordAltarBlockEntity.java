@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.blockentity;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.common.item.ShadowBellItem;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -28,7 +28,7 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
     private boolean shouldSpawnParticleExplosion;
 
     public ShadeSwordAltarBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.SHADE_SWORD_ALTAR, pos, state);
+        super(CompanionsBlockEntities.SHADE_SWORD_ALTAR.get(), pos, state);
         this.tickCount = 0;
         this.shouldSpawnParticleExplosion = false;
     }
@@ -75,7 +75,7 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
             }
 
             if (altar.getCharges() > 0 && altar.tickCount % 2 == 0 && level.random.nextFloat() < 0.01 * altar.getCharges() && altar.level != null && altar.level.isClientSide) {
-                CompanionsFabric.PROXY.spawnShadeAltarParticles(altar, level, 0, 0, 0, 5);
+                Companions.PROXY.spawnShadeAltarParticles(altar, level, 0, 0, 0, 5);
             }
 
             altar.tickCount++;
@@ -91,7 +91,7 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
 
     @Override
     public ShadeEntity spawnShade(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand, ShadowBellItem shadowBell) {
-        ShadeEntity entity = CompanionsEntities.SHADE_SWORD.create(pLevel);
+        ShadeEntity entity = CompanionsEntities.SHADE_SWORD.get().create(pLevel);
         if (entity != null) {
             entity.tame(pPlayer);
 

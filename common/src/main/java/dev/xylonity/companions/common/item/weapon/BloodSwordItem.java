@@ -1,8 +1,10 @@
 package dev.xylonity.companions.common.item.weapon;
 
+import dev.xylonity.companions.client.item.renderer.GenericAxeItemRenderer;
+import dev.xylonity.companions.client.item.renderer.GenericSwordItemRenderer;
 import dev.xylonity.companions.common.entity.projectile.BloodSlashProjectile;
 import dev.xylonity.companions.common.entity.projectile.HolinessStartProjectile;
-import dev.xylonity.companions.common.item.generic.GenericGeckoSwordItem;
+import dev.xylonity.companions.common.item.gecko.GeckoSwordItem;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
@@ -21,18 +23,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-public class BloodSwordItem extends GenericGeckoSwordItem {
+public class BloodSwordItem extends GeckoSwordItem {
 
     public BloodSwordItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
         super(properties, resourceKey, material, extraDamage, extraSpeed);
     }
 
     @Override
+    protected Supplier<Object> createGeckoRenderer() {
+        return () -> new GenericSwordItemRenderer(resourceKey);
+    }
+
+    @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level pLevel, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!pLevel.isClientSide) {
-            BloodSlashProjectile slash = CompanionsEntities.BLOOD_SLASH_PROJECTILE.create(pLevel);
+            BloodSlashProjectile slash = CompanionsEntities.BLOOD_SLASH_PROJECTILE.get().create(pLevel);
             if (slash != null) {
                 Vec3 spawnPos = player.position().add(0, player.getEyeHeight(), 0);
                 slash.setOwner(player);

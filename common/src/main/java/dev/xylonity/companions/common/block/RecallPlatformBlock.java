@@ -51,7 +51,7 @@ public class RecallPlatformBlock extends AbstractTeslaBlock implements EntityBlo
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return CompanionsBlockEntities.RECALL_PLATFORM.create(pos, state);
+        return CompanionsBlockEntities.RECALL_PLATFORM.get().create(pos, state);
     }
 
     @Nullable

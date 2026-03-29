@@ -2,7 +2,7 @@ package dev.xylonity.companions.common.item.weapon;
 
 import dev.xylonity.companions.common.entity.projectile.BloodSlashProjectile;
 import dev.xylonity.companions.common.entity.projectile.HolinessStartProjectile;
-import dev.xylonity.companions.common.item.generic.GenericGeckoSwordItem;
+import dev.xylonity.companions.common.item.gecko.GeckoSwordItem;
 import dev.xylonity.companions.common.material.ItemMaterials;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEntities;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BloodSwordItem extends GenericGeckoSwordItem {
+public class BloodSwordItem extends GeckoSwordItem {
 
     public BloodSwordItem(Properties properties, String resourceKey, ItemMaterials material, float extraDamage, float extraSpeed) {
         super(properties, resourceKey, material, extraDamage, extraSpeed);

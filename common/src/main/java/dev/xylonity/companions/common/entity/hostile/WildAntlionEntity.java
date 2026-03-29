@@ -281,7 +281,7 @@ public class WildAntlionEntity extends HostileEntity implements PlayerRideable {
     private boolean tameAntlion(Player player) {
         if (level().random.nextFloat() < 0.55f) {
 
-            AntlionEntity antlion = CompanionsEntities.ANTLION.create(level());
+            AntlionEntity antlion = CompanionsEntities.ANTLION.get().create(level());
             if (antlion != null) {
                 antlion.moveTo(position());
                 antlion.tameInteraction(player);

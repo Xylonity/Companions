@@ -13,7 +13,7 @@ public class EmptyPuppetBlockEntity extends BlockEntity implements GeoBlockEntit
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public EmptyPuppetBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.EMPTY_PUPPET, pos, state);
+        super(CompanionsBlockEntities.EMPTY_PUPPET.get(), pos, state);
     }
 
     @Override

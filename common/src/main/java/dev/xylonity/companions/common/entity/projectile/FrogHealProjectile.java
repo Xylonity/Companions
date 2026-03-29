@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity.projectile;
 
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -65,7 +66,7 @@ public class FrogHealProjectile extends BaseProjectile {
     }
 
     public void spawnRibbon() {
-        CompanionsFabric.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), 225/255f, 1, 218/255f, 0, 0.35f);
+        Companions.PROXY.spawnGenericRibbonTrail(this, level(), getX(), getY(), getZ(), 225/255f, 1, 218/255f, 0, 0.35f);
     }
 
     public void spawnParticles() {

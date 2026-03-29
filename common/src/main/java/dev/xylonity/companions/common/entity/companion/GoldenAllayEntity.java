@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.companion;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.FlyingNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsLookAtPlayerGoal;
@@ -126,7 +126,7 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
 
             if (transformationCounter == TRANSFORMATION_ANIMATION_TICKS) {
 
-                SoulMageEntity mage = CompanionsEntities.SOUL_MAGE.create(level());
+                SoulMageEntity mage = CompanionsEntities.SOUL_MAGE.get().create(level());
                 if (mage != null) {
                     mage.moveTo(position());
 
@@ -138,7 +138,7 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
 
                     level().addFreshEntity(mage);
 
-                    SoulMageBookEntity book = CompanionsEntities.SOUL_MAGE_BOOK.create(level());
+                    SoulMageBookEntity book = CompanionsEntities.SOUL_MAGE_BOOK.get().create(level());
                     if (book != null) {
                         book.moveTo(position());
                         book.setOwner(mage);
@@ -153,7 +153,7 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
         }
 
         if (level().isClientSide) {
-            CompanionsFabric.PROXY.spawnGoldenAllayRibbonTrail(this, level(), getX(), getY(), getZ(), 1, 1, 160/255f, 0, 0.1225f);
+            Companions.PROXY.spawnGoldenAllayRibbonTrail(this, level(), getX(), getY(), getZ(), 1, 1, 160/255f, 0, 0.1225f);
         }
 
     }

@@ -33,7 +33,7 @@ public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEnti
     private boolean spasm = false;
 
     public CroissantEggBlockEntity(BlockPos pos, BlockState state) {
-        super(CompanionsBlockEntities.CROISSANT_EGG, pos, state);
+        super(CompanionsBlockEntities.CROISSANT_EGG.get(), pos, state);
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T F) {
@@ -43,7 +43,7 @@ public class CroissantEggBlockEntity extends BlockEntity implements GeoBlockEnti
             if (egg.tickCounter >= CompanionsConfig.CROISSANT_EGG_LIFETIME) {
                 level.destroyBlock(pos, false);
 
-                Entity croissantDragonEntity = CompanionsEntities.CROISSANT_DRAGON.create(level);
+                Entity croissantDragonEntity = CompanionsEntities.CROISSANT_DRAGON.get().create(level);
                 if (croissantDragonEntity instanceof CroissantDragonEntity croissantDragon) {
                     croissantDragon.moveTo(egg.getBlockPos().getCenter());
                     level.addFreshEntity(croissantDragon);

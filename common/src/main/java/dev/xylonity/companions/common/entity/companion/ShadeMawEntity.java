@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.entity.companion;
 
-import dev.xylonity.companions.CompanionsFabric;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ShadeEntity;
@@ -138,7 +138,7 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
         this.setAirSupply(this.getMaxAirSupply());
 
         if (this.level().isClientSide) {
-            CompanionsFabric.PROXY.tickShadeMaw(this);
+            Companions.PROXY.tickShadeMaw(this);
         }
 
         if (!hasSpawned && isSpawning()) {
