@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
 import dev.xylonity.companions.common.recipe.CroissantDragonArmorRecipe;
 import dev.xylonity.companions.registry.CompanionsBlocks;

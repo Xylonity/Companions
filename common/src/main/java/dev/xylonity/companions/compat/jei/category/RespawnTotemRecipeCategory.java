@@ -4,13 +4,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsFabric;
-import dev.xylonity.companions.common.blockentity.ShadeMawAltarBlockEntity;
-import dev.xylonity.companions.common.entity.projectile.ShadeAltarUpgradeHaloProjectile;
-import dev.xylonity.companions.common.recipe.ShadeAltarRecipe;
+import dev.xylonity.companions.common.blockentity.RespawnTotemBlockEntity;
+import dev.xylonity.companions.common.entity.projectile.RespawnTotemRingProjectile;
+import dev.xylonity.companions.common.recipe.HourglassRecipe;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
-import dev.xylonity.companions.registry.CompanionsItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -35,34 +33,32 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecipe> {
+public class RespawnTotemRecipeCategory implements IRecipeCategory<HourglassRecipe> {
 
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_altar_interaction");
-    public static final RecipeType<ShadeAltarRecipe> TYPE = new RecipeType<>(UID, ShadeAltarRecipe.class);
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "respawn_totem_interaction");
+    public static final RecipeType<HourglassRecipe> TYPE = new RecipeType<>(UID, HourglassRecipe.class);
     public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
-    private ShadeMawAltarBlockEntity cachedBlockEntity;
-    private ShadeAltarUpgradeHaloProjectile cachedEntity;
+    private RespawnTotemBlockEntity cachedBlockEntity;
+    private RespawnTotemRingProjectile cachedEntity;
 
     private long lastUpdateTime = 0;
     private final IDrawable icon;
 
     private long lastEntityAppearTime = 0;
-    private int spawnCooldown;
 
-    public ShadeAltarRecipeCategory(IGuiHelper gui) {
-        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsItems.CRYSTALLIZED_BLOOD.get()));
-        this.spawnCooldown = 0;
+    public RespawnTotemRecipeCategory(IGuiHelper gui) {
+        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.RESPAWN_TOTEM.get()));
     }
 
     @Override
-    public @NotNull RecipeType<ShadeAltarRecipe> getRecipeType() {
+    public @NotNull RecipeType<HourglassRecipe> getRecipeType() {
         return TYPE;
     }
 
     @Override
     public @NotNull Component getTitle() {
-        return Component.translatable("jei.companions.shade_altar_interaction.title");
+        return Component.translatable("jei.companions.respawn_totem_interaction.title");
     }
 
     @Override
@@ -72,7 +68,7 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
 
     @Override
     public int getHeight() {
-        return 80;
+        return 100;
     }
 
     @Override
@@ -81,27 +77,26 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, ShadeAltarRecipe rec, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, HourglassRecipe rec, @NotNull IFocusGroup focuses) {
         this.cachedEntity = null;
         builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
-    private ShadeMawAltarBlockEntity getOrCreateBlockEntity() {
+    private RespawnTotemBlockEntity getOrCreateBlockEntity() {
         if (cachedBlockEntity == null) {
-            cachedBlockEntity = new ShadeMawAltarBlockEntity(BlockPos.ZERO, CompanionsBlocks.SHADE_MAW_ALTAR.get().defaultBlockState());
-            cachedBlockEntity.addCharge();
+            cachedBlockEntity = new RespawnTotemBlockEntity(BlockPos.ZERO, CompanionsBlocks.RESPAWN_TOTEM.get().defaultBlockState());
+            cachedBlockEntity.setCharges(1);
         }
 
         return cachedBlockEntity;
     }
 
-    private ShadeAltarUpgradeHaloProjectile getOrCreateEntity() {
-        if (cachedEntity == null && spawnCooldown == 0) {
+    private RespawnTotemRingProjectile getOrCreateEntity() {
+        if (cachedEntity == null) {
             Minecraft mc = Minecraft.getInstance();
             if (mc.level != null) {
-                cachedEntity = new ShadeAltarUpgradeHaloProjectile(CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO.get(), mc.level);
+                cachedEntity = new RespawnTotemRingProjectile(CompanionsEntities.RESPAWN_TOTEM_RING_PROJECTILE.get(), mc.level);
                 cachedEntity.setNoGravity(true);
-                cachedEntity.tickCount = 0;
             }
         }
 
@@ -113,36 +108,27 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
 
         if (lastUpdateTime == 0) {
             lastUpdateTime = currentTime;
-            lastEntityAppearTime = currentTime;
         }
 
-        if (currentTime - lastEntityAppearTime >= 1600) {
+        if (currentTime - lastEntityAppearTime >= 3900) {
             lastEntityAppearTime = currentTime;
-            cachedEntity = null;
-            spawnCooldown = 0;
-        }
 
-        ShadeAltarUpgradeHaloProjectile entity = getOrCreateEntity();
-        if (entity != null) {
-            long delta = currentTime - lastEntityAppearTime;
-            int ticks = (int)(delta / 50);
-            entity.tickCount = ticks;
-
-            if (ticks >= 16) {
-                cachedEntity = null;
-                spawnCooldown = 400;
+            RespawnTotemRingProjectile entity = getOrCreateEntity();
+            if (entity != null) {
+                entity.tickCount = 0;
             }
         }
 
         lastUpdateTime = currentTime;
-        if (spawnCooldown > 0) spawnCooldown--;
+        if (cachedEntity != null) cachedEntity.tickCount = (int)(System.currentTimeMillis() / 50);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void draw(@NotNull ShadeAltarRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(@NotNull HourglassRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         RenderSystem.setShaderTexture(0, SHADOW);
-        guiGraphics.blit(SHADOW, 21, 55, 0, 0, 39, 17);
+        // shadow
+        guiGraphics.blit(SHADOW, 21, 69, 170, 0, 42, 25);
         // arrow down
         guiGraphics.blit(SHADOW, 33, 10, 46, 3, 33, 22);
         // item bg input
@@ -150,11 +136,11 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
 
         updateAnimation();
 
-        ShadeMawAltarBlockEntity blockEntity = getOrCreateBlockEntity();
-        ShadeAltarUpgradeHaloProjectile entity = getOrCreateEntity();
+        RespawnTotemBlockEntity blockEntity = getOrCreateBlockEntity();
+        RespawnTotemRingProjectile entity = getOrCreateEntity();
 
-        GeoBlockRenderer<ShadeMawAltarBlockEntity> blockRenderer = (GeoBlockRenderer<ShadeMawAltarBlockEntity>) Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(blockEntity);
-        GeoEntityRenderer<ShadeAltarUpgradeHaloProjectile> entityRenderer = entity != null ? (GeoEntityRenderer<ShadeAltarUpgradeHaloProjectile>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity) : null;
+        GeoBlockRenderer<RespawnTotemBlockEntity> blockRenderer = (GeoBlockRenderer<RespawnTotemBlockEntity>) Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(blockEntity);
+        GeoEntityRenderer<RespawnTotemRingProjectile> entityRenderer = entity != null ? (GeoEntityRenderer<RespawnTotemRingProjectile>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity) : null;
 
         if (blockRenderer == null) return;
 
@@ -163,10 +149,10 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
 
         // chalice
         pose.pushPose();
-        pose.translate(60, 55, 20);
+        pose.translate(44, 80, 120);
         pose.scale(24f, 24f, 24f);
         pose.mulPose(Axis.XP.rotationDegrees(-25f));
-        pose.mulPose(Axis.YP.rotationDegrees(45f));
+        pose.mulPose(Axis.YP.rotationDegrees(145f));
         pose.mulPose(Axis.ZP.rotationDegrees(180f));
 
         Matrix3f normalMat = pose.last().normal();
@@ -190,8 +176,8 @@ public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecip
         if (entity != null) {
             pose.pushPose();
 
-            pose.translate(60, 63, 27.5);
-            pose.scale(24f, 24f, 24f);
+            pose.translate(60, 80, 100);
+            pose.scale(5f, 5f, 5f);
             pose.mulPose(Axis.XP.rotationDegrees(-25f));
             pose.mulPose(Axis.YP.rotationDegrees(45f));
             pose.mulPose(Axis.ZP.rotationDegrees(180f));

@@ -4,10 +4,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsFabric;
-import dev.xylonity.companions.common.entity.companion.PuppetEntity;
-import dev.xylonity.companions.common.entity.companion.PuppetGloveEntity;
-import dev.xylonity.companions.common.recipe.EmptyPuppetRecipe;
+import dev.xylonity.companions.common.blockentity.ShadeMawAltarBlockEntity;
+import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
+import dev.xylonity.companions.common.recipe.ShadeMawAltarRecipe;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import mezz.jei.api.constants.VanillaTypes;
@@ -23,39 +22,42 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "puppet_interaction");
-    public static final RecipeType<EmptyPuppetRecipe> TYPE = new RecipeType<>(UID, EmptyPuppetRecipe.class);
+public final class ShadeMawAltarRecipeCategory implements IRecipeCategory<ShadeMawAltarRecipe> {
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_maw_altar_interaction");
+    public static final RecipeType<ShadeMawAltarRecipe> TYPE = new RecipeType<>(UID, ShadeMawAltarRecipe.class);
 
     public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
-    private PuppetGloveEntity cachedEntity;
-    private PuppetEntity cachedEntity2;
+    private ShadeMawAltarBlockEntity cachedBlockEntity;
+    private ShadeMawEntity cachedEntity;
 
     private long lastUpdateTime = 0;
 
-    public PuppetRecipeCategory(IGuiHelper gui) {
-        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.EMPTY_PUPPET.get()));
+    public ShadeMawAltarRecipeCategory(IGuiHelper gui) {
+        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.SHADE_MAW_ALTAR.get()));
     }
 
     @Override
-    public @NotNull RecipeType<EmptyPuppetRecipe> getRecipeType() {
+    public @NotNull RecipeType<ShadeMawAltarRecipe> getRecipeType() {
         return TYPE;
     }
 
     @Override
     public @NotNull Component getTitle() {
-        return Component.translatable("jei.companions.puppet_interaction.title");
+        return Component.translatable("jei.companions.shade_maw_altar_interaction.title");
     }
 
     @Override
@@ -74,28 +76,27 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, EmptyPuppetRecipe rec, @NotNull IFocusGroup focuses) {
-        this.cachedEntity = null;
-        this.cachedEntity2 = null;
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addItemStack(rec.input);
+    public void setRecipe(IRecipeLayoutBuilder builder, ShadeMawAltarRecipe rec, @NotNull IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
-    private PuppetGloveEntity getOrCreateEntity() {
+    private ShadeMawAltarBlockEntity getOrCreateBlockEntity() {
+        if (cachedBlockEntity == null) {
+            cachedBlockEntity = new ShadeMawAltarBlockEntity(BlockPos.ZERO, CompanionsBlocks.SHADE_MAW_ALTAR.get().defaultBlockState());
+            cachedBlockEntity.addCharge();
+        }
+
+        return cachedBlockEntity;
+    }
+
+    private ShadeMawEntity getOrCreateEntity() {
         if (cachedEntity == null) {
-            cachedEntity = new PuppetGloveEntity(CompanionsEntities.PUPPET_GLOVE.get(), Minecraft.getInstance().level);
+            cachedEntity = new ShadeMawEntity(CompanionsEntities.SHADE_MAW.get(), Minecraft.getInstance().level);
+            cachedEntity.setIsSpawning(false);
             cachedEntity.setNoAi(true);
         }
 
         return cachedEntity;
-    }
-
-    private PuppetEntity getOrCreateEntity2() {
-        if (cachedEntity2 == null) {
-            cachedEntity2 = new PuppetEntity(CompanionsEntities.PUPPET.get(), Minecraft.getInstance().level);
-            cachedEntity2.setNoAi(true);
-        }
-
-        return cachedEntity2;
     }
 
     private void updateAnimation() {
@@ -109,41 +110,41 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
         }
 
         if (cachedEntity != null) cachedEntity.tickCount = (int)(System.currentTimeMillis() / 50);
-        if (cachedEntity2 != null) cachedEntity2.tickCount = (int)(System.currentTimeMillis() / 50);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void draw(@NotNull EmptyPuppetRecipe recipe, @NotNull IRecipeSlotsView slots, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(@NotNull ShadeMawAltarRecipe recipe, @NotNull IRecipeSlotsView slots, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
         RenderSystem.setShaderTexture(0, SHADOW);
-        // glove shadow
-        guiGraphics.blit(SHADOW, 19, 62, 216, 5, 38, 16);
+        // altar shadow
+        guiGraphics.blit(SHADOW, 10, 55, 0, 0, 39, 17);
         // arrow down
-        guiGraphics.blit(SHADOW, 26, 10, 62, 56, 19, 29);
+        guiGraphics.blit(SHADOW, 32, 10, 56, 30, 24, 22);
         // arrow right
-        guiGraphics.blit(SHADOW, 60, 50, 81, 6, 39, 12);
+        guiGraphics.blit(SHADOW, 70, 45, 142, 6, 24, 12);
         // item bg input
-        guiGraphics.blit(SHADOW, 4, 4, 120, 0, 19, 19);
-        // puppet shadow
-        guiGraphics.blit(SHADOW, 110, 62, 216, 5, 38, 16);
+        guiGraphics.blit(SHADOW, 9, 4, 120, 0, 19, 19);
+        // maw shadow
+        guiGraphics.blit(SHADOW, 97, 50, 170, 0, 42, 25);
 
         updateAnimation();
 
-        PuppetGloveEntity dragon1 = getOrCreateEntity();
-        PuppetEntity dragon2 = getOrCreateEntity2();
+        ShadeMawAltarBlockEntity be = getOrCreateBlockEntity();
+        ShadeMawEntity maw = getOrCreateEntity();
 
-        GeoEntityRenderer<PuppetGloveEntity> dragonRenderer1 = (GeoEntityRenderer<PuppetGloveEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dragon1);
-        GeoEntityRenderer<PuppetEntity> dragonRenderer2 = (GeoEntityRenderer<PuppetEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dragon2);
+        GeoBlockRenderer<ShadeMawAltarBlockEntity> renderer = (GeoBlockRenderer<ShadeMawAltarBlockEntity>) Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(be);
+        GeoEntityRenderer<ShadeMawEntity> mawRenderer = (GeoEntityRenderer<ShadeMawEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(maw);
+        if (renderer == null) return;
 
         PoseStack pose = guiGraphics.pose();
         MultiBufferSource.BufferSource buffer = guiGraphics.bufferSource();
 
-        // glove
+        // altar
         pose.pushPose();
-        pose.translate(40, 68, 20);
-        pose.scale(17f, 17f, 17f);
+        pose.translate(49, 55, 0);
+        pose.scale(24f, 24f, 24f);
         pose.mulPose(Axis.XP.rotationDegrees(-25f));
-        pose.mulPose(Axis.YP.rotationDegrees(38f));
+        pose.mulPose(Axis.YP.rotationDegrees(45f));
         pose.mulPose(Axis.ZP.rotationDegrees(180f));
 
         Matrix3f normalMat = pose.last().normal();
@@ -159,19 +160,19 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
         try {
             float partialTicks = (float)((System.currentTimeMillis() - lastUpdateTime) / 50.0);
 
-            dragonRenderer1.render(dragon1, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
+            renderer.render(be, partialTicks, pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
-            dragonRenderer1.render(dragon1, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
+            renderer.render(be, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
         }
 
         pose.popPose();
 
-        // puppet
+        // shade maw
         pose.pushPose();
-        pose.translate(130, 68, 20);
-        pose.scale(18f, 18f, 18f);
+        pose.translate(130, 65, 20);
+        pose.scale(12, 12, 12);
         pose.mulPose(Axis.XP.rotationDegrees(-25f));
-        pose.mulPose(Axis.YP.rotationDegrees(38f));
+        pose.mulPose(Axis.YP.rotationDegrees(45f));
         pose.mulPose(Axis.ZP.rotationDegrees(180f));
 
         Matrix3f normalMat2 = pose.last().normal();
@@ -187,9 +188,9 @@ public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRe
         try {
             float partialTicks = (float)((System.currentTimeMillis() - lastUpdateTime) / 50.0);
 
-            dragonRenderer2.render(dragon2, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
+            mawRenderer.render(maw, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
         } catch (Exception e) {
-            dragonRenderer2.render(dragon2, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
+            mawRenderer.render(maw, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
         }
 
         pose.popPose();

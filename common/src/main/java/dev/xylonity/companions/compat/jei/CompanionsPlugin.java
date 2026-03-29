@@ -1,7 +1,6 @@
 package dev.xylonity.companions.compat.jei;
 
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsFabric;
 import dev.xylonity.companions.common.recipe.*;
 import dev.xylonity.companions.compat.jei.category.*;
 import dev.xylonity.companions.registry.CompanionsBlocks;

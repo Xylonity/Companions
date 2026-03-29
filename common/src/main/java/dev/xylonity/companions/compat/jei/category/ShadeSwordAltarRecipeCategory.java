@@ -4,10 +4,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.CompanionsFabric;
-import dev.xylonity.companions.common.blockentity.CroissantEggBlockEntity;
-import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
-import dev.xylonity.companions.common.recipe.CroissantEggRecipe;
+import dev.xylonity.companions.common.blockentity.ShadeSwordAltarBlockEntity;
+import dev.xylonity.companions.common.entity.companion.ShadeSwordEntity;
+import dev.xylonity.companions.common.recipe.ShadeSwordAltarRecipe;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import mezz.jei.api.constants.VanillaTypes;
@@ -34,31 +33,34 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public final class CroissantEggRecipeCategory implements IRecipeCategory<CroissantEggRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "croissant_egg_interaction");
-    public static final RecipeType<CroissantEggRecipe> TYPE = new RecipeType<>(UID, CroissantEggRecipe.class);
+public final class ShadeSwordAltarRecipeCategory implements IRecipeCategory<ShadeSwordAltarRecipe> {
+    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_sword_altar_interaction");
+    public static final RecipeType<ShadeSwordAltarRecipe> TYPE = new RecipeType<>(UID, ShadeSwordAltarRecipe.class);
 
     public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
 
     private final IDrawable icon;
 
-    private CroissantEggBlockEntity cachedBlockEntity;
-    private CroissantDragonEntity cachedEntity;
+    private ShadeSwordAltarBlockEntity cachedBlockEntity;
+    private ShadeSwordEntity cachedEntity;
 
     private long lastUpdateTime = 0;
 
-    public CroissantEggRecipeCategory(IGuiHelper gui) {
-        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.CROISSANT_EGG.get()));
+    private double animationTicks = 0;
+    private long lastSystemTimeMs = 0;
+
+    public ShadeSwordAltarRecipeCategory(IGuiHelper gui) {
+        this.icon = gui.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CompanionsBlocks.SHADE_SWORD_ALTAR.get()));
     }
 
     @Override
-    public @NotNull RecipeType<CroissantEggRecipe> getRecipeType() {
+    public @NotNull RecipeType<ShadeSwordAltarRecipe> getRecipeType() {
         return TYPE;
     }
 
     @Override
     public @NotNull Component getTitle() {
-        return Component.translatable("jei.companions.croissant_egg_interaction.title");
+        return Component.translatable("jei.companions.shade_sword_altar_interaction.title");
     }
 
     @Override
@@ -77,22 +79,23 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, CroissantEggRecipe rec, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addItemStack(rec.input);
+    public void setRecipe(IRecipeLayoutBuilder builder, ShadeSwordAltarRecipe rec, @NotNull IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 10, 5).addItemStack(rec.input);
     }
 
-    private CroissantEggBlockEntity getOrCreateBlockEntity() {
+    private ShadeSwordAltarBlockEntity getOrCreateBlockEntity() {
         if (cachedBlockEntity == null) {
-            cachedBlockEntity = new CroissantEggBlockEntity(BlockPos.ZERO, CompanionsBlocks.CROISSANT_EGG.get().defaultBlockState());
+            cachedBlockEntity = new ShadeSwordAltarBlockEntity(BlockPos.ZERO, CompanionsBlocks.SHADE_SWORD_ALTAR.get().defaultBlockState());
+            cachedBlockEntity.addCharge();
         }
 
         return cachedBlockEntity;
     }
 
-    private CroissantDragonEntity getOrCreateEntity() {
+    private ShadeSwordEntity getOrCreateEntity() {
         if (cachedEntity == null) {
-            cachedEntity = new CroissantDragonEntity(CompanionsEntities.CROISSANT_DRAGON.get(), Minecraft.getInstance().level);
-            cachedEntity.setMilkAmount(3);
+            cachedEntity = new ShadeSwordEntity(CompanionsEntities.SHADE_SWORD.get(), Minecraft.getInstance().level);
+            cachedEntity.setIsSpawning(false);
             cachedEntity.setNoAi(true);
         }
 
@@ -112,41 +115,54 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
         if (cachedEntity != null) cachedEntity.tickCount = (int)(System.currentTimeMillis() / 50);
     }
 
+    private void updateAnimationTicks() {
+        long now = System.currentTimeMillis();
+        if (lastSystemTimeMs == 0) {
+            lastSystemTimeMs = now;
+            return;
+        }
+
+        long ms = now - lastSystemTimeMs;
+        lastSystemTimeMs = now;
+        animationTicks += ms / 50.0;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
-    public void draw(@NotNull CroissantEggRecipe recipe, @NotNull IRecipeSlotsView slots, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(@NotNull ShadeSwordAltarRecipe recipe, @NotNull IRecipeSlotsView slots, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
         RenderSystem.setShaderTexture(0, SHADOW);
-        // egg shadow
-        guiGraphics.blit(SHADOW, 12, 57, 0, 0, 39, 17);
+        // altar shadow
+        guiGraphics.blit(SHADOW, 20, 58, 5, 28, 35, 9);
         // arrow down
-        guiGraphics.blit(SHADOW, 26, 10, 62, 56, 19, 29);
+        guiGraphics.blit(SHADOW, 32, 10, 46, 3, 33, 22);
         // arrow right
-        guiGraphics.blit(SHADOW, 60, 50, 81, 6, 39, 12);
+        guiGraphics.blit(SHADOW, 80, 45, 142, 6, 24, 12);
         // item bg input
-        guiGraphics.blit(SHADOW, 4, 4, 120, 0, 19, 19);
-        // clock
-        guiGraphics.blit(SHADOW, 68, 24, 111, 24, 21, 25);
-        // dragon shadow
-        guiGraphics.blit(SHADOW, 100, 50, 170, 0, 42, 25);
+        guiGraphics.blit(SHADOW, 9, 4, 120, 0, 19, 19);
+        // item bg input
+        guiGraphics.blit(SHADOW, 9, 4, 120, 0, 19, 19);
+        // sword shadow
+        guiGraphics.blit(SHADOW, 115, 55, 216, 5, 38, 16);
 
         updateAnimation();
+        updateAnimationTicks();
 
-        CroissantEggBlockEntity be = getOrCreateBlockEntity();
-        CroissantDragonEntity maw = getOrCreateEntity();
+        ShadeSwordAltarBlockEntity be = getOrCreateBlockEntity();
+        ShadeSwordEntity sword = getOrCreateEntity();
 
-        GeoBlockRenderer<CroissantEggBlockEntity> renderer = (GeoBlockRenderer<CroissantEggBlockEntity>) Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(be);
-        GeoEntityRenderer<CroissantDragonEntity> mawRenderer = (GeoEntityRenderer<CroissantDragonEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(maw);
+        GeoBlockRenderer<ShadeSwordAltarBlockEntity> renderer = (GeoBlockRenderer<ShadeSwordAltarBlockEntity>) Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(be);
+        GeoEntityRenderer<ShadeSwordEntity> swordRenderer = (GeoEntityRenderer<ShadeSwordEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(sword);
         if (renderer == null) return;
 
         PoseStack pose = guiGraphics.pose();
         MultiBufferSource.BufferSource buffer = guiGraphics.bufferSource();
 
-        // egg
+        // altar
         pose.pushPose();
-        pose.translate(25, 65, 20);
+        pose.translate(42, 65, 20);
         pose.scale(20f, 20f, 20f);
         pose.mulPose(Axis.XP.rotationDegrees(-25f));
-        pose.mulPose(Axis.YP.rotationDegrees(160));
+        pose.mulPose(Axis.YP.rotationDegrees(135f));
         pose.mulPose(Axis.ZP.rotationDegrees(180f));
 
         Matrix3f normalMat = pose.last().normal();
@@ -169,18 +185,18 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
 
         pose.popPose();
 
-        // dragon
+        // shade sword
         pose.pushPose();
-        pose.translate(130, 65, 20);
-        pose.scale(18f, 18f, 18f);
+        pose.translate(135, 62, 20);
+        pose.scale(16, 16, 16);
         pose.mulPose(Axis.XP.rotationDegrees(-25f));
-        pose.mulPose(Axis.YP.rotationDegrees(38f));
+        pose.mulPose(Axis.YP.rotationDegrees(45f));
         pose.mulPose(Axis.ZP.rotationDegrees(180f));
 
         Matrix3f normalMat2 = pose.last().normal();
 
-        Vector3f up2 = new Vector3f(-1, 10, -1);
-        Vector3f front2 = new Vector3f(-1, 3, -1);
+        Vector3f up2 = new Vector3f(-1, 100, -1);
+        Vector3f front2 = new Vector3f(-1, 300, -1);
 
         normalMat2.transform(up2).normalize();
         normalMat2.transform(front2).normalize();
@@ -188,11 +204,9 @@ public final class CroissantEggRecipeCategory implements IRecipeCategory<Croissa
         RenderSystem.setupGui3DDiffuseLighting(up2, front2);
 
         try {
-            float partialTicks = (float)((System.currentTimeMillis() - lastUpdateTime) / 50.0);
-
-            mawRenderer.render(maw, 0f, partialTicks, pose, buffer, LightTexture.pack(15, 15));
+            swordRenderer.render(sword, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
         } catch (Exception e) {
-            mawRenderer.render(maw, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
+            swordRenderer.render(sword, 0f, Minecraft.getInstance().getFrameTime(), pose, buffer, LightTexture.pack(15, 15));
         }
 
         pose.popPose();
