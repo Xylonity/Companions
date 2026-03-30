@@ -139,7 +139,7 @@ public final class CompanionsServerEvents {
 
     @RegisterEvent
     public static void onLootTableModify(final LootTableModifyEvent event) {
-        if (event.isChestTable() && !event.getId().getNamespace().equals("minecraft")) {
+        if (event.isChestTable() && event.getId().getNamespace().equals("minecraft")) {
             float chance;
             NumberProvider count;
             Item coin;
