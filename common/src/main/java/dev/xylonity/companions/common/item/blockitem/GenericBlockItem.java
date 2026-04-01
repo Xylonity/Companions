@@ -9,9 +9,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -20,7 +17,6 @@ public class GenericBlockItem extends GeckoBlockItem {
 
     public GenericBlockItem(Block pBlock, Properties pProperties, String resourceKey) {
         super(pBlock, pProperties, resourceKey);
-        SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
     @Override

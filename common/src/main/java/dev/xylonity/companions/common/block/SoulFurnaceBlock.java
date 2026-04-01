@@ -14,6 +14,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -51,22 +52,14 @@ public class SoulFurnaceBlock extends Block implements EntityBlock {
 
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
-        } else {
-            this.openContainer(level, pos, player);
-            return InteractionResult.CONSUME;
-        }
-    }
-
-    protected void openContainer(Level pLevel, BlockPos pPos, Player pPlayer) {
-        if (!pLevel.isClientSide && pPlayer instanceof ServerPlayer serverPlayer) {
-            BlockEntity be = pLevel.getBlockEntity(pPos);
-            if (be instanceof SoulFurnaceBlockEntity furnaceBlockEntity) {
-                KnightLib.PLATFORM.openMenu(serverPlayer, furnaceBlockEntity, buf -> buf.writeBlockPos(pPos));
+            final BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof MenuProvider menuProvider && player instanceof ServerPlayer serverPlayer) {
+                KnightLib.PLATFORM.openMenu(serverPlayer, menuProvider, friendlyByteBuf -> friendlyByteBuf.writeBlockPos(pos));
             }
 
         }
 
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
