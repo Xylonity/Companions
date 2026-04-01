@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.tesla.behaviour.lamp;
 
 import dev.xylonity.companions.common.block.PlasmaLampBlock;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;

@@ -2,7 +2,8 @@ package dev.xylonity.companions.common.tesla.behaviour.lamp;
 
 import dev.xylonity.companions.common.block.PlasmaLampBlock;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.ConnectionTarget;
+import dev.xylonity.companions.common.tesla.TeslaNetwork;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;
@@ -19,56 +20,70 @@ public class LampPulseBehaviour implements ITeslaNodeBehaviour {
     @Override
     public void process(AbstractTeslaBlockEntity lamp, Level level, BlockPos blockPos, BlockState blockState) {
 
-        List<TeslaConnectionManager.ConnectionNode> oldConnections = new ArrayList<>(lamp.connectionManager.getIncoming(lamp.asConnectionNode()));
+        // Snapshot of the incoming nodes before potential blockstate change
+        final List<ConnectionTarget> oldIncoming = level.isClientSide
+                ? List.of()
+                : new ArrayList<>(TeslaNetwork.get(level).getIncoming(lamp.asConnectionTarget()));
 
         if (lamp.cycleCounter >= 0) {
-
-            // Particle decoration
+            // Decorative particles
             if (lamp.isActive() && lamp.cycleCounter % 4 == 0) {
                 for (int i = 0; i < 360; i += 120) {
                     if (new Random().nextFloat() < 0.6f) {
-                        double radius = 0.2;
-                        double angleRadians = Math.toRadians(i);
-                        double particleX = lamp.getBlockPos().getX() + 0.5 + radius * Math.cos(angleRadians);
-                        double particleZ = lamp.getBlockPos().getZ() + 0.5 + radius * Math.sin(angleRadians);
-                        double particleY = lamp.getBlockPos().getY() + 0.5 + 1 * Math.random();
-                        level.addParticle(CompanionsParticles.DINAMO_SPARK.get(), particleX, particleY, particleZ, 0d, 0.35d, 0d);
+                        final double radius = 0.2;
+                        final double angle = Math.toRadians(i);
+                        final double px = lamp.getBlockPos().getX() + 0.5 + radius * Math.cos(angle);
+                        final double pz = lamp.getBlockPos().getZ() + 0.5 + radius * Math.sin(angle);
+                        final double py = lamp.getBlockPos().getY() + 0.5 + Math.random();
+                        level.addParticle(CompanionsParticles.DINAMO_SPARK.get(), px, py, pz, 0, 0.35, 0);
                     }
+
                 }
+
             }
 
             if (lamp.cycleCounter == 0) {
-                // Keeps the lamp active for a full cycle
                 lamp.setActive(true);
                 level.setBlockAndUpdate(blockPos, blockState.setValue(PlasmaLampBlock.LIT, true));
-                linkLamp(lamp, level, blockPos, oldConnections);
+                relinkLamp(lamp, level, blockPos, oldIncoming);
             }
 
             if (lamp.cycleCounter == MAX_LAPSUS) {
-                //Things here happen ONCE when the cycle is over
                 lamp.cycleCounter = -1;
                 level.setBlockAndUpdate(blockPos, blockState.setValue(PlasmaLampBlock.LIT, false));
-                linkLamp(lamp, level, blockPos, oldConnections);
+                relinkLamp(lamp, level, blockPos, oldIncoming);
                 lamp.setActive(false);
             }
             else {
                 lamp.cycleCounter++;
                 lamp.tickCount++;
             }
+
         }
-        //With an else statement, things here happen every tick outside the cycle
 
     }
 
-    private void linkLamp(AbstractTeslaBlockEntity lamp, Level level, BlockPos blockPos, List<TeslaConnectionManager.ConnectionNode> oldConnections){
-        BlockEntity newBe = level.getBlockEntity(blockPos);
-        if (newBe instanceof AbstractTeslaBlockEntity newLamp) {
-            for (TeslaConnectionManager.ConnectionNode node : oldConnections) {
-                newLamp.connectionManager.addConnection(node, newLamp.asConnectionNode(), false);
+    private void relinkLamp(AbstractTeslaBlockEntity lamp, Level level, BlockPos blockPos, List<ConnectionTarget> oldIncoming) {
+        if (level.isClientSide) {
+            return;
+        }
+
+        final BlockEntity newBlockEntity = level.getBlockEntity(blockPos);
+        if (newBlockEntity instanceof AbstractTeslaBlockEntity newLamp) {
+            final TeslaNetwork network = TeslaNetwork.get(level);
+            for (final ConnectionTarget source : oldIncoming) {
+                if (source.isBlock()) {
+                    final AbstractTeslaBlockEntity sourceBe = network.getBlockEntity(source.blockPos());
+                    if (sourceBe != null) {
+                        sourceBe.addOutgoing(newLamp.asConnectionTarget());
+                        network.onConnectionAdded(source, newLamp.asConnectionTarget());
+                    }
+
+                }
+
             }
 
-            // The new lamp state is not registered into the tesla network, so we gotta registry it again per se
-            TeslaConnectionManager.getInstance().registerBlockEntity(newLamp);
+            network.registerBlockEntity(newLamp);
         }
 
     }

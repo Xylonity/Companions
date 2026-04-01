@@ -1,7 +1,6 @@
 package dev.xylonity.companions.common.tesla.behaviour.coil;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

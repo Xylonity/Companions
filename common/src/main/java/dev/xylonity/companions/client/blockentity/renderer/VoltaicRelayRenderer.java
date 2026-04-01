@@ -20,7 +20,9 @@ public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEnti
 
     public VoltaicRelayRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new VoltaicRelayModel());
-        addRenderLayer(new ElectricConnectionLayer<>(this, Companions.of("textures/misc/electric_arch.png"), totalFrames, ticksPerFrame));
+        addRenderLayer(new ElectricConnectionLayer<>(this,
+                Companions.of("textures/misc/electric_arch.png"),
+                totalFrames, ticksPerFrame));
     }
 
     public VoltaicRelayRenderer(BlockEntityRendererProvider.Context renderManager) {
@@ -30,11 +32,6 @@ public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEnti
     @Override
     protected void rotateBlock(Direction facing, PoseStack poseStack) {
         ;;
-    }
-
-    @Override
-    public void actuallyRender(PoseStack poseStack, VoltaicRelayBlockEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override

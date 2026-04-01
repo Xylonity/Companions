@@ -14,7 +14,9 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> {
 
     public TeslaCoilRenderer(BlockEntityRendererProvider.Context rendererDispatcher, int totalFrames, int ticksPerFrame) {
         super(new TeslaCoilModel());
-        addRenderLayer(new ElectricConnectionLayer<>(this, Companions.of("textures/misc/electric_arch.png"), totalFrames, ticksPerFrame));
+        addRenderLayer(new ElectricConnectionLayer<>(this,
+                Companions.of("textures/misc/electric_arch.png"),
+                totalFrames, ticksPerFrame));
     }
 
     public TeslaCoilRenderer(BlockEntityRendererProvider.Context renderManager) {
@@ -22,9 +24,7 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> {
     }
 
     @Override
-    protected void rotateBlock(Direction facing, PoseStack poseStack) {
-        ;;
-    }
+    protected void rotateBlock(Direction facing, PoseStack poseStack) { }
 
     @Override
     public int getViewDistance() {

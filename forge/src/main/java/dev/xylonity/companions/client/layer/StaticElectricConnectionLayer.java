@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;

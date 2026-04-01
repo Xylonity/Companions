@@ -1,6 +1,6 @@
 package dev.xylonity.companions.common.blockentity;
 
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.TeslaNetwork;
 import dev.xylonity.companions.common.tesla.behaviour.platform.RecallPlatformPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
@@ -35,51 +35,60 @@ public class RecallPlatformBlockEntity extends AbstractTeslaBlockEntity {
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
-        if (!(t instanceof RecallPlatformBlockEntity platform)) return;
+        if (!(t instanceof RecallPlatformBlockEntity platform)) {
+            return;
+        }
 
         if (level.getEntitiesOfClass(Player.class, new AABB(platform.getBlockPos()).move(0, 1, 0).inflate(0.5)).isEmpty()) {
             platform.cooldown = COOLDOWN_TICKS;
-        } else {
+        }
+        else {
             platform.cooldown--;
         }
 
         platform.pulseBehaviour.process(platform, level, blockPos, blockState);
-
         platform.tickCount++;
-
         platform.sync();
     }
 
     public void onStepped(ServerPlayer player) {
-        if (cooldown > 0 || !isActive()) return;
+        if (cooldown > 0 || !isActive()) {
+            return;
+        }
+        if (getLevel() == null) {
+            return;
+        }
 
-        if (getLevel() == null) return;
-
-        List<BlockPos> shuffled = new ArrayList<>(partnerPositions);
+        final List<BlockPos> shuffled = new ArrayList<>(partnerPositions);
         Collections.shuffle(shuffled, new Random());
 
-        for (BlockPos target : shuffled) {
+        final TeslaNetwork network = TeslaNetwork.get(getLevel());
+        for (final BlockPos target : shuffled) {
             if (!(getLevel().getBlockEntity(target) instanceof RecallPlatformBlockEntity otherPlatform)) {
                 partnerPositions.remove(target);
                 setChanged();
                 continue;
             }
 
-            TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
-            if (!manager.getConnectedComponent(this.asConnectionNode()).contains(otherPlatform.asConnectionNode())) {
+            if (!network.getConnectedComponent(this.asConnectionTarget()).contains(otherPlatform.asConnectionTarget())) {
                 partnerPositions.remove(target);
                 setChanged();
                 continue;
             }
 
-            if (level != null) level.playSound(null, getBlockPos(), CompanionsSounds.TEDDY_TRANSFORMATION.get(), SoundSource.BLOCKS, 1, 1);
+            if (level != null) {
+                level.playSound(null, getBlockPos(), CompanionsSounds.TEDDY_TRANSFORMATION.get(), SoundSource.BLOCKS, 1, 1);
+            }
 
             player.teleportTo(target.getX() + .5, target.getY() + 1, target.getZ() + .5);
 
-            if (level != null) level.playSound(null, target, CompanionsSounds.TEDDY_TRANSFORMATION.get(), SoundSource.BLOCKS, 1, 1);
+            if (level != null) {
+                level.playSound(null, target, CompanionsSounds.TEDDY_TRANSFORMATION.get(), SoundSource.BLOCKS, 1, 1);
+            }
 
             this.cooldown = COOLDOWN_TICKS;
             otherPlatform.cooldown = COOLDOWN_TICKS;
+
             return;
         }
     }
@@ -97,13 +106,13 @@ public class RecallPlatformBlockEntity extends AbstractTeslaBlockEntity {
     protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
 
-        ListTag list = new ListTag();
-        for (BlockPos p : partnerPositions) {
-            CompoundTag t = new CompoundTag();
-            t.putInt("X", p.getX());
-            t.putInt("Y", p.getY());
-            t.putInt("Z", p.getZ());
-            list.add(t);
+        final ListTag list = new ListTag();
+        for (final BlockPos blockPos : partnerPositions) {
+            final CompoundTag compoundTag = new CompoundTag();
+            compoundTag.putInt("X", blockPos.getX());
+            compoundTag.putInt("Y", blockPos.getY());
+            compoundTag.putInt("Z", blockPos.getZ());
+            list.add(compoundTag);
         }
 
         tag.put("Partners", list);
@@ -116,23 +125,24 @@ public class RecallPlatformBlockEntity extends AbstractTeslaBlockEntity {
 
         partnerPositions.clear();
         if (tag.contains("Partners", Tag.TAG_LIST)) {
-            ListTag list = tag.getList("Partners", Tag.TAG_COMPOUND);
-            for (Tag t : list) {
-                CompoundTag c = (CompoundTag) t;
-                partnerPositions.add(new BlockPos(c.getInt("X"),
-                        c.getInt("Y"),
-                        c.getInt("Z")));
+            final ListTag list = tag.getList("Partners", Tag.TAG_COMPOUND);
+            for (final Tag tagg : list) {
+                final CompoundTag compoundTag = (CompoundTag) tagg;
+                partnerPositions.add(new BlockPos(compoundTag.getInt("X"), compoundTag.getInt("Y"), compoundTag.getInt("Z")));
             }
+
         }
 
         cooldown = tag.getInt("Cooldown");
     }
 
-    @Override public @NotNull Vec3 electricalChargeOriginOffset() {
+    @Override
+    public @NotNull Vec3 electricalChargeOriginOffset() {
         return Vec3.ZERO;
     }
 
-    @Override public @NotNull Vec3 electricalChargeEndOffset() {
+    @Override
+    public @NotNull Vec3 electricalChargeEndOffset() {
         return new Vec3(0, .5, 0);
     }
 

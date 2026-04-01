@@ -1,8 +1,10 @@
 # 1.3.0
+- The Tesla Manager, which handles connection logic on the Tesla Network, has been rewritten, potentially fixing Tesla connection and desynchronization issues on dedicated servers
 - Now the Sacred Pontiff can have its name translated into different languages instead of being exclusively in English (previously limited by the bossbar system)
 - Armor effects now apply to any entity wearing the armor set, not just players
 - In Fabric, the respawn totem can now respawn any tamable entity, not just companions
 - The code has been rewritten to ensure loader parity
+- Added compatibility with knightlib 1.5.0
 - Fixed companions not being detected by mods that display entity loot tables, due to a lack of loot table definitions
 - Fixed a bug where the hostile imp was not dropping demon flesh in Fabric
 

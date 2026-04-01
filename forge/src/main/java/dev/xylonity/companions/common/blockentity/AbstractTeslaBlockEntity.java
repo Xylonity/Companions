@@ -1,6 +1,5 @@
 package dev.xylonity.companions.common.blockentity;
 
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.tesla.behaviour.DefaultAttackBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import net.minecraft.core.BlockPos;

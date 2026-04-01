@@ -1,11 +1,13 @@
 package dev.xylonity.companions.common.blockentity;
 
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.ConnectionTarget;
+import dev.xylonity.companions.common.tesla.TeslaNetwork;
 import dev.xylonity.companions.common.tesla.behaviour.DefaultAttackBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -25,22 +27,23 @@ import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.util.RenderUtils;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Base class for all Tesla network block entities.
+ *
  * Extend this class to create new components that belong to the Tesla network.
  *
- * Each instance is registered as a node in the tesla network graph (see TeslaConnectionManager)
- * and holds common fields such as the active state and a network distance measure, along with the
- * cycle scheduled lifetime.
+ * Each instance stores its own outgoing connections (synced to the client for rendering)
+ * and registers itself with the server side {@link TeslaNetwork} for graph operations.
  */
 public abstract class AbstractTeslaBlockEntity extends BlockEntity implements GeoBlockEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public final TeslaConnectionManager connectionManager;
+    private final Set<ConnectionTarget> outgoing = ConcurrentHashMap.newKeySet();
 
     public int tickCount;
     public int activationTick;
@@ -59,7 +62,6 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
 
     public AbstractTeslaBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        this.connectionManager = TeslaConnectionManager.getInstance();
         this.distance = 0;
         this.isActive = false;
         this.tickCount = 0;
@@ -68,6 +70,146 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.pendingRemoval = false;
         this.receivesGenerator = false;
         this.defaultAttackBehaviour = new DefaultAttackBehaviour();
+    }
+
+    public ConnectionTarget asConnectionTarget() {
+        final ResourceLocation dimensionRL = getLevel() != null
+                ? getLevel().dimension().location()
+                : new ResourceLocation("overworld");
+
+        return ConnectionTarget.forBlock(getBlockPos(), dimensionRL);
+    }
+
+    public Set<ConnectionTarget> getOutgoing() {
+        return outgoing;
+    }
+
+    public void addOutgoing(ConnectionTarget target) {
+        outgoing.add(target);
+        setChanged();
+    }
+
+    public void removeOutgoing(ConnectionTarget target) {
+        outgoing.remove(target);
+        setChanged();
+    }
+
+    @Override
+    public void setLevel(@NotNull Level level) {
+        super.setLevel(level);
+        if (!level.isClientSide && !registeredInTesla) {
+            TeslaNetwork.get(level).registerBlockEntity(this);
+            registeredInTesla = true;
+        }
+
+    }
+
+    @Override
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
+
+        outgoing.clear();
+        if (tag.contains("OutgoingConnections", Tag.TAG_LIST)) {
+            tag.getList("OutgoingConnections", Tag.TAG_COMPOUND).forEach(tagg ->
+                    outgoing.add(ConnectionTarget.deserialize((CompoundTag) tagg)));
+        }
+
+        this.tickCount = tag.getInt("TickCount");
+        this.isActive = tag.getBoolean("IsActive");
+        this.activationTick = tag.contains("ActivationTick") ? tag.getInt("ActivationTick") : 0;
+
+        if (tag.contains("CycleCounter")) {
+            this.cycleCounter = tag.getInt("CycleCounter");
+        }
+
+        this.receivesGenerator = tag.getBoolean("ReceivesGenerator");
+        this.distance = tag.getInt("Distance");
+        this.activationTick = tag.getInt("AnimationTick");
+        if (tag.contains("OwnerUUID")) {
+            this.ownerUUID = tag.getUUID("OwnerUUID");
+        }
+
+    }
+
+    @Override
+    protected void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
+
+        final ListTag list = new ListTag();
+        outgoing.forEach(node -> list.add(node.serialize()));
+        tag.put("OutgoingConnections", list);
+
+        tag.putInt("TickCount", this.tickCount);
+        tag.putBoolean("IsActive", this.isActive);
+        tag.putInt("ActivationTick", this.activationTick);
+        tag.putInt("CycleCounter", this.cycleCounter);
+        tag.putBoolean("ReceivesGenerator", this.receivesGenerator);
+        tag.putInt("Distance", this.distance);
+        tag.putInt("AnimationTick", this.activationTick);
+        if (ownerUUID != null) {
+            tag.putUUID("OwnerUUID", ownerUUID);
+        }
+
+    }
+
+    /**
+     * Now includes outgoing connections so the client can render electric arcs.
+     */
+    @Override
+    public @NotNull CompoundTag getUpdateTag() {
+        final CompoundTag tag = super.getUpdateTag();
+
+        final ListTag list = new ListTag();
+        outgoing.forEach(node -> list.add(node.serialize()));
+        tag.put("OutgoingConnections", list);
+
+        tag.putInt("TickCount", this.tickCount);
+        tag.putBoolean("IsActive", this.isActive);
+        tag.putInt("Distance", this.distance);
+        tag.putInt("AnimationTick", this.activationTick);
+        tag.putInt("CycleCounter", this.cycleCounter);
+        if (ownerUUID != null) {
+            tag.putUUID("OwnerUUID", ownerUUID);
+        }
+
+        return tag;
+    }
+
+    public void sync() {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        final Packet<ClientGamePacketListener> packet = ClientboundBlockEntityDataPacket.create(this);
+        final ChunkPos chunkPos = new ChunkPos(worldPosition);
+        serverLevel.getChunkSource().chunkMap.getPlayers(chunkPos, false)
+                .forEach(serverPlayer -> serverPlayer.connection.send(packet));
+    }
+
+    public boolean handleNodeSelection(ConnectionTarget thisNode, ConnectionTarget nodeToConnect, @Nullable UseOnContext ctx, Player player) {
+        if (level != null) {
+            addOutgoing(nodeToConnect);
+            TeslaNetwork.get(level).onConnectionAdded(thisNode, nodeToConnect);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean handleNodeRemoval(ConnectionTarget thisNode, ConnectionTarget nodeToConnect, @Nullable UseOnContext ctx, Player player) {
+        if (level != null) {
+            removeOutgoing(nodeToConnect);
+            TeslaNetwork.get(level).onConnectionRemoved(thisNode, nodeToConnect);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public int getDistance() {
@@ -82,76 +224,28 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         return this.isActive;
     }
 
-    public TeslaConnectionManager.ConnectionNode asConnectionNode() {
-        ResourceLocation dimension = getLevel() != null
-                ? getLevel().dimension().location()
-                : new ResourceLocation("overworld");
-        return TeslaConnectionManager.ConnectionNode.forBlock(getBlockPos(), dimension);
+    public void setActive(boolean active) {
+        this.isActive = active;
     }
 
-    @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-        if (!level.isClientSide && !registeredInTesla) {
-            connectionManager.registerBlockEntity(this);
-            registeredInTesla = true;
-        }
+    public boolean isPendingRemoval() {
+        return pendingRemoval;
     }
 
-    @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
-        tag.getList("OutgoingConnections", 10).forEach(t -> {
-            TeslaConnectionManager.getInstance().addConnection(asConnectionNode(), TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t), true);
-        });
-        this.tickCount = tag.getInt("TickCount");
-        this.isActive = tag.getBoolean("IsActive");
-        this.activationTick = tag.contains("ActivationTick") ? tag.getInt("ActivationTick") : 0;
-        if (this.cycleCounter >= 0) {
-            tag.putInt("CycleCounter", this.cycleCounter);
-        }
-        this.receivesGenerator = tag.getBoolean("ReceivesGenerator");
-        this.setDistance(tag.getInt("Distance"));
-        this.setAnimationStartTick(tag.getInt("AnimationTick"));
-        if (tag.contains("OwnerUUID")) setOwnerUUID(tag.getUUID("OwnerUUID"));
+    public void setReceivesGenerator(boolean receivesGenerator) {
+        this.receivesGenerator = receivesGenerator;
     }
 
-    @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
-        ListTag outgoing = new ListTag();
-        connectionManager.getOutgoing(asConnectionNode()).forEach(node -> {
-            outgoing.add(node.serialize());
-        });
-        tag.put("OutgoingConnections", outgoing);
-
-        tag.putInt("TickCount", this.tickCount);
-        tag.putBoolean("IsActive", this.isActive);
-        tag.putInt("ActivationTick", this.activationTick);
-        tag.putInt("CycleCounter", this.cycleCounter);
-        tag.putBoolean("ReceivesGenerator", this.receivesGenerator);
-        tag.putInt("Distance", this.distance);
-        tag.putInt("AnimationTick", this.getAnimationStartTick());
-        if (getOwnerUUID() != null) tag.putUUID("OwnerUUID", getOwnerUUID());
+    public boolean isReceivesGenerator() {
+        return this.receivesGenerator;
     }
 
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
+    public void setAnimationStartTick(int animationStartTick) {
+        this.activationTick = animationStartTick;
     }
 
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) { ;; }
-
-    @Override
-    public double getTick(Object o) {
-        return RenderUtils.getCurrentTick();
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
+    public int getAnimationStartTick() {
+        return activationTick;
     }
 
     public void setOwnerUUID(UUID uuid) {
@@ -162,87 +256,40 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         return this.ownerUUID;
     }
 
-    @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        tag.putInt("TickCount", this.tickCount);
-        tag.putBoolean("IsActive", this.isActive);
-        tag.putInt("Distance", this.distance);
-        tag.putInt("AnimationTick", this.getAnimationStartTick());
-        tag.putInt("CycleCounter", this.cycleCounter);
-        if (tag.contains("OwnerUUID")) tag.putUUID("OwnerUUID", getOwnerUUID());
-        return tag;
-    }
-
-    public void sync() {
-        if (!(level instanceof ServerLevel serverLevel)) return;
-
-        Packet<ClientGamePacketListener> pkt = ClientboundBlockEntityDataPacket.create(this);
-        ChunkPos chunkPos = new ChunkPos(worldPosition);
-
-        serverLevel.getChunkSource().chunkMap.getPlayers(chunkPos, false).forEach(p -> p.connection.send(pkt));
-    }
-
-    public boolean isPendingRemoval() {
-        return pendingRemoval;
-    }
-
-    public void setReceivesGenerator(boolean flag) {
-        this.receivesGenerator = flag;
-    }
-
-    public boolean isReceivesGenerator() {
-        return this.receivesGenerator;
-    }
-
-    public void setAnimationStartTick(int tick) {
-        this.activationTick = tick;
+    public boolean hasConcurrentPower() {
+        return this.isActive;
     }
 
     public void startCycle() {
         this.cycleCounter = 0;
         this.setChanged();
+
+        // Sync data to client
+        if (this.level instanceof ServerLevel) {
+            this.sync();
+        }
+
     }
 
-    public int getAnimationStartTick() {
-        return activationTick;
-    }
-
-    public boolean hasConcurrentPower() {
-        return this.isActive;
-    }
-
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    // Can the module connect to other modules
+    /** Whether this module can form new outgoing connections. */
     public boolean canConnectToOtherModules() {
         return true;
     }
 
-    // Position offset where the electrical charge is emitted (from x + 0.5, y, z + 0.5)
-    public @NotNull abstract Vec3 electricalChargeOriginOffset();
+    /** Offset where the electrical charge is emitted (from block center) */
+    public abstract @NotNull Vec3 electricalChargeOriginOffset();
 
-    // Position where the electrical charge is received
-    public @NotNull abstract Vec3 electricalChargeEndOffset();
+    /** Offset where the electrical charge is received (from block center) */
+    public abstract @NotNull Vec3 electricalChargeEndOffset();
 
-    /**
-     * Defers the call from the wrench item when this node is getting connected to another one
-     * Don't override if the connection is simple (one node to another node)
-     */
-    public boolean handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx, Player player) {
-        connectionManager.addConnection(thisNode, nodeToConnect);
-        return true;
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        ;;
     }
 
-    /**
-     * Defers the call from the wrench item when this node is getting removed from the tesla network
-     * Don't override if the connection is simple (one node to another node)
-     */
-    public boolean handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx, Player player) {
-        connectionManager.removeConnection(thisNode, nodeToConnect);
-        return true;
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 
 }

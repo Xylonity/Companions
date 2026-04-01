@@ -22,19 +22,22 @@ public class VoltaicRelayBlockEntity extends AbstractTeslaBlockEntity {
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
-        if (level.isClientSide) return;
-        if (!(t instanceof VoltaicRelayBlockEntity relay)) return;
+        if (level.isClientSide) {
+            return;
+        }
+        if (!(t instanceof VoltaicRelayBlockEntity relay)) {
+            return;
+        }
 
         relay.pulseBehaviour.process(relay, level, blockPos, blockState);
         relay.defaultAttackBehaviour.process(relay, level, blockPos, blockState);
-
         relay.sync();
     }
 
     @Override
     public @NotNull Vec3 electricalChargeOriginOffset() {
-        Direction dir = this.getBlockState().getValue(AbstractTeslaBlock.FACING);
-        return switch (dir) {
+        final Direction direction = this.getBlockState().getValue(AbstractTeslaBlock.FACING);
+        return switch (direction) {
             case DOWN -> new Vec3(0, 0, 0);
             case UP -> new Vec3(0, 1, 0);
             case NORTH -> new Vec3(0, 0.5, -0.65);
@@ -42,19 +45,12 @@ public class VoltaicRelayBlockEntity extends AbstractTeslaBlockEntity {
             case WEST -> new Vec3(-0.65, 0.5, 0);
             case EAST -> new Vec3(0.65, 0.5, 0);
         };
+
     }
 
     @Override
     public @NotNull Vec3 electricalChargeEndOffset() {
-        Direction dir = this.getBlockState().getValue(AbstractTeslaBlock.FACING);
-        return switch (dir) {
-            case DOWN -> new Vec3(0, 0, 0);
-            case UP -> new Vec3(0, 1, 0);
-            case NORTH -> new Vec3(0, 0.5, -0.65);
-            case SOUTH -> new Vec3(0, 0.5, 0.65);
-            case WEST -> new Vec3(-0.65, 0.5, 0);
-            case EAST -> new Vec3(0.65, 0.5, 0);
-        };
+        return electricalChargeOriginOffset();
     }
 
 }

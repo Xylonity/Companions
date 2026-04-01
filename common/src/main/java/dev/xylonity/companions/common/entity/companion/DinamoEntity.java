@@ -1,11 +1,13 @@
 package dev.xylonity.companions.common.entity.companion;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
+import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.ConnectionTarget;
+import dev.xylonity.companions.common.tesla.TeslaNetwork;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoAttackBehaviour;
 import dev.xylonity.companions.common.tesla.behaviour.dinamo.DinamoPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
@@ -34,8 +36,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
@@ -51,9 +53,10 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DinamoEntity extends CompanionEntity implements GeoEntity {
-    private final TeslaConnectionManager connectionManager;
+
     public List<LivingEntity> entitiesToAttack = new ArrayList<>();
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
@@ -66,16 +69,20 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     private static final EntityDataAccessor<Boolean> ATTACK_ACTIVE = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> ATTACK_CYCLE_COUNTER = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> TARGET_IDS = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.STRING);
-
     private static final EntityDataAccessor<Boolean> SHOULD_ATTACK = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private static final EntityDataAccessor<CompoundTag> OUTGOING_CONNECTIONS = SynchedEntityData.defineId(DinamoEntity.class, EntityDataSerializers.COMPOUND_TAG);
+
+    private final Set<ConnectionTarget> outgoing = ConcurrentHashMap.newKeySet();
 
     private final ITeslaGeneratorBehaviour pulseBehavior;
     private final ITeslaGeneratorBehaviour attackBehavior;
 
+    private boolean teslaIndexed = false;
+
     public DinamoEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.connectionManager = TeslaConnectionManager.getInstance();
-        this.pulseBehavior = new DinamoPulseBehaviour();
+        this.pulseBehavior  = new DinamoPulseBehaviour();
         this.attackBehavior = new DinamoAttackBehaviour();
     }
 
@@ -88,7 +95,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
-
         this.goalSelector.addGoal(2, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(2, new CompanionRandomStrollGoal(this, 0.43));
 
@@ -99,24 +105,98 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
                 super.start();
                 DinamoEntity.this.setTargetIds(getTargetIds() + getOwnerLastHurt().getId() + ";");
             }
+
         });
+
     }
 
-    public TeslaConnectionManager.ConnectionNode asConnectionNode() {
-        return TeslaConnectionManager.ConnectionNode.forEntity(getUUID(), level().dimension().location());
+    public ConnectionTarget asConnectionTarget() {
+        return ConnectionTarget.forEntity(getUUID(), level().dimension().location());
+    }
+
+    public Set<ConnectionTarget> getOutgoing() {
+        if (level().isClientSide) {
+            return deserializeOutgoing(this.entityData.get(OUTGOING_CONNECTIONS));
+        }
+
+        return outgoing;
+    }
+
+    public void addOutgoingConnection(ConnectionTarget target) {
+        outgoing.add(target);
+        syncOutgoingToClient();
+    }
+
+    public void removeOutgoingConnection(ConnectionTarget target) {
+        outgoing.remove(target);
+        syncOutgoingToClient();
+    }
+
+    private void syncOutgoingToClient() {
+        this.entityData.set(OUTGOING_CONNECTIONS, serializeOutgoing());
+    }
+
+    private CompoundTag serializeOutgoing() {
+        final CompoundTag tag = new CompoundTag();
+        final ListTag list = new ListTag();
+        for (final ConnectionTarget connectionTarget : outgoing) {
+            list.add(connectionTarget.serialize());
+        }
+
+        tag.put("Connections", list);
+        return tag;
+    }
+
+    private static Set<ConnectionTarget> deserializeOutgoing(CompoundTag tag) {
+        final Set<ConnectionTarget> result = ConcurrentHashMap.newKeySet();
+        if (tag != null && tag.contains("Connections", Tag.TAG_LIST)) {
+            final ListTag list = tag.getList("Connections", Tag.TAG_COMPOUND);
+            for (final Tag tagg : list) {
+                result.add(ConnectionTarget.deserialize((CompoundTag) tagg));
+            }
+
+        }
+
+        return result;
+    }
+
+    public void handleNodeSelection(ConnectionTarget thisNode, ConnectionTarget nodeToConnect) {
+        addOutgoingConnection(nodeToConnect);
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        ListTag outgoing = new ListTag();
 
-        for (TeslaConnectionManager.ConnectionNode node : TeslaConnectionManager.getInstance().getOutgoing(asConnectionNode())) {
-            outgoing.add(node.serialize());
+        final ListTag list = new ListTag();
+        for (ConnectionTarget t : outgoing) {
+            list.add(t.serialize());
         }
 
-        tag.put("OutgoingConnections", outgoing);
+        tag.put("OutgoingConnections", list);
         tag.putInt("AnimationStartTick", getAnimationStartTick());
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+
+        outgoing.clear();
+        if (tag.contains("OutgoingConnections", Tag.TAG_LIST)) {
+            final ListTag list = tag.getList("OutgoingConnections", Tag.TAG_COMPOUND);
+            for (final Tag tagg : list) {
+                outgoing.add(ConnectionTarget.deserialize((CompoundTag) tagg));
+            }
+
+        }
+
+        syncOutgoingToClient();
+
+        if (!level().isClientSide) {
+            TeslaNetwork.get(level()).indexEntityOutgoing(asConnectionTarget(), outgoing);
+            teslaIndexed = true;
+        }
+
     }
 
     @Override
@@ -135,40 +215,33 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-
-        TeslaConnectionManager.ConnectionNode me = asConnectionNode();
-        connectionManager.getOutgoing(me).clear();
-        connectionManager.getIncoming(me).clear();
-
-        if (tag.contains("OutgoingConnections")) {
-            ListTag outgoingList = tag.getList("OutgoingConnections", 10);
-            for (Tag t : outgoingList) {
-                TeslaConnectionManager.ConnectionNode node = TeslaConnectionManager.ConnectionNode.deserialize((CompoundTag) t);
-                connectionManager.addConnection(me, node, true);
-            }
-        }
-
-        connectionManager.recalculateDistances();
-    }
-
-    @Override
     public void die(@NotNull DamageSource pCause) {
         super.die(pCause);
 
-        Set<TeslaConnectionManager.ConnectionNode> outNodes = new HashSet<>(connectionManager.getOutgoing(asConnectionNode()));
-        for (TeslaConnectionManager.ConnectionNode target : outNodes) {
-            connectionManager.removeConnection(asConnectionNode(), target);
-        }
+        if (!level().isClientSide) {
+            final TeslaNetwork network = TeslaNetwork.get(level());
+            final ConnectionTarget self = asConnectionTarget();
 
-        Set<TeslaConnectionManager.ConnectionNode> inNodes = new HashSet<>(connectionManager.getIncoming(asConnectionNode()));
-        for (TeslaConnectionManager.ConnectionNode source : inNodes) {
-            connectionManager.removeConnection(source, asConnectionNode());
-        }
+            for (final ConnectionTarget target : new HashSet<>(outgoing)) {
+                network.onConnectionRemoved(self, target);
+            }
 
-        connectionManager.removeConnectionNode(asConnectionNode());
-        connectionManager.recalculateDistances();
+            outgoing.clear();
+
+            for (final ConnectionTarget source : network.getIncoming(self)) {
+                if (source.isBlock()) {
+                    final AbstractTeslaBlockEntity blockEntity = network.getBlockEntity(source.blockPos());
+                    if (blockEntity != null) {
+                        blockEntity.removeOutgoing(self);
+                        blockEntity.sync();
+                    }
+
+                }
+
+            }
+
+            network.removeEntityNode(self);
+        }
 
     }
 
@@ -183,18 +256,23 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player && player.getMainHandItem().getItem() != CompanionsItems.WRENCH.get()) {
+        if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player
+                && player.getMainHandItem().getItem() != CompanionsItems.WRENCH.get()) {
+
             if (player.isShiftKeyDown() && getMainAction() != 0) {
                 setShouldAttack(!shouldAttack());
-
                 if (shouldAttack()) {
                     player.displayClientMessage(Component.translatable("dinamo.companions.client_message.attack").withStyle(ChatFormatting.GREEN), true);
-                } else {
+                }
+                else {
                     player.displayClientMessage(Component.translatable("dinamo.companions.client_message.no_attack").withStyle(ChatFormatting.GREEN), true);
                 }
 
-            } else {
-                if (level().isClientSide) return InteractionResult.SUCCESS;
+            }
+            else {
+                if (level().isClientSide) {
+                    return InteractionResult.SUCCESS;
+                }
 
                 handleDefaultMainActionAndHeal(player, hand);
             }
@@ -213,29 +291,44 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
             setActive(false);
         }
 
-        // clears the target list on the client upon the cycle end of life
         if (level().isClientSide) {
             if (this.getAttackCycleCounter() >= ITeslaUtil.DINAMO_ATTACK_DELAY) {
                 this.entitiesToAttack.clear();
             }
+
         }
 
         if (getMainAction() == 0) {
             pulseBehavior.tick(this);
-        } else {
+        }
+        else {
             attackBehavior.tick(this);
         }
 
-        // populating the server side cached target entities to the client list (to make the ray visible)
+        // Populates the client-side target list to render the outgoing arcs
         if (level().isClientSide) {
             if (!getTargetIds().isEmpty() && !getTargetIds().isBlank()) {
-                for (String s : getTargetIds().split(";")) {
-                    if (level().getEntity(Integer.parseInt(s)) instanceof LivingEntity e) {
-                        this.entitiesToAttack.add(e);
+                for (final String string : getTargetIds().split(";")) {
+                    try {
+                        if (level().getEntity(Integer.parseInt(string)) instanceof LivingEntity e) {
+                            this.entitiesToAttack.add(e);
+                        }
+
                     }
+                    catch (NumberFormatException ignored) {
+                        ;;
+                    }
+
                 }
+
             }
 
+        }
+
+        // Lazy index with TeslaNetwork if not yet done
+        if (!level().isClientSide && !teslaIndexed && !outgoing.isEmpty()) {
+            TeslaNetwork.get(level()).indexEntityOutgoing(asConnectionTarget(), outgoing);
+            teslaIndexed = true;
         }
 
     }
@@ -249,14 +342,17 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         this.entityData.set(ACTIVE, active);
     }
 
+    public boolean isActive() {
+        return this.entityData.get(ACTIVE);
+    }
+
     public String getTargetIds() {
         return this.entityData.get(TARGET_IDS);
     }
 
-    public void setTargetIds(String uuid) {
-        this.entityData.set(TARGET_IDS, uuid);
+    public void setTargetIds(String ids) {
+        this.entityData.set(TARGET_IDS, ids);
     }
-
 
     public boolean isActiveForAttack() {
         return this.entityData.get(ATTACK_ACTIVE);
@@ -264,11 +360,6 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
 
     public void setActiveForAttack(boolean active) {
         this.entityData.set(ATTACK_ACTIVE, active);
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
     }
 
     public int getAnimationStartTick() {
@@ -295,20 +386,17 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         this.entityData.set(ATTACK_CYCLE_COUNTER, tick);
     }
 
-    public boolean isActive() {
-        return this.entityData.get(ACTIVE);
-    }
-
     public boolean shouldAttack() {
         return this.entityData.get(SHOULD_ATTACK);
     }
 
-    public void setShouldAttack(boolean shouldAttack) {
-        this.entityData.set(SHOULD_ATTACK, shouldAttack);
+    public void setShouldAttack(boolean v) {
+        this.entityData.set(SHOULD_ATTACK, v);
     }
 
-    public void handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect) {
-        connectionManager.addConnection(thisNode, nodeToConnect);
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
     }
 
     @Override
@@ -349,6 +437,7 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         this.entityData.define(ATTACK_CYCLE_COUNTER, 0);
         this.entityData.define(SHOULD_ATTACK, true);
         this.entityData.define(TARGET_IDS, "");
+        this.entityData.define(OUTGOING_CONNECTIONS, new CompoundTag());
     }
 
     @Override
@@ -364,9 +453,11 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
         if (getMainAction() == 0) {
             event.getController().setAnimation(SIT);
-        } else if (event.isMoving()) {
+        }
+        else if (event.isMoving()) {
             event.getController().setAnimation(WALK);
-        } else {
+        }
+        else {
             event.getController().setAnimation(IDLE);
         }
 

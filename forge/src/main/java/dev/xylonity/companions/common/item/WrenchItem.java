@@ -4,7 +4,6 @@ import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.blockentity.VoltaicRelayBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsSounds;

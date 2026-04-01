@@ -72,6 +72,7 @@ public class TeslaCoilBlock extends AbstractTeslaBlock implements EntityBlock {
             case NORTH -> SHAPE_N;
             case SOUTH -> SHAPE_S;
         };
+
     }
 
     @Nullable
@@ -83,7 +84,7 @@ public class TeslaCoilBlock extends AbstractTeslaBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.TESLA_COIL ? TeslaCoilBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.TESLA_COIL.get() ? TeslaCoilBlockEntity::tick : null;
     }
 
 }

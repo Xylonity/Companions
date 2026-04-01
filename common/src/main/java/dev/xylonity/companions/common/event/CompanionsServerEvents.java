@@ -6,6 +6,7 @@ import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.projectile.PontiffFireRingProjectile;
 import dev.xylonity.companions.common.entity.summon.*;
 import dev.xylonity.companions.common.material.ArmorMaterials;
+import dev.xylonity.companions.common.tesla.TeslaNetwork;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlocks;
@@ -232,10 +233,16 @@ public final class CompanionsServerEvents {
                 if (owner != null) {
                     owner.sendSystemMessage(Component.translatable("respawn_totem.companions.charges_remaining", totem.getCharges() - 1));
                 }
+
             }
 
         }
 
+    }
+
+    @RegisterEvent
+    public static void onServerWorldUnload(final ServerWorldUnloadEvent event) {
+        TeslaNetwork.clearAll();
     }
 
 }

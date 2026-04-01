@@ -5,7 +5,8 @@ import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.blockentity.VoltaicRelayBlockEntity;
 import dev.xylonity.companions.common.entity.companion.DinamoEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.ConnectionTarget;
+import dev.xylonity.companions.common.tesla.TeslaNetwork;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.ChatFormatting;
@@ -24,15 +25,20 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.WeakHashMap;
+
 public class WrenchItem extends TooltipItem {
 
-    @Nullable
-    private TeslaConnectionManager.ConnectionNode firstNode = null;
-    private final int maxConnDist;
+    // I hate statics
+    private final Map<UUID, ConnectionTarget> firstNodes = new WeakHashMap<>();
+
+    private final int maxConnectionDistanceSqr;
 
     public WrenchItem(Properties properties) {
         super(properties);
-        this.maxConnDist = CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE * CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE;
+        this.maxConnectionDistanceSqr = CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE * CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE;
     }
 
     @Override
@@ -42,11 +48,17 @@ public class WrenchItem extends TooltipItem {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, @NotNull Player player, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
-        if (!(target instanceof DinamoEntity dinamoEntity) || player.level().isClientSide()) return InteractionResult.PASS;
-        if (dinamoEntity.getOwner() != null && !player.equals(dinamoEntity.getOwner())) return InteractionResult.PASS;
+        if (!(target instanceof DinamoEntity dinamo) || player.level().isClientSide()) {
+            return InteractionResult.PASS;
+        }
+        if (dinamo.getOwner() != null && !player.equals(dinamo.getOwner())) {
+            return InteractionResult.PASS;
+        }
 
-        if (dinamoEntity.getMainAction() == 0) {
-            handleNodeSelection(player, TeslaConnectionManager.ConnectionNode.forEntity(target.getUUID(), player.level().dimension().location()), null);
+        if (dinamo.getMainAction() == 0) {
+            handleNodeSelection(player,
+                    ConnectionTarget.forEntity(target.getUUID(), player.level().dimension().location()),
+                    null);
         }
 
         return InteractionResult.SUCCESS;
@@ -54,178 +66,242 @@ public class WrenchItem extends TooltipItem {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        if (context.getLevel().isClientSide()) return InteractionResult.PASS;
+        if (context.getLevel().isClientSide()) {
+            return InteractionResult.PASS;
+        }
 
-        BlockPos pos = context.getClickedPos();
-        BlockEntity be = context.getLevel().getBlockEntity(pos);
+        final BlockPos clickedPos = context.getClickedPos();
+        final BlockEntity blockEntity = context.getLevel().getBlockEntity(clickedPos);
 
-        if (be instanceof AbstractTeslaBlockEntity) {
-            TeslaConnectionManager.ConnectionNode node = TeslaConnectionManager.ConnectionNode.forBlock(pos, context.getLevel().dimension().location());
-            handleNodeSelection(context.getPlayer(), node, context);
+        if (blockEntity instanceof AbstractTeslaBlockEntity && context.getPlayer() != null) {
+            handleNodeSelection(context.getPlayer(),
+                    ConnectionTarget.forBlock(clickedPos, context.getLevel().dimension().location()),
+                    context);
         }
 
         return InteractionResult.SUCCESS;
     }
 
-    private void handleNodeSelection(Player player, TeslaConnectionManager.ConnectionNode currentNode, @Nullable UseOnContext context) {
-        if (firstNode == null) {
+    private void handleNodeSelection(Player player, ConnectionTarget currentNode, @Nullable UseOnContext context) {
+        final UUID playerId = player.getUUID();
+        final ConnectionTarget firstNode = firstNodes.get(playerId);
 
+        if (firstNode == null) {
+            // First node selection
             if (currentNode.isBlock()) {
-                if (player.level().getBlockEntity(currentNode.blockPos()) instanceof VoltaicPillarBlockEntity be && !be.isTop()) {
+                if (player.level().getBlockEntity(currentNode.blockPos()) instanceof VoltaicPillarBlockEntity vp && !vp.isTop()) {
                     player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_top_voltaic_pillar").withStyle(ChatFormatting.RED), true);
                     return;
                 }
+
             }
 
-            firstNode = currentNode;
-            handleFirstNodeMessage(player, currentNode, context);
-        } else {
-            if (firstNode.equals(currentNode)) {
-                player.displayClientMessage(Component.translatable("wrench.companions.client_message.same_node").withStyle(ChatFormatting.RED), true);
-                firstNode = null;
+            firstNodes.put(playerId, currentNode);
+            showFirstNodeMessage(player, currentNode);
+
+            return;
+        }
+
+        // Second node selection
+        if (firstNode.equals(currentNode)) {
+            player.displayClientMessage(Component.translatable("wrench.companions.client_message.same_node").withStyle(ChatFormatting.RED), true);
+            firstNodes.remove(playerId);
+            return;
+        }
+
+        final boolean aToBExists = nodeHasOutgoingTo(firstNode, currentNode, player);
+        final boolean bToAExists = nodeHasOutgoingTo(currentNode, firstNode, player);
+        final boolean anyConnection = aToBExists || bToAExists;
+
+        if (anyConnection) {
+            // Removes existing connection
+            removeExistingConnection(player, firstNode, currentNode, aToBExists, bToAExists, context);
+            player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_deleted").withStyle(ChatFormatting.RED), true);
+        }
+        else {
+            // Creates a new connection
+            if (!validateNewConnection(player, firstNode, currentNode, context)) {
+                firstNodes.remove(playerId);
                 return;
             }
 
-            TeslaConnectionManager manager = TeslaConnectionManager.getInstance();
-            boolean connectionAtoB = manager.getOutgoing(firstNode).contains(currentNode);
-            boolean connectionBtoA = manager.getOutgoing(currentNode).contains(firstNode);
-            boolean anyConnection = connectionAtoB || connectionBtoA;
-
-            if (anyConnection) {
-                // The context is null if the second node selected is a dinamo (and I assume so), so we just add a generic connection
-                if (context == null) {
-                    if (connectionAtoB) {
-                        manager.removeConnection(firstNode, currentNode);
-                    } else {
-                        manager.removeConnection(currentNode, firstNode);
-                    }
-                } else {
-                    // For example, dinamo -> tesla module
-                    if (firstNode.isEntity()) {
-                        manager.removeConnection(firstNode, currentNode);
-                    } else {
-                        BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
-                        if (first instanceof AbstractTeslaBlockEntity be) {
-                            if (connectionAtoB) {
-                                be.handleNodeRemoval(firstNode, currentNode, context, player);
-                            } else {
-                                be.handleNodeRemoval(currentNode, firstNode, context, player);
-                            }
-
-                            be.setOwnerUUID(player.getUUID());
-                        }
-                    }
-
-                }
-
-                player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_deleted").withStyle(ChatFormatting.RED), true);
-            } else {
-                // caps conn max distance
-                Vec3 posFirst = getNodePosition(firstNode);
-                Vec3 posCurrent = getNodePosition(currentNode);
-
-                if (posFirst == null) return;
-                if (posCurrent == null) return;
-
-                if (posFirst.distanceToSqr(posCurrent) > maxConnDist) {
-                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_distance", CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE).withStyle(ChatFormatting.RED), true);
-                    this.firstNode = null;
-                    return;
-                }
-
-                boolean msgFlag = false;
-
-                // The context is null if the second node selected is a dinamo (and I assume so), so we just add a generic connection
-                if (context == null) {
-                    manager.addConnection(firstNode, currentNode, false);
-                } else {
-                    if (firstNode.isEntity()) {
-                        Entity entity = CompanionsEntityTracker.getEntityByUUID(firstNode.entityId());
-                        if (entity instanceof DinamoEntity dinamo) {
-                            dinamo.handleNodeSelection(firstNode, currentNode);
-                            msgFlag = true;
-                        }
-                    } else {
-                        BlockEntity first = context.getLevel().getBlockEntity(firstNode.blockPos());
-                        if (first instanceof AbstractTeslaBlockEntity be) {
-
-                            if (currentNode.isBlock()) {
-                                BlockEntity curr = context.getLevel().getBlockEntity(currentNode.blockPos());
-                                if (curr instanceof VoltaicPillarBlockEntity pillar && !pillar.isTop()) {
-                                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_top_voltaic_pillar").withStyle(ChatFormatting.RED), true);
-                                    this.firstNode = null;
-                                    return;
-                                }
-                                if (first instanceof VoltaicPillarBlockEntity && !(curr instanceof VoltaicPillarBlockEntity)) {
-                                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_voltaic_pillar").withStyle(ChatFormatting.RED), true);
-                                    this.firstNode = null;
-                                    return;
-                                }
-                                if (be.getDistance() == CompanionsConfig.DINAMO_MAX_CHAIN_CONNECTIONS && !(curr instanceof VoltaicRelayBlockEntity)) {
-                                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.max_chain_connections").withStyle(ChatFormatting.RED), true);
-                                    this.firstNode = null;
-                                    return;
-                                }
-                            }
-
-                            msgFlag = be.handleNodeSelection(firstNode, currentNode, context, player);
-                            be.setOwnerUUID(player.getUUID());
-                        }
-                    }
-
-                    if (currentNode.isBlock()) {
-                        BlockEntity currentBe = context.getLevel().getBlockEntity(currentNode.blockPos());
-                        if (currentBe instanceof AbstractTeslaBlockEntity currentTeslaBe) {
-                            currentTeslaBe.setOwnerUUID(player.getUUID());
-                        }
-                    }
-
-                }
-
-                if (msgFlag) {
-                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_established").withStyle(ChatFormatting.GREEN), true);
-                }
-
+            final boolean messageFlag = createConnection(player, firstNode, currentNode, context);
+            if (messageFlag) {
+                player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_established").withStyle(ChatFormatting.GREEN), true);
             }
 
-            if (context != null) {
-                context.getLevel().playSound(null, context.getClickedPos(), CompanionsSounds.WRENCH_CONNECTION.get(), SoundSource.BLOCKS, 0.35f, 1);
+        }
+
+        if (context != null) {
+            context.getLevel().playSound(null, context.getClickedPos(), CompanionsSounds.WRENCH_CONNECTION.get(), SoundSource.BLOCKS, 0.35f, 1);
+        }
+
+        firstNodes.remove(playerId);
+    }
+
+    private boolean nodeHasOutgoingTo(ConnectionTarget source, ConnectionTarget target, Player player) {
+        if (source.isBlock()) {
+            if (player.level().getBlockEntity(source.blockPos()) instanceof AbstractTeslaBlockEntity blockEntity) {
+                return blockEntity.getOutgoing().contains(target);
             }
 
-            firstNode = null;
+        }
+        else if (source.isEntity()) {
+            final Entity entity = CompanionsEntityTracker.getEntityByUUID(source.entityId());
+            if (entity instanceof DinamoEntity dinamo) {
+                return dinamo.getOutgoing().contains(target);
+            }
+
+        }
+
+        return false;
+    }
+
+    private void removeExistingConnection(Player player, ConnectionTarget first, ConnectionTarget current, boolean aToBExists, boolean bToAExists, @Nullable UseOnContext context) {
+        final ConnectionTarget source = aToBExists ? first : current;
+        final ConnectionTarget target = aToBExists ? current : first;
+
+        if (source.isEntity()) {
+            final Entity entity = CompanionsEntityTracker.getEntityByUUID(source.entityId());
+            if (entity instanceof DinamoEntity dinamo) {
+                dinamo.removeOutgoingConnection(target);
+                TeslaNetwork.get(player.level()).onConnectionRemoved(source, target);
+            }
+        }
+        else if (source.isBlock()) {
+            if (player.level().getBlockEntity(source.blockPos()) instanceof AbstractTeslaBlockEntity blockEntity) {
+                if (context != null) {
+                    blockEntity.handleNodeRemoval(source, target, context, player);
+                }
+                else {
+                    blockEntity.removeOutgoing(target);
+                    TeslaNetwork.get(player.level()).onConnectionRemoved(source, target);
+                }
+
+                blockEntity.setOwnerUUID(player.getUUID());
+                blockEntity.sync();
+            }
+
         }
 
     }
 
-    private void handleFirstNodeMessage(Player player, TeslaConnectionManager.ConnectionNode currentNode, @Nullable UseOnContext context) {
-        if (firstNode != null) {
-            String name = "";
-            if (firstNode.isEntity()) {
-                if (CompanionsEntityTracker.getEntityByUUID(firstNode.entityId()) instanceof DinamoEntity dinamo) {
-                    name = dinamo.getName().getString();
-                }
+    private boolean validateNewConnection(Player player, ConnectionTarget first, ConnectionTarget current, @Nullable UseOnContext context) {
+        // Distance check
+        final Vec3 posFirst = getNodePosition(first);
+        final Vec3 posCurrent = getNodePosition(current);
+        if (posFirst == null || posCurrent == null) {
+            return false;
+        }
 
-                player.displayClientMessage(Component.translatable("wrench.companions.client_message.first_node_selection_entity", name).withStyle(ChatFormatting.GREEN), true);
-            } else {
-                if (player.level().getBlockEntity(currentNode.blockPos()) instanceof AbstractTeslaBlockEntity be) {
-                    name = new ItemStack(be.getBlockState().getBlock()).getHoverName().getString();
-                }
+        if (posFirst.distanceToSqr(posCurrent) > maxConnectionDistanceSqr) {
+            player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_distance",
+                    CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE).withStyle(ChatFormatting.RED), true);
+            return false;
+        }
 
-                player.displayClientMessage(Component.translatable("wrench.companions.client_message.first_node_selection_block", name).withStyle(ChatFormatting.GREEN), true);
+        if (context != null && current.isBlock()) {
+            final BlockEntity currentBlockEntity = context.getLevel().getBlockEntity(current.blockPos());
+            if (currentBlockEntity instanceof VoltaicPillarBlockEntity pillar && !pillar.isTop()) {
+                player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_top_voltaic_pillar").withStyle(ChatFormatting.RED), true);
+                return false;
             }
+
+            if (first.isBlock()) {
+                final BlockEntity firstBlockEntity = context.getLevel().getBlockEntity(first.blockPos());
+                if (firstBlockEntity instanceof VoltaicPillarBlockEntity && !(currentBlockEntity instanceof VoltaicPillarBlockEntity)) {
+                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_non_voltaic_pillar").withStyle(ChatFormatting.RED), true);
+                    return false;
+                }
+                if (firstBlockEntity instanceof AbstractTeslaBlockEntity blockEntity && blockEntity.getDistance() == CompanionsConfig.DINAMO_MAX_CHAIN_CONNECTIONS && !(currentBlockEntity instanceof VoltaicRelayBlockEntity)) {
+                    player.displayClientMessage(Component.translatable("wrench.companions.client_message.max_chain_connections").withStyle(ChatFormatting.RED), true);
+                    return false;
+                }
+
+            }
+
+        }
+
+        return true;
+    }
+
+    private boolean createConnection(Player player, ConnectionTarget first, ConnectionTarget current, @Nullable UseOnContext context) {
+        final TeslaNetwork network = TeslaNetwork.get(player.level());
+        boolean messageFlag = false;
+
+        if (first.isEntity()) {
+            final Entity entity = CompanionsEntityTracker.getEntityByUUID(first.entityId());
+            if (entity instanceof DinamoEntity dinamo) {
+                dinamo.addOutgoingConnection(current);
+                network.onConnectionAdded(first, current);
+                messageFlag = true;
+            }
+
+        }
+        else if (first.isBlock() && context != null) {
+            final BlockEntity blockEntity = context.getLevel().getBlockEntity(first.blockPos());
+            if (blockEntity instanceof AbstractTeslaBlockEntity teslaBlockEntity) {
+                messageFlag = teslaBlockEntity.handleNodeSelection(first, current, context, player);
+                teslaBlockEntity.setOwnerUUID(player.getUUID());
+                teslaBlockEntity.sync();
+            }
+
+        }
+        else {
+            // If the context is null but the first one is a block
+            if (first.isEntity()) {
+                final Entity entity = CompanionsEntityTracker.getEntityByUUID(first.entityId());
+                if (entity instanceof DinamoEntity dinamo) {
+                    dinamo.addOutgoingConnection(current);
+                    network.onConnectionAdded(first, current);
+                }
+
+            }
+
+        }
+
+        // Sets the owner on the second node if it's a block
+        if (current.isBlock() && context != null) {
+            final BlockEntity currentBlockEntity = context.getLevel().getBlockEntity(current.blockPos());
+            if (currentBlockEntity instanceof AbstractTeslaBlockEntity blockEntity) {
+                blockEntity.setOwnerUUID(player.getUUID());
+            }
+
+        }
+
+        return messageFlag;
+    }
+
+    private void showFirstNodeMessage(Player player, ConnectionTarget node) {
+        String name = "";
+        if (node.isEntity()) {
+            if (CompanionsEntityTracker.getEntityByUUID(node.entityId()) instanceof DinamoEntity dinamo) {
+                name = dinamo.getName().getString();
+            }
+
+            player.displayClientMessage(Component.translatable("wrench.companions.client_message.first_node_selection_entity", name).withStyle(ChatFormatting.GREEN), true);
+        }
+        else if (node.isBlock()) {
+            if (player.level().getBlockEntity(node.blockPos()) instanceof AbstractTeslaBlockEntity be) {
+                name = new ItemStack(be.getBlockState().getBlock()).getHoverName().getString();
+            }
+
+            player.displayClientMessage(Component.translatable("wrench.companions.client_message.first_node_selection_block", name).withStyle(ChatFormatting.GREEN), true);
         }
 
     }
 
     @Nullable
-    private Vec3 getNodePosition(TeslaConnectionManager.ConnectionNode node) {
+    private Vec3 getNodePosition(ConnectionTarget node) {
         if (node.isEntity()) {
-            Entity e = CompanionsEntityTracker.getEntityByUUID(node.entityId());
-            return (e != null) ? e.position() : null;
-        } else {
-            BlockPos p = node.blockPos();
-            return new Vec3(p.getX(), p.getY(), p.getZ());
+            final Entity entity = CompanionsEntityTracker.getEntityByUUID(node.entityId());
+            return entity != null ? entity.position() : null;
         }
+        else {
+            final BlockPos blockPos = node.blockPos();
+            return new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        }
+
     }
 
 }

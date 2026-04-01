@@ -24,7 +24,6 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
             searchForTargets(dinamo);
         }
 
-        // Deal with animation stuff
         if (dinamo.getAttackCycleCounter() < ELECTRICAL_CHARGE_DURATION) {
             dinamo.setAnimationStartTick(dinamo.getAttackCycleCounter());
             dinamo.setActiveForAttack(true);
@@ -35,40 +34,40 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
         }
 
         if (dinamo.isActiveForAttack()) {
-
             if (!dinamo.entitiesToAttack.isEmpty()) {
-                // Decorative particles lol
+                // Decorative particles
                 if (dinamo.level().isClientSide()) {
-                    double radius = 0.42;
-                    double initialY = dinamo.position().y + dinamo.getBbHeight() - 0.60;
+                    final double radius = 0.42;
+                    final double initialY = dinamo.position().y + dinamo.getBbHeight() - 0.60;
                     for (int i = 0; i < 360; i += 120) {
-                        double angleRadians = Math.toRadians(i);
-                        double particleX = dinamo.position().x + radius * Math.cos(angleRadians);
-                        double particleZ = dinamo.position().z + radius * Math.sin(angleRadians);
-                        dinamo.level().addParticle(CompanionsParticles.DINAMO_SPARK.get(), particleX, initialY, particleZ, 0d, 0.35d, 0d);
+                        final double angle = Math.toRadians(i);
+                        final double px = dinamo.position().x + radius * Math.cos(angle);
+                        final double pz = dinamo.position().z + radius * Math.sin(angle);
+                        dinamo.level().addParticle(CompanionsParticles.DINAMO_SPARK.get(), px, initialY, pz, 0, 0.35, 0);
                     }
                 }
 
-                // Delay before hurting, so it syncs with the electrical charge anim
                 if (dinamo.getAttackCycleCounter() == 3) {
-                    for (LivingEntity target : dinamo.entitiesToAttack) {
+                    for (final LivingEntity target : dinamo.entitiesToAttack) {
                         if (target.distanceToSqr(target) <= 64) {
                             target.hurt(dinamo.damageSources().lightningBolt(), (float) CompanionsConfig.ELECTRICITY_DAMAGE);
                             if (target.getRandom().nextFloat() < 0.4f) {
                                 target.addEffect(new MobEffectInstance(CompanionsEffects.ELECTROSHOCK.get(), 50, 0, false, true, true));
                             }
-
                         }
+
                     }
 
                 }
 
-                if (dinamo.getAttackCycleCounter() == 0) dinamo.playSound(CompanionsSounds.DINAMO_ATTACK.get(), 0.45f, 1f);
+                if (dinamo.getAttackCycleCounter() == 0) {
+                    dinamo.playSound(CompanionsSounds.DINAMO_ATTACK.get(), 0.45f, 1f);
+                }
+
             }
 
         }
 
-        // Reset once the time is up
         if (dinamo.getAttackCycleCounter() >= DINAMO_ATTACK_DELAY) {
             dinamo.setAttackCycleCounter(0);
             dinamo.entitiesToAttack.clear();
@@ -76,26 +75,29 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
             return;
         }
 
-        // Up the cicle count
         dinamo.setAttackCycleCounter(dinamo.getAttackCycleCounter() + 1);
     }
 
     private void searchForTargets(DinamoEntity dinamo) {
-        List<LivingEntity> list = dinamo.level().getEntitiesOfClass(LivingEntity.class, dinamo.getBoundingBox().inflate(10), e ->
-            {
-                if (Util.areEntitiesLinked(e, dinamo)) return false;
+        final List<LivingEntity> list = dinamo.level().getEntitiesOfClass(LivingEntity.class,
+                        dinamo.getBoundingBox().inflate(10),
+                        entity -> {
+                            if (Util.areEntitiesLinked(entity, dinamo)) {
+                                return false;
+                            }
 
-                return e instanceof Monster;
-            })
-            .stream()
-            .filter(dinamo::hasLineOfSight)
-            .collect(Collectors.toCollection(ArrayList::new));
+                            return entity instanceof Monster;
+                        })
+                .stream()
+                .filter(dinamo::hasLineOfSight)
+                .collect(Collectors.toCollection(ArrayList::new));
 
-        for (LivingEntity m : list) {
-            if (!dinamo.entitiesToAttack.contains(m)) {
-                dinamo.entitiesToAttack.add(m);
-                dinamo.setTargetIds(dinamo.getTargetIds() + m.getId() + ";");
+        for (final LivingEntity livingEntity : list) {
+            if (!dinamo.entitiesToAttack.contains(livingEntity)) {
+                dinamo.entitiesToAttack.add(livingEntity);
+                dinamo.setTargetIds(dinamo.getTargetIds() + livingEntity.getId() + ";");
             }
+
         }
 
         if (dinamo.getTarget() != null) {

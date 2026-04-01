@@ -88,7 +88,7 @@ public class PlasmaLampBlock extends AbstractTeslaBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.PLASMA_LAMP ? PlasmaLampBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.PLASMA_LAMP.get() ? PlasmaLampBlockEntity::tick : null;
     }
 
     @Nullable
@@ -96,4 +96,5 @@ public class PlasmaLampBlock extends AbstractTeslaBlock implements EntityBlock {
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return CompanionsBlockEntities.PLASMA_LAMP.get().create(pos, state);
     }
+
 }

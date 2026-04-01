@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.blockentity;
 
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
+import dev.xylonity.companions.common.tesla.ConnectionTarget;
+import dev.xylonity.companions.common.tesla.TeslaNetwork;
 import dev.xylonity.companions.common.tesla.behaviour.pillar.PillarPulseBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
@@ -34,7 +35,9 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
-        if (!(t instanceof VoltaicPillarBlockEntity pillar)) return;
+        if (!(t instanceof VoltaicPillarBlockEntity pillar)) {
+            return;
+        }
 
         pillar.pulseBehaviour.process(pillar, level, blockPos, blockState);
         pillar.defaultAttackBehaviour.process(pillar, level, blockPos, blockState);
@@ -42,19 +45,11 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
         pillar.setIsTop(!(level.getBlockEntity(pillar.getBlockPos().above()) instanceof VoltaicPillarBlockEntity));
         pillar.setHasBlockOnTop(!level.getBlockState(pillar.getBlockPos().above()).isAir());
 
-        if (level.getBlockEntity(pillar.getBlockPos().above()) instanceof VoltaicPillarBlockEntity be) {
-            pillar.setOwnerUUID(be.getOwnerUUID());
+        if (level.getBlockEntity(pillar.getBlockPos().above()) instanceof VoltaicPillarBlockEntity blockEntity) {
+            pillar.setOwnerUUID(blockEntity.getOwnerUUID());
         }
 
         pillar.sync();
-    }
-
-    public void setHasBlockOnTop(boolean hasBlockOnTop) {
-        this.hasBlockOnTop = hasBlockOnTop;
-    }
-
-    public boolean hasBlockOnTop() {
-        return hasBlockOnTop;
     }
 
     public boolean isTop() {
@@ -65,25 +60,33 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
         this.isTop = top;
     }
 
+    public boolean hasBlockOnTop() {
+        return hasBlockOnTop;
+    }
+
+    public void setHasBlockOnTop(boolean hasBlockOnTop) {
+        this.hasBlockOnTop = hasBlockOnTop;
+    }
+
     @Override
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
-        this.setIsTop(tag.getBoolean("IsTop"));
-        this.setHasBlockOnTop(tag.getBoolean("BlockOnTop"));
+        this.isTop = tag.getBoolean("IsTop");
+        this.hasBlockOnTop = tag.getBoolean("BlockOnTop");
     }
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putBoolean("IsTop", this.isTop());
-        tag.putBoolean("BlockOnTop", this.hasBlockOnTop());
+        tag.putBoolean("IsTop", isTop);
+        tag.putBoolean("BlockOnTop", hasBlockOnTop);
     }
 
     @Override
     public @NotNull CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
-        tag.putBoolean("IsTop", this.isTop());
-        tag.putBoolean("BlockOnTop", this.hasBlockOnTop());
+        tag.putBoolean("IsTop", isTop);
+        tag.putBoolean("BlockOnTop", hasBlockOnTop);
         return tag;
     }
 
@@ -98,68 +101,85 @@ public class VoltaicPillarBlockEntity extends AbstractTeslaBlockEntity {
     }
 
     @Override
-    public boolean handleNodeSelection(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx, Player player) {
-        if (ctx != null) {
-            if (ctx.getLevel().getBlockEntity(nodeToConnect.blockPos()) instanceof VoltaicPillarBlockEntity) {
-                List<VoltaicPillarBlockEntity> thisList = new ArrayList<>();
-                List<VoltaicPillarBlockEntity> otherList = new ArrayList<>();
-                pillarsBelow(thisList, thisNode.blockPos());
-                pillarsBelow(otherList, nodeToConnect.blockPos());
-                if (thisList.size() == otherList.size()) {
-                    for (int i = 0; i < thisList.size(); i++) {
-                        connectionManager.addConnection(thisList.get(i).asConnectionNode(), otherList.get(i).asConnectionNode());
-                    }
-                } else {
-                    if (player != null) {
-                        player.displayClientMessage(Component.translatable("voltaic_pillar.companions.client_message.wrong_amount").withStyle(ChatFormatting.RED), true);
-                    }
+    public boolean handleNodeSelection(ConnectionTarget thisNode, ConnectionTarget nodeToConnect, @Nullable UseOnContext context, Player player) {
+        if (context != null && nodeToConnect.isBlock()
+                && context.getLevel().getBlockEntity(nodeToConnect.blockPos()) instanceof VoltaicPillarBlockEntity
+                && level != null) {
 
-                    return false;
+            final List<VoltaicPillarBlockEntity> thisList = new ArrayList<>();
+            final List<VoltaicPillarBlockEntity> otherList = new ArrayList<>();
+            pillarsBelow(thisList, thisNode.blockPos());
+            pillarsBelow(otherList, nodeToConnect.blockPos());
+
+            if (thisList.size() != otherList.size()) {
+                if (player != null) {
+                    player.displayClientMessage(Component.translatable(
+                            "voltaic_pillar.companions.client_message.wrong_amount").withStyle(ChatFormatting.RED), true);
                 }
+
+                return false;
+            }
+
+            final TeslaNetwork network = TeslaNetwork.get(level);
+            for (int i = 0; i < thisList.size(); i++) {
+                final VoltaicPillarBlockEntity sourceBlockEntity = thisList.get(i);
+                final VoltaicPillarBlockEntity destinationBlockEntity = otherList.get(i);
+                final ConnectionTarget sourceTarget = sourceBlockEntity.asConnectionTarget();
+                final ConnectionTarget destinationTarget = destinationBlockEntity.asConnectionTarget();
+                sourceBlockEntity.addOutgoing(destinationTarget);
+                network.onConnectionAdded(sourceTarget, destinationTarget);
             }
 
         }
 
-        return super.handleNodeSelection(thisNode, nodeToConnect, ctx, player);
+        return super.handleNodeSelection(thisNode, nodeToConnect, context, player);
     }
 
     @Override
-    public boolean handleNodeRemoval(TeslaConnectionManager.ConnectionNode thisNode, TeslaConnectionManager.ConnectionNode nodeToConnect, @Nullable UseOnContext ctx, Player player) {
-        if (ctx != null) {
-            if (ctx.getLevel().getBlockEntity(nodeToConnect.blockPos()) instanceof VoltaicPillarBlockEntity) {
-                List<VoltaicPillarBlockEntity> thisList = new ArrayList<>();
-                List<VoltaicPillarBlockEntity> otherList = new ArrayList<>();
-                pillarsBelow(thisList, thisNode.blockPos());
-                pillarsBelow(otherList, nodeToConnect.blockPos());
-                if (thisList.size() == otherList.size()) {
-                    for (int i = 0; i < thisList.size(); i++) {
-                        connectionManager.removeConnection(thisList.get(i).asConnectionNode(), otherList.get(i).asConnectionNode());
-                    }
+    public boolean handleNodeRemoval(ConnectionTarget thisNode, ConnectionTarget nodeToConnect, @Nullable UseOnContext context, Player player) {
+        if (context != null && nodeToConnect.isBlock()
+                && context.getLevel().getBlockEntity(nodeToConnect.blockPos()) instanceof VoltaicPillarBlockEntity
+                && level != null) {
+
+            final List<VoltaicPillarBlockEntity> thisList = new ArrayList<>();
+            final List<VoltaicPillarBlockEntity> otherList = new ArrayList<>();
+            pillarsBelow(thisList, thisNode.blockPos());
+            pillarsBelow(otherList, nodeToConnect.blockPos());
+
+            final TeslaNetwork network = TeslaNetwork.get(level);
+            if (thisList.size() == otherList.size()) {
+                for (int i = 0; i < thisList.size(); i++) {
+                    final VoltaicPillarBlockEntity sourceBlockEntity = thisList.get(i);
+                    final VoltaicPillarBlockEntity destinationBlockEntity = otherList.get(i);
+                    final ConnectionTarget sourceTarget = sourceBlockEntity.asConnectionTarget();
+                    final ConnectionTarget destinationTarget = destinationBlockEntity.asConnectionTarget();
+                    sourceBlockEntity.removeOutgoing(destinationTarget);
+                    network.onConnectionRemoved(sourceTarget, destinationTarget);
                 }
+
             }
 
         }
 
-        return super.handleNodeRemoval(thisNode, nodeToConnect, ctx, player);
+        return super.handleNodeRemoval(thisNode, nodeToConnect, context, player);
     }
 
     private void pillarsBelow(List<VoltaicPillarBlockEntity> pillars, BlockPos pos) {
-        scanPillars(pillars, pos.getX(), pos.getY() - 1, -1, pos.getZ());
-    }
+        if (this.level == null) {
+            return;
+        }
 
-    private void scanPillars(List<VoltaicPillarBlockEntity> pillars, int x, int startY, int step, int z) {
-        if (this.level == null) return;
-
-        for (int currentY = startY; ; currentY += step) {
-            BlockPos currentPos = new BlockPos(x, currentY, z);
-            BlockEntity entity = level.getBlockEntity(currentPos);
-            if (entity instanceof VoltaicPillarBlockEntity pillarEntity) {
-                pillars.add(pillarEntity);
-            } else {
+        for (int y = pos.getY() - 1; ; y--) {
+            final BlockEntity blockEntity = level.getBlockEntity(new BlockPos(pos.getX(), y, pos.getZ()));
+            if (blockEntity instanceof VoltaicPillarBlockEntity pillarBlock) {
+                pillars.add(pillarBlock);
+            }
+            else {
                 break;
             }
 
         }
+
     }
 
 }

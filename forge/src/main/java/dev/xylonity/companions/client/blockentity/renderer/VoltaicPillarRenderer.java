@@ -3,7 +3,6 @@ package dev.xylonity.companions.client.blockentity.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.xylonity.companions.CompanionsForge;
 import dev.xylonity.companions.client.blockentity.model.VoltaicPillarModel;
-import dev.xylonity.companions.client.layer.StaticElectricConnectionLayer;
 import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

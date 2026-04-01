@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.tesla.behaviour;
 
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.event.CompanionsEntityTracker;
-import dev.xylonity.companions.common.tesla.TeslaConnectionManager;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.common.util.interfaces.ITeslaNodeBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;

@@ -10,16 +10,12 @@ public class RecallPlatformPulseBehaviour implements ITeslaNodeBehaviour {
 
     @Override
     public void process(AbstractTeslaBlockEntity lamp, Level level, BlockPos blockPos, BlockState blockState) {
-
         if (lamp.cycleCounter >= 0) {
-
             if (lamp.cycleCounter == 0) {
-                // Keeps the lamp active for a full cycle
                 lamp.setActive(true);
             }
 
             if (lamp.cycleCounter == MAX_LAPSUS) {
-                //Things here happen ONCE when the cycle is over
                 lamp.cycleCounter = -1;
                 lamp.setActive(false);
             }
@@ -27,8 +23,8 @@ public class RecallPlatformPulseBehaviour implements ITeslaNodeBehaviour {
                 lamp.cycleCounter++;
                 lamp.tickCount++;
             }
+
         }
-        //With an else statement, things here happen every tick outside the cycle
 
     }
 
