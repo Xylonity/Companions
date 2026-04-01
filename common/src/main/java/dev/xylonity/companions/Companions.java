@@ -19,9 +19,9 @@ public class Companions {
     public static IProxy PROXY;
 
     public static void init() {
-        CompanionsItems.ITEMS.init();
         CompanionsBlocks.BLOCKS.init();
         CompanionsEntities.ENTITIES.init();
+        CompanionsItems.ITEMS.init();
         CompanionsBlockEntities.BLOCK_ENTITIES.init();
         CompanionsCreativeModeTabs.CREATIVE_TABS.init();
         CompanionsEffects.EFFECTS.init();

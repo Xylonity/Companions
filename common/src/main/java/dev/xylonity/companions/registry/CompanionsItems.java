@@ -76,4 +76,16 @@ public class CompanionsItems {
     public static final ResourceEntry<Item> CRYSTALLIZED_BLOOD_SCYTHE = ITEMS.register("crystallized_blood_scythe", () -> new BloodScytheItem(new Item.Properties().fireResistant(), "crystallized_blood_scythe", ItemMaterials.CRYSTALLIZED_BLOOD, 1f, -2.8F));
     public static final ResourceEntry<Item> CRYSTALLIZED_BLOOD_AXE = ITEMS.register("crystallized_blood_axe", () -> new BloodAxeItem(new Item.Properties().fireResistant(), "crystallized_blood_axe", ItemMaterials.CRYSTALLIZED_BLOOD, 5f, -3.0F));
 
+    public static final ResourceEntry<Item> CORNELIUS_SPAWN_EGG = ITEMS.registerSpawnEgg("cornelius_spawn_egg", CompanionsEntities.CORNELIUS, 0x92b475, 0x57565c, new Item.Properties());
+    public static final ResourceEntry<Item> TEDDY_SPAWN_EGG = ITEMS.registerSpawnEgg("teddy_spawn_egg", CompanionsEntities.TEDDY, 0x765b47, 0xa475b1, new Item.Properties());
+    public static final ResourceEntry<Item> WILD_ANTLION_SPAWN_EGG = ITEMS.registerSpawnEgg("wild_antlion_spawn_egg", CompanionsEntities.WILD_ANTLION, 0xb5ae86, 0x66563f, new Item.Properties());
+    public static final ResourceEntry<Item> BROKEN_DINAMO_SPAWN_EGG = ITEMS.registerSpawnEgg("broken_dinamo_spawn_egg", CompanionsEntities.BROKEN_DINAMO, 0x8d7441, 0xafafaf, new Item.Properties());
+    public static final ResourceEntry<Item> HOSTILE_IMP_SPAWN_EGG = ITEMS.registerSpawnEgg("hostile_imp_spawn_egg", CompanionsEntities.HOSTILE_IMP, 0x47353a, 0x87496e, new Item.Properties());
+    public static final ResourceEntry<Item> GOLDEN_ALLAY_SPAWN_EGG = ITEMS.registerSpawnEgg("golden_allay_spawn_egg", CompanionsEntities.GOLDEN_ALLAY, 0xa070d8, 0xf2db6a, new Item.Properties());
+    public static final ResourceEntry<Item> CROISSANT_DRAGON_SPAWN_EGG = ITEMS.registerSpawnEgg("croissant_dragon_spawn_egg", CompanionsEntities.CROISSANT_DRAGON, 0x8f4727, 0xe1b078, new Item.Properties());
+    public static final ResourceEntry<Item> SACRED_PONTIFF_SPAWN_EGG = ITEMS.registerSpawnEgg("sacred_pontiff_spawn_egg", CompanionsEntities.SACRED_PONTIFF, 0x4c604f, 0x8b6f51, new Item.Properties());
+    public static final ResourceEntry<Item> LIVING_CANDLE_SPAWN_EGG = ITEMS.registerSpawnEgg("living_candle_spawn_egg", CompanionsEntities.LIVING_CANDLE, 0xfff67c, 0xfde4ab, new Item.Properties());
+    public static final ResourceEntry<Item> ILLAGER_GOLEM_SPAWN_EGG = ITEMS.registerSpawnEgg("illager_golem_spawn_egg", CompanionsEntities.ILLAGER_GOLEM, 0x8d7441, 0xafafaf, new Item.Properties());
+    public static final ResourceEntry<Item> HOSTILE_PUPPET_GLOVE_SPAWN_EGG = ITEMS.registerSpawnEgg("hostile_puppet_glove_spawn_egg", CompanionsEntities.HOSTILE_PUPPET_GLOVE, 0xe7e7e7, 0x1a1a1a, new Item.Properties());
+
 }
