@@ -6,10 +6,14 @@ import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
+import dev.xylonity.knightlib.KnightLib;
+import dev.xylonity.knightlib.api.camera.ShakeSettings;
+import dev.xylonity.knightlib.network.packets.CameraShakeS2C;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -79,7 +83,6 @@ public class BlackHoleProjectile extends BaseProjectile {
 
     @Override
     public void tick() {
-        if (!this.level().isClientSide) setTickCount(tickCount);
 
         super.tick();
 
@@ -96,16 +99,18 @@ public class BlackHoleProjectile extends BaseProjectile {
 
         }
 
-        if (this.getTickCount() >= getLifetime()) {
-            this.discard();
-            return;
-        }
-
         if (this.isLocked()) {
-            if (level().isClientSide) {
-                for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                    Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+            if (!level().isClientSide && tickCount == 22) {
+                for (final Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        KnightLib.NET.sendTo(serverPlayer,
+                                CameraShakeS2C.TYPE.base(),
+                                new CameraShakeS2C(ShakeSettings.builder()
+                                        .fadeInTicks(5).durationTicks(80).fadeOutTicks(20).frequency(15).octaves(6).amplitude(0.27f, 0.27f, 0.27f).build(), false));
+                    }
+
                 }
+
             }
 
             this.setDeltaMovement(Vec3.ZERO);

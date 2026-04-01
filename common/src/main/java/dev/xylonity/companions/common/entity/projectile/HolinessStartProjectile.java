@@ -7,10 +7,14 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.mixin.ProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.knightlib.KnightLib;
+import dev.xylonity.knightlib.api.camera.ShakeSettings;
+import dev.xylonity.knightlib.network.packets.CameraShakeS2C;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -144,13 +148,21 @@ public class HolinessStartProjectile extends BaseProjectile {
         if (!level().isClientSide) {
             if (isRed()) {
                 redExplosion();
-            } else {
+            }
+            else {
                 blueExplosion();
             }
-        } else {
-            for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+
+        }
+
+        for (final Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                KnightLib.NET.sendTo(serverPlayer,
+                        CameraShakeS2C.TYPE.base(),
+                        new CameraShakeS2C(ShakeSettings.builder()
+                                .fadeInTicks(3).durationTicks(15).fadeOutTicks(12).lacunarity(4).amplitude(0.42225f, 0.42225f, 0.42225f).build(), false));
             }
+
         }
 
         super.remove(pReason);
