@@ -25,4 +25,8 @@ public interface IProxy {
     default void shakePlayerCamera(Player player, int durationTicks, float intensityX, float intensityY, float intensityZ, int fadeStartTick) { ;; }
     default void updateCreamParticle(Vec3 coordinates) { ;; }
 
+    default void registerClientEvents() {
+        ;;
+    }
+
 }

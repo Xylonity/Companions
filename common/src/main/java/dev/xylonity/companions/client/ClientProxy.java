@@ -1,5 +1,6 @@
 package dev.xylonity.companions.client;
 
+import dev.xylonity.companions.client.event.CompanionsClientEvents;
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
@@ -8,6 +9,7 @@ import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.knightlib.api.camera.CameraShakeManager;
+import dev.xylonity.knightlib.api.event.KnightLibEvents;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -24,6 +26,11 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Random;
 
 public class ClientProxy implements IProxy {
+
+    @Override
+    public void registerClientEvents() {
+        KnightLibEvents.CLIENT.register(CompanionsClientEvents.class);
+    }
 
     @Override
     public void spawnElectricArc(Entity e, Entity target, Level level, float d) {
