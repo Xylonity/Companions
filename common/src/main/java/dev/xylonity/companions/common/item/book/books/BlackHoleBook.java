@@ -38,7 +38,7 @@ public class BlackHoleBook extends AbstractMagicBook {
                 level.addFreshEntity(blackHole);
             }
 
-            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.BLACK_HOLE_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
+            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.BLACK_HOLE_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE.get()) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(level, player, hand);

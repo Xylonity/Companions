@@ -97,9 +97,9 @@ public final class CompanionsServerEvents {
 
         final float amount = event.getAmount();
 
-        final int amountHoly = Util.hasFullSetOn(livingEntity, ArmorMaterials.HOLY_ROBE);
-        final int amountMage = Util.hasFullSetOn(livingEntity, ArmorMaterials.MAGE);
-        final int amountBlood = Util.hasFullSetOn(livingEntity, ArmorMaterials.CRYSTALLIZED_BLOOD);
+        final int amountHoly = Util.hasFullSetOn(livingEntity, ArmorMaterials.HOLY_ROBE.get());
+        final int amountMage = Util.hasFullSetOn(livingEntity, ArmorMaterials.MAGE.get());
+        final int amountBlood = Util.hasFullSetOn(livingEntity, ArmorMaterials.CRYSTALLIZED_BLOOD.get());
 
         // Crystallized blood set reduction
         if (amountBlood != 0 && livingEntity.getHealth() <= livingEntity.getMaxHealth() * CompanionsConfig.CRYSTALLIZED_BLOOD_SET_MIN_HEALTH) {

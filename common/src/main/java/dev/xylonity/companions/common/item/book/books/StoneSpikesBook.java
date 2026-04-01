@@ -42,7 +42,7 @@ public class StoneSpikesBook extends AbstractMagicBook {
         spawnSpikeRow(Util.rotateHorizontalDirection(baseDir, 30), (int) (spikes * 0.3), player);
 
         if (!level.isClientSide) {
-            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.STONE_SPIKES_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
+            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.STONE_SPIKES_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE.get()) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(level, player, usedHand);

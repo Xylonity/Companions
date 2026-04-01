@@ -65,7 +65,7 @@ public class IceShardBook extends AbstractMagicBook {
                 pLevel.addFreshEntity(projectile);
             }
 
-            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.ICE_SHARD_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
+            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.ICE_SHARD_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE.get()) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(pLevel, player, pUsedHand);

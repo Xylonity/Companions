@@ -36,7 +36,7 @@ public class HealRingBook extends AbstractMagicBook {
                 pLevel.addFreshEntity(healRing);
             }
 
-            pPlayer.getCooldowns().addCooldown(this, (int)(CompanionsConfig.HEAL_RING_COOLDOWN * (1 - (Util.hasFullSetOn(pPlayer, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
+            pPlayer.getCooldowns().addCooldown(this, (int)(CompanionsConfig.HEAL_RING_COOLDOWN * (1 - (Util.hasFullSetOn(pPlayer, ArmorMaterials.MAGE.get()) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(pLevel, pPlayer, pUsedHand);

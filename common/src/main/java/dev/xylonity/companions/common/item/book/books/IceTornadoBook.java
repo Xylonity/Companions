@@ -39,7 +39,7 @@ public class IceTornadoBook extends AbstractMagicBook {
                 pLevel.addFreshEntity(tornadoProjectile);
             }
 
-            pPlayer.getCooldowns().addCooldown(this, (int)(CompanionsConfig.ICE_TORNADO_COOLDOWN * (1 - (Util.hasFullSetOn(pPlayer, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
+            pPlayer.getCooldowns().addCooldown(this, (int)(CompanionsConfig.ICE_TORNADO_COOLDOWN * (1 - (Util.hasFullSetOn(pPlayer, ArmorMaterials.MAGE.get()) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(pLevel, pPlayer, pUsedHand);

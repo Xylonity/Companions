@@ -15,6 +15,7 @@ import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -197,7 +198,7 @@ public class Util {
     /**
      * Checks how many pieces of an armor set are equipped
      */
-    public static int hasFullSetOn(LivingEntity livingEntity, ArmorMaterials material) {
+    public static int hasFullSetOn(LivingEntity livingEntity, ArmorMaterial material) {
         int amount = 0;
         for (ItemStack armorStack : livingEntity.getArmorSlots()) {
             if (!armorStack.isEmpty() && armorStack.getItem() instanceof ArmorItem armorItem) {

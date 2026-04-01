@@ -45,7 +45,7 @@ public class BraceBook extends AbstractMagicBook {
                 level.addFreshEntity(projectile);
             }
 
-            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.BRACE_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
+            player.getCooldowns().addCooldown(this, (int)(CompanionsConfig.BRACE_COOLDOWN * (1 - (Util.hasFullSetOn(player, ArmorMaterials.MAGE.get()) * CompanionsConfig.MAGE_SET_COOLDOWN_REDUCTION))));
         }
 
         return super.use(level, player, hand);
