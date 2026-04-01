@@ -7,6 +7,7 @@ import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
+import dev.xylonity.knightlib.api.bossbar.TrackedServerBossEvent;
 import dev.xylonity.knightlib.api.sound.music.IBossMusicProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -96,7 +97,7 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
     private int lastAttackType;
     private int transformationCounter;
 
-    private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
+    private final TrackedServerBossEvent bossInfo = (TrackedServerBossEvent)(new TrackedServerBossEvent(this, this.getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
 
     private static final Set<Integer> SHAKE_TICKS = Set.of(70, 80, 93, 104, 117, 128, 159);
 
@@ -265,7 +266,6 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
             if (getStateCounter() == ANIMATION_PHASE1_DEAD_MAX_TICKS) {
                 cycleState();
                 setInvisible(true);
-                bossInfo.setName(Component.translatable("entity.companions.sacred_pontiff_invisible"));
             }
         }
         else if (getState() == 4) {

@@ -8,12 +8,14 @@ import dev.xylonity.companions.client.gui.screen.PuppetScreen;
 import dev.xylonity.companions.client.gui.screen.SoulFurnaceScreen;
 import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
 import dev.xylonity.companions.client.projectile.renderer.*;
+import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.api.bossbar.BossBarBuilder;
 import dev.xylonity.knightlib.api.event.RegisterEvent;
 import dev.xylonity.knightlib.api.event.impl.client.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
@@ -167,53 +169,49 @@ public class CompanionsClientEvents {
     public static void registerBossBars(final BossBarRegistrationEvent event) {
         // Pontiff
         BossBarBuilder
-                .legacyMatcher(boss -> boss.getName().getString().contains("Sacred Pontiff") && !boss.getName().getString().equalsIgnoreCase("Sacred Pontiff Invisible"))
-                .legacyRenderer((gui, boss, x, y) -> {
+                .matcher(context -> context.entity() instanceof SacredPontiffEntity)
+                .renderer((gui, context, x, y) -> {
                     // background
-                    gui.blit(PONTIFF_BACKGROUND, x, y + 22, 0, 0, 183, 5);
+                    final LerpingBossEvent bossEvent = context.event();
+                    if (context.entity() instanceof SacredPontiffEntity pontiff) {
+                        final int pontiffState = pontiff.getState();
+                        // First phase
+                        if (pontiffState == 1 || pontiffState == 2 || pontiffState == 3) {
+                            gui.blit(PONTIFF_BACKGROUND, x, y + 22, 0, 0, 183, 5);
 
-                    // health
-                    int healthWidth = (int) (boss.getProgress() * 183);
-                    if (healthWidth > 0) {
-                        gui.blit(PONTIFF_HEALTH, x, y, 0, 0, healthWidth, 27);
+                            // health
+                            final int healthWidth = (int) (bossEvent.getProgress() * 183);
+                            if (healthWidth > 0) {
+                                gui.blit(PONTIFF_HEALTH, x, y, 0, 0, healthWidth, 27);
+                            }
+
+                            // overlay
+                            gui.blit(PONTIFF_OVERLAY, x - 3, y, 0, 0, 189, 30);
+
+                            final int text = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - Minecraft.getInstance().font.width(bossEvent.getName()) / 2;
+                            // name
+                            gui.drawString(Minecraft.getInstance().font, bossEvent.getName(), text, y, 0xFFFFFF);
+                        }
+                        // Second phase
+                        else if (pontiffState > 4) {
+                            // background
+                            gui.blit(HOLINESS_BACKGROUND, x - 2, y + 15, 0, 0, 185, 5);
+
+                            // health
+                            final int healthWidth = (int) (bossEvent.getProgress() * 185);
+                            if (healthWidth > 0) {
+                                gui.blit(HOLINESS_HEALTH, x - 2, y + 15, 0, 0, healthWidth, 28);
+                            }
+
+                            // overlay
+                            gui.blit(HOLINESS_OVERLAY, x - 23, y, 0, 0, 227, 42);
+
+                            final int text = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - Minecraft.getInstance().font.width(bossEvent.getName()) / 2;
+                            gui.drawString(Minecraft.getInstance().font, bossEvent.getName(), text, y, 0xFFFFFF);
+                        }
+
                     }
 
-                    // overlay
-                    gui.blit(PONTIFF_OVERLAY, x - 3, y, 0, 0, 189, 30);
-
-                    int text = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - Minecraft.getInstance().font.width(boss.getName()) / 2;
-                    // name
-                    gui.drawString(Minecraft.getInstance().font, boss.getName(), text, y, 0xFFFFFF);
-                })
-                .padding(24)
-                .hideVanillaName()
-                .register();
-
-        // Invisible
-        BossBarBuilder
-                .legacyMatcher(boss -> boss.getName().getString().contains("Sacred Pontiff Invisible"))
-                .legacyRenderer((gui, boss, x, y) -> { ;; })
-                .hideVanillaName()
-                .register();
-
-        // Holiness
-        BossBarBuilder
-                .legacyMatcher(boss -> boss.getName().getString().contains("His Holiness"))
-                .legacyRenderer((gui, boss, x, y) -> {
-                    // background
-                    gui.blit(HOLINESS_BACKGROUND, x - 2, y + 15, 0, 0, 185, 5);
-
-                    // health
-                    int healthWidth = (int) (boss.getProgress() * 185);
-                    if (healthWidth > 0) {
-                        gui.blit(HOLINESS_HEALTH, x - 2, y + 15, 0, 0, healthWidth, 28);
-                    }
-
-                    // overlay
-                    gui.blit(HOLINESS_OVERLAY, x - 23, y, 0, 0, 227, 42);
-
-                    int text = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - Minecraft.getInstance().font.width(boss.getName()) / 2;
-                    gui.drawString(Minecraft.getInstance().font, boss.getName(), text, y, 0xFFFFFF);
                 })
                 .padding(24)
                 .hideVanillaName()

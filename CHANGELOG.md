@@ -1,4 +1,5 @@
 # 1.3.0
+- Now the Sacred Pontiff can have its name translated into different languages instead of being exclusively in English (previously limited by the bossbar system)
 - Armor effects now apply to any entity wearing the armor set, not just players
 - In Fabric, the respawn totem can now respawn any tamable entity, not just companions
 - The code has been rewritten to ensure loader parity
