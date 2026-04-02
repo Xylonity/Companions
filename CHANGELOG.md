@@ -2,6 +2,8 @@
 - The Tesla Manager, which handles connection logic on the Tesla Network, has been rewritten, potentially fixing Tesla connection and desynchronization issues on dedicated servers
 - Now the Sacred Pontiff can have its name translated into different languages instead of being exclusively in English (previously limited by the bossbar system)
 - Armor effects now apply to any entity wearing the armor set, not just players
+- The force with which certain camera shakes were performed was modified to make it more natural
+- Added 2 missing camera shakes, at the beginning and end of His Holiness appearance animation
 - In Fabric, the respawn totem can now respawn any tamable entity, not just companions
 - The code has been rewritten to ensure loader parity
 - Added compatibility with knightlib 1.5.0
