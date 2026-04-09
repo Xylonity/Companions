@@ -36,9 +36,9 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class ShadeAltarRecipeCategory implements IRecipeCategory<ShadeAltarRecipe> {
 
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_altar_interaction");
+    public static final ResourceLocation UID = Companions.of("shade_altar_interaction");
     public static final RecipeType<ShadeAltarRecipe> TYPE = new RecipeType<>(UID, ShadeAltarRecipe.class);
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = Companions.of("textures/gui/sprites.png");
 
     private ShadeMawAltarBlockEntity cachedBlockEntity;
     private ShadeAltarUpgradeHaloProjectile cachedEntity;

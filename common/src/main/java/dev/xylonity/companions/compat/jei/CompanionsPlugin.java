@@ -24,7 +24,7 @@ import java.util.List;
 @JeiPlugin
 public final class CompanionsPlugin implements IModPlugin {
 
-    private static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "jei_plugin");
+    private static final ResourceLocation UID = Companions.of("jei_plugin");
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {

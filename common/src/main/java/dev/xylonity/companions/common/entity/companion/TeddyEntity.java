@@ -374,9 +374,12 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             return InteractionResult.PASS;
         }
 
-        ItemStack stack = player.getItemInHand(hand);
+        // Tame
+        final ItemStack stack = player.getItemInHand(hand);
         if (!isTame() && stack.getItem() == CompanionsItems.NEEDLE.get()) {
-            if (level().isClientSide) return InteractionResult.SUCCESS;
+            if (level().isClientSide) {
+                return InteractionResult.SUCCESS;
+            }
 
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
@@ -387,18 +390,37 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             return InteractionResult.SUCCESS;
         }
 
+        // Mutant phase
         if (isTame() && player == getOwner() && stack.getItem() == CompanionsItems.ETERNAL_LIGHTER.get() && getPhase() == 1) {
-            if (level().isClientSide) return InteractionResult.SUCCESS;
+            if (level().isClientSide) {
+                return InteractionResult.SUCCESS;
+            }
 
             setSecondPhaseCounter(getSecondPhaseCounter() + 1);
 
             return InteractionResult.SUCCESS;
         }
 
-        if (isTame() && player == getOwner() && stack.getItem() == Items.LAVA_BUCKET && getPhase() == 2) {
-            if (level().isClientSide) return InteractionResult.SUCCESS;
+        // Holy phase
+        if (isTame() && player == getOwner() && stack.getItem() == CompanionsItems.PORCELAIN_POTTERY.get() && getPhase() == 1) {
+            if (level().isClientSide) {
+                return InteractionResult.SUCCESS;
+            }
 
-            if (!player.getAbilities().instabuild) stack.shrink(1);
+            setPhase(random.nextInt(2) + 3);
+
+            return InteractionResult.SUCCESS;
+        }
+
+        // Mutant flesh per lava bucket
+        if (isTame() && player == getOwner() && stack.getItem() == Items.LAVA_BUCKET && getPhase() == 2) {
+            if (level().isClientSide) {
+                return InteractionResult.SUCCESS;
+            }
+
+            if (!player.getAbilities().instabuild) {
+                stack.shrink(1);
+            }
 
             player.setItemInHand(hand, new ItemStack(Items.BUCKET));
 
@@ -409,6 +431,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             return InteractionResult.SUCCESS;
         }
 
+        // Healing
         if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
         }
@@ -490,14 +513,13 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-
         if (getPhase() == 1) {
             if (this.getSecondPhaseCounter() != 0 && this.getSecondPhaseCounter() <= ANIMATION_TRANSFORM_MAX_TICKS) {
                 event.getController().setAnimation(TRANSFORM);
             }
             else if (this.getMainAction() == 0) {
-                RawAnimation vari = getSitVariation() == 0 ? LAY : getSitVariation() == 1 ? SIT : SLEEP;
-                event.getController().setAnimation(vari);
+                final RawAnimation sit = getSitVariation() == 0 ? LAY : getSitVariation() == 1 ? SIT : SLEEP;
+                event.getController().setAnimation(sit);
             }
             else if (getAttackType() == 1) {
                 event.setAnimation(STAB);
@@ -518,8 +540,8 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                 event.getController().setAnimation(MUTATED_DEATH);
             }
             else if (this.getMainAction() == 0) {
-                RawAnimation vari = getIsOnAir() ? MUTATED_SIT3 : getSitVariation() == 0 ? MUTATED_SIT1 : MUTATED_SIT2;
-                event.getController().setAnimation(vari);
+                final RawAnimation sit = getIsOnAir() ? MUTATED_SIT3 : getSitVariation() == 0 ? MUTATED_SIT1 : MUTATED_SIT2;
+                event.getController().setAnimation(sit);
             }
             else if (getAttackType() == 1) {
                 event.getController().setAnimation(MUTATED_ATTACK1);
@@ -534,8 +556,8 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         }
         else {
             if (this.getMainAction() == 0) {
-                RawAnimation vari = getSitVariation() == 0 ? HOLY_SIT1 : HOLY_SIT2;
-                event.getController().setAnimation(vari);
+                final RawAnimation sit = getSitVariation() == 0 ? HOLY_SIT1 : HOLY_SIT2;
+                event.getController().setAnimation(sit);
             }
             else if (getAttackType() == 1) {
                 event.setAnimation(HOLY_ATTACK1);

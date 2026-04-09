@@ -34,10 +34,10 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class ShadeMawAltarRecipeCategory implements IRecipeCategory<ShadeMawAltarRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_maw_altar_interaction");
+    public static final ResourceLocation UID = Companions.of("shade_maw_altar_interaction");
     public static final RecipeType<ShadeMawAltarRecipe> TYPE = new RecipeType<>(UID, ShadeMawAltarRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = Companions.of("textures/gui/sprites.png");
 
     private final IDrawable icon;
 

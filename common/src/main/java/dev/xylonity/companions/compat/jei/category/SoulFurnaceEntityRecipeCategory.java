@@ -36,10 +36,10 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public final class SoulFurnaceEntityRecipeCategory implements IRecipeCategory<SoulFurnaceEntityRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "soul_furnace_entity_interaction");
+    public static final ResourceLocation UID = Companions.of("soul_furnace_entity_interaction");
     public static final RecipeType<SoulFurnaceEntityRecipe> TYPE = new RecipeType<>(UID, SoulFurnaceEntityRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = Companions.of("textures/gui/sprites.png");
 
     private final IDrawable icon;
 

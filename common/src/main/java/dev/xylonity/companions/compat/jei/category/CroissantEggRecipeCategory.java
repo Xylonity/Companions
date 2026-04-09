@@ -34,10 +34,10 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class CroissantEggRecipeCategory implements IRecipeCategory<CroissantEggRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "croissant_egg_interaction");
+    public static final ResourceLocation UID = Companions.of("croissant_egg_interaction");
     public static final RecipeType<CroissantEggRecipe> TYPE = new RecipeType<>(UID, CroissantEggRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = Companions.of("textures/gui/sprites.png");
 
     private final IDrawable icon;
 

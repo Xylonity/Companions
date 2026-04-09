@@ -31,10 +31,10 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class PuppetRecipeCategory implements IRecipeCategory<EmptyPuppetRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "puppet_interaction");
+    public static final ResourceLocation UID = Companions.of("puppet_interaction");
     public static final RecipeType<EmptyPuppetRecipe> TYPE = new RecipeType<>(UID, EmptyPuppetRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = Companions.of("textures/gui/sprites.png");
 
     private final IDrawable icon;
 

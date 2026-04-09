@@ -29,9 +29,9 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class AntlionRecipeCategory implements IRecipeCategory<HourglassRecipe> {
 
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "antlion_interaction");
+    public static final ResourceLocation UID = Companions.of("antlion_interaction");
     public static final RecipeType<HourglassRecipe> TYPE = new RecipeType<>(UID, HourglassRecipe.class);
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = Companions.of("textures/gui/sprites.png");
 
     private AntlionEntity cachedEntity;
 

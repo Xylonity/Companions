@@ -34,10 +34,10 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public final class ShadeSwordAltarRecipeCategory implements IRecipeCategory<ShadeSwordAltarRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Companions.MOD_ID, "shade_sword_altar_interaction");
+    public static final ResourceLocation UID = Companions.of("shade_sword_altar_interaction");
     public static final RecipeType<ShadeSwordAltarRecipe> TYPE = new RecipeType<>(UID, ShadeSwordAltarRecipe.class);
 
-    public static final ResourceLocation SHADOW = new ResourceLocation(Companions.MOD_ID, "textures/gui/sprites.png");
+    public static final ResourceLocation SHADOW = Companions.of("textures/gui/sprites.png");
 
     private final IDrawable icon;
 

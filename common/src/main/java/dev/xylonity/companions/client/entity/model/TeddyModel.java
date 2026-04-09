@@ -13,17 +13,17 @@ import software.bernie.geckolib.model.data.EntityModelData;
 public class TeddyModel extends GeoModel<TeddyEntity> {
 
     private String prefix(TeddyEntity animatable) {
-        return animatable.getPhase() == 1 ? "" : "mutated_";
+        return animatable.getPhase() == 1 ? "" : animatable.getPhase() == 2 ? "mutated_" : "holy_";
     }
 
     @Override
     public ResourceLocation getModelResource(TeddyEntity animatable) {
-        return Companions.of("geo/" + prefix(animatable) +"teddy.geo.json");
+        return Companions.of("geo/" + prefix(animatable) + "teddy.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(TeddyEntity animatable) {
-        return Companions.of("textures/entity/" + prefix(animatable) + "teddy.png");
+        return Companions.of("textures/entity/" + prefix(animatable) + "teddy" + (animatable.getPhase() == 4 ? "2" : "") + ".png");
     }
 
     @Override
@@ -33,8 +33,7 @@ public class TeddyModel extends GeoModel<TeddyEntity> {
 
     @Override
     public void setCustomAnimations(TeddyEntity animatable, long instanceId, AnimationState<TeddyEntity> animationState) {
-        CoreGeoBone head = getAnimationProcessor().getBone("head");
-
+        final CoreGeoBone head = getAnimationProcessor().getBone("head");
         if (head != null && animatable.getAttackType() == 0) {
             EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
             head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
