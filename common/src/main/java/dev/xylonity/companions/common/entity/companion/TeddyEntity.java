@@ -55,6 +55,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.Random;
 
 public class TeddyEntity extends CompanionEntity implements TraceableEntity {
+
     private final RawAnimation LAY = RawAnimation.begin().thenPlay("lay");
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
     private final RawAnimation SLEEP = RawAnimation.begin().thenPlay("sleep");
@@ -72,9 +73,18 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private final RawAnimation MUTATED_SIT3 = RawAnimation.begin().thenPlay("flying_sit");
     private final RawAnimation MUTATED_DEATH = RawAnimation.begin().thenPlay("death");
 
+    private final RawAnimation HOLY_WALK = RawAnimation.begin().thenPlay("walk");
+    private final RawAnimation HOLY_ATTACK1 = RawAnimation.begin().thenPlay("stab");
+    private final RawAnimation HOLY_ATTACK2 = RawAnimation.begin().thenPlay("stab2");
+    private final RawAnimation HOLY_SIT1 = RawAnimation.begin().thenPlay("lay");
+    private final RawAnimation HOLY_SIT2 = RawAnimation.begin().thenPlay("sit");
+    private final RawAnimation HOLY_APPLY_EFFECTS = RawAnimation.begin().thenPlay("apply_effects");
+    private final RawAnimation HOLY_SUMMON_BALLS = RawAnimation.begin().thenPlay("summon_balls");
+
     // Phase 1: 1 stab, 2 auto-stab
     // Phase 2: 1 attack
     private static final EntityDataAccessor<Integer> ATTACK_TYPE = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
+    // 1 base, 2 mutated, 3 holy1, 4 holy2
     private static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SECOND_PHASE_COUNTER = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_ON_AIR = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.BOOLEAN);
@@ -484,31 +494,68 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         if (getPhase() == 1) {
             if (this.getSecondPhaseCounter() != 0 && this.getSecondPhaseCounter() <= ANIMATION_TRANSFORM_MAX_TICKS) {
                 event.getController().setAnimation(TRANSFORM);
-            } else if (this.getMainAction() == 0) {
+            }
+            else if (this.getMainAction() == 0) {
                 RawAnimation vari = getSitVariation() == 0 ? LAY : getSitVariation() == 1 ? SIT : SLEEP;
                 event.getController().setAnimation(vari);
-            } else if (getAttackType() == 1) {
+            }
+            else if (getAttackType() == 1) {
                 event.setAnimation(STAB);
-            } else if (getAttackType() == 2) {
+            }
+            else if (getAttackType() == 2) {
                 event.setAnimation(AUTO_STAB);
-            } else if (event.isMoving()) {
+            }
+            else if (event.isMoving()) {
                 event.getController().setAnimation(WALK);
-            } else {
+            }
+            else {
                 event.getController().setAnimation(IDLE);
             }
-        } else {
+
+        }
+        else if (getPhase() == 2) {
             if (isDeadOrDying()) {
                 event.getController().setAnimation(MUTATED_DEATH);
-            } else if (this.getMainAction() == 0) {
+            }
+            else if (this.getMainAction() == 0) {
                 RawAnimation vari = getIsOnAir() ? MUTATED_SIT3 : getSitVariation() == 0 ? MUTATED_SIT1 : MUTATED_SIT2;
                 event.getController().setAnimation(vari);
-            } else if (getAttackType() == 1) {
+            }
+            else if (getAttackType() == 1) {
                 event.getController().setAnimation(MUTATED_ATTACK1);
-            } else if (getAttackType() == 2) {
+            }
+            else if (getAttackType() == 2) {
                 event.getController().setAnimation(MUTATED_ATTACK2);
-            } else {
+            }
+            else {
                 event.getController().setAnimation(MUTATED_FLY);
             }
+
+        }
+        else {
+            if (this.getMainAction() == 0) {
+                RawAnimation vari = getSitVariation() == 0 ? HOLY_SIT1 : HOLY_SIT2;
+                event.getController().setAnimation(vari);
+            }
+            else if (getAttackType() == 1) {
+                event.setAnimation(HOLY_ATTACK1);
+            }
+            else if (getAttackType() == 2) {
+                event.setAnimation(HOLY_ATTACK2);
+            }
+            else if (getAttackType() == 3) {
+                event.setAnimation(HOLY_APPLY_EFFECTS);
+            }
+            else if (getAttackType() == 4) {
+                event.setAnimation(HOLY_SUMMON_BALLS);
+            }
+            else if (event.isMoving()) {
+                event.getController().setAnimation(HOLY_WALK);
+            }
+            else {
+                event.getController().setAnimation(IDLE);
+            }
+
         }
 
         return PlayState.CONTINUE;

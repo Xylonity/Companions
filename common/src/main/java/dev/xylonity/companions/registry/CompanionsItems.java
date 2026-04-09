@@ -37,6 +37,7 @@ public class CompanionsItems {
     public static final ResourceEntry<Item> DEMON_FLESH = ITEMS.register("demon_flesh", () -> new TooltipItem(new Item.Properties().food((new FoodProperties.Builder()).nutrition(10).saturationMod(0.6F).meat().build()), "demon_flesh"));
     public static final ResourceEntry<Item> OLD_CLOTH = ITEMS.register("old_cloth", () -> new TooltipItem(new Item.Properties().fireResistant(), "old_cloth"));
     public static final ResourceEntry<Item> RELIC_GOLD = ITEMS.register("relic_gold", () -> new TooltipItem(new Item.Properties().fireResistant(), "relic_gold"));
+    public static final ResourceEntry<Item> PORCELAIN_POTTERY = ITEMS.register("porcelain_pottery", () -> new TooltipItem(new Item.Properties().fireResistant(), "porcelain_pottery"));
 
     public static final ResourceEntry<Item> CROISSANT_DRAGON_ARMOR_STRAWBERRY = ITEMS.register("croissant_dragon_strawberry_armor", () -> new CroissantDragonArmor(new Item.Properties(), "croissant_dragon_strawberry_armor"));
     public static final ResourceEntry<Item> CROISSANT_DRAGON_ARMOR_VANILLA = ITEMS.register("croissant_dragon_vanilla_armor", () -> new CroissantDragonArmor(new Item.Properties(), "croissant_dragon_vanilla_armor"));
