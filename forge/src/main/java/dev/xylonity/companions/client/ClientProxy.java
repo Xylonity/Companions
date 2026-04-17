@@ -1,5 +1,6 @@
 package dev.xylonity.companions.client;
 
+import dev.xylonity.companions.client.event.CompanionsExtraClientEvents;
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
@@ -8,6 +9,7 @@ import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.knightlib.api.camera.CameraShakeManager;
+import dev.xylonity.knightlib.api.event.KnightLibEvents;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -56,8 +58,13 @@ public class ClientProxy implements IProxy {
     }
 
     @Override
+    public void registerClientEvents() {
+        KnightLibEvents.CLIENT.register(CompanionsExtraClientEvents.class);
+    }
+
+    @Override
     public void shakePlayerCamera(Player player, int durationTicks, float intensityX, float intensityY, float intensityZ, int fadeStartTick) {
-        CameraShakeManager.shake(player, durationTicks, intensityX, intensityY, intensityZ, fadeStartTick);
+        //CameraShakeManager.shake(player, durationTicks, intensityX, intensityY, intensityZ, fadeStartTick);
     }
 
     @Override

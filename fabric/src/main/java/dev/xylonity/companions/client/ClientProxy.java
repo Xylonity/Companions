@@ -57,7 +57,7 @@ public class ClientProxy implements IProxy {
 
     @Override
     public void shakePlayerCamera(Player player, int durationTicks, float intensityX, float intensityY, float intensityZ, int fadeStartTick) {
-        CameraShakeManager.shake(player, durationTicks, intensityX, intensityY, intensityZ, fadeStartTick);
+        //CameraShakeManager.shake(player, durationTicks, intensityX, intensityY, intensityZ, fadeStartTick);
     }
 
     @Override

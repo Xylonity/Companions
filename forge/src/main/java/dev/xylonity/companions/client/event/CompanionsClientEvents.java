@@ -128,8 +128,6 @@ public class CompanionsClientEvents {
             MenuScreens.register(CompanionsMenuTypes.PUPPET_CONTAINER.get(), PuppetScreen::new);
             MenuScreens.register(CompanionsMenuTypes.CORNELIUS_CONTAINER.get(), CorneliusScreen::new);
 
-            ItemBlockRenderTypes.setRenderLayer(CompanionsBlocks.ETERNAL_FIRE.get(), RenderType.cutout());
-
             // Pontiff
             BossBarBuilder
                 .legacyMatcher(boss -> boss.getName().getString().contains("Sacred Pontiff") && !boss.getName().getString().equalsIgnoreCase("Sacred Pontiff Invisible"))

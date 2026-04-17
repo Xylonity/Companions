@@ -1,4 +1,9 @@
 # 1.2.2
+- Added compatibility with Knightlib 1.5.0
+- Fixed an issue in Fabric where the eternal fire would not be transparent and would have a black texture instead
+- Preparing the ground for the major update 1.3.0
+
+# 1.2.2
 - Attempt to fix recall platform loop crash
 - Black hole is now summonable
 

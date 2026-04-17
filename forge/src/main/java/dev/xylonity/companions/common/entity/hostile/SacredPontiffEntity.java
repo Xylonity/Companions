@@ -7,7 +7,7 @@ import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import dev.xylonity.knightlib.api.music.IBossMusicProvider;
+import dev.xylonity.knightlib.api.sound.music.IBossMusicProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

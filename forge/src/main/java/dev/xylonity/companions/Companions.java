@@ -37,7 +37,7 @@ public class Companions {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Companions.MOD_ID);
 
     public Companions() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         KnightLib.initialize();
 
@@ -56,9 +56,12 @@ public class Companions {
         PARTICLES.register(modEventBus);
         SOUNDS.register(modEventBus);
 
+        Companions.PROXY.registerClientEvents();
+
         CompanionsSpawnBiomeModifier.BIOME_MODIFIER.register("companions_mob_spawns", CompanionsSpawnBiomeModifier::makeCodec);
 
         ConfigComposer.registerConfig(Companions.MOD_ID, CompanionsConfig.class);
+
         CompanionsCommon.init();
     }
 
