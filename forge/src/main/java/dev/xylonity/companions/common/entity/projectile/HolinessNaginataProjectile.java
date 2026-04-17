@@ -3,6 +3,10 @@ package dev.xylonity.companions.common.entity.projectile;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.knightlib.KnightLib;
+import dev.xylonity.knightlib.api.camera.ShakeSettings;
+import dev.xylonity.knightlib.network.packets.CameraShakeS2C;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -89,11 +93,19 @@ public class HolinessNaginataProjectile extends ThrownTrident implements GeoEnti
     }
 
     protected void doShake() {
-        if (level().isClientSide) {
-            for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
+        if (!level().isClientSide) {
+            for (final Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    KnightLib.NET.sendTo(serverPlayer,
+                            CameraShakeS2C.TYPE.base(),
+                            new CameraShakeS2C(ShakeSettings.builder()
+                                    .fadeInTicks(2).durationTicks(10).fadeOutTicks(8).lacunarity(4).amplitude(0.32225f, 0.32225f, 0.32225f).build(), false));
+                }
+
             }
+
         }
+
     }
 
     @Override
