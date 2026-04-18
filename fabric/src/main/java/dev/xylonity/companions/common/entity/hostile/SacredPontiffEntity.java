@@ -1,6 +1,5 @@
 package dev.xylonity.companions.common.entity.hostile;
 
-import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
@@ -8,7 +7,7 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.KnightLib;
-import dev.xylonity.knightlib.api.camera.ShakeSettings;
+import dev.xylonity.knightlib.api.camera.shake.ShakeSettings;
 import dev.xylonity.knightlib.api.sound.music.IBossMusicProvider;
 import dev.xylonity.knightlib.network.packets.CameraShakeS2C;
 import net.minecraft.core.BlockPos;
