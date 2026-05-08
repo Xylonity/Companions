@@ -246,7 +246,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
     private void doubleCreeper() {
         if (getLevel() instanceof ServerLevel server) {
             BlockPos center = worldPosition.above();
-            for (int i = 0; i < 2 + new Random().nextInt(3); i++) {
+            for (int i = 0; i < 2 + server.random.nextInt(3); i++) {
                 BonanzaTnt tnt = new BonanzaTnt(server, center.getX() + 0.5, center.getY(), center.getZ() + 0.5, null);
                 double angle = getLevel().random.nextDouble() * Math.PI * 2;
                 double speed = 0.15 + getLevel().random.nextDouble() * 0.6;
@@ -321,24 +321,26 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             BlockPos center = worldPosition.above();
 
             for (int i = 0; i < 3; i++) {
-                double angle = new Random().nextDouble() * Math.PI * 2;
-                double dist = new Random().nextDouble() * 4;
+                double angle = server.random.nextDouble() * Math.PI * 2;
+                double dist = server.random.nextDouble() * 4;
                 double x = center.getX() + 0.5 + Math.cos(angle) * dist;
                 double y = center.getY();
                 double z = center.getZ() + 0.5 + Math.sin(angle) * dist;
 
-                Creeper creeper = EntityType.CREEPER.create(server);
+                final Creeper creeper = EntityType.CREEPER.create(server);
                 if (creeper != null) {
-                    creeper.moveTo(x, y, z, new Random().nextFloat() * 360F, 0F);
-                    LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(server);
+                    creeper.moveTo(x, y, z, server.random.nextFloat() * 360F, 0F);
+                    server.addFreshEntity(creeper);
+
+                    final LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(server);
                     if (bolt != null) {
                         bolt.moveTo(x, y, z);
                         server.addFreshEntity(bolt);
                         creeper.thunderHit(server, bolt);
                     }
 
-                    server.addFreshEntity(creeper);
                 }
+
             }
 
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);

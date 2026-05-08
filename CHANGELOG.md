@@ -12,6 +12,7 @@
 - Added compatibility with knightlib 1.5.0
 - Fixed companions not being detected by mods that display entity loot tables, due to a lack of loot table definitions
 - Fixed a bug where the hostile imp was not dropping demon flesh in Fabric
+- Fixed a potential sync issue that occurred when spawning charged creepers with the frog bonanza
 
 # 1.2.2
 - Attempt to fix recall platform loop crash
