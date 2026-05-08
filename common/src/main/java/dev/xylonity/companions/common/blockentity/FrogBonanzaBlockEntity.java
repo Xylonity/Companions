@@ -5,7 +5,6 @@ import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.mixin.FallingBlockEntityAccessor;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
-import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -264,9 +262,17 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
     private void doubleCoin()  {
         if (getLevel() != null) {
-            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.COPPER_COIN.get(), new Random().nextInt(2, 10)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.NETHER_COIN.get(), new Random().nextInt(1, 4)));
-            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.END_COIN.get()));
+            parseBonanzaTeddyDrops(CompanionsConfig.BONANZA_2_COIN_HEADS_DROPS)
+                .forEach(drop -> {
+                    if (getLevel().getRandom().nextFloat() < drop.chance) {
+                        final Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(drop.id()));
+                        if (item != null) {
+                            popResource(getLevel(), getBlockPos(), new ItemStack(item, (drop.min == drop.max) ? drop.min : getLevel().getRandom().nextInt(drop.min, drop.max + 1)));
+                        }
+
+                    }
+
+                });
 
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }
@@ -278,11 +284,13 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             parseBonanzaTeddyDrops(CompanionsConfig.BONANZA_2_TEDDY_HEADS_DROPS)
                 .forEach(drop -> {
                     if (getLevel().getRandom().nextFloat() < drop.chance) {
-                        Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(drop.id()));
+                        final Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(drop.id()));
                         if (item != null) {
                             popResource(getLevel(), getBlockPos(), new ItemStack(item, (drop.min == drop.max) ? drop.min : getLevel().getRandom().nextInt(drop.min, drop.max + 1)));
                         }
+
                     }
+
                 });
 
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
@@ -295,7 +303,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             Vec3 center = Vec3.atCenterOf(getBlockPos());
             Player player = serverLevel.getNearestPlayer(center.x, center.y, center.z, 25.0, false);
             if (player != null) {
-                FallingBlockEntity anvil = FallingBlockEntityAccessor._new(serverLevel, player.getX(), player.getY() + 20, player.getZ(), Blocks.ANVIL.defaultBlockState());
+                final FallingBlockEntity anvil = FallingBlockEntityAccessor._new(serverLevel, player.getX(), player.getY() + 20, player.getZ(), Blocks.ANVIL.defaultBlockState());
 
                 anvil.time = 1;
                 anvil.disableDrop();
@@ -340,17 +348,17 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
     private void tripleCoin()  {
         if (getLevel() != null) {
-            RandomSource rand = getLevel().getRandom();
+            parseBonanzaTeddyDrops(CompanionsConfig.BONANZA_3_COIN_HEADS_DROPS)
+                .forEach(drop -> {
+                    if (getLevel().getRandom().nextFloat() < drop.chance) {
+                        final Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(drop.id()));
+                        if (item != null) {
+                            popResource(getLevel(), getBlockPos(), new ItemStack(item, (drop.min == drop.max) ? drop.min : getLevel().getRandom().nextInt(drop.min, drop.max + 1)));
+                        }
 
-            popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.COPPER_COIN.get(), rand.nextInt(1, 20)));
+                    }
 
-            if (rand.nextFloat() < 0.75f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.NETHER_COIN.get(), rand.nextInt(1, 5)));
-            }
-
-            if (rand.nextFloat() < 0.45f) {
-                popResource(getLevel(), getBlockPos(), new ItemStack(CompanionsBlocks.END_COIN.get(), 1));
-            }
+                });
 
             getLevel().playSound(null, getBlockPos(), CompanionsSounds.POP.get(), SoundSource.BLOCKS);
         }

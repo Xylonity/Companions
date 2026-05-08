@@ -865,6 +865,24 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Bonanza",
+            comment = "Bonanza coin reward drops from 2 coin heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]. Leave blank to disable coin rewards entirely."
+    )
+    public static String BONANZA_2_COIN_HEADS_DROPS =
+            "companions:copper_coin, 1.0, 2-9;" +
+            "companions:nether_coin, 1.0, 1-3;" +
+            "companions:end_coin, 1.0, 1";
+
+    @ConfigEntry(
+            category = "Bonanza",
+            comment = "Bonanza coin reward drops from 3 coin heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]. Leave blank to disable coin rewards entirely."
+    )
+    public static String BONANZA_3_COIN_HEADS_DROPS =
+            "companions:copper_coin, 1.0, 1-19;" +
+            "companions:nether_coin, 0.75, 1-4;" +
+            "companions:end_coin, 0.45, 1";
+
+    @ConfigEntry(
+            category = "Bonanza",
             comment = "Bonanza item reward drops from 2 teddy heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]"
     )
     public static String BONANZA_2_TEDDY_HEADS_DROPS =
