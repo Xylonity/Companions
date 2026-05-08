@@ -519,6 +519,12 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Magic Books",
+            comment = "If true, spells that produce explosions (e.g. Fire Mark) are allowed to break blocks, and if false, spells will never break blocks regardless of the mobGriefing gamerule."
+    )
+    public static boolean SPELLS_GRIEF_WORLD = true;
+
+    @ConfigEntry(
+            category = "Magic Books",
             comment = "Damage dealt by each fragment of the magic ray.",
             min = 1.0D, max = 1000.0D
     )
@@ -803,6 +809,23 @@ public final class CompanionsConfig {
             min = 0d, max = 1000d
     )
     public static double BLOOD_SLASH_SPEED = 0.5225d;
+
+    /**
+     * HOLY PORCELAIN POTTERY
+     */
+
+    @ConfigEntry(
+            category = "Holy Porcelain Pottery",
+            comment = "List of entity IDs that cannot be stored inside the Holy Porcelain Pottery. Example: minecraft:ender_dragon; minecraft:wither"
+    )
+    public static String HOLY_PORCELAIN_POTTERY_BLACKLIST = "minecraft:ender_dragon; minecraft:wither; minecraft:warden";
+
+    @ConfigEntry(
+            category = "Holy Porcelain Pottery",
+            comment = "Maximum bounding box size (width and height in blocks) an entity can have to be stored inside the Holy Porcelain Pottery.",
+            min = 0.0, max = 64.0
+    )
+    public static double HOLY_PORCELAIN_POTTERY_MAX_BBOX = 2.0;
 
     @ConfigEntry(
             category = "Spawn Rates",
