@@ -1,13 +1,12 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.KnightLib;
-import dev.xylonity.knightlib.api.camera.ShakeSettings;
+import dev.xylonity.knightlib.api.camera.shake.ShakeSettings;
 import dev.xylonity.knightlib.network.packets.CameraShakeS2C;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

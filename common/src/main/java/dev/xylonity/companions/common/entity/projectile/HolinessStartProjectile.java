@@ -8,7 +8,7 @@ import dev.xylonity.companions.mixin.ProjectileAccessor;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.knightlib.KnightLib;
-import dev.xylonity.knightlib.api.camera.ShakeSettings;
+import dev.xylonity.knightlib.api.camera.shake.ShakeSettings;
 import dev.xylonity.knightlib.network.packets.CameraShakeS2C;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
