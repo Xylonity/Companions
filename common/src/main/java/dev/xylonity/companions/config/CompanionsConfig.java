@@ -655,6 +655,12 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Armoury",
+            comment = "When crafting Crystallized Blood, Holy Robe or Mage gear, the enchantments of the consumed vanilla armor/weapon are transferred to the resulting item."
+    )
+    public static boolean PRESERVE_ENCHANTMENTS_ON_CRAFT = true;
+
+    @ConfigEntry(
+            category = "Armoury",
             comment = "Crystallized Blood armor stats: [helmet, chest, legs, boots, toughness, knockbackRes, durabilityMult]. Don't use negative values and stick to the format."
     )
     public static String CRYSTALLIZED_BLOOD_SET_STATS = "4, 9, 7, 3, 3.5, 0.15, 40";

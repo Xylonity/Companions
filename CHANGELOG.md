@@ -4,6 +4,9 @@
 - Armor effects now apply to any entity wearing the armor set, not just players
 - The force with which certain camera shakes were performed was modified to make it more natural
 - Added 2 missing camera shakes, at the beginning and end of His Holiness appearance animation
+- Added a config option to modify bonanza drops on the 2 or 3 coin head rolls
+- Added a config option to prevent mob griefing (when using certain magic books)
+- Added a config option to allow the enchantments on the respective armor piece to persist when crafting mage, holy robe, or crystallized blood armor sets
 - In Fabric, the respawn totem can now respawn any tamable entity, not just companions
 - The code has been rewritten to ensure loader parity
 - Added compatibility with knightlib 1.5.0

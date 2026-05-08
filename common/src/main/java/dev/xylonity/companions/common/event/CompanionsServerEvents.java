@@ -16,6 +16,7 @@ import dev.xylonity.knightlib.api.entity.data.PersistentData;
 import dev.xylonity.knightlib.api.event.RegisterEvent;
 import dev.xylonity.knightlib.api.event.impl.server.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -23,6 +24,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,6 +32,9 @@ import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -40,6 +45,8 @@ import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.lang.ref.WeakReference;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public final class CompanionsServerEvents {
@@ -243,6 +250,48 @@ public final class CompanionsServerEvents {
     @RegisterEvent
     public static void onServerWorldUnload(final ServerWorldUnloadEvent event) {
         TeslaNetwork.clearAll();
+    }
+
+    @RegisterEvent
+    public static void onPlayerItemCrafted(final PlayerItemCraftedEvent event) {
+        if (!CompanionsConfig.PRESERVE_ENCHANTMENTS_ON_CRAFT) {
+            return;
+        }
+
+        final ItemStack result = event.getCrafted();
+        if (result.isEmpty()) {
+            return;
+        }
+
+        final ResourceLocation resultId = BuiltInRegistries.ITEM.getKey(result.getItem());
+        if (!resultId.getNamespace().equals("companions")) {
+            return;
+        }
+
+        final String path = resultId.getPath();
+        if (!path.startsWith("crystallized_blood_") && !path.startsWith("holy_robe_") && !path.startsWith("mage_")) {
+            return;
+        }
+
+        final Container matrix = event.getCraftMatrix();
+        final Map<Enchantment, Integer> merged = new LinkedHashMap<>();
+        for (int i = 0; i < matrix.getContainerSize(); i++) {
+            final ItemStack stack = matrix.getItem(i);
+            if (stack.isEmpty() || !stack.isEnchanted()) {
+                continue;
+            }
+
+            EnchantmentHelper.getEnchantments(stack).forEach((enchantment, level) -> merged.merge(enchantment, level, Math::max));
+        }
+
+        if (merged.isEmpty()) {
+            return;
+        }
+
+        final Map<Enchantment, Integer> existingEnchantments = new LinkedHashMap<>(EnchantmentHelper.getEnchantments(result));
+        merged.forEach((enchantment, level) -> existingEnchantments.merge(enchantment, level, Math::max));
+
+        EnchantmentHelper.setEnchantments(existingEnchantments, result);
     }
 
 }
