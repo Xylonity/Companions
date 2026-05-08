@@ -14,6 +14,6 @@ public final class CompanionsRecipeSerializers {
     public static final ResourceRegistry<RecipeSerializer<?>> RECIPE_SERIALIZERS = ResourceDispatcher.create(BuiltInRegistries.RECIPE_SERIALIZER, Companions.MOD_ID);
 
     public static final ResourceEntry<RecipeSerializer<ShadeMawAltarRecipe>> CHALICE_SERIALIZER = RECIPE_SERIALIZERS.register("shade_maw_altar_interaction", () -> ShadeMawAltarRecipe.SERIALIZER);
-    public static final ResourceEntry<RecipeSerializer<SoulFurnaceRecipe>> SOUL_FURNACE_SERIALIZER = RECIPE_SERIALIZERS.register("soul_furnace_interaction", SoulFurnaceRecipe.Serializer::new);
+    public static final ResourceEntry<RecipeSerializer<SoulFurnaceRecipe>> SOUL_FURNACE_SERIALIZER = RECIPE_SERIALIZERS.register("soul_furnace", SoulFurnaceRecipe.Serializer::new);
 
 }
