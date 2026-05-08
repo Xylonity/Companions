@@ -3,6 +3,7 @@ package dev.xylonity.companions.compat.jei;
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.recipe.*;
 import dev.xylonity.companions.compat.jei.category.*;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsRecipeTypes;
@@ -12,8 +13,11 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +47,7 @@ public final class CompanionsPlugin implements IModPlugin {
         reg.addRecipeCategories(new PuppetRecipeCategory(reg.getJeiHelpers().getGuiHelper()));
         reg.addRecipeCategories(new SoulFurnaceItemRecipeCategory(reg.getJeiHelpers().getGuiHelper()));
         reg.addRecipeCategories(new SoulFurnaceEntityRecipeCategory(reg.getJeiHelpers().getGuiHelper()));
+        reg.addRecipeCategories(new FrogBonanzaRecipeCategory(reg.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -87,18 +92,50 @@ public final class CompanionsPlugin implements IModPlugin {
                 new CroissantDragonArmorRecipe(new ItemStack(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get())),
                 new CroissantDragonArmorRecipe(new ItemStack(CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get()))
         ));
+
+        reg.addRecipes(FrogBonanzaRecipeCategory.TYPE, List.of(new FrogBonanzaRecipe(parseBonanzaCurrencies(CompanionsConfig.BONANZA_CURRENCY_TYPES))));
+    }
+
+    private static List<ItemStack> parseBonanzaCurrencies(String configEntry) {
+        final List<ItemStack> list = new ArrayList<>();
+        if (configEntry == null || configEntry.isBlank()) {
+            return list;
+        }
+
+        for (final String part : configEntry.split(";")) {
+            final String[] entry = part.trim().split(",");
+            if (entry.length < 1) {
+                continue;
+            }
+
+            final Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(entry[0].trim()));
+            if (item == Items.AIR) {
+                continue;
+            }
+
+            list.add(new ItemStack(item));
+        }
+
+        return list;
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration reg) {
         reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.SHADE_MAW_ALTAR.get()), ShadeMawAltarRecipeCategory.TYPE);
         reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.SHADE_SWORD_ALTAR.get()), ShadeSwordAltarRecipeCategory.TYPE);
-        reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.CROISSANT_EGG.get()), CroissantEggRecipeCategory.TYPE);
-        reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.RESPAWN_TOTEM.get()), RespawnTotemRecipeCategory.TYPE);
-        reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.EMPTY_PUPPET.get()), PuppetRecipeCategory.TYPE);
+
         reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.SOUL_FURNACE.get()), SoulFurnaceItemRecipeCategory.TYPE);
         reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.SOUL_FURNACE.get()), SoulFurnaceEntityRecipeCategory.TYPE);
+
+        reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.CROISSANT_EGG.get()), CroissantEggRecipeCategory.TYPE);
+
+        reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.RESPAWN_TOTEM.get()), RespawnTotemRecipeCategory.TYPE);
+
+        reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.EMPTY_PUPPET.get()), PuppetRecipeCategory.TYPE);
+
         reg.addRecipeCatalyst(new ItemStack(CompanionsItems.CRYSTALLIZED_BLOOD.get()), ShadeAltarRecipeCategory.TYPE);
+
+        reg.addRecipeCatalyst(new ItemStack(CompanionsBlocks.FROG_BONANZA.get()), FrogBonanzaRecipeCategory.TYPE);
     }
 
 }

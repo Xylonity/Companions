@@ -3,6 +3,7 @@
 - Now the Sacred Pontiff can have its name translated into different languages instead of being exclusively in English (previously limited by the bossbar system)
 - Armor effects now apply to any entity wearing the armor set, not just players
 - The force with which certain camera shakes were performed was modified to make it more natural
+- A new JEI category has been added for the frog bonanza, indicating which items are enabled to be used as currency in the machine
 - Added 2 missing camera shakes, at the beginning and end of His Holiness appearance animation
 - Added a config option to modify bonanza drops on the 2 or 3 coin head rolls
 - Added a config option to prevent mob griefing (when using certain magic books)

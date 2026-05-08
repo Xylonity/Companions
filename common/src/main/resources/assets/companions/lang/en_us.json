@@ -43,6 +43,10 @@
   "shadow_bell.companions.client_message.altar_saved": "Altar linked successfully.",
   "shadow_bell.companions.client_message.altar_empty": "The current altar in empty.",
 
+  "tooltip.item.companions.holy_porcelain_pottery.stored": "Contains: %s",
+  "holy_porcelain_pottery.companions.client_message.blacklisted": "This entity cannot be stored inside the pottery.",
+  "holy_porcelain_pottery.companions.client_message.too_big": "This entity is too big to fit inside the pottery.",
+
   "hostile_puppet_glove.companions.client_message.game_start": "You're going to start playing rock, paper, scissors.",
   "hostile_puppet_glove.companions.client_message.wrong_item": "You need rock, paper, or scissors.",
   "hostile_puppet_glove.companions.client_message.draw": "Draw!",
@@ -285,5 +289,6 @@
   "jei.companions.puppet_interaction.title": "Create Puppet",
   "jei.companions.croissant_egg_interaction.title": "Spawn Croissant Dragon",
   "jei.companions.croissant_dragon_armor_interaction.title": "Croissant Dragon Armor",
-  "jei.companions.antlion_interaction.title": "Cycle Antlion state"
+  "jei.companions.antlion_interaction.title": "Cycle Antlion state",
+  "jei.companions.frog_bonanza_interaction.title": "Frog Bonanza"
 }
