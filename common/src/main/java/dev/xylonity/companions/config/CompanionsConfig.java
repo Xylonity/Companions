@@ -206,6 +206,12 @@ public final class CompanionsConfig {
     )
     public static String CORNELIUS_JACKBLACK_BETS = "companions:copper_coin; companions:nether_coin; companions:end_coin";
 
+    @ConfigEntry(
+            category = "Cornelius",
+            comment = "Names (separated by ; or ,) that activate Cornelius's reskin when used as a nametag. Leave blank to disable."
+    )
+    public static String CORNELIUS_RESKIN_NAMES = "Rosalind; Juan";
+
     /**
      * CROISSANT DRAGON
      */
@@ -231,6 +237,12 @@ public final class CompanionsConfig {
             min = 0d, max = 5000d
     )
     public static double CROISSANT_DRAGON_MAX_LIFE = 80d;
+
+    @ConfigEntry(
+            category = "Croissant Dragon",
+            comment = "Names (separated by ; or ,) that activate the Croissant Dragon's reskin when used as a nametag. Leave blank to disable."
+    )
+    public static String CROISSANT_DRAGON_RESKIN_NAMES = "Rosalind; Juan";
 
     /**
      * TEDDY
@@ -296,6 +308,12 @@ public final class CompanionsConfig {
     )
     public static double SOUL_MAGE_MAX_LIFE = 75d;
 
+    @ConfigEntry(
+            category = "Soul Mage",
+            comment = "Names (separated by ; or ,) that activate the Soul Mage's reskin when used as a nametag. Leave blank to disable."
+    )
+    public static String SOUL_MAGE_RESKIN_NAMES = "Rosalind; Juan";
+
     /**
      * SHADE SWORD
      */
@@ -328,6 +346,12 @@ public final class CompanionsConfig {
             min = 0.0, max = 10.0
     )
     public static double SHADOW_SWORD_BLOOD_MULTIPLIER = 1.2;
+
+    @ConfigEntry(
+            category = "Shadow Sword",
+            comment = "Names (separated by ; or ,) that activate the Shade Sword's reskin when used as a nametag. Leave blank to disable."
+    )
+    public static String SHADOW_SWORD_RESKIN_NAMES = "Rosalind; Juan";
 
     /**
      * SHADE MAW

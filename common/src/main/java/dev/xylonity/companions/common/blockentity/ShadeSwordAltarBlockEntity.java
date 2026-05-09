@@ -135,7 +135,7 @@ public class ShadeSwordAltarBlockEntity extends AbstractShadeAltarBlockEntity {
             }
 
             if (pPlayer.getItemInHand(pUsedHand).hasCustomHoverName()) {
-                entity.setHasReskin(true);
+                entity.setCustomName(pPlayer.getItemInHand(pUsedHand).getHoverName());
             }
 
             double dx = pPlayer.getX() - px;

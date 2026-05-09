@@ -32,6 +32,27 @@ public class Util {
 
     private Util() { ;; }
 
+    public static boolean matchesReskinName(Entity entity, String rawConfigEntry) {
+        if (entity == null || !entity.hasCustomName() || rawConfigEntry == null || rawConfigEntry.isBlank()) {
+            return false;
+        }
+
+        final String trimmed = entity.getCustomName().getString().trim();
+        if (trimmed.isEmpty()) {
+            return false;
+        }
+
+        for (final String entry : rawConfigEntry.split("[,;]")) {
+            final String name = entry.trim();
+            if (!name.isEmpty() && name.equalsIgnoreCase(trimmed)) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
     public static BlockPos findClosestGroundBelow(CompanionEntity entity, float y) {
         Vec3 start = new Vec3(entity.getX(), entity.getBoundingBox().minY + 0.01, entity.getZ());
         BlockHitResult trace = entity.level().clip(new ClipContext(start, start.subtract(0, y, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));

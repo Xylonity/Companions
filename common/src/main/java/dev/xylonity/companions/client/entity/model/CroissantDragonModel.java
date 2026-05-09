@@ -2,6 +2,8 @@ package dev.xylonity.companions.client.entity.model;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.companion.CroissantDragonEntity;
+import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
@@ -16,7 +18,7 @@ public class CroissantDragonModel extends GeoModel<CroissantDragonEntity> {
 
     @Override
     public ResourceLocation getTextureResource(CroissantDragonEntity animatable) {
-        if (animatable.hasCustomName()) {
+        if (Util.matchesReskinName(animatable, CompanionsConfig.CROISSANT_DRAGON_RESKIN_NAMES)) {
             return Companions.of(TPATH + animatable.getArmorName() + "_reskin.png");
         }
 

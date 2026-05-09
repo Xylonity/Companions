@@ -4,7 +4,9 @@
 - Armor effects now apply to any entity wearing the armor set, not just players
 - The force with which certain camera shakes were performed was modified to make it more natural
 - A new JEI category has been added for the frog bonanza, indicating which items are enabled to be used as currency in the machine
+- Now reskins for entities are only activated when the entity has a nametag with a specific name, not just by having a nametag as before
 - Added 2 missing camera shakes, at the beginning and end of His Holiness appearance animation
+- Added config options to specify names under which each entity would activate its reskin
 - Added a config option to modify bonanza drops on the 2 or 3 coin head rolls
 - Added a config option to prevent mob griefing (when using certain magic books)
 - Added a config option to allow the enchantments on the respective armor piece to persist when crafting mage, holy robe, or crystallized blood armor sets

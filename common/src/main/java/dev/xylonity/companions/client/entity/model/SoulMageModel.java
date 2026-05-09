@@ -2,6 +2,8 @@ package dev.xylonity.companions.client.entity.model;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.companion.SoulMageEntity;
+import dev.xylonity.companions.common.util.Util;
+import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.constant.DataTickets;
@@ -19,7 +21,7 @@ public class SoulMageModel extends GeoModel<SoulMageEntity> {
 
     @Override
     public ResourceLocation getTextureResource(SoulMageEntity animatable) {
-        if (animatable.hasCustomName()) {
+        if (Util.matchesReskinName(animatable, CompanionsConfig.SOUL_MAGE_RESKIN_NAMES)) {
             return Companions.of("textures/entity/soul_mage_reskin.png");
         }
 
