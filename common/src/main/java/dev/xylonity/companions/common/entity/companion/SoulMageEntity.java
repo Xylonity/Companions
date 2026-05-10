@@ -120,10 +120,11 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 
+        this.goalSelector.addGoal(2, new SoulMageHealRingGoal(this, 70, 160));
+
         this.goalSelector.addGoal(3, new SoulMageMagicRayGoal(this, 70, 160));
         this.goalSelector.addGoal(3, new SoulMageBlackHoleGoal(this, 70, 160));
         this.goalSelector.addGoal(3, new SoulMageStoneSpikesGoal(this, 70, 160));
-        this.goalSelector.addGoal(3, new SoulMageHealRingGoal(this, 70, 160));
         this.goalSelector.addGoal(3, new SoulMageIceShardGoal(this, 70, 160));
         this.goalSelector.addGoal(3, new SoulMageFireMarkGoal(this, 70, 160));
         this.goalSelector.addGoal(3, new SoulMageTornadoGoal(this, 70, 160));
@@ -232,7 +233,7 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
 
         if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!level().isClientSide && player instanceof ServerPlayer serverPlayer) {
-                KnightLib.PLATFORM.openMenu(serverPlayer, this, friendlyByteBuf -> friendlyByteBuf.writeInt(getBookId()));
+                KnightLib.PLATFORM.openMenu(serverPlayer, this, friendlyByteBuf -> friendlyByteBuf.writeInt(getId()));
                 this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.5F, 1.0F);
             }
 

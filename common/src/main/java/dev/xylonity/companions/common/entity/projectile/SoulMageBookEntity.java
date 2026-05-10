@@ -55,6 +55,7 @@ public class SoulMageBookEntity extends BaseProjectile {
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(TARGET_RED, 255);
         this.entityData.define(TARGET_GREEN, 255);
         this.entityData.define(TARGET_BLUE, 255);

@@ -25,11 +25,11 @@ public class SoulMageBlackHoleGoal extends AbstractSoulMageAttackGoal {
 
                 blackHole.setOwner(soulMage);
 
-                Vec3 dir = target.getEyePosition(1f).add(0, 1f + soulMage.getRandom().nextFloat(), 0).subtract(spawnPos).normalize();
+                Vec3 dir = target.position().add(0, target.getBbHeight() * 0.5, 0).subtract(spawnPos).normalize();
                 float yaw = (float) (Math.atan2(dir.z, dir.x) * (180f / Math.PI)) - 90f;
                 float pitch = (float) (-(Math.atan2(dir.y, Math.sqrt(dir.x * dir.x + dir.z * dir.z)) * (180.0F / Math.PI)));
 
-                blackHole.shootFromRotation(soulMage, pitch, yaw, 0f, 0.8f, 0f);
+                blackHole.shootFromRotation(soulMage, pitch, yaw, 0f, 1.2f, 0f);
 
                 soulMage.level().addFreshEntity(blackHole);
             }
