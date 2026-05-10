@@ -4,6 +4,8 @@ import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.container.PuppetContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
+import dev.xylonity.companions.common.entity.ai.generic.CompanionRandomStrollGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
 import dev.xylonity.companions.common.entity.ai.puppet.goal.*;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -29,7 +31,6 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -124,7 +125,8 @@ public class PuppetEntity extends CompanionEntity implements RangedAttackMob, Co
 
         this.goalSelector.addGoal(3, new PuppetApproachTargetGoal(this, 0.5, 0.4f, 1.25f));
 
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(4, new CompanionFollowOwnerGoal(this, 0.6D, 6.0F, 2.0F, false));
+        this.goalSelector.addGoal(4, new CompanionRandomStrollGoal(this, 0.43));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new CompanionsHurtTargetGoal(this));
