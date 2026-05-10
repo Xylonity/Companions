@@ -841,6 +841,28 @@ public final class CompanionsConfig {
     public static double BLOOD_SLASH_SPEED = 0.5225d;
 
     /**
+     * STRUCTURES
+     */
+
+    @ConfigEntry(
+            category = "Structures",
+            comment = "Loot tables (separated by ; or ,) used to populate chests and barrels inside the mod's structures. One is picked at random per container (chest/barrel/etc). Leave blank to disable loots."
+    )
+    public static String STRUCTURE_LOOT_TABLES =
+            "minecraft:chests/simple_dungeon;" +
+            "minecraft:chests/abandoned_mineshaft;" +
+            "minecraft:chests/desert_pyramid;" +
+            "minecraft:chests/woodland_mansion;" +
+            "minecraft:chests/pillager_outpost;";
+
+    @ConfigEntry(
+            category = "Structures",
+            comment = "Probability (0.0–1.0) that a chest or barrel inside a mod structure receives a random loot table from the STRUCTURE_LOOT_TABLES config entry. Set to 0 to disable.",
+            min = 0.0, max = 1.0
+    )
+    public static double STRUCTURE_CHEST_LOOT_FILL_CHANCE = 0.45;
+
+    /**
      * HOLY PORCELAIN POTTERY
      */
 

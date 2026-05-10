@@ -106,7 +106,6 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.BROKEN_DINAMO_SPAWN_EGG.get());
                                 output.accept(CompanionsItems.HOSTILE_IMP_SPAWN_EGG.get());
                                 output.accept(CompanionsItems.GOLDEN_ALLAY_SPAWN_EGG.get());
-                                output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get());
                                 output.accept(CompanionsItems.SACRED_PONTIFF_SPAWN_EGG.get());
                                 output.accept(CompanionsItems.LIVING_CANDLE_SPAWN_EGG.get());
                                 output.accept(CompanionsItems.ILLAGER_GOLEM_SPAWN_EGG.get());

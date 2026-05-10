@@ -30,6 +30,7 @@ public class Companions {
         CompanionsMenuTypes.MENUS.init();
         CompanionsRecipeTypes.RECIPE_TYPES.init();
         CompanionsRecipeSerializers.RECIPE_SERIALIZERS.init();
+        CompanionsStructureProcessors.PROCESSORS.init();
 
         CompanionsEntitySpawns.init();
         CompanionsEntityDrops.init();
