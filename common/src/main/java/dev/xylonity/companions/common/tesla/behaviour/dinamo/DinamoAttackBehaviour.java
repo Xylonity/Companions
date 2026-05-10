@@ -86,6 +86,10 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
                                 return false;
                             }
 
+                            if (Util.areTeammates(dinamo.getOwner(), entity)) {
+                                return false;
+                            }
+
                             return entity instanceof Monster;
                         })
                 .stream()

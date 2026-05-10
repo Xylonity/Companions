@@ -20,6 +20,7 @@
 - Fixed a bug where the hostile imp was not dropping demon flesh in Fabric
 - Fixed a potential sync issue that occurred when spawning charged creepers with the frog bonanza
 - Fixed the puppet using incorrect logic, following the owner indefinitely even when instructed to do something else
+- Fixed an issue where the dynamo would harm its owner's teammates, resolving problems with FTB Teams
 
 # 1.2.2
 - Attempt to fix recall platform loop crash

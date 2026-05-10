@@ -2,7 +2,6 @@ package dev.xylonity.companions.common.util;
 
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.CompanionSummonEntity;
-import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.mixin.LevelAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -22,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -30,7 +31,37 @@ import java.util.UUID;
 
 public class Util {
 
-    private Util() { ;; }
+    private Util() {
+        ;;
+    }
+
+    /**
+     * Afaik FTB Teams creates vanilla scoreboard teams so this transparently respects FTB team membership
+     */
+    public static boolean areTeammates(@Nullable Entity sourceOwner, @Nullable Entity victim) {
+        final Player player1 = computePlayer(sourceOwner);
+        final Player player2 = computePlayer(victim);
+        if (player1 == null || player2 == null || player1 == player2) {
+            return false;
+        }
+
+        return !player1.canHarmPlayer(player2);
+    }
+
+    @Nullable
+    private static Player computePlayer(@Nullable Entity entity) {
+        if (entity == null) {
+            return null;
+        }
+        if (entity instanceof Player player) {
+            return player;
+        }
+        if (entity instanceof OwnableEntity ownableEntity && ownableEntity.getOwner() instanceof Player player) {
+            return player;
+        }
+
+        return null;
+    }
 
     public static boolean matchesReskinName(Entity entity, String rawConfigEntry) {
         if (entity == null || !entity.hasCustomName() || rawConfigEntry == null || rawConfigEntry.isBlank()) {
