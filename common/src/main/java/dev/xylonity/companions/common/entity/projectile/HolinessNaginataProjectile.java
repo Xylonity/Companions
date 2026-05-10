@@ -130,7 +130,7 @@ public class HolinessNaginataProjectile extends ThrownTrident implements GeoEnti
     protected void onHitEntity(EntityHitResult pResult) {
         Entity entity = pResult.getEntity();
         Entity owner = this.getOwner();
-        DamageSource damageSource = this.damageSources().trident(this, (owner == null ? this : owner));
+        DamageSource damageSource = this.damageSources().indirectMagic(this, (owner == null ? this : owner));
         this.dealtDamage = true;
         entity.hurt(damageSource, (float) CompanionsConfig.NAGINATA_DAMAGE);
         this.playSound(SoundEvents.TRIDENT_HIT, 5.0f, 1.0F);

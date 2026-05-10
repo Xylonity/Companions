@@ -99,7 +99,7 @@ public class BraceProjectile extends BaseProjectile {
         }
 
         // Hurts the trigger entity and caches its id so the projectile doesn't attack it again and continues bouncing
-        target.hurt(damageSources().thrown(this, getOwner()), (float) CompanionsConfig.BRACE_PROJECTILE_DAMAGE);
+        target.hurt(damageSources().indirectMagic(this, getOwner()), (float) CompanionsConfig.BRACE_PROJECTILE_DAMAGE);
         target.setSecondsOnFire(random.nextInt(1, 10));
         hitEntities.add(target.getId());
         entityBounces++;

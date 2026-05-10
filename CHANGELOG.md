@@ -7,15 +7,16 @@
 - Now reskins for entities are only activated when the entity has a nametag with a specific name, not just by having a nametag as before
 - Added 2 missing camera shakes, at the beginning and end of His Holiness appearance animation
 - Added loot to chests and barrels in the mod's structures. Loot tables and the percentage of containers that are filled are configurable via the config file
+- Certain projectiles in magic books have been changed to deal vanilla magic damage instead of other types
+- In Fabric, the respawn totem can now respawn any tamable entity, not just companions
+- The code has been rewritten to ensure loader parity
+- Added compatibility with knightlib 1.5.0
 - Added config options to specify names under which each entity would activate its reskin
 - Added a config option to modify bonanza drops on the 2 or 3 coin head rolls
 - Added a config option to prevent mob griefing (when using certain magic books)
 - Added a config option to specify the chance of a container being filled with loot in a structure
 - Added a config option to specify the loot tables that structures will use to fill their chests and barrels
 - Added a config option to allow the enchantments on the respective armor piece to persist when crafting mage, holy robe, or crystallized blood armor sets
-- In Fabric, the respawn totem can now respawn any tamable entity, not just companions
-- The code has been rewritten to ensure loader parity
-- Added compatibility with knightlib 1.5.0
 - Fixed companions not being detected by mods that display entity loot tables, due to a lack of loot table definitions
 - Fixed a bug where the hostile imp was not dropping demon flesh in Fabric
 - Fixed a potential sync issue that occurred when spawning charged creepers with the frog bonanza
