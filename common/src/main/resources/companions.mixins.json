@@ -10,7 +10,8 @@
       "IllagerGolemRaidMixin",
       "MobMixin",
       "LivingEntityMixin",
-      "ProjectileAccessor"
+      "ProjectileAccessor",
+      "SmithingTrimRecipeMixin"
     ],
     "client": [
     ],
