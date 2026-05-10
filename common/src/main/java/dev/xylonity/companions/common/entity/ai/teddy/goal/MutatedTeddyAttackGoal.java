@@ -13,7 +13,7 @@ public class MutatedTeddyAttackGoal extends AbstractTeddyAttackGoal {
 
     @Override
     public boolean canUse() {
-        return super.canUse() && teddy.getTarget() != null && teddy.distanceToSqr(teddy.getTarget()) < 4 && teddy.getPhase() == 2;
+        return super.canUse() && teddy.getTarget() != null && teddy.distanceToSqr(teddy.getTarget()) < 6 && teddy.getPhase() == 2;
     }
 
     @Override
