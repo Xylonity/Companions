@@ -27,7 +27,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class ShadeMawLandingRingProjectile extends AbstractProjectile {
+public class ShadeMawLandingRingProjectile extends BaseProjectile {
 
     private static final EntityDataAccessor<Float> STRENGTH = SynchedEntityData.defineId(ShadeMawLandingRingProjectile.class, EntityDataSerializers.FLOAT);
 
