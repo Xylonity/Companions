@@ -29,6 +29,7 @@
 - Fixed a potential sync issue that occurred when spawning charged creepers with the frog bonanza
 - Fixed the puppet using incorrect logic, following the owner indefinitely even when instructed to do something else
 - Fixed an issue where the dynamo would harm its owner's teammates, resolving problems with FTB Teams
+- Fixed a case where running while riding the Shade Maw would spam its step sound constantly
 
 # 1.2.2
 - Attempt to fix recall platform loop crash

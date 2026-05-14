@@ -388,6 +388,13 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Shadow Maw",
+            comment = "Shade Maw jump cooldown (in ticks)",
+            min = 0.0, max = 5000.0
+    )
+    public static int SHADOW_MAW_JUMP_COOLDOWN = 70;
+
+    @ConfigEntry(
+            category = "Shadow Maw",
             comment = "Shadow Maw stats multiplier on its blood state. For example, if set to 1.2, a default damage of 10 will be 12 when the blood upgrade is active. This is only applied to Health and Attack Damage attributes.",
             min = 0.0, max = 10.0
     )

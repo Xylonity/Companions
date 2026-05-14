@@ -6,7 +6,9 @@ import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ShadeEntity;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionFollowOwnerGoal;
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsHurtTargetGoal;
+import dev.xylonity.companions.common.entity.projectile.ShadeMawLandingRingProjectile;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.api.scheduler.TickScheduler;
@@ -53,12 +55,24 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
 
     private static final float WALK_THETA = 0.02f;
     private static final float RUN_THETA = 0.375f;
-    private static final float ACCEL = 0.02f;
+    private static final float ACCELERATION = 0.04f;
     private static final float LIQUID_DRAG = 0.90f;
+
+    private static final float JUMP_PITCH_MAX_DEGREES = 22f;
+    private static final float JUMP_PITCH_RELAX_LERP = 0.18f;
+
     private float throttle = 0f;
-    private boolean canJump = true;
-    private int jumpCharge = 0;
     private boolean hasSpawned;
+    private int lastStepSoundTick = -100;
+    private int lastAboveRunThetaTick = -100;
+
+    public float prevBodyPitch = 0f;
+    public float bodyPitch = 0f;
+
+    private float lastJumpStrength = 0f;
+    private boolean landingImpactPending = false;
+    private boolean wasInAirAfterJump = false;
+    private int jumpReadyCooldown = 0;
 
     public ShadeMawEntity(EntityType<? extends CompanionEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -124,11 +138,22 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
 
     @Override
     protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        if (getDeltaMovement().horizontalDistanceSqr() > RUN_THETA * RUN_THETA) {
-            if (tickCount % 5 == 0) playSound(CompanionsSounds.SHADE_STEP.get(), 2, 1);
-        } else {
-            playSound(CompanionsSounds.SHADE_STEP.get(), 2, 1);
+        if (level().isClientSide) {
+            return;
         }
+        if (getDeltaMovement().horizontalDistanceSqr() > RUN_THETA * RUN_THETA) {
+            lastAboveRunThetaTick = tickCount;
+        }
+
+        final boolean running = tickCount - lastAboveRunThetaTick < 10;
+        final int minInterval = running ? 15 : 4;
+        if (tickCount - lastStepSoundTick < minInterval) {
+            return;
+        }
+
+        playSound(CompanionsSounds.SHADE_STEP.get(), 0.5f, 1);
+
+        lastStepSoundTick = tickCount;
     }
 
     @Override
@@ -157,7 +182,89 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
             }
         }
 
+        updateJumpBodyPitch();
+
+        if (jumpReadyCooldown > 0) {
+            jumpReadyCooldown--;
+        }
+
+        if (!level().isClientSide && landingImpactPending) {
+            if (!onGround()) {
+                wasInAirAfterJump = true;
+            }
+            else if (wasInAirAfterJump && getDeltaMovement().y <= 0.05) {
+                landingImpactPending = false;
+                wasInAirAfterJump = false;
+                triggerImpact(lastJumpStrength);
+                lastJumpStrength = 0f;
+            }
+
+        }
+
         setLifetime(getLifetime() - 1);
+    }
+
+    private void updateJumpBodyPitch() {
+        this.prevBodyPitch = this.bodyPitch;
+
+        if (isInAnyFluid() || isSpawning()) {
+            this.bodyPitch = Mth.lerp(JUMP_PITCH_RELAX_LERP, this.bodyPitch, 0f);
+            return;
+        }
+
+        float target = 0f;
+        if (!onGround()) {
+            final float dy = (float) Mth.clamp(getDeltaMovement().y, -1.5d, 1.5d);
+            target = Mth.clamp(-dy * 24, -JUMP_PITCH_MAX_DEGREES, JUMP_PITCH_MAX_DEGREES);
+        }
+
+        final float lerp = onGround() ? JUMP_PITCH_RELAX_LERP : 0.28f;
+        this.bodyPitch = Mth.lerp(lerp, this.bodyPitch, target);
+    }
+
+    private void triggerImpact(float strength) {
+        if (strength <= 0.5f) {
+            return;
+        }
+
+        if (level() instanceof ServerLevel server) {
+            final ShadeMawLandingRingProjectile ring = CompanionsEntities.SHADE_MAW_LANDING_RING.get().create(server);
+            if (ring != null) {
+                ring.setOwner(this);
+                ring.setStrength(strength);
+                ring.moveTo(getX(), getY() + 0.04d, getZ(), getYRot(), 0f);
+                server.addFreshEntity(ring);
+            }
+
+        }
+
+        playSound(CompanionsSounds.SHADE_MAW_BITE.get(), 0.6f + strength * 0.4f, 0.55f + (1f - strength) * 0.25f);
+    }
+
+    private void startJump(int strength) {
+        final int charge = Mth.clamp(strength, 0, 100);
+        if (charge <= 0 || jumpReadyCooldown > 0 || isSpawning()) {
+            return;
+        }
+        if (!onGround() && !isOnLiquidSurface()) {
+            return;
+        }
+
+        double yStr;
+        if (isOnLiquidSurface()) {
+            yStr = 0.5d;
+        }
+        else {
+            yStr = 0.25d + 0.008d * charge;
+        }
+
+        setDeltaMovement(getDeltaMovement().x, yStr, getDeltaMovement().z);
+
+        this.hasImpulse = true;
+        this.lastJumpStrength = Mth.clamp(charge / 100f, 0f, 1f);
+        this.landingImpactPending = true;
+        this.wasInAirAfterJump = false;
+        this.jumpReadyCooldown = CompanionsConfig.SHADOW_MAW_JUMP_COOLDOWN;
     }
 
     @Nullable
@@ -216,14 +323,14 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
             if (forward < 0F) forward *= 0.25F;
 
             if (Math.abs(forward) > 1.0e-3F || Math.abs(strafe) > 1.0e-3F) {
-                throttle = Mth.clamp(throttle + ACCEL, 0F, 1F);
-            } else {
-                throttle = Mth.clamp(throttle - ACCEL * 1.5F, 0F, 1F);
+                throttle = Mth.clamp(throttle + ACCELERATION, 0F, 1F);
+            }
+            else {
+                throttle = Mth.clamp(throttle - ACCELERATION * 1.5F, 0F, 1F);
             }
 
             if (horizontalCollision && !isInAnyFluid()) {
                 throttle = 0.3525F;
-                setDeltaMovement(getDeltaMovement().multiply(0, 1, 0));
             }
 
             if (isInAnyFluid()) {
@@ -267,9 +374,10 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
                 move(MoverType.SELF, motion);
                 setDeltaMovement(getDeltaMovement().scale(LIQUID_DRAG));
                 setSwimming(true);
-            } else {
+            }
+            else {
                 setSpeed((float) getAttributeValue(Attributes.MOVEMENT_SPEED) * throttle);
-                super.travel(new Vec3(strafe, travelVec.y, Math.signum(forward)));
+                super.travel(new Vec3(strafe, travelVec.y, forward));
             }
 
             return;
@@ -304,21 +412,6 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
             rider.swinging = false;
         }
 
-        if (this.jumpCharge > 0 && canJump && onGround()) {
-            double yStr;
-
-            if (isOnLiquidSurface()) {
-                yStr = 0.5d;
-            } else if (onGround()) {
-                yStr = 0.25d + 0.008d * jumpCharge;
-            } else {
-                return;
-            }
-
-            setDeltaMovement(getDeltaMovement().x, yStr, getDeltaMovement().z);
-            this.hasImpulse = true;
-            jumpCharge = 0;
-        }
     }
 
     private void doAttack() {
@@ -377,46 +470,38 @@ public class ShadeMawEntity extends ShadeEntity implements PlayerRideableJumping
 
     @Override
     public void onPlayerJump(int strength) {
-        if (strength > 0) {
-            this.jumpCharge = Mth.clamp(strength, 0, 100);
-            if (isOnLiquidSurface()) {
-                setDeltaMovement(getDeltaMovement().x, 0.5d, getDeltaMovement().z);
-                this.hasImpulse = true;
-                this.jumpCharge = 0;
-            }
-        }
-
+        startJump(strength);
     }
 
     private boolean isOnLiquidSurface() {
-        if (!this.isInAnyFluid()) return false;
+        if (!this.isInAnyFluid()) {
+            return false;
+        }
 
-        BlockPos pos = this.blockPosition();
-        BlockPos abovePos = pos.above();
-        FluidState fluidState = level().getFluidState(pos);
-        FluidState aboveFluidState = level().getFluidState(abovePos);
+        final BlockPos pos = this.blockPosition();
+        final BlockPos abovePos = pos.above();
+        final FluidState fluidState = level().getFluidState(pos);
+        final FluidState aboveFluidState = level().getFluidState(abovePos);
         return !fluidState.isEmpty() && aboveFluidState.isEmpty();
     }
 
     @Override
     public boolean canJump() {
-        return this.canJump && (onGround() || isOnLiquidSurface());
+        return jumpReadyCooldown <= 0 && (onGround() || isOnLiquidSurface());
     }
 
     @Override
     public void handleStartJump(int strength) {
-        this.jumpCharge = strength;
-        this.canJump = false;
+        startJump(strength);
     }
 
     @Override
     public void handleStopJump() {
-        this.canJump = true;
     }
 
     @Override
     public int getJumpCooldown() {
-        return 0;
+        return Math.max(0, jumpReadyCooldown);
     }
 
     @Override
