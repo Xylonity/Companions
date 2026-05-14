@@ -33,12 +33,21 @@ public class ShadeMawModel extends GeoModel<ShadeMawEntity> {
     public void setCustomAnimations(ShadeMawEntity anim, long instanceId, AnimationState<ShadeMawEntity> state) {
         super.setCustomAnimations(anim, instanceId, state);
 
-        CoreGeoBone entity = getAnimationProcessor().getBone("entity");
-        if (entity != null && anim.isInAnyFluid()) {
+        final CoreGeoBone entityBone = getAnimationProcessor().getBone("entity");
+        if (entityBone == null) {
+            return;
+        }
+
+        if (anim.isInAnyFluid()) {
             float pitch = Mth.lerp(state.getPartialTick(), anim.xRotO, anim.getXRot());
             pitch = Mth.clamp(pitch, -90f, 90f);
+            entityBone.setRotX(-pitch * Mth.DEG_TO_RAD);
+            return;
+        }
 
-            entity.setRotX(-pitch * Mth.DEG_TO_RAD);
+        final float jumpPitchDeg = Mth.lerp(state.getPartialTick(), anim.prevBodyPitch, anim.bodyPitch);
+        if (Math.abs(jumpPitchDeg) > 0.05f) {
+            entityBone.setRotX(-jumpPitchDeg * Mth.DEG_TO_RAD * 2);
         }
 
     }

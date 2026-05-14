@@ -13,6 +13,10 @@
 - Increased mutated teddy attack range
 - Now the soul mage casts the black hole with greater accuracy towards his target, so that it is less likely to miss
 - The soul mage's healing ring spell has been given priority, as it wasn't cast sometimes
+- Certain armor pieces are no longer trimmable
+- Shade Maw now generates a shockwave when it hits the ground after a jump. The jump now has a cooldown
+- Enhanced the movement of the Shade Maw, to make it less rough
+- Now the Shade Maw rotates slightly up or down depending on the direction of movement
 - Added compatibility with knightlib 1.5.0
 - Added config options to specify names under which each entity would activate its reskin
 - Added a config option to modify bonanza drops on the 2 or 3 coin head rolls
