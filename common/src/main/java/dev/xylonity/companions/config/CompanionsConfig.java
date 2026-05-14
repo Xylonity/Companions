@@ -374,10 +374,17 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Shadow Maw",
-            comment = "Damage dealt by the Shadow Maw",
+            comment = "Damage dealt by the Shade Maw",
             min = 0.0, max = 500.0
     )
     public static double SHADOW_MAW_DAMAGE = 6.0;
+
+    @ConfigEntry(
+            category = "Shadow Maw",
+            comment = "Damage dealt by the Shade Maw when it lands on the floor after a jump (may vary depending on the distance)",
+            min = 0.0, max = 500.0
+    )
+    public static double SHADOW_MAW_LANDING_DAMAGE = 8.0;
 
     @ConfigEntry(
             category = "Shadow Maw",

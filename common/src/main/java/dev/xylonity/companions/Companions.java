@@ -3,6 +3,8 @@ package dev.xylonity.companions;
 import dev.xylonity.companions.platform.CompanionsPlatform;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.*;
+import dev.xylonity.knightlib.api.network.Network;
+import dev.xylonity.knightlib.api.network.NetworkEndpoint;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +18,13 @@ public class Companions {
 
     public static final CompanionsPlatform PLATFORM = ServiceLoader.load(CompanionsPlatform.class).findFirst().orElseThrow();
 
+    public static final NetworkEndpoint NETWORK = Network.endpoint(MOD_ID);
+
     public static IProxy PROXY;
 
     public static void init() {
+        CompanionsPackets.registerAll();
+
         CompanionsBlocks.BLOCKS.init();
         CompanionsEntities.ENTITIES.init();
         CompanionsItems.ITEMS.init();

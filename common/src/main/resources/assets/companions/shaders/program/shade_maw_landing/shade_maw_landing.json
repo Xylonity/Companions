@@ -1,0 +1,51 @@
+{
+  "blend": {
+    "func": "add",
+    "srcrgb": "one",
+    "dstrgb": "zero"
+  },
+  "vertex": "companions:shade_maw_landing/shade_maw_landing",
+  "fragment": "companions:shade_maw_landing/shade_maw_landing",
+  "attributes": [ "Position" ],
+  "samplers": [
+    { "name": "DiffuseSampler" },
+    { "name": "DepthSampler" }
+  ],
+  "uniforms": [
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ] },
+    { "name": "InverseTransformMatrix", "type": "matrix4x4", "count": 16, "values": [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ] },
+    { "name": "InverseModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ] },
+    { "name": "OutSize", "type": "float", "count": 2, "values": [ 1, 1 ] },
+
+    { "name": "CameraPosition", "type": "float", "count": 3, "values": [ 0, 0, 0 ] },
+
+    { "name": "time", "type": "float", "count": 1, "values": [ 0 ] },
+    { "name": "intensity", "type": "float", "count": 1, "values": [ 1 ] },
+
+    { "name": "waveDurationSec", "type": "float", "count": 1, "values": [ 3.0 ] },
+    { "name": "waveSpeed", "type": "float", "count": 1, "values": [ 1.0 ] },
+
+    { "name": "ringWidth", "type": "float", "count": 1, "values": [ 0.72 ] },
+    { "name": "glowStrength", "type": "float", "count": 1, "values": [ 0.95 ] },
+    { "name": "chromaStrength", "type": "float", "count": 1, "values": [ 1.35 ] },
+
+    { "name": "waveStartRadius", "type": "float", "count": 1, "values": [ 0.5 ] },
+    { "name": "waveEndRadius", "type": "float", "count": 1, "values": [ 8.0 ] },
+
+    { "name": "ringColorA", "type": "float", "count": 3, "values": [ 0.68, 0.06, 0.10 ] },
+    { "name": "ringColorB", "type": "float", "count": 3, "values": [ 0.06, 0.01, 0.025 ] },
+
+    { "name": "verticalColumnHeight", "type": "float", "count": 1, "values": [ 0.62 ] },
+    { "name": "flashStrength", "type": "float", "count": 1, "values": [ 0.85 ] },
+
+    { "name": "waveOrigin0", "type": "float", "count": 3, "values": [ 0, 0, 0 ] },
+    { "name": "waveOrigin1", "type": "float", "count": 3, "values": [ 0, 0, 0 ] },
+    { "name": "waveOrigin2", "type": "float", "count": 3, "values": [ 0, 0, 0 ] },
+    { "name": "waveOrigin3", "type": "float", "count": 3, "values": [ 0, 0, 0 ] },
+
+    { "name": "waveAge0", "type": "float", "count": 1, "values": [ -1 ] },
+    { "name": "waveAge1", "type": "float", "count": 1, "values": [ -1 ] },
+    { "name": "waveAge2", "type": "float", "count": 1, "values": [ -1 ] },
+    { "name": "waveAge3", "type": "float", "count": 1, "values": [ -1 ] }
+  ]
+}

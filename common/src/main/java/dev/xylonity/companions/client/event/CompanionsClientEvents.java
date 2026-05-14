@@ -8,6 +8,7 @@ import dev.xylonity.companions.client.gui.screen.PuppetScreen;
 import dev.xylonity.companions.client.gui.screen.SoulFurnaceScreen;
 import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
 import dev.xylonity.companions.client.projectile.renderer.*;
+import dev.xylonity.companions.client.shader.ShadeMawLandingPostShader;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.registry.*;
@@ -28,6 +29,11 @@ public class CompanionsClientEvents {
     private static final ResourceLocation HOLINESS_BACKGROUND = Companions.of("textures/gui/holiness_bar_background.png");
     private static final ResourceLocation HOLINESS_HEALTH = Companions.of("textures/gui/holiness_bar_health.png");
     private static final ResourceLocation HOLINESS_OVERLAY = Companions.of("textures/gui/holiness_bar_overlay.png");
+
+    @RegisterEvent
+    public static void onRegisterPostShaders(final CustomPostShaderRegistrationEvent event) {
+        event.registerShader(ShadeMawLandingPostShader.INSTANCE);
+    }
 
     @RegisterEvent
     public static void registerEntityRenderers(final EntityRendererRegistrationEvent event) {
@@ -81,6 +87,7 @@ public class CompanionsClientEvents {
         event.register(CompanionsEntities.SHADE_ALTAR_UPGRADE_HALO, ShadeAltarUpgradeHaloRenderer::new);
         event.register(CompanionsEntities.SHADE_SWORD_IMPACT_PROJECTILE, ShadeSwordImpactRenderer::new);
         event.register(CompanionsEntities.PONTIFF_FIRE_RING, PontiffFireRingRenderer::new);
+        event.register(CompanionsEntities.SHADE_MAW_LANDING_RING, ShadeMawLandingRingRenderer::new);
         event.register(CompanionsEntities.NEEDLE_PROJECTILE, NeedleRenderer::new);
         event.register(CompanionsEntities.RESPAWN_TOTEM_RING_PROJECTILE, RespawnTotemRingRenderer::new);
         event.register(CompanionsEntities.LASER_PROJECTILE, LaserRenderer::new);
