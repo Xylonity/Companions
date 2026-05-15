@@ -90,6 +90,18 @@ public class CompanionsBlocks {
             block -> new GenericBlockItem(block, new Item.Properties(), "shade_maw_altar")
     );
 
+    public static final Supplier<Block> SHADE_BAT_ALTAR = BLOCKS.registerBlock("shade_bat_altar",
+            () -> new ShadeBatAltarBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.STONE)
+                    .requiresCorrectToolForDrops()
+                    .strength(2f, 6f)
+                    .sound(SoundType.STONE)
+                    .instrument(NoteBlockInstrument.SKELETON)
+                    .noOcclusion()),
+            CompanionsItems.ITEMS,
+            block -> new GenericBlockItem(block, new Item.Properties(), "shade_bat_altar")
+    );
+
     public static final Supplier<Block> PLASMA_LAMP = BLOCKS.registerBlock("plasma_lamp_block",
             () -> new PlasmaLampBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.METAL)

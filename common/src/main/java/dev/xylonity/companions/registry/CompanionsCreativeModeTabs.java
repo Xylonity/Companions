@@ -65,6 +65,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsBlocks.RESPAWN_TOTEM.get());
                                 output.accept(CompanionsBlocks.SHADE_SWORD_ALTAR.get());
                                 output.accept(CompanionsBlocks.SHADE_MAW_ALTAR.get());
+                                output.accept(CompanionsBlocks.SHADE_BAT_ALTAR.get());
                                 output.accept(CompanionsBlocks.RECALL_PLATFORM.get());
                                 output.accept(CompanionsBlocks.VOLTAIC_RELAY.get());
                                 output.accept(CompanionsBlocks.FROG_BONANZA.get());

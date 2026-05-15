@@ -354,6 +354,39 @@ public final class CompanionsConfig {
     public static String SHADOW_SWORD_RESKIN_NAMES = "Rosalind; Juan";
 
     /**
+     * SHADE BAT
+     */
+
+    @ConfigEntry(
+            category = "Shadow Bat",
+            comment = "The amount of lifetime of the Shade Bat",
+            note = "The time is measured in ticks (20 ticks = 1 second)",
+            min = 0, max = 100000
+    )
+    public static int SHADOW_BAT_LIFETIME = 4800;
+
+    @ConfigEntry(
+            category = "Shadow Bat",
+            comment = "Max life of the Shade Bat",
+            min = 0d, max = 5000d
+    )
+    public static double SHADOW_BAT_MAX_LIFE = 70d;
+
+    @ConfigEntry(
+            category = "Shadow Bat",
+            comment = "Damage dealt by the Shade Bat",
+            min = 0.0, max = 500.0
+    )
+    public static double SHADOW_BAT_DAMAGE = 8.0;
+
+    @ConfigEntry(
+            category = "Shadow Bat",
+            comment = "Shade Bat stats multiplier on its blood state. For example, if set to 1.2, a default damage of 10 will be 12 when the blood upgrade is active. This is only applied to Health and Attack Damage attributes.",
+            min = 0.0, max = 10.0
+    )
+    public static double SHADOW_BAT_BLOOD_MULTIPLIER = 1.2;
+
+    /**
      * SHADE MAW
      */
 
