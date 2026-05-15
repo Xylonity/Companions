@@ -37,6 +37,7 @@ public class CompanionsEntities {
     public static final ResourceEntry<EntityType<PuppetEntity>> PUPPET = ENTITIES.registerEntity("puppet", PuppetEntity::new, MobCategory.CREATURE, 1f, 2.8f, null);
     public static final ResourceEntry<EntityType<ShadeSwordEntity>> SHADE_SWORD = ENTITIES.registerEntity("shade_sword", ShadeSwordEntity::new, MobCategory.CREATURE, 1.25f, 4f, List.of(EntityType.Builder::fireImmune));
     public static final ResourceEntry<EntityType<ShadeMawEntity>> SHADE_MAW = ENTITIES.registerEntity("shade_maw", ShadeMawEntity::new, MobCategory.CREATURE, 3f, 2.5f, List.of(EntityType.Builder::fireImmune));
+    public static final ResourceEntry<EntityType<ShadeBatEntity>> SHADE_BAT = ENTITIES.registerEntity("shade_bat", ShadeBatEntity::new, MobCategory.CREATURE, 0.5f, 0.5f, List.of(EntityType.Builder::fireImmune));
     public static final ResourceEntry<EntityType<MankhEntity>> MANKH = ENTITIES.registerEntity("mankh", MankhEntity::new, MobCategory.CREATURE, 1f, 2f, List.of(EntityType.Builder::fireImmune));
     public static final ResourceEntry<EntityType<CloakEntity>> CLOAK = ENTITIES.registerEntity("cloak", CloakEntity::new, MobCategory.CREATURE, 1f, 2f, List.of(EntityType.Builder::fireImmune));
 
@@ -71,6 +72,7 @@ public class CompanionsEntities {
     public static final ResourceEntry<EntityType<HolinessNaginataProjectile>> HOLINESS_NAGINATA = ENTITIES.registerEntity("holiness_naginata", HolinessNaginataProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<HolinessStartProjectile>> HOLINESS_STAR = ENTITIES.registerEntity("holiness_star", HolinessStartProjectile::new, MobCategory.MISC, 0.15f, 0.15f, List.of(EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<PontiffFireRingProjectile>> PONTIFF_FIRE_RING = ENTITIES.registerEntity("pontiff_fire_ring", PontiffFireRingProjectile::new, MobCategory.MISC, 0.6f, 0.6f, List.of(EntityType.Builder::noSummon));
+    public static final ResourceEntry<EntityType<ShadeMawLandingRingProjectile>> SHADE_MAW_LANDING_RING = ENTITIES.registerEntity("shade_maw_landing_ring", ShadeMawLandingRingProjectile::new, MobCategory.MISC, 0.6f, 0.1f, List.of(EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<ShadeSwordImpactProjectile>> SHADE_SWORD_IMPACT_PROJECTILE = ENTITIES.registerEntity("shade_sword_impact", ShadeSwordImpactProjectile::new, MobCategory.MISC, 1.2f, 1.2f, List.of(EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<NeedleProjectile>> NEEDLE_PROJECTILE = ENTITIES.registerEntity("needle_projectile", NeedleProjectile::new, MobCategory.MISC, 1.2f, 0.4f, List.of(EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<LaserTriggerProjectile>> LASER_PROJECTILE = ENTITIES.registerEntity("laser", LaserTriggerProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));

@@ -9,7 +9,7 @@
 - Added loot to chests and barrels in the mod's structures. Loot tables and the percentage of containers that are filled are configurable via the config file
 - Certain projectiles in magic books have been changed to deal vanilla magic damage instead of other types
 - In Fabric, the respawn totem can now respawn any tamable entity, not just companions
-- The code has been rewritten to ensure loader parity
+- The code has been partially rewritten to ensure loader parity
 - Increased mutated teddy attack range
 - Now the soul mage casts the black hole with greater accuracy towards his target, so that it is less likely to miss
 - The soul mage's healing ring spell has been given priority, as it wasn't cast sometimes

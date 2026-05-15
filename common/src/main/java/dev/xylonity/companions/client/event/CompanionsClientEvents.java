@@ -8,6 +8,7 @@ import dev.xylonity.companions.client.gui.screen.PuppetScreen;
 import dev.xylonity.companions.client.gui.screen.SoulFurnaceScreen;
 import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
 import dev.xylonity.companions.client.projectile.renderer.*;
+import dev.xylonity.companions.client.shader.HolyTeddyAuraPostShader;
 import dev.xylonity.companions.client.shader.ShadeMawLandingPostShader;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.particle.*;
@@ -33,6 +34,7 @@ public class CompanionsClientEvents {
     @RegisterEvent
     public static void onRegisterPostShaders(final CustomPostShaderRegistrationEvent event) {
         event.registerShader(ShadeMawLandingPostShader.INSTANCE);
+        event.registerShader(HolyTeddyAuraPostShader.INSTANCE);
     }
 
     @RegisterEvent
@@ -120,6 +122,7 @@ public class CompanionsClientEvents {
         event.register(CompanionsBlockEntities.RESPAWN_TOTEM, RespawnTotemRenderer::new);
         event.register(CompanionsBlockEntities.SHADE_SWORD_ALTAR, ShadeSwordAltarRenderer::new);
         event.register(CompanionsBlockEntities.SHADE_MAW_ALTAR, ShadeMawAltarRenderer::new);
+        event.register(CompanionsBlockEntities.SHADE_BAT_ALTAR, ShadeBatAltarRenderer::new);
         event.register(CompanionsBlockEntities.RECALL_PLATFORM, RecallPlatformRenderer::new);
         event.register(CompanionsBlockEntities.VOLTAIC_RELAY, VoltaicRelayRenderer::new);
         event.register(CompanionsBlockEntities.FROG_BONANZA, FrogBonanzaRenderer::new);

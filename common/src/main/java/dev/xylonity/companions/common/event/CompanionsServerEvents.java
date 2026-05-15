@@ -67,6 +67,7 @@ public final class CompanionsServerEvents {
         event.register(CompanionsEntities.PUPPET_GLOVE, PuppetGloveEntity::setAttributes);
         event.register(CompanionsEntities.SHADE_SWORD, ShadeSwordEntity::setAttributes);
         event.register(CompanionsEntities.SHADE_MAW, ShadeMawEntity::setAttributes);
+        event.register(CompanionsEntities.SHADE_BAT, ShadeBatEntity::setAttributes);
         event.register(CompanionsEntities.MANKH, MankhEntity::setAttributes);
         event.register(CompanionsEntities.CLOAK, CloakEntity::setAttributes);
         event.register(CompanionsEntities.ILLAGER_GOLEM, IllagerGolemEntity::setAttributes);
