@@ -4,6 +4,7 @@ import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.client.shader.ShadeMawLandingPostShaderSettings;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.network.packets.ShadeMawLandingPostShaderS2C;
 import dev.xylonity.companions.registry.CompanionsParticles;
@@ -17,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -106,7 +108,7 @@ public class ShadeMawLandingRingProjectile extends BaseProjectile {
             if (!(entity instanceof LivingEntity living)) {
                 continue;
             }
-            if (living == owner || living == tameOwner || living == passenger) {
+            if (living == owner || living == tameOwner || living == passenger || Util.areEntitiesLinked(living, tameOwner) || Util.areTeammates(living, tameOwner)) {
                 continue;
             }
 
