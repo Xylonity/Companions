@@ -73,13 +73,15 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private final RawAnimation MUTATED_SIT3 = RawAnimation.begin().thenPlay("flying_sit");
     private final RawAnimation MUTATED_DEATH = RawAnimation.begin().thenPlay("death");
 
-    private final RawAnimation HOLY_WALK = RawAnimation.begin().thenPlay("walk");
-    private final RawAnimation HOLY_ATTACK1 = RawAnimation.begin().thenPlay("stab");
-    private final RawAnimation HOLY_ATTACK2 = RawAnimation.begin().thenPlay("stab2");
     private final RawAnimation HOLY_SIT1 = RawAnimation.begin().thenPlay("lay");
     private final RawAnimation HOLY_SIT2 = RawAnimation.begin().thenPlay("sit");
+    private final RawAnimation HOLY_SIT3 = RawAnimation.begin().thenPlay("sit2");
+    private final RawAnimation HOLY_ATTACK1 = RawAnimation.begin().thenPlay("stab");
+    private final RawAnimation HOLY_ATTACK2 = RawAnimation.begin().thenPlay("stab2");
     private final RawAnimation HOLY_APPLY_EFFECTS = RawAnimation.begin().thenPlay("apply_effects");
     private final RawAnimation HOLY_SUMMON_BALLS = RawAnimation.begin().thenPlay("summon_balls");
+    private final RawAnimation HOLY_FLY = RawAnimation.begin().thenPlay("holy_fly");
+    private final RawAnimation HOLY_FLY_IDLE = RawAnimation.begin().thenPlay("holy_fly_idle");
 
     // Phase 1: 1 stab, 2 auto-stab
     // Phase 2: 1 attack
@@ -127,7 +129,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             @Override
             public void start() {
                 super.start();
-                if (getPhase() == 2) {
+                if (getPhase() >= 2) {
                     double currentX = getX();
                     double currentZ = getZ();
 
@@ -556,7 +558,8 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         }
         else {
             if (this.getMainAction() == 0) {
-                final RawAnimation sit = getSitVariation() == 0 ? HOLY_SIT1 : HOLY_SIT2;
+                final boolean secondSit = level().random.nextBoolean();
+                final RawAnimation sit = getSitVariation() == 0 ? HOLY_SIT1 : secondSit ? HOLY_SIT2 : HOLY_SIT3;
                 event.getController().setAnimation(sit);
             }
             else if (getAttackType() == 1) {
@@ -572,10 +575,10 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                 event.setAnimation(HOLY_SUMMON_BALLS);
             }
             else if (event.isMoving()) {
-                event.getController().setAnimation(HOLY_WALK);
+                event.getController().setAnimation(HOLY_FLY);
             }
             else {
-                event.getController().setAnimation(IDLE);
+                event.getController().setAnimation(HOLY_FLY_IDLE);
             }
 
         }
