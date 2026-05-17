@@ -24,6 +24,7 @@ public class CompanionsBlockEntities {
     public static final ResourceEntry<BlockEntityType<ShadeMawAltarBlockEntity>> SHADE_MAW_ALTAR = BLOCK_ENTITIES.registerBlockEntity("shade_maw_altar", ShadeMawAltarBlockEntity::new, CompanionsBlocks.SHADE_MAW_ALTAR);
     public static final ResourceEntry<BlockEntityType<ShadeBatAltarBlockEntity>> SHADE_BAT_ALTAR = BLOCK_ENTITIES.registerBlockEntity("shade_bat_altar", ShadeBatAltarBlockEntity::new, CompanionsBlocks.SHADE_BAT_ALTAR);
     public static final ResourceEntry<BlockEntityType<RecallPlatformBlockEntity>> RECALL_PLATFORM = BLOCK_ENTITIES.registerBlockEntity("recall_platform", RecallPlatformBlockEntity::new, CompanionsBlocks.RECALL_PLATFORM);
+    public static final ResourceEntry<BlockEntityType<PorcelainPotteryBlockEntity>> PORCELAIN_POTTERY = BLOCK_ENTITIES.registerBlockEntity("porcelain_pottery", PorcelainPotteryBlockEntity::new, CompanionsBlocks.PORCELAIN_POTTERY);
     public static final ResourceEntry<BlockEntityType<VoltaicRelayBlockEntity>> VOLTAIC_RELAY = BLOCK_ENTITIES.registerBlockEntity("voltaic_relay", VoltaicRelayBlockEntity::new, CompanionsBlocks.VOLTAIC_RELAY);
 
 }

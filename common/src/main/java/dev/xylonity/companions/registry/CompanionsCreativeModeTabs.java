@@ -51,7 +51,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.MUTANT_FLESH.get());
                                 output.accept(CompanionsItems.OLD_CLOTH.get());
                                 output.accept(CompanionsItems.RELIC_GOLD.get());
-                                output.accept(CompanionsItems.PORCELAIN_POTTERY.get());
+                                output.accept(CompanionsBlocks.PORCELAIN_POTTERY.get());
                                 output.accept(CompanionsItems.HOLY_PORCELAIN_POTTERY.get());
                                 output.accept(CompanionsItems.ETERNAL_LIGHTER.get());
                                 output.accept(CompanionsItems.WRENCH.get());

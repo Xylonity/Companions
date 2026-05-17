@@ -2,6 +2,7 @@ package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.block.*;
+import dev.xylonity.companions.common.item.PorcelainPottery;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.knightlib.api.registrar.ResourceDispatcher;
@@ -206,6 +207,17 @@ public class CompanionsBlocks {
                     .noOcclusion()),
             CompanionsItems.ITEMS,
             block -> new GenericBlockItem(block, new Item.Properties(), "frog_bonanza_block")
+    );
+
+    public static final Supplier<Block> PORCELAIN_POTTERY = BLOCKS.registerBlock("porcelain_pottery",
+            () -> new PorcelainPotteryBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.TERRACOTTA_WHITE)
+                    .strength(1.2f)
+                    .sound(SoundType.COPPER)
+                    .instrument(NoteBlockInstrument.FLUTE)
+                    .noOcclusion()),
+            CompanionsItems.ITEMS,
+            block -> new PorcelainPottery(block, new Item.Properties(), "porcelain_pottery")
     );
 
     public static final Supplier<Block> ETERNAL_FIRE = BLOCKS.registerBlock("eternal_fire",

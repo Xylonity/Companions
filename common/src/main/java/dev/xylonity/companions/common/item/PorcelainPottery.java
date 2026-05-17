@@ -1,13 +1,12 @@
 package dev.xylonity.companions.common.item;
 
-public class PorcelainPottery extends TooltipItem {
+import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
+import net.minecraft.world.level.block.Block;
 
-    public PorcelainPottery(Properties properties) {
-        super(properties);
-    }
+public class PorcelainPottery extends GenericBlockItem {
 
-    public PorcelainPottery(Properties properties, String tooltipName) {
-        super(properties, tooltipName);
+    public PorcelainPottery(Block pBlock, Properties pProperties, String resourceKey) {
+        super(pBlock, pProperties, resourceKey);
     }
 
 }
