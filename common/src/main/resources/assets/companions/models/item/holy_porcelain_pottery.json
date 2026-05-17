@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "companions:item/porcelain_pottery"
+    "layer0": "companions:item/holy_porcelain_pottery"
   }
 }

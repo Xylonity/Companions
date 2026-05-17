@@ -17,6 +17,7 @@
 - Shade Maw now generates a shockwave when it hits the ground after a jump. The jump now has a cooldown
 - Enhanced the movement of the Shade Maw, to make it less rough
 - Now the Shade Maw rotates slightly up or down depending on the direction of movement
+- Deleted croissant dragon spawn egg, which was obtainable through commands
 - Added compatibility with knightlib 1.5.0
 - Added config options to specify names under which each entity would activate its reskin
 - Added a config option to modify bonanza drops on the 2 or 3 coin head rolls
@@ -30,7 +31,7 @@
 - Fixed the puppet using incorrect logic, following the owner indefinitely even when instructed to do something else
 - Fixed an issue where the dynamo would harm its owner's teammates, resolving problems with FTB Teams
 - Fixed a case where running while riding the Shade Maw would spam its step sound constantly
-- Fixed block projections in the inventory, which would have incorrect positions and rotations, or would extend beyond the inventory by overlapping other slots
+- Fixed block projections in the inventory and on the ground, which would have incorrect positions and rotations, or would extend beyond the inventory by overlapping other slots
 
 # 1.2.2
 - Attempt to fix recall platform loop crash
