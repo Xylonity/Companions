@@ -7,7 +7,7 @@
 - Now reskins for entities are only activated when the entity has a nametag with a specific name, not just by having a nametag as before
 - Added 2 missing camera shakes, at the beginning and end of His Holiness appearance animation
 - Added loot to chests and barrels in the mod's structures. Loot tables and the percentage of containers that are filled are configurable via the config file
-- Certain projectiles in magic books have been changed to deal vanilla magic damage instead of other types
+- Certain projectiles in magic books have been changed to deal vanilla magic damage instead of other type of damage
 - In Fabric, the respawn totem can now respawn any tamable entity, not just companions
 - The code has been partially rewritten to ensure loader parity
 - Increased mutated teddy attack range
@@ -30,6 +30,7 @@
 - Fixed the puppet using incorrect logic, following the owner indefinitely even when instructed to do something else
 - Fixed an issue where the dynamo would harm its owner's teammates, resolving problems with FTB Teams
 - Fixed a case where running while riding the Shade Maw would spam its step sound constantly
+- Fixed block projections in the inventory, which would have incorrect positions and rotations, or would extend beyond the inventory by overlapping other slots
 
 # 1.2.2
 - Attempt to fix recall platform loop crash
