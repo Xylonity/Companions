@@ -53,6 +53,7 @@ public class CompanionsClientEvents {
         event.register(CompanionsEntities.PUPPET, PuppetRenderer::new);
         event.register(CompanionsEntities.SHADE_SWORD, ShadeSwordRenderer::new);
         event.register(CompanionsEntities.SHADE_MAW, ShadeMawRenderer::new);
+        event.register(CompanionsEntities.SHADE_BAT, ShadeBatRenderer::new);
         event.register(CompanionsEntities.MANKH, MankhRenderer::new);
         event.register(CompanionsEntities.CLOAK, CloakRenderer::new);
 
@@ -119,6 +120,8 @@ public class CompanionsClientEvents {
         event.register(CompanionsBlockEntities.PLASMA_LAMP, PlasmaLampRenderer::new);
         event.register(CompanionsBlockEntities.VOLTAIC_PILLAR, VoltaicPillarRenderer::new);
         event.register(CompanionsBlockEntities.EMPTY_PUPPET, EmptyPuppetRenderer::new);
+        event.register(CompanionsBlockEntities.PORCELAIN_POTTERY, PorcelainPotteryRenderer::new);
+        event.register(CompanionsBlockEntities.HOLY_PORCELAIN_POTTERY, HolyPorcelainPotteryRenderer::new);
         event.register(CompanionsBlockEntities.RESPAWN_TOTEM, RespawnTotemRenderer::new);
         event.register(CompanionsBlockEntities.SHADE_SWORD_ALTAR, ShadeSwordAltarRenderer::new);
         event.register(CompanionsBlockEntities.SHADE_MAW_ALTAR, ShadeMawAltarRenderer::new);
