@@ -37,8 +37,6 @@ public class CompanionsItems {
     public static final ResourceEntry<Item> DEMON_FLESH = ITEMS.register("demon_flesh", () -> new TooltipItem(new Item.Properties().food((new FoodProperties.Builder()).nutrition(10).saturationMod(0.6F).meat().build()), "demon_flesh"));
     public static final ResourceEntry<Item> OLD_CLOTH = ITEMS.register("old_cloth", () -> new TooltipItem(new Item.Properties().fireResistant(), "old_cloth"));
     public static final ResourceEntry<Item> RELIC_GOLD = ITEMS.register("relic_gold", () -> new TooltipItem(new Item.Properties().fireResistant(), "relic_gold"));
-    public static final ResourceEntry<Item> PORCELAIN_POTTERY = ITEMS.register("porcelain_pottery", () -> new PorcelainPottery(new Item.Properties(), "porcelain_pottery"));
-    public static final ResourceEntry<Item> HOLY_PORCELAIN_POTTERY = ITEMS.register("holy_porcelain_pottery", () -> new HolyPorcelainPottery(new Item.Properties().fireResistant(), "holy_porcelain_pottery"));
 
     public static final ResourceEntry<Item> CROISSANT_DRAGON_ARMOR_STRAWBERRY = ITEMS.register("croissant_dragon_strawberry_armor", () -> new CroissantDragonArmor(new Item.Properties(), "croissant_dragon_strawberry_armor"));
     public static final ResourceEntry<Item> CROISSANT_DRAGON_ARMOR_VANILLA = ITEMS.register("croissant_dragon_vanilla_armor", () -> new CroissantDragonArmor(new Item.Properties(), "croissant_dragon_vanilla_armor"));
@@ -84,7 +82,6 @@ public class CompanionsItems {
     public static final ResourceEntry<Item> BROKEN_DINAMO_SPAWN_EGG = ITEMS.registerSpawnEgg("broken_dinamo_spawn_egg", CompanionsEntities.BROKEN_DINAMO, 0x8d7441, 0xafafaf, new Item.Properties());
     public static final ResourceEntry<Item> HOSTILE_IMP_SPAWN_EGG = ITEMS.registerSpawnEgg("hostile_imp_spawn_egg", CompanionsEntities.HOSTILE_IMP, 0x47353a, 0x87496e, new Item.Properties());
     public static final ResourceEntry<Item> GOLDEN_ALLAY_SPAWN_EGG = ITEMS.registerSpawnEgg("golden_allay_spawn_egg", CompanionsEntities.GOLDEN_ALLAY, 0xa070d8, 0xf2db6a, new Item.Properties());
-    public static final ResourceEntry<Item> CROISSANT_DRAGON_SPAWN_EGG = ITEMS.registerSpawnEgg("croissant_dragon_spawn_egg", CompanionsEntities.CROISSANT_DRAGON, 0x8f4727, 0xe1b078, new Item.Properties());
     public static final ResourceEntry<Item> SACRED_PONTIFF_SPAWN_EGG = ITEMS.registerSpawnEgg("sacred_pontiff_spawn_egg", CompanionsEntities.SACRED_PONTIFF, 0x4c604f, 0x8b6f51, new Item.Properties());
     public static final ResourceEntry<Item> LIVING_CANDLE_SPAWN_EGG = ITEMS.registerSpawnEgg("living_candle_spawn_egg", CompanionsEntities.LIVING_CANDLE, 0xfff67c, 0xfde4ab, new Item.Properties());
     public static final ResourceEntry<Item> ILLAGER_GOLEM_SPAWN_EGG = ITEMS.registerSpawnEgg("illager_golem_spawn_egg", CompanionsEntities.ILLAGER_GOLEM, 0x8d7441, 0xafafaf, new Item.Properties());
