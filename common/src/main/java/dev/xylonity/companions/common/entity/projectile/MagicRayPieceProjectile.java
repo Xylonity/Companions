@@ -49,7 +49,7 @@ public class MagicRayPieceProjectile extends BaseProjectile {
 
             if (!hitEntities.isEmpty()) {
                 LivingEntity hit = hitEntities.get(0);
-                hit.hurt(damageSources().magic(), (float) CompanionsConfig.MAGIC_PIECE_DAMAGE);
+                hit.hurt(damageSources().indirectMagic(this, getOwner()), (float) CompanionsConfig.MAGIC_PIECE_DAMAGE);
             }
         }
 

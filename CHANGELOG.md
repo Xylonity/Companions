@@ -31,6 +31,7 @@
 - Fixed the puppet using incorrect logic, following the owner indefinitely even when instructed to do something else
 - Fixed an issue where the dynamo would harm its owner's teammates, resolving problems with FTB Teams
 - Fixed a case where running while riding the Shade Maw would spam its step sound constantly
+- Fixed magic ray magic book not activating revenge logic on some entities
 - Fixed block projections in the inventory and on the ground, which would have incorrect positions and rotations, or would extend beyond the inventory by overlapping other slots
 
 # 1.2.2
