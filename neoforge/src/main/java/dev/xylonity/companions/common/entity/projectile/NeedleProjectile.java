@@ -2,12 +2,16 @@ package dev.xylonity.companions.common.entity.projectile;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.knightlib.KnightLib;
+import dev.xylonity.knightlib.api.camera.shake.ShakeSettings;
+import dev.xylonity.knightlib.network.packets.CameraShakeS2C;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -75,10 +79,17 @@ public class NeedleProjectile extends HolinessNaginataProjectile implements GeoE
 
     @Override
     protected void doShake() {
-        if (level().isClientSide) {
-            for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                Companions.PROXY.shakePlayerCamera(player, 5, 0.02f, 0.02f, 0.02f, 10);
+        if (!level().isClientSide) {
+            for (final Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    KnightLib.NET.sendTo(serverPlayer,
+                            CameraShakeS2C.TYPE.base(),
+                            new CameraShakeS2C(ShakeSettings.builder()
+                                    .fadeInTicks(2).durationTicks(10).fadeOutTicks(8).lacunarity(4).amplitude(0.072225f, 0.072225f, 0.072225f).build(), false));
+                }
+
             }
+
         }
 
     }

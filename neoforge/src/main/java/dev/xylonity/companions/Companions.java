@@ -6,7 +6,7 @@ import dev.xylonity.companions.common.biome.CompanionsSpawnBiomeModifier;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.*;
-import dev.xylonity.knightlib.config.ConfigComposer;
+import dev.xylonity.knightlib.api.config.ConfigComposer;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
@@ -57,7 +57,7 @@ public class Companions {
 
         //CompanionsSpawnBiomeModifier.BIOME_MODIFIER.register("companions_mob_spawns", CompanionsSpawnBiomeModifier::makeCodec);
 
-        ConfigComposer.registerConfig(CompanionsConfig.class, modEventBus);
+        ConfigComposer.registerConfig(Companions.MOD_ID, CompanionsConfig.class);
 
         CompanionsCommon.init();
     }

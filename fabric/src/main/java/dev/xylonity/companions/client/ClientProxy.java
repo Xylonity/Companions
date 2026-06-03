@@ -7,7 +7,7 @@ import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProj
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.CompanionsParticles;
-import dev.xylonity.knightlib.api.CameraShakeManager;
+import dev.xylonity.knightlib.api.camera.shake.CameraShakeManager;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -57,7 +57,7 @@ public class ClientProxy implements IProxy {
 
     @Override
     public void shakePlayerCamera(Player player, int durationTicks, float intensityX, float intensityY, float intensityZ, int fadeStartTick) {
-        CameraShakeManager.shake(player, durationTicks, intensityX, intensityY, intensityZ, fadeStartTick);
+        //CameraShakeManager.shake(player, durationTicks, intensityX, intensityY, intensityZ, fadeStartTick);
     }
 
     @Override

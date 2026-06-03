@@ -31,10 +31,19 @@ repositories {
     }
 }
 
+repositories {
+    maven {
+        name = "Terraformers"
+        url = "https://maven.terraformersmc.com/"
+    }
+}
+
 dependencies {
-    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:4.7.6"
+    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:4.8.3"
 
     modImplementation "dev.xylonity.knightlib:knightlib-fabric-${minecraft_version}:${knightlib_version}"
+
+    modImplementation "com.terraformersmc:modmenu:11.0.4"
 
     compileOnly "mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}"
     modImplementation "mezz.jei:jei-${minecraft_version}-fabric:${jei_version}"

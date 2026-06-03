@@ -7,7 +7,10 @@ import dev.xylonity.companions.common.entity.ai.pontiff.goal.*;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsSounds;
-import dev.xylonity.knightlib.api.IBossMusicProvider;
+import dev.xylonity.knightlib.KnightLib;
+import dev.xylonity.knightlib.api.camera.shake.ShakeSettings;
+import dev.xylonity.knightlib.api.sound.music.IBossMusicProvider;
+import dev.xylonity.knightlib.network.packets.CameraShakeS2C;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -170,14 +173,19 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         // phase 1 transformation
         if (getState() >= 3 && getState() <= 5) {
             if (getState() == 3) {
-                if (level().isClientSide && transformationCounter == 130) {
-                    for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                        if (level().isClientSide) {
-                            Companions.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
+                if (transformationCounter == 130) {
+                    for (final Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            KnightLib.NET.sendTo(serverPlayer,
+                                    CameraShakeS2C.TYPE.base(),
+                                    new CameraShakeS2C(ShakeSettings.builder()
+                                            .fadeInTicks(15).durationTicks(50).fadeOutTicks(35).amplitude(0.35f, 0.35f, 0.35f).build(), false));
                         }
+
                     }
+
                 }
-                else if (!level().isClientSide && transformationCounter == 120) {
+                else if (transformationCounter == 120) {
                     playSound(CompanionsSounds.PONTIFF_DESPAWN.get(), 0.5f, 1f);
                 }
 
@@ -194,31 +202,40 @@ public class SacredPontiffEntity extends HostileEntity implements IBossMusicProv
         }
 
         // Impact attack camera shaking
-        if (getState() >= 5) {
+        if (getState() >= 5 && !level().isClientSide) {
             if (getAttackType() == 4) {
-                if (level().isClientSide && attackCounter == 35) {
-                    for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                        if (level().isClientSide) {
-                            Companions.PROXY.shakePlayerCamera(player, 50, 0.045f, 0.045f, 0.045f, 30);
+                if (attackCounter == 35) {
+                    for (final Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            KnightLib.NET.sendTo(serverPlayer,
+                                    CameraShakeS2C.TYPE.base(),
+                                    new CameraShakeS2C(ShakeSettings.builder()
+                                            .fadeInTicks(15).durationTicks(50).fadeOutTicks(35).amplitude(0.4f, 0.4f, 0.4f).build(), false));
                         }
+
                     }
-                } else if (!level().isClientSide && attackCounter == 35) {
+
                     playSound(CompanionsSounds.HOLINESS_HIT_GROUND.get(), 14f, 1f);
                 }
+
             }
 
         }
 
         // camera shaking when the pontiff punches its chest
-        if (getState() == 5) {
+        if (getState() == 5 && !level().isClientSide) {
             if (SHAKE_TICKS.contains(getStateCounter())) {
-                for (Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
-                    if (level().isClientSide) {
-                        Companions.PROXY.shakePlayerCamera(player, 5, 0.1f, 0.1f, 0.1f, 10);
-                    } else {
-                        playSound(CompanionsSounds.HOLINESS_HIT_CHEST.get(), 2f, 1f);
+                for (final Player player : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(30))) {
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        KnightLib.NET.sendTo(serverPlayer,
+                                CameraShakeS2C.TYPE.base(),
+                                new CameraShakeS2C(ShakeSettings.builder()
+                                        .fadeInTicks(2).durationTicks(10).fadeOutTicks(8).lacunarity(4).amplitude(0.172225f, 0.172225f, 0.172225f).build(), false));
                     }
+
+                    playSound(CompanionsSounds.HOLINESS_HIT_CHEST.get(), 2f, 1f);
                 }
+
             }
 
         }
