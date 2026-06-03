@@ -1,5 +1,6 @@
 package dev.xylonity.companions.client;
 
+import dev.xylonity.companions.client.event.CompanionsExtraClientEvents;
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
@@ -7,7 +8,7 @@ import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProj
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.CompanionsParticles;
-import dev.xylonity.knightlib.api.camera.shake.CameraShakeManager;
+import dev.xylonity.knightlib.api.event.KnightLibEvents;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -53,6 +54,11 @@ public class ClientProxy implements IProxy {
         double z = entity.getZ() + (level.random.nextDouble() - 0.5) * entity.getBbWidth();
 
         Minecraft.getInstance().particleEngine.add(new BaseRibbonTrailParticle(level, x, y, z, r, g, b, radius, height, entity.getId()));
+    }
+
+    @Override
+    public void registerClientEvents() {
+        KnightLibEvents.CLIENT.register(CompanionsExtraClientEvents.class);
     }
 
     @Override
