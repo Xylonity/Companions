@@ -3,6 +3,7 @@ package dev.xylonity.companions;
 import dev.xylonity.companions.common.material.ArmorMaterials;
 import dev.xylonity.companions.platform.CompanionsPlatform;
 import dev.xylonity.companions.registry.*;
+import dev.xylonity.knightlib.KnightLib;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,8 @@ public class CompanionsCommon {
         CompanionsEffects.init();
         CompanionsParticles.init();
         CompanionsSounds.init();
+
+        KnightLib.initialize();
     }
 
 }

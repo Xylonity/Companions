@@ -1,3 +1,6 @@
+# 1.2.4
+- Added a missing flag that made the great chalice uncraftable
+
 # 1.2.3
 - Added compatibility with Knightlib 1.5.0
 - Fixed an issue in Fabric where the eternal fire would not be transparent and would have a black texture instead
