@@ -1,19 +1,15 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import dev.xylonity.companions.Companions;
-import dev.xylonity.companions.client.shader.ShadeMawLandingPostShaderSettings;
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.network.packets.ShadeMawLandingPostShaderS2C;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.knightlib.common.entity.AbstractProjectile;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -21,7 +17,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -33,7 +28,7 @@ public class ShadeMawLandingRingProjectile extends BaseProjectile {
 
     private static final EntityDataAccessor<Float> STRENGTH = SynchedEntityData.defineId(ShadeMawLandingRingProjectile.class, EntityDataSerializers.FLOAT);
 
-    private boolean packetDispatched = false;
+    private boolean impacted = false;
     private double impactRadius = 0d;
 
     public ShadeMawLandingRingProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
@@ -69,10 +64,9 @@ public class ShadeMawLandingRingProjectile extends BaseProjectile {
         this.setPos(x, y, z);
 
         if (level() instanceof ServerLevel serverLevel) {
-            if (!packetDispatched) {
-                packetDispatched = true;
+            if (!impacted) {
+                impacted = true;
                 impact(serverLevel);
-                sendPacket(serverLevel);
                 setLifetime(computeLifetime());
             }
 
@@ -158,35 +152,9 @@ public class ShadeMawLandingRingProjectile extends BaseProjectile {
 
     }
 
-    private void sendPacket(ServerLevel server) {
-        final float strength = getStrength();
-        final int duration = 28 + (int) (10 * strength);
-        final ShadeMawLandingPostShaderSettings settings = ShadeMawLandingPostShaderSettings.builder()
-                .origin(new Vec3(getX(), getY() + 0.05d, getZ()))
-                .durationTicks(duration)
-                .speed(2.85f)
-                .width(3f + 0.5f * strength)
-                .glow(1 * strength)
-                .chroma(0f)
-                .intensity(1.0f)
-                .radii(0.5f, 10 * strength)
-                .colors(new Vec3(200/255f, 73/255f, 39/255f), new Vec3(255/255f, 73/255f, 39/255f))
-                .column(7)
-                .flash(0.1f)
-                .build();
-
-        for (final ServerPlayer player : server.players()) {
-            if (player.distanceToSqr(position()) <= 96 * 96) {
-                Companions.NETWORK.sendTo(player, ShadeMawLandingPostShaderS2C.TYPE.base(), new ShadeMawLandingPostShaderS2C(settings));
-            }
-
-        }
-
-    }
-
     @Override
     public boolean shouldRenderAtSqrDistance(double pDistance) {
-        return false;
+        return pDistance < 96 * 96;
     }
 
     @Override
