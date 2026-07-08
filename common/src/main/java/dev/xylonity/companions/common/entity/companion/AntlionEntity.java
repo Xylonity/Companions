@@ -436,6 +436,11 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
                 .add(Attributes.FOLLOW_RANGE, 35.0);
     }
 
+    @Override
+    public @NotNull MobType getMobType() {
+        return MobType.ARTHROPOD;
+    }
+
     public boolean isPhaseLocked() {
         return this.entityData.get(IS_LOCKED);
     }
