@@ -26,6 +26,7 @@
 - Added a config option to specify the loot tables that structures will use to fill their chests and barrels
 - Added a config option to allow the enchantments on the respective armor piece to persist when crafting mage, holy robe, or crystallized blood armor sets
 - Fixed companions not being detected by mods that display entity loot tables, due to a lack of loot table definitions
+- Fixed a bug where the blood scythe wouldn't heal the player on hit
 - Fixed a bug where the hostile imp was not dropping demon flesh in Fabric
 - Fixed a potential sync issue that occurred when spawning charged creepers with the frog bonanza
 - Fixed the puppet using incorrect logic, following the owner indefinitely even when instructed to do something else

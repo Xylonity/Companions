@@ -8,7 +8,9 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -30,13 +32,10 @@ public class BloodScytheItem extends GeckoPickaxeItem {
 
     @Override
     public boolean hurtEnemy(@NotNull ItemStack pStack, @NotNull LivingEntity pTarget, @NotNull LivingEntity pAttacker) {
-        float healthBefore = pTarget.getHealth();
+        final float damage = (float) pAttacker.getAttributeValue(Attributes.ATTACK_DAMAGE) + EnchantmentHelper.getDamageBonus(pStack, pTarget.getMobType());
+        pAttacker.heal(damage * (float) CompanionsConfig.CRYSTALLIZED_BLOOD_SCYTHE_LIFE_STEAL);
 
-        boolean toRet = super.hurtEnemy(pStack, pTarget, pAttacker);
-
-        pAttacker.heal((healthBefore - pTarget.getHealth()) * (float) CompanionsConfig.CRYSTALLIZED_BLOOD_SCYTHE_LIFE_STEAL);
-
-        return toRet;
+        return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 
     @Override
