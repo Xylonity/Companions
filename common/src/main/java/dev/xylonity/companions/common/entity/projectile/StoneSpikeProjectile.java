@@ -53,7 +53,7 @@ public class StoneSpikeProjectile extends BaseProjectile {
         List<LivingEntity> entities = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.3), e -> !e.equals(getOwner()));
         for (LivingEntity e : entities) {
             if (!Util.areEntitiesLinked(e, this)) {
-                e.hurt(damageSources().magic(), (float) CompanionsConfig.STONE_SPIKE_DAMAGE);
+                e.hurt(damageSources().indirectMagic(this, getOwner()), (float) CompanionsConfig.STONE_SPIKE_DAMAGE);
                 if (new Random().nextFloat() < 0.25f) {
                     if (!e.hasEffect(MobEffects.POISON)) {
                         e.addEffect(new MobEffectInstance(MobEffects.POISON, new Random().nextInt(20, 100), 0, true, true, true));

@@ -45,7 +45,7 @@ public class HealRingProjectile extends BaseProjectile implements GeoEntity {
             if (tickCount % 10 == 0 && !hasHealed) {
                 for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(2))) {
                     if (e.isInvertedHealAndHarm()) {
-                        e.hurt(damageSources().magic(), (float) CompanionsConfig.HEAL_RING_HEALING);
+                        e.hurt(damageSources().indirectMagic(this, getOwner()), (float) CompanionsConfig.HEAL_RING_HEALING);
                         spawnParticles(e, CompanionsParticles.SHADE_SUMMON.get());
                     } else {
                         e.heal((float) CompanionsConfig.HEAL_RING_HEALING);

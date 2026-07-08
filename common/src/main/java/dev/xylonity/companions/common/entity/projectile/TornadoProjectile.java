@@ -131,7 +131,7 @@ public class TornadoProjectile extends BaseProjectile {
                     Vec3 dir = e.position().subtract(this.position()).normalize().scale(1.4);
                     e.push(dir.x + 0.1, dir.y + 0.1, dir.z + 0.1);
                     if (e instanceof LivingEntity living) {
-                        living.hurt(damageSources().magic(), (float) CompanionsConfig.ICE_TORNADO_DAMAGE);
+                        living.hurt(damageSources().indirectMagic(this, getOwner()), (float) CompanionsConfig.ICE_TORNADO_DAMAGE);
                     }
                 });
 

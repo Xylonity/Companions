@@ -165,7 +165,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
                 return;
             }
 
-            target.hurt(damageSources().magic(), (float) CompanionsConfig.SMALL_ICE_SHARD_DAMAGE);
+            target.hurt(damageSources().indirectMagic(this, getOwner()), (float) CompanionsConfig.SMALL_ICE_SHARD_DAMAGE);
             target.setTicksFrozen(target.getTicksFrozen() + CompanionsConfig.SMALL_ICE_SHARD_FREEZE_TICKS);
         }
 

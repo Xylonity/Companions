@@ -126,7 +126,7 @@ public class BloodTornadoProjectile extends BaseProjectile {
         this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1), e -> !Util.areEntitiesLinked(this, e))
                 .forEach(e -> {
                     if (e instanceof LivingEntity living) {
-                        living.hurt(damageSources().magic(), (float) CompanionsConfig.BLOOD_TORNADO_DAMAGE);
+                        living.hurt(damageSources().indirectMagic(this, getOwner()), (float) CompanionsConfig.BLOOD_TORNADO_DAMAGE);
                     }
                 });
 

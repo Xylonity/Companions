@@ -91,7 +91,7 @@ public class BloodSlashProjectile extends FrogHealProjectile {
         Entity e = pResult.getEntity();
         if (e instanceof LivingEntity entity) {
             if (!Util.areEntitiesLinked(this, entity)) {
-                entity.hurt(damageSources().magic(), (float) CompanionsConfig.BLOOD_SLASH_DAMAGE);
+                entity.hurt(damageSources().indirectMagic(this, getOwner()), (float) CompanionsConfig.BLOOD_SLASH_DAMAGE);
             }
         }
 
