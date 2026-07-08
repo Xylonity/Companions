@@ -28,6 +28,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -191,12 +192,17 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
         }
     }
 
+    private int requiredAmount(int rolledAmount, Item item) {
+        return Math.min(rolledAmount, new ItemStack(item).getMaxStackSize());
+    }
+
     private InteractionResult giveFirstItem(Player pPlayer, InteractionHand pHand, ItemStack stack) {
-        if (stack.getItem() == Items.OAK_PLANKS && stack.getCount() >= woodAmount) {
+        final int requiredWood = requiredAmount(woodAmount, Items.OAK_PLANKS);
+        if (stack.getItem() == Items.OAK_PLANKS && stack.getCount() >= requiredWood) {
             if (confirmationCheck) {
                 if (level().isClientSide) return InteractionResult.SUCCESS;
 
-                if (!pPlayer.getAbilities().instabuild) stack.shrink(woodAmount);
+                if (!pPlayer.getAbilities().instabuild) stack.shrink(requiredWood);
 
                 cycleState();
                 confirmationCheck = false;
@@ -205,7 +211,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
 
                 pPlayer.displayClientMessage(
                         Component.translatable("broken_dinamo.companions.client_message.wood_consumed",
-                                Component.literal(String.valueOf(woodAmount)).withStyle(ChatFormatting.ITALIC)), true);
+                                Component.literal(String.valueOf(requiredWood)).withStyle(ChatFormatting.ITALIC)), true);
 
                 pPlayer.level().playSound(null, this.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.NEUTRAL, 1.0F, 1.0F);
                 generateWaxParticles();
@@ -214,14 +220,14 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
             } else {
                 pPlayer.displayClientMessage(
                         Component.translatable("broken_dinamo.companions.client_message.wood_will_get_consumed",
-                                Component.literal(String.valueOf(woodAmount)).withStyle(ChatFormatting.ITALIC)), true);
+                                Component.literal(String.valueOf(requiredWood)).withStyle(ChatFormatting.ITALIC)), true);
 
                 confirmationCheck = true;
             }
         } else {
             pPlayer.displayClientMessage(
                     Component.translatable("broken_dinamo.companions.client_message.requires_wood",
-                            Component.literal(String.valueOf(woodAmount)).withStyle(ChatFormatting.ITALIC)), true);
+                            Component.literal(String.valueOf(requiredWood)).withStyle(ChatFormatting.ITALIC)), true);
 
             pPlayer.level().playSound(null, this.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
@@ -255,11 +261,12 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
     }
 
     private InteractionResult giveThirdItem(Player pPlayer, InteractionHand pHand, ItemStack stack) {
-        if (stack.getItem() == Items.IRON_INGOT && stack.getCount() >= ironAmount) {
+        final int requiredIron = requiredAmount(ironAmount, Items.IRON_INGOT);
+        if (stack.getItem() == Items.IRON_INGOT && stack.getCount() >= requiredIron) {
             if (confirmationCheck) {
                 if (level().isClientSide) return InteractionResult.SUCCESS;
 
-                if (!pPlayer.getAbilities().instabuild) stack.shrink(ironAmount);
+                if (!pPlayer.getAbilities().instabuild) stack.shrink(requiredIron);
 
                 cycleState();
                 confirmationCheck = false;
@@ -268,7 +275,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
 
                 pPlayer.displayClientMessage(
                         Component.translatable("broken_dinamo.companions.client_message.iron_consumed",
-                                Component.literal(String.valueOf(ironAmount)).withStyle(ChatFormatting.ITALIC)), true);
+                                Component.literal(String.valueOf(requiredIron)).withStyle(ChatFormatting.ITALIC)), true);
 
                 pPlayer.level().playSound(null, this.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.NEUTRAL, 1.0F, 1.0F);
                 generateWaxParticles();
@@ -277,7 +284,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
             } else {
                 pPlayer.displayClientMessage(
                         Component.translatable("broken_dinamo.companions.client_message.iron_will_get_consumed",
-                                Component.literal(String.valueOf(ironAmount)).withStyle(ChatFormatting.ITALIC)), true);
+                                Component.literal(String.valueOf(requiredIron)).withStyle(ChatFormatting.ITALIC)), true);
 
                 pPlayer.level().playSound(null, this.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
@@ -286,7 +293,7 @@ public class BrokenDinamoEntity extends Monster implements GeoEntity {
         } else {
             pPlayer.displayClientMessage(
                     Component.translatable("broken_dinamo.companions.client_message.requires_iron",
-                            Component.literal(String.valueOf(ironAmount)).withStyle(ChatFormatting.ITALIC)), true);
+                            Component.literal(String.valueOf(requiredIron)).withStyle(ChatFormatting.ITALIC)), true);
 
             pPlayer.level().playSound(null, this.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
