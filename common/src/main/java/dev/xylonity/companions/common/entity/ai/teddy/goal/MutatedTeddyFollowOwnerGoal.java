@@ -44,7 +44,8 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
     @Override
     public boolean canUse() {
         if (this.teddy.getMainAction() != 1) return false;
-        if (this.teddy.getPhase() != 2) return false;
+        if (this.teddy.getPhase() == 1) return false;
+        if (this.teddy.getRitualTicks() > 0) return false;
 
         LivingEntity poss = this.teddy.getOwner();
         if (poss == null || !poss.isAlive()) return false;
@@ -56,7 +57,8 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (this.teddy.getPhase() != 2) return false;
+        if (this.teddy.getPhase() == 1) return false;
+        if (this.teddy.getRitualTicks() > 0) return false;
         if (this.owner == null) return false;
         if (!this.owner.isAlive()) return false;
 

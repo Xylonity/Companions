@@ -28,7 +28,7 @@ public class TeddyApproachTargetGoal extends Goal {
     @Override
     public boolean canUse() {
         LivingEntity t = teddy.getTarget();
-        if (teddy.getPhase() == 2) return false;
+        if (teddy.getPhase() != 1) return false;
         if (t == null || !t.isAlive()) return false;
         this.target = t;
         return teddy.distanceToSqr(this.target) > this.startDistance * this.startDistance;

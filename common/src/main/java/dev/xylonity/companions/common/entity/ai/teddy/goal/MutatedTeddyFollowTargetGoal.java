@@ -106,9 +106,9 @@ public class MutatedTeddyFollowTargetGoal extends Goal {
         teddy.setPos(nextPos.x, nextPos.y, nextPos.z);
         teddy.setDeltaMovement(Vec3.ZERO);
 
-        // charges towards the target
+        // charges towards the target (holy phases teleport on attack instead)
         if (ticksInState >= untilNextDirChange) {
-            if (untilNextCharge <= 0) {
+            if (untilNextCharge <= 0 && teddy.getPhase() == 2) {
                 state = State.CHARGE;
                 chargeDir = center.subtract(teddy.position()).normalize();
                 ticksInState = 0;

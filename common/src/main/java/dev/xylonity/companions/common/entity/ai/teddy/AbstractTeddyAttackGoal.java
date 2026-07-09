@@ -25,7 +25,8 @@ public abstract class AbstractTeddyAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (this.phase() != teddy.getPhase()) return false;
+        if (!matchesPhase()) return false;
+        if (teddy.getRitualTicks() > 0) return false;
         if (teddy.getAttackType() != 0) return false;
         if (teddy.getTarget() == null) return false;
         if (teddy.getMainAction() != 1) return false;
@@ -75,6 +76,10 @@ public abstract class AbstractTeddyAttackGoal extends Goal {
     @Override
     public boolean requiresUpdateEveryTick() {
         return true;
+    }
+
+    protected boolean matchesPhase() {
+        return this.phase() == teddy.getPhase();
     }
 
     protected abstract void performAttack(LivingEntity target);

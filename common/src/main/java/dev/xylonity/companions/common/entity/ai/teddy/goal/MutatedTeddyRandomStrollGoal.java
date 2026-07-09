@@ -39,7 +39,8 @@ public class MutatedTeddyRandomStrollGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (teddy.getMainAction() != 2 || teddy.getPhase() != 2) return false;
+        if (teddy.getMainAction() != 2 || teddy.getPhase() == 1) return false;
+        if (teddy.getRitualTicks() > 0) return false;
         if (teddy.isVehicle()) return false;
 
         if (!forceTrigger) {
@@ -75,7 +76,8 @@ public class MutatedTeddyRandomStrollGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (teddy.getMainAction() != 2 || teddy.getPhase() != 2) return false;
+        if (teddy.getMainAction() != 2 || teddy.getPhase() == 1) return false;
+        if (teddy.getRitualTicks() > 0) return false;
         if (teddy.isVehicle() || targetPos == null) return false;
         double dx = targetPos.x - teddy.getX();
         double dy = targetPos.y - teddy.getY();
