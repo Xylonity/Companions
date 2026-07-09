@@ -85,6 +85,8 @@ public class CompanionsClientEvents {
         event.register(CompanionsEntities.PONTIFF_FIRE_RING, PontiffFireRingRenderer::new);
         event.register(CompanionsEntities.SHADE_MAW_LANDING_RING, ShadeMawLandingRingRenderer::new);
         event.register(CompanionsEntities.NEEDLE_PROJECTILE, NeedleRenderer::new);
+        event.register(CompanionsEntities.BLUE_ORB_PROJECTILE, BlueOrbRenderer::new);
+        event.register(CompanionsEntities.HOLY_RING_PROJECTILE, HolyRingRenderer::new);
         event.register(CompanionsEntities.RESPAWN_TOTEM_RING_PROJECTILE, RespawnTotemRingRenderer::new);
         event.register(CompanionsEntities.LASER_PROJECTILE, LaserRenderer::new);
         event.register(CompanionsEntities.LASER_RING, LaserRingRenderer::new);
