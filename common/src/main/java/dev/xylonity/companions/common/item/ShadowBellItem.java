@@ -10,6 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import dev.xylonity.knightlib.api.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -71,7 +72,7 @@ public class ShadowBellItem extends TooltipItem {
 
         ServerLevel altarLevel = null;
         if (pLevel.getServer() != null) {
-            ServerLevel maybe = pLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString(ST_DIM))));
+            ServerLevel maybe = pLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocations.parse(tag.getString(ST_DIM))));
             if (maybe instanceof ServerLevel) altarLevel = maybe;
         }
 
@@ -202,7 +203,7 @@ public class ShadowBellItem extends TooltipItem {
             return InteractionResultHolder.pass(stack);
         }
 
-        ServerLevel world = pLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString(ST_DIM))));
+        ServerLevel world = pLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocations.parse(tag.getString(ST_DIM))));
         if (world == null) {
             pPlayer.displayClientMessage(Component.translatable("shadow_bell.companions.client_message.couldnt_find"), true);
 

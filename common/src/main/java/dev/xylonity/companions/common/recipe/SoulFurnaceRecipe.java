@@ -8,6 +8,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import dev.xylonity.knightlib.api.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
@@ -148,7 +149,7 @@ public class SoulFurnaceRecipe implements Recipe<Container> {
             Block block = null;
 
             if (json.has("result_item")) {
-                ResourceLocation rl = new ResourceLocation(GsonHelper.getAsString(json, "result_item"));
+                ResourceLocation rl = ResourceLocations.parse(GsonHelper.getAsString(json, "result_item"));
                 item = BuiltInRegistries.ITEM.get(rl);
 
                 if (item == Items.AIR) {
@@ -158,12 +159,12 @@ public class SoulFurnaceRecipe implements Recipe<Container> {
             }
 
             if (json.has("result_entity")) {
-                ResourceLocation rl = new ResourceLocation(GsonHelper.getAsString(json, "result_entity"));
+                ResourceLocation rl = ResourceLocations.parse(GsonHelper.getAsString(json, "result_entity"));
                 entity = BuiltInRegistries.ENTITY_TYPE.get(rl);
             }
 
             if (json.has("result_block")) {
-                ResourceLocation rl = new ResourceLocation(GsonHelper.getAsString(json, "result_block"));
+                ResourceLocation rl = ResourceLocations.parse(GsonHelper.getAsString(json, "result_block"));
                 block = BuiltInRegistries.BLOCK.get(rl);
             }
 
@@ -216,7 +217,7 @@ public class SoulFurnaceRecipe implements Recipe<Container> {
                 buf.writeByte((byte) 1);
                 ResourceLocation key = BuiltInRegistries.ITEM.getKey(r.resultItem);
 
-                if (key == null) key = new ResourceLocation("minecraft", "air");
+                if (key == null) key = ResourceLocations.minecraft("air");
 
                 buf.writeResourceLocation(key);
                 buf.writeVarInt(Math.max(1, r.resultCount));
@@ -224,14 +225,14 @@ public class SoulFurnaceRecipe implements Recipe<Container> {
                 buf.writeByte((byte) 2);
                 ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(r.resultEntity);
 
-                if (key == null) key = new ResourceLocation("minecraft", "pig");
+                if (key == null) key = ResourceLocations.minecraft("pig");
 
                 buf.writeResourceLocation(key);
             } else if (r.resultBlock != null) {
                 buf.writeByte((byte) 3);
                 ResourceLocation key = BuiltInRegistries.BLOCK.getKey(r.resultBlock);
 
-                if (key == null) key = new ResourceLocation("minecraft", "air");
+                if (key == null) key = ResourceLocations.minecraft("air");
 
                 buf.writeResourceLocation(key);
             } else {

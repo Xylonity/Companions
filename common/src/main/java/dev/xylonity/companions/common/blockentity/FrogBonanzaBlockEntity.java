@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import dev.xylonity.knightlib.api.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -263,7 +264,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             parseBonanzaTeddyDrops(CompanionsConfig.BONANZA_2_COIN_HEADS_DROPS)
                 .forEach(drop -> {
                     if (getLevel().getRandom().nextFloat() < drop.chance) {
-                        final Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(drop.id()));
+                        final Item item = BuiltInRegistries.ITEM.get(ResourceLocations.parse(drop.id()));
                         if (item != null) {
                             popResource(getLevel(), getBlockPos(), new ItemStack(item, (drop.min == drop.max) ? drop.min : getLevel().getRandom().nextInt(drop.min, drop.max + 1)));
                         }
@@ -282,7 +283,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             parseBonanzaTeddyDrops(CompanionsConfig.BONANZA_2_TEDDY_HEADS_DROPS)
                 .forEach(drop -> {
                     if (getLevel().getRandom().nextFloat() < drop.chance) {
-                        final Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(drop.id()));
+                        final Item item = BuiltInRegistries.ITEM.get(ResourceLocations.parse(drop.id()));
                         if (item != null) {
                             popResource(getLevel(), getBlockPos(), new ItemStack(item, (drop.min == drop.max) ? drop.min : getLevel().getRandom().nextInt(drop.min, drop.max + 1)));
                         }
@@ -349,7 +350,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             parseBonanzaTeddyDrops(CompanionsConfig.BONANZA_3_COIN_HEADS_DROPS)
                 .forEach(drop -> {
                     if (getLevel().getRandom().nextFloat() < drop.chance) {
-                        final Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(drop.id()));
+                        final Item item = BuiltInRegistries.ITEM.get(ResourceLocations.parse(drop.id()));
                         if (item != null) {
                             popResource(getLevel(), getBlockPos(), new ItemStack(item, (drop.min == drop.max) ? drop.min : getLevel().getRandom().nextInt(drop.min, drop.max + 1)));
                         }
@@ -369,7 +370,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
                 parseBonanzaTeddyDrops(CompanionsConfig.BONANZA_3_TEDDY_HEADS_DROPS)
                         .forEach(drop -> {
                             if (getLevel().getRandom().nextFloat() < drop.chance) {
-                                Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(drop.id()));
+                                Item item = BuiltInRegistries.ITEM.get(ResourceLocations.parse(drop.id()));
                                 if (item != null) {
                                     popResource(getLevel(), getBlockPos(), new ItemStack(item, (drop.min == drop.max) ? drop.min : getLevel().getRandom().nextInt(drop.min, drop.max + 1)));
                                 }
@@ -390,7 +391,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
         if (player == null) return;
 
         for (SkullDropEntities config : parseEntitySpawns(CompanionsConfig.BONANZA_3_SKULL_DROP_ENTITIES)) {
-            EntityType<?> raw = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(config.id()));
+            EntityType<?> raw = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocations.parse(config.id()));
             if (raw == null) continue;
             // Unsafe cast but eh nobody will spawn non-mob entities... right?
             EntityType<? extends Mob> type = (EntityType<? extends Mob>) raw;
@@ -546,7 +547,7 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
 
             ResourceLocation id;
             try {
-                id = new ResourceLocation(idString);
+                id = ResourceLocations.parse(idString);
             }
             catch (Exception ignore) {
                 continue;

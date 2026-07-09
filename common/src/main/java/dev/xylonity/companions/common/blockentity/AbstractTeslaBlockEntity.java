@@ -11,6 +11,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import dev.xylonity.knightlib.api.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -75,7 +76,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     public ConnectionTarget asConnectionTarget() {
         final ResourceLocation dimensionRL = getLevel() != null
                 ? getLevel().dimension().location()
-                : new ResourceLocation("overworld");
+                : ResourceLocations.parse("overworld");
 
         return ConnectionTarget.forBlock(getBlockPos(), dimensionRL);
     }

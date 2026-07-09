@@ -27,7 +27,7 @@
 - Now antlions are categorized as arthropods
 - Now the croissant dragon armor can be swapped
 - Reworked bonanza drops, making it more difficult to keep playing
-- Added compatibility with knightlib 1.5.0
+- Added compatibility with knightlib 1.6.0
 - Added config options to specify names under which each entity would activate its reskin
 - Added a config option that lets specify if companions can actively attack nearby hostile mobs without the owner having to attack first
 - Added a config option to modify bonanza drops on the 2 or 3 coin head rolls

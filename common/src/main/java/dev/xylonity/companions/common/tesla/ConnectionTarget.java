@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.tesla;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import dev.xylonity.knightlib.api.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Objects;
@@ -51,7 +52,7 @@ public record ConnectionTarget(
     }
 
     public static ConnectionTarget deserialize(CompoundTag tag) {
-        final ResourceLocation dimensionRL = new ResourceLocation(tag.getString("Dimension"));
+        final ResourceLocation dimensionRL = ResourceLocations.parse(tag.getString("Dimension"));
         if ("entity".equals(tag.getString("Type"))) {
             return forEntity(tag.getUUID("UUID"), dimensionRL);
         }

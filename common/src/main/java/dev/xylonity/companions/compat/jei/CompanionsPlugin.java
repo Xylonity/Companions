@@ -14,6 +14,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
+import dev.xylonity.knightlib.api.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -108,7 +109,7 @@ public final class CompanionsPlugin implements IModPlugin {
                 continue;
             }
 
-            final Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(entry[0].trim()));
+            final Item item = BuiltInRegistries.ITEM.get(ResourceLocations.parse(entry[0].trim()));
             if (item == Items.AIR) {
                 continue;
             }

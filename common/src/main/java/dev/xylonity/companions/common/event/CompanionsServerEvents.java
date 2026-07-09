@@ -21,6 +21,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import dev.xylonity.knightlib.api.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -208,7 +209,7 @@ public final class CompanionsServerEvents {
         }
 
         // Search for the original level the respawn totem is located into
-        ServerLevel totemLevel = minecraftServer.getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensionId)));
+        ServerLevel totemLevel = minecraftServer.getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocations.parse(dimensionId)));
         if (totemLevel == null) {
             return;
         }

@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import dev.xylonity.knightlib.api.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -224,7 +225,7 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
 
         if (pCompound.contains("RespawnTotemPos")) {
             respawnTotemPos = pCompound.getLong("RespawnTotemPos");
-            respawnTotemDim = new ResourceLocation(pCompound.getString("RespawnTotemDim"));
+            respawnTotemDim = ResourceLocations.parse(pCompound.getString("RespawnTotemDim"));
         }
 
     }

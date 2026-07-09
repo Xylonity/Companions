@@ -5,6 +5,7 @@ import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.api.network.Network;
 import dev.xylonity.knightlib.api.network.NetworkEndpoint;
+import dev.xylonity.knightlib.api.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class Companions {
     }
 
     public static ResourceLocation of(final String path) {
-        return new ResourceLocation(MOD_ID, path);
+        return ResourceLocations.of(MOD_ID, path);
     }
 
 }
