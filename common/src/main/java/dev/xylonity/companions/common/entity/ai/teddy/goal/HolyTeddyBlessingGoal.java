@@ -56,6 +56,7 @@ public class HolyTeddyBlessingGoal extends AbstractTeddyAttackGoal {
         super.start();
         teddy.setNoMovement(true);
         teddy.playSound(SoundEvents.AMETHYST_BLOCK_RESONATE, 1f, 0.8f);
+        teddy.playSound(SoundEvents.EVOKER_PREPARE_SUMMON, 0.8f, 1.4f);
     }
 
     @Override

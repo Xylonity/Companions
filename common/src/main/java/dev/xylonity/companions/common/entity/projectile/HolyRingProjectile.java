@@ -75,15 +75,15 @@ public class HolyRingProjectile extends BaseProjectile implements GeoEntity {
             affected.add(entity.getUUID());
 
             if (Util.areEntitiesLinked(this, entity)) {
-                entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 160, 1, true, true, true));
-                entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 300, 0, true, true, true));
+                entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, random.nextInt(80, 240), 1, true, true, true));
+                entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, random.nextInt(150, 500), 0, true, true, true));
                 spawnBlessParticles(entity);
             }
             else if (entity instanceof Enemy || isOwnersTarget(entity)) {
                 final float damage = (float) CompanionsConfig.TEDDY_HOLY_NOVA_DAMAGE * (entity.isInvertedHealAndHarm() ? 1.5f : 1f);
                 entity.hurt(damageSources().indirectMagic(this, getOwner()), damage);
-                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1, true, true, true));
-                entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 100, 0, true, true, true));
+                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, random.nextInt(60, 140), 1, true, true, true));
+                entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, random.nextInt(60, 120), 0, true, true, true));
             }
 
         }

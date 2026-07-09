@@ -289,6 +289,34 @@ public final class CompanionsConfig {
     )
     public static boolean TEDDY_MUTANT_HEALS_OVER_TIME = true;
 
+    @ConfigEntry(
+            category = "Teddy",
+            comment = "Max life of the Teddy in holy phase",
+            min = 0, max = 2000
+    )
+    public static double TEDDY_HOLY_MAX_LIFE = 110;
+
+    @ConfigEntry(
+            category = "Teddy",
+            comment = "Damage dealt by the Teddy in holy phase",
+            min = 0.0, max = 100.0
+    )
+    public static double TEDDY_HOLY_DAMAGE = 8d;
+
+    @ConfigEntry(
+            category = "Teddy",
+            comment = "Damage dealt by each orb summoned by the Teddy in holy phase",
+            min = 0.0, max = 100.0
+    )
+    public static double TEDDY_HOLY_ORB_DAMAGE = 5d;
+
+    @ConfigEntry(
+            category = "Teddy",
+            comment = "Damage dealt by the holy nova released by the Teddy in holy phase",
+            min = 0.0, max = 100.0
+    )
+    public static double TEDDY_HOLY_NOVA_DAMAGE = 6d;
+
 
     /**
      * SOUL MAGE
@@ -943,7 +971,13 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Holy Porcelain Pottery",
-            comment = "List of entity IDs that cannot be stored inside the Holy Porcelain Pottery. Example: minecraft:ender_dragon; minecraft:wither"
+            comment = "List of entity IDs (separated by ; or ,) that can be stored inside the Holy Porcelain Pottery. Leave blank to allow every entity that isn't blacklisted. Example: minecraft:pig; minecraft:cow"
+    )
+    public static String HOLY_PORCELAIN_POTTERY_WHITELIST = "";
+
+    @ConfigEntry(
+            category = "Holy Porcelain Pottery",
+            comment = "List of entity IDs (separated by ; or ,) that cannot be stored inside the Holy Porcelain Pottery. Takes priority over the whitelist. Example: minecraft:ender_dragon; minecraft:wither"
     )
     public static String HOLY_PORCELAIN_POTTERY_BLACKLIST = "minecraft:ender_dragon; minecraft:wither; minecraft:warden";
 
