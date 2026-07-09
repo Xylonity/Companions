@@ -1,9 +1,10 @@
 # 1.3.0
 - Added a new companion, the shade bat. The default version consists of some small bats that do basic damage, while the blood version is a big bat that makes tackles (and applies poison) to the current target.
-- Added a new teddy variant, the holy teddy. It is activated by interacting with a normal teddy using a porcelain pottery.
+- Added a new teddy variant, the holy teddy. It is activated by interacting with a normal teddy using a porcelain pottery. Interacting with the teddy while holding an item with the curse of vanishing enchantment would eliminate it
 - Added 2 new items (placeable), porcelain pottery and holy porcelain pottery. The former is used to transform the teddy in its holy variant, while the latter is used to contain entities and allows to move them freely
 - The Tesla Manager, which handles connection logic on the Tesla Network, has been rewritten, potentially fixing Tesla connection and desynchronization issues on dedicated servers
 - Now the Sacred Pontiff can have its name translated into different languages instead of being exclusively in English (previously limited by the bossbar system)
+- The bonanza's 2 skull drop anvil feels special today, don't you dare annoy it
 - Armor effects now apply to any entity wearing the armor set, not just players
 - The force with which certain camera shakes were performed was modified to make it more natural
 - A new JEI category has been added for the frog bonanza, indicating which items are enabled to be used as currency in the machine
@@ -25,8 +26,10 @@
 - The needle recipe now requires antlion fur
 - Now antlions are categorized as arthropods
 - Now the croissant dragon armor can be swapped
-- Added compatibility with knightlib 1.6.0
+- Reworked bonanza drops, making it more difficult to keep playing
+- Added compatibility with knightlib 1.5.0
 - Added config options to specify names under which each entity would activate its reskin
+- Added a config option that lets specify if companions can actively attack nearby hostile mobs without the owner having to attack first
 - Added a config option to modify bonanza drops on the 2 or 3 coin head rolls
 - Added a config option to prevent mob griefing (when using certain magic books)
 - Added a config option to specify the chance of a container being filled with loot in a structure
@@ -43,8 +46,10 @@
 - Fixed magic ray magic book not activating revenge logic on some entities
 - Fixed a case where the wild cornelius would keep its chunk loaded, keeping some persistent server lag (fix applied into existing worlds too)
 - Fixed block projections in the inventory and on the ground, which would have incorrect positions and rotations, or would extend beyond the inventory by overlapping other slots
-- Fixed antlion base health not being set by the actual config entry 
+- Fixed antlion base health not being set by the actual config entry
+- Fixed the teddy needle hit sound taking a long time to sound
 - Fixed a case where companions spawned inside structures wouldn't see their base health modified even though the max health value was changed through the config file
+- Fixed crystallized blood axe using a wrong on-ground scale
 
 # 1.2.2
 - Attempt to fix recall platform loop crash
