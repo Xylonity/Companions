@@ -12,6 +12,7 @@
 - In Fabric, the respawn totem can now respawn any tamable entity, not just companions
 - The code has been partially rewritten to ensure loader parity
 - Increased mutated teddy attack range
+- Enhanced the visuals for the holiness star
 - Now the soul mage casts the black hole with greater accuracy towards his target, so that it is less likely to miss
 - The soul mage's healing ring spell has been given priority, as it wasn't cast sometimes
 - Certain armor pieces are no longer trimmable
