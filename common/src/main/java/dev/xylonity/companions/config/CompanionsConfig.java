@@ -1035,52 +1035,58 @@ public final class CompanionsConfig {
             comment = "Bonanza coin reward drops from 2 coin heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]. Leave blank to disable coin rewards entirely."
     )
     public static String BONANZA_2_COIN_HEADS_DROPS =
-            "companions:copper_coin, 1.0, 2-9;" +
-            "companions:nether_coin, 1.0, 1-3;" +
-            "companions:end_coin, 1.0, 1";
+            "companions:copper_coin, 1.0, 1-3;" +
+            "companions:nether_coin, 0.35, 1;" +
+            "companions:end_coin, 0.1, 1";
 
     @ConfigEntry(
             category = "Bonanza",
             comment = "Bonanza coin reward drops from 3 coin heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]. Leave blank to disable coin rewards entirely."
     )
     public static String BONANZA_3_COIN_HEADS_DROPS =
-            "companions:copper_coin, 1.0, 1-19;" +
-            "companions:nether_coin, 0.75, 1-4;" +
-            "companions:end_coin, 0.45, 1";
+            "companions:copper_coin, 1.0, 2-5;" +
+            "companions:nether_coin, 0.9, 1-2;" +
+            "companions:end_coin, 0.8, 1";
 
     @ConfigEntry(
             category = "Bonanza",
             comment = "Bonanza item reward drops from 2 teddy heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]"
     )
     public static String BONANZA_2_TEDDY_HEADS_DROPS =
-            "minecraft:golden_apple, 1.0, 1;" +
             "minecraft:feather, 1.0, 1-4;" +
-            "minecraft:ender_pearl, 0.5, 1;" +
-            "minecraft:enchanted_golden_apple, 0.25, 1;" +
-            "minecraft:netherite_scrap, 0.05, 1;" +
-            "minecraft:wither_skeleton_skull, 0.10, 1;" +
-            "minecraft:axolotl_bucket, 0.10, 1;" +
-            "minecraft:music_disc_pigstep, 0.05, 1;" +
-            "minecraft:diamond, 0.15, 1;" +
+            "minecraft:golden_apple, 0.5, 1-2;" +
+            "minecraft:golden_carrot, 0.25, 1-3;" +
+            "minecraft:ender_pearl, 0.25, 1;" +
             "minecraft:emerald, 0.20, 1-2;" +
-            "minecraft:experience_bottle, 0.10, 1-3;" +
-            "minecraft:nether_star, 0.005, 1";
+            "minecraft:amethyst_shard, 0.15, 1-2;" +
+            "companions:big_bread, 0.15, 1;" +
+            "minecraft:experience_bottle, 0.10, 1-5;" +
+            "minecraft:diamond, 0.10, 1-2;" +
+            "minecraft:axolotl_bucket, 0.1, 1;" +
+            "minecraft:name_tag, 0.05, 1;" +
+            "minecraft:saddle, 0.05, 1;" +
+            "minecraft:wither_skeleton_skull, 0.05, 1;" +
+            "minecraft:music_disc_pigstep, 0.03, 1;" +
+            "minecraft:netherite_scrap, 0.03, 1";
 
     @ConfigEntry(
             category = "Bonanza",
             comment = "Bonanza item reward drops from 3 teddy heads: [item, chance, amount (can be either exact, n, or ranged, n-m); ...]"
     )
     public static String BONANZA_3_TEDDY_HEADS_DROPS =
-            "minecraft:golden_apple, 1.0, 1-3;" +
-            "minecraft:enchanted_golden_apple, 0.8, 1-3;" +
+            "minecraft:golden_apple, 1.0, 1-2;" +
+            "minecraft:gold_ingot, 1.0, 4-12;" +
+            "minecraft:diamond, 1.0, 1-4;" +
             "minecraft:ender_pearl, 0.75, 1-2;" +
-            "minecraft:ender_eye, 0.75, 1-2;" +
-            "minecraft:diamond, 0.65, 1-9;" +
-            "minecraft:gold_ingot, 0.85, 1-19;" +
+            "minecraft:ender_eye, 0.5, 1-2;" +
             "minecraft:cake, 0.55, 1;" +
-            "minecraft:netherite_scrap, 0.30, 1;" +
-            "minecraft:netherite_ingot, 0.10, 1;" +
-            "minecraft:nether_star, 0.05, 1;";
+            "minecraft:enchanted_golden_apple, 0.25, 1;" +
+            "minecraft:netherite_scrap, 0.15, 1;" +
+            "minecraft:totem_of_undying, 0.10, 1;" +
+            "minecraft:heart_of_the_sea, 0.08, 1;" +
+            "minecraft:netherite_ingot, 0.07, 1;" +
+            "minecraft:music_disc_otherside, 0.05, 1;" +
+            "minecraft:nether_star, 0.04, 1;";
 
     @ConfigEntry(
             category = "Bonanza",
@@ -1092,6 +1098,6 @@ public final class CompanionsConfig {
             category = "Bonanza",
             comment = "Bonanza curency-amount pair. The first value corresponds to the item used as currency, and the latter value indicates how many attempts that item provides. For example: minecraft:iron_ingot, 1; minecraft:gold_ingot, 2; ..."
     )
-    public static String BONANZA_CURRENCY_TYPES = "companions:copper_coin, 1; companions:nether_coin, 3; companions:end_coin, 5";
+    public static String BONANZA_CURRENCY_TYPES = "companions:copper_coin, 1; companions:nether_coin, 2; companions:end_coin, 4";
 
 }
