@@ -105,7 +105,7 @@ public class SoulFurnaceBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.SOUL_FURNACE ? SoulFurnaceBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.SOUL_FURNACE.get() ? SoulFurnaceBlockEntity::tick : null;
     }
 
     @Override

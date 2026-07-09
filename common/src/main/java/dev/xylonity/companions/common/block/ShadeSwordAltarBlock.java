@@ -64,7 +64,7 @@ public class ShadeSwordAltarBlock extends AbstractShadeAltarBlock implements Ent
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pBlockEntityType == CompanionsBlockEntities.SHADE_SWORD_ALTAR ? ShadeSwordAltarBlockEntity::tick : null;
+        return pBlockEntityType == CompanionsBlockEntities.SHADE_SWORD_ALTAR.get() ? ShadeSwordAltarBlockEntity::tick : null;
     }
 
 }

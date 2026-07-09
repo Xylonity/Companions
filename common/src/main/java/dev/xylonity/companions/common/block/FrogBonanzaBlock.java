@@ -188,7 +188,7 @@ public class FrogBonanzaBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pState.getValue(HALF) == DoubleBlockHalf.LOWER && pBlockEntityType == CompanionsBlockEntities.FROG_BONANZA ? FrogBonanzaBlockEntity::tick : null;
+        return pState.getValue(HALF) == DoubleBlockHalf.LOWER && pBlockEntityType == CompanionsBlockEntities.FROG_BONANZA.get() ? FrogBonanzaBlockEntity::tick : null;
     }
 
     @Nullable

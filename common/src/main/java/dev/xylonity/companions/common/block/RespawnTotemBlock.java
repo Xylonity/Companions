@@ -256,7 +256,7 @@ public class RespawnTotemBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pState.getValue(HALF) == DoubleBlockHalf.LOWER && pBlockEntityType == CompanionsBlockEntities.RESPAWN_TOTEM ? RespawnTotemBlockEntity::tick : null;
+        return pState.getValue(HALF) == DoubleBlockHalf.LOWER && pBlockEntityType == CompanionsBlockEntities.RESPAWN_TOTEM.get() ? RespawnTotemBlockEntity::tick : null;
     }
 
     @Nullable
