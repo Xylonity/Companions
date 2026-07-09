@@ -429,8 +429,8 @@ public class AntlionEntity extends CompanionEntity implements PlayerRideable {
 
     public static AttributeSupplier.Builder setAttributes() {
         return CompanionEntity.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 60)
-                .add(Attributes.ATTACK_DAMAGE, 6f)
+                .add(Attributes.MAX_HEALTH, CompanionsConfig.ANTLION_NORMAL_MAX_LIFE)
+                .add(Attributes.ATTACK_DAMAGE, CompanionsConfig.ANTLION_NORMAL_DAMAGE)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.55f)
                 .add(Attributes.FOLLOW_RANGE, 35.0);
