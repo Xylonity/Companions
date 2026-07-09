@@ -1,5 +1,7 @@
 # 1.3.0
 - Added a new companion, the shade bat. The default version consists of some small bats that do basic damage, while the blood version is a big bat that makes tackles (and applies poison) to the current target.
+- Added a new teddy variant, the holy teddy. It is activated by interacting with a normal teddy using a porcelain pottery.
+- Added 2 new items (placeable), porcelain pottery and holy porcelain pottery. The former is used to transform the teddy in its holy variant, while the latter is used to contain entities and allows to move them freely
 - The Tesla Manager, which handles connection logic on the Tesla Network, has been rewritten, potentially fixing Tesla connection and desynchronization issues on dedicated servers
 - Now the Sacred Pontiff can have its name translated into different languages instead of being exclusively in English (previously limited by the bossbar system)
 - Armor effects now apply to any entity wearing the armor set, not just players
@@ -8,7 +10,7 @@
 - Now reskins for entities are only activated when the entity has a nametag with a specific name, not just by having a nametag as before
 - Added 2 missing camera shakes, at the beginning and end of His Holiness appearance animation
 - Added loot to chests and barrels in the mod's structures. Loot tables and the percentage of containers that are filled are configurable via the config file
-- Certain projectiles in magic books have been changed to deal vanilla magic damage instead of other type of damage
+- Certain projectiles in magic books have been changed to deal vanilla indirect magic damage instead
 - In Fabric, the respawn totem can now respawn any tamable entity, not just companions
 - The code has been partially rewritten to ensure loader parity
 - Increased mutated teddy attack range

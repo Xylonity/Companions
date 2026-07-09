@@ -10,6 +10,7 @@ import dev.xylonity.companions.common.entity.ai.teddy.control.TeddyMoveControl;
 import dev.xylonity.companions.common.entity.ai.teddy.goal.*;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsBlocks;
 import dev.xylonity.companions.registry.CompanionsItems;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -64,6 +65,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation AUTO_STAB = RawAnimation.begin().thenPlay("auto_stab");
     private final RawAnimation TRANSFORM = RawAnimation.begin().thenPlay("transform");
+    private final RawAnimation TRANSFORM_ANGEL = RawAnimation.begin().thenPlay("transform_angel");
 
     private final RawAnimation MUTATED_FLY = RawAnimation.begin().thenPlay("flying");
     private final RawAnimation MUTATED_ATTACK1 = RawAnimation.begin().thenPlay("attack");
@@ -80,8 +82,8 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private final RawAnimation HOLY_ATTACK2 = RawAnimation.begin().thenPlay("stab2");
     private final RawAnimation HOLY_APPLY_EFFECTS = RawAnimation.begin().thenPlay("apply_effects");
     private final RawAnimation HOLY_SUMMON_BALLS = RawAnimation.begin().thenPlay("summon_balls");
-    private final RawAnimation HOLY_FLY = RawAnimation.begin().thenPlay("holy_fly");
-    private final RawAnimation HOLY_FLY_IDLE = RawAnimation.begin().thenPlay("holy_fly_idle");
+    private final RawAnimation HOLY_FLY = RawAnimation.begin().thenPlay("fly");
+    private final RawAnimation HOLY_FLY_IDLE = RawAnimation.begin().thenPlay("fly_idle");
 
     // Phase 1: 1 stab, 2 auto-stab
     // Phase 2: 1 attack
@@ -89,10 +91,12 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     // 1 base, 2 mutated, 3 holy1, 4 holy2
     private static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SECOND_PHASE_COUNTER = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> ANGEL_PHASE_COUNTER = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_ON_AIR = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> TELEPORTED = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final int ANIMATION_TRANSFORM_MAX_TICKS = 200;
+    private static final int ANIMATION_TRANSFORM_ANGEL_MAX_TICKS = 80;
     private static final int ANIMATION_DEAD_MAX_TICKS = 64;
 
     public TeddyEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
@@ -129,7 +133,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             @Override
             public void start() {
                 super.start();
-                if (getPhase() >= 2) {
+                if (getPhase() == 2) {
                     double currentX = getX();
                     double currentZ = getZ();
 
@@ -245,6 +249,14 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         this.entityData.set(SECOND_PHASE_COUNTER, t);
     }
 
+    public int getAngelPhaseCounter() {
+        return this.entityData.get(ANGEL_PHASE_COUNTER);
+    }
+
+    public void setAngelPhaseCounter(int t) {
+        this.entityData.set(ANGEL_PHASE_COUNTER, t);
+    }
+
     public int getAttackType() {
         return this.entityData.get(ATTACK_TYPE);
     }
@@ -271,6 +283,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         super.defineSynchedData();
         this.entityData.define(PHASE, 1);
         this.entityData.define(SECOND_PHASE_COUNTER, 0);
+        this.entityData.define(ANGEL_PHASE_COUNTER, 0);
         this.entityData.define(ATTACK_TYPE, 0);
         this.entityData.define(IS_ON_AIR, false);
         this.entityData.define(TELEPORTED, false);
@@ -311,6 +324,24 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             setSecondPhaseCounter(getSecondPhaseCounter() + 1);
         }
 
+        if (getAngelPhaseCounter() != 0 && getAngelPhaseCounter() <= ANIMATION_TRANSFORM_ANGEL_MAX_TICKS) {
+            setTarget(null);
+            setNoMovement(true);
+
+            if (getAngelPhaseCounter() == ANIMATION_TRANSFORM_ANGEL_MAX_TICKS) {
+                setNoMovement(false);
+
+                spawnAngelParticles(50);
+
+                setPhase(random.nextInt(2) + 3);
+                this.refreshDimensions();
+
+                playSound(CompanionsSounds.TEDDY_TRANSFORMATION.get());
+            }
+
+            setAngelPhaseCounter(getAngelPhaseCounter() + 1);
+        }
+
         if (getPhase() == 2) {
             if (getOwner() != null && !getOwner().hasEffect(MobEffects.REGENERATION)) {
                 if (this.distanceToSqr(getOwner()) < 16 * 16)  {
@@ -322,6 +353,23 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         if (getPhase() == 2 && !level().isClientSide && CompanionsConfig.TEDDY_MUTANT_HEALS_OVER_TIME) {
             if (tickCount % 200 == 0) this.heal(1f);
             if (tickCount % 15 == 0 && ((getMainAction() == 0 && getIsOnAir()) || (getMainAction() != 0))) playSound(CompanionsSounds.MUTANT_TEDDY_FLAP_WINGS.get(), 0.4f, 1f);
+        }
+
+    }
+
+    private void spawnAngelParticles(int amount) {
+        for (int i = 0; i < amount; i++) {
+            double dx = (this.random.nextDouble() - 0.5) * 2.0;
+            double dy = (this.random.nextDouble() - 0.5) * 2.0;
+            double dz = (this.random.nextDouble() - 0.5) * 2.0;
+            if (this.level() instanceof ServerLevel level) {
+                level.sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.1);
+                if (i % 5 == 0) {
+                    level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + 1, this.getZ(), 1, dx, dy, dz, 0.1);
+                }
+
+            }
+
         }
 
     }
@@ -372,7 +420,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (getSecondPhaseCounter() != 0 && getPhase() == 1) {
+        if ((getSecondPhaseCounter() != 0 || getAngelPhaseCounter() != 0) && getPhase() == 1) {
             return InteractionResult.PASS;
         }
 
@@ -404,12 +452,16 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         }
 
         // Holy phase
-        if (isTame() && player == getOwner() && stack.getItem() == CompanionsItems.PORCELAIN_POTTERY.get() && getPhase() == 1) {
+        if (isTame() && player == getOwner() && stack.getItem() == CompanionsBlocks.PORCELAIN_POTTERY.get().asItem() && getPhase() == 1) {
             if (level().isClientSide) {
                 return InteractionResult.SUCCESS;
             }
 
-            setPhase(random.nextInt(2) + 3);
+            if (!player.getAbilities().instabuild) {
+                stack.shrink(1);
+            }
+
+            setAngelPhaseCounter(getAngelPhaseCounter() + 1);
 
             return InteractionResult.SUCCESS;
         }
@@ -492,6 +544,9 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         if (this.getSecondPhaseCounter() != 0) {
             pCompound.putInt("Phase", 2);
         }
+        else if (this.getAngelPhaseCounter() != 0 && getPhase() == 1) {
+            pCompound.putInt("Phase", random.nextInt(2) + 3);
+        }
     }
 
     @Override
@@ -518,6 +573,9 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         if (getPhase() == 1) {
             if (this.getSecondPhaseCounter() != 0 && this.getSecondPhaseCounter() <= ANIMATION_TRANSFORM_MAX_TICKS) {
                 event.getController().setAnimation(TRANSFORM);
+            }
+            else if (this.getAngelPhaseCounter() != 0 && this.getAngelPhaseCounter() <= ANIMATION_TRANSFORM_ANGEL_MAX_TICKS) {
+                event.getController().setAnimation(TRANSFORM_ANGEL);
             }
             else if (this.getMainAction() == 0) {
                 final RawAnimation sit = getSitVariation() == 0 ? LAY : getSitVariation() == 1 ? SIT : SLEEP;
