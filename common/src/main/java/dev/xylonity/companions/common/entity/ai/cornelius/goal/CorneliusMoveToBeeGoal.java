@@ -4,7 +4,6 @@ import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.entity.player.Player;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -23,7 +22,8 @@ public class CorneliusMoveToBeeGoal extends Goal {
     @Override
     public boolean canUse() {
         if (cornelius.isTame()) return false;
-        if (cornelius.level().getEntitiesOfClass(Player.class, cornelius.getBoundingBox().inflate(10)).isEmpty()) return false;
+        if (cornelius.getRandom().nextInt(reducedTickDelay(10)) != 0) return false;
+        if (cornelius.level().getNearestPlayer(cornelius, 10) == null) return false;
         List<Bee> bees = cornelius.level().getEntitiesOfClass(Bee.class, cornelius.getBoundingBox().inflate(10), EntitySelector.NO_SPECTATORS);
         if (bees.isEmpty()) return false;
         this.bee = bees.get(0);
@@ -32,7 +32,7 @@ public class CorneliusMoveToBeeGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (cornelius.level().getEntitiesOfClass(Player.class, cornelius.getBoundingBox().inflate(10)).isEmpty()) return false;
+        if (cornelius.level().getNearestPlayer(cornelius, 10) == null) return false;
         return this.bee != null && this.bee.isAlive() && !cornelius.isVehicle();
     }
 

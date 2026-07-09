@@ -61,16 +61,26 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
             this.setDeltaMovement(Vec3.ZERO);
         }
 
-        if (shouldKeepChunkLoaded() && level() instanceof ServerLevel level) {
-            ChunkPos currentChunkPos = new ChunkPos(blockPosition());
-            if (!currentChunkPos.equals(lastChunkPos)) {
-                if (lastChunkPos != null) {
-                    level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);
-                }
+        if (level() instanceof ServerLevel level) {
+            // Only tamed companions may pin their chunk
+            if (isTame() && shouldKeepChunkLoaded()) {
+                final ChunkPos currentChunkPos = new ChunkPos(blockPosition());
+                if (!currentChunkPos.equals(lastChunkPos)) {
+                    if (lastChunkPos != null) {
+                        level.setChunkForced(lastChunkPos.x, lastChunkPos.z, false);
+                    }
 
-                level.setChunkForced(currentChunkPos.x, currentChunkPos.z, true);
-                lastChunkPos = currentChunkPos;
+                    level.setChunkForced(currentChunkPos.x, currentChunkPos.z, true);
+                    lastChunkPos = currentChunkPos;
+                }
             }
+            // Fixes already polluted worlds
+            else if (lastChunkPos != null || (tickCount == 1 && shouldKeepChunkLoaded())) {
+                final ChunkPos staleChunkPos = lastChunkPos != null ? lastChunkPos : new ChunkPos(blockPosition());
+                level.setChunkForced(staleChunkPos.x, staleChunkPos.z, false);
+                lastChunkPos = null;
+            }
+
         }
 
     }

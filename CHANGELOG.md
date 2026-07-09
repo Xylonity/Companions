@@ -36,6 +36,7 @@
 - Fixed an issue where the dynamo would harm its owner's teammates, resolving problems with FTB Teams
 - Fixed a case where running while riding the Shade Maw would spam its step sound constantly
 - Fixed magic ray magic book not activating revenge logic on some entities
+- Fixed a case where the wild cornelius would keep its chunk loaded, keeping some persistent server lag (fix applied into existing worlds too)
 - Fixed block projections in the inventory and on the ground, which would have incorrect positions and rotations, or would extend beyond the inventory by overlapping other slots
 
 # 1.2.2
