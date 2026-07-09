@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " s ",
+    "l l",
+    "bbb"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:netherite_scrap"
+    },
+    "l": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "b": {
+      "item": "minecraft:bone"
+    }
+  },
+  "result": {
+    "item": "companions:porcelain_pottery",
+    "count": 1
+  }
+}

@@ -1,0 +1,26 @@
+{
+   "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " g ",
+    "npn",
+    " c "
+  ],
+  "key": {
+    "g": {
+      "item": "companions:relic_gold"
+    },
+    "n": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "p": {
+      "item": "companions:porcelain_pottery"
+    },
+    "c": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "companions:holy_porcelain_pottery",
+    "count": 1
+  }
+}

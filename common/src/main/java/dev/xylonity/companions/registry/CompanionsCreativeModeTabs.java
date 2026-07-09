@@ -1,34 +1,28 @@
 package dev.xylonity.companions.registry;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
+import dev.xylonity.knightlib.KnightLib;
+import dev.xylonity.knightlib.api.registrar.ResourceDispatcher;
+import dev.xylonity.knightlib.api.registrar.ResourceRegistry;
 import dev.xylonity.knightlib.registry.KnightLibBlocks;
 import dev.xylonity.knightlib.registry.KnightLibItems;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class CompanionsCreativeModeTabs {
 
-    public static void init() { ;; }
-
-    private static final List<Supplier<Item>> spawnEggs = new ArrayList<>();
-
-    public static void populateSpawnEgg(Supplier<Item> item) {
-        spawnEggs.add(item);
-    }
+    public static final ResourceRegistry<CreativeModeTab> CREATIVE_TABS = ResourceDispatcher.create(BuiltInRegistries.CREATIVE_MODE_TAB, Companions.MOD_ID);
 
     public static final Supplier<CreativeModeTab> COMPANIONS_TAB =
-            CompanionsCommon.COMMON_PLATFORM.registerCreativeModeTab("companions_tab",
-                    () -> CompanionsCommon.COMMON_PLATFORM.creativeTabBuilder()
+            CREATIVE_TABS.register("companions_tab",
+                    () -> KnightLib.PLATFORM.creativeTabBuilder()
                             .icon(() -> new ItemStack(CompanionsBlocks.CROISSANT_EGG.get()))
                             .title(Component.translatable("creativetab.companions.title"))
                             .displayItems((itemDisplayParameters, output) -> {
-
                                 output.accept(KnightLibBlocks.GREAT_CHALICE.get());
                                 output.accept(KnightLibItems.SMALL_ESSENCE.get());
                                 output.accept(KnightLibItems.GREAT_ESSENCE.get());
@@ -57,6 +51,8 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.MUTANT_FLESH.get());
                                 output.accept(CompanionsItems.OLD_CLOTH.get());
                                 output.accept(CompanionsItems.RELIC_GOLD.get());
+                                output.accept(CompanionsBlocks.PORCELAIN_POTTERY.get());
+                                output.accept(CompanionsBlocks.HOLY_PORCELAIN_POTTERY.get());
                                 output.accept(CompanionsItems.ETERNAL_LIGHTER.get());
                                 output.accept(CompanionsItems.WRENCH.get());
 
@@ -69,6 +65,7 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsBlocks.RESPAWN_TOTEM.get());
                                 output.accept(CompanionsBlocks.SHADE_SWORD_ALTAR.get());
                                 output.accept(CompanionsBlocks.SHADE_MAW_ALTAR.get());
+                                output.accept(CompanionsBlocks.SHADE_BAT_ALTAR.get());
                                 output.accept(CompanionsBlocks.RECALL_PLATFORM.get());
                                 output.accept(CompanionsBlocks.VOLTAIC_RELAY.get());
                                 output.accept(CompanionsBlocks.FROG_BONANZA.get());
@@ -104,9 +101,16 @@ public class CompanionsCreativeModeTabs {
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get());
                                 output.accept(CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get());
 
-                                for (Supplier<Item> sup : spawnEggs) {
-                                    output.accept(sup.get());
-                                }
+                                output.accept(CompanionsItems.CORNELIUS_SPAWN_EGG.get());
+                                output.accept(CompanionsItems.TEDDY_SPAWN_EGG.get());
+                                output.accept(CompanionsItems.WILD_ANTLION_SPAWN_EGG.get());
+                                output.accept(CompanionsItems.BROKEN_DINAMO_SPAWN_EGG.get());
+                                output.accept(CompanionsItems.HOSTILE_IMP_SPAWN_EGG.get());
+                                output.accept(CompanionsItems.GOLDEN_ALLAY_SPAWN_EGG.get());
+                                output.accept(CompanionsItems.SACRED_PONTIFF_SPAWN_EGG.get());
+                                output.accept(CompanionsItems.LIVING_CANDLE_SPAWN_EGG.get());
+                                output.accept(CompanionsItems.ILLAGER_GOLEM_SPAWN_EGG.get());
+                                output.accept(CompanionsItems.HOSTILE_PUPPET_GLOVE_SPAWN_EGG.get());
 
                             })
                             .build());

@@ -11,7 +11,7 @@
 
         "location": "companions:companions_teddytower",
 
-        "processors": "minecraft:empty",
+        "processors": "companions:loot_injection",
 
         "projection": "rigid",
 

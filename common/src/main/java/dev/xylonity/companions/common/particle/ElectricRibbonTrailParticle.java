@@ -1,13 +1,13 @@
 package dev.xylonity.companions.common.particle;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 
 public class ElectricRibbonTrailParticle extends BaseRibbonTrailParticle {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(CompanionsCommon.MOD_ID, "textures/particle/trail.png");
+    private static final ResourceLocation TEXTURE = Companions.of("textures/particle/trail.png");
 
     private final double amp;
     private final long seed;

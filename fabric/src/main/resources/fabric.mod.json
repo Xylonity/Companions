@@ -16,16 +16,13 @@
     "environment": "*",
     "entrypoints": {
         "main": [
-          "dev.xylonity.companions.Companions"
+            "dev.xylonity.companions.CompanionsFabric"
         ],
         "client": [
-            "dev.xylonity.companions.CompanionsClient"
+            "dev.xylonity.companions.CompanionsFabricClient"
         ],
         "jei_mod_plugin": [
             "dev.xylonity.companions.compat.jei.CompanionsPlugin"
-        ],
-        "fabric-datagen": [
-            "dev.xylonity.companions.datagen.CompanionsLootModifierGenerator"
         ]
     },
     "mixins": [
@@ -37,7 +34,7 @@
         "fabric": "*",
         "minecraft": "~${minecraft_version}",
         "java": ">=17",
-        "knightlib": ">=1.5.0"
+        "knightlib": ">=1.6.0"
     },
     "suggests": {
         "another-mod": "*"

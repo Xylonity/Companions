@@ -6,9 +6,17 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "FallingBlockEntityAccessor",
-    "IllagerGolemRaidMixin"
+    "IllagerGolemRaidMixin",
+    "LevelAccessor",
+    "LivingEntityMixin",
+    "MobMixin",
+    "PlayerInteractOnMixin",
+    "ProjectileAccessor",
+    "SmithingTrimRecipeMixin"
   ],
   "client": [
+    "RenderStateShardAccessor",
+    "RenderTypeAccessor"
   ],
   "server": [
   ],
