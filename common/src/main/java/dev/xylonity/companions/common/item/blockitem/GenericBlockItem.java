@@ -29,7 +29,7 @@ public class GenericBlockItem extends GeckoBlockItem {
         final Component stackName = super.getName(stack);
         if (stackName instanceof MutableComponent component) {
             switch (resourceKey) {
-                case "shade_sword_altar", "shade_maw_altar" -> component.withStyle(ChatFormatting.RED);
+                case "shade_sword_altar", "shade_maw_altar", "shade_bat_altar" -> component.withStyle(ChatFormatting.RED);
                 case "frog_bonanza_block" -> component.withStyle(ChatFormatting.GRAY);
                 case "respawn_totem_block" -> component.withStyle(ChatFormatting.GOLD);
             }
