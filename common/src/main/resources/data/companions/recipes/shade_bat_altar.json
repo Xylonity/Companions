@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "mfm",
+    " m "
+  ],
+  "key": {
+    "m": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "c": {
+      "item": "companions:crystallized_blood"
+    },
+    "f": {
+      "tag": "minecraft:banners"
+    }
+  },
+  "result": {
+    "item": "companions:shade_bat_altar",
+    "count": 1
+  }
+}
