@@ -2,17 +2,17 @@ package dev.xylonity.companions.client.entity.model;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.companion.ShadeBatEntity;
-import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class ShadeBatModel extends GeoModel<ShadeBatEntity> {
 
     @Override
     public ResourceLocation getModelResource(ShadeBatEntity animatable) {
+        if (animatable.isBlood()) {
+            return Companions.of("geo/shade_bat_blood.geo.json");
+        }
+
         return Companions.of("geo/shade_bat.geo.json");
     }
 
@@ -27,6 +27,10 @@ public class ShadeBatModel extends GeoModel<ShadeBatEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(ShadeBatEntity animatable) {
+        if (animatable.isBlood()) {
+            return Companions.of("animations/shade_bat_blood.animation.json");
+        }
+
         return Companions.of("animations/shade_bat.animation.json");
     }
 

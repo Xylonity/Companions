@@ -1,4 +1,5 @@
 # 1.3.0
+- Added a new companion, the shade bat. The default version consists of some small bats that do basic damage, while the blood version is a big bat that makes tackles (and applies poison) to the current target.
 - The Tesla Manager, which handles connection logic on the Tesla Network, has been rewritten, potentially fixing Tesla connection and desynchronization issues on dedicated servers
 - Now the Sacred Pontiff can have its name translated into different languages instead of being exclusively in English (previously limited by the bossbar system)
 - Armor effects now apply to any entity wearing the armor set, not just players

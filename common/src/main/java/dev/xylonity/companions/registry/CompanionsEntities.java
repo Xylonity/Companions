@@ -38,6 +38,7 @@ public class CompanionsEntities {
     public static final ResourceEntry<EntityType<ShadeSwordEntity>> SHADE_SWORD = ENTITIES.registerEntity("shade_sword", ShadeSwordEntity::new, MobCategory.CREATURE, 1.25f, 4f, List.of(EntityType.Builder::fireImmune));
     public static final ResourceEntry<EntityType<ShadeMawEntity>> SHADE_MAW = ENTITIES.registerEntity("shade_maw", ShadeMawEntity::new, MobCategory.CREATURE, 3f, 2.5f, List.of(EntityType.Builder::fireImmune));
     public static final ResourceEntry<EntityType<ShadeBatEntity>> SHADE_BAT = ENTITIES.registerEntity("shade_bat", ShadeBatEntity::new, MobCategory.CREATURE, 0.5f, 0.5f, List.of(EntityType.Builder::fireImmune));
+    public static final ResourceEntry<EntityType<ShadeBatPartEntity>> SHADE_BAT_PART = ENTITIES.registerEntity("shade_bat_part", ShadeBatPartEntity::new, MobCategory.MISC, 0.3f, 0.3f, List.of(EntityType.Builder::fireImmune, EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<MankhEntity>> MANKH = ENTITIES.registerEntity("mankh", MankhEntity::new, MobCategory.CREATURE, 1f, 2f, List.of(EntityType.Builder::fireImmune));
     public static final ResourceEntry<EntityType<CloakEntity>> CLOAK = ENTITIES.registerEntity("cloak", CloakEntity::new, MobCategory.CREATURE, 1f, 2f, List.of(EntityType.Builder::fireImmune));
 

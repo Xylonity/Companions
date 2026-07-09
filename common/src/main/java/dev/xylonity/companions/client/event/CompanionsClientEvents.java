@@ -8,8 +8,6 @@ import dev.xylonity.companions.client.gui.screen.PuppetScreen;
 import dev.xylonity.companions.client.gui.screen.SoulFurnaceScreen;
 import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
 import dev.xylonity.companions.client.projectile.renderer.*;
-import dev.xylonity.companions.client.shader.HolyTeddyAuraPostShader;
-import dev.xylonity.companions.client.shader.ShadeMawLandingPostShader;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.registry.*;
@@ -32,12 +30,6 @@ public class CompanionsClientEvents {
     private static final ResourceLocation HOLINESS_OVERLAY = Companions.of("textures/gui/holiness_bar_overlay.png");
 
     @RegisterEvent
-    public static void onRegisterPostShaders(final CustomPostShaderRegistrationEvent event) {
-        event.registerShader(ShadeMawLandingPostShader.INSTANCE);
-        event.registerShader(HolyTeddyAuraPostShader.INSTANCE);
-    }
-
-    @RegisterEvent
     public static void registerEntityRenderers(final EntityRendererRegistrationEvent event) {
         event.register(CompanionsEntities.CORNELIUS, CorneliusRenderer::new);
         event.register(CompanionsEntities.TEDDY, TeddyRenderer::new);
@@ -54,6 +46,7 @@ public class CompanionsClientEvents {
         event.register(CompanionsEntities.SHADE_SWORD, ShadeSwordRenderer::new);
         event.register(CompanionsEntities.SHADE_MAW, ShadeMawRenderer::new);
         event.register(CompanionsEntities.SHADE_BAT, ShadeBatRenderer::new);
+        event.register(CompanionsEntities.SHADE_BAT_PART, ShadeBatPartRenderer::new);
         event.register(CompanionsEntities.MANKH, MankhRenderer::new);
         event.register(CompanionsEntities.CLOAK, CloakRenderer::new);
 

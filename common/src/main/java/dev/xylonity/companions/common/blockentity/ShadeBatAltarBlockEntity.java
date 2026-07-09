@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.blockentity;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.entity.ShadeEntity;
+import dev.xylonity.companions.common.entity.companion.ShadeBatEntity;
 import dev.xylonity.companions.common.item.ShadowBellItem;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
@@ -122,7 +123,7 @@ public class ShadeBatAltarBlockEntity extends AbstractShadeAltarBlockEntity {
                             if (i % 3 == 0) sv.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), px, py, pz, 1, vx, vy, vz, 0.35);
                         }
                     }
-                }, 104
+                }, ShadeBatEntity.SPAWN_FADE_TICKS
             );
 
             if (isBloodUpgradeActive()) {
@@ -130,9 +131,8 @@ public class ShadeBatAltarBlockEntity extends AbstractShadeAltarBlockEntity {
 
                 AttributeInstance maxHealth = entity.getAttribute(Attributes.MAX_HEALTH);
                 if (maxHealth != null) {
-                    float updatedHealth = (float) (maxHealth.getBaseValue() * CompanionsConfig.SHADOW_BAT_BLOOD_MULTIPLIER);
-                    maxHealth.setBaseValue(updatedHealth);
-                    entity.setHealth(updatedHealth);
+                    maxHealth.setBaseValue(CompanionsConfig.SHADOW_BAT_BLOOD_MAX_LIFE);
+                    entity.setHealth((float) CompanionsConfig.SHADOW_BAT_BLOOD_MAX_LIFE);
                 }
 
                 AttributeInstance dmg = entity.getAttribute(Attributes.ATTACK_DAMAGE);
@@ -152,7 +152,7 @@ public class ShadeBatAltarBlockEntity extends AbstractShadeAltarBlockEntity {
             entity.setXRot(pitch);
             entity.xRotO = pitch;
 
-            entity.setInvisible(true);
+            entity.setInvisible(!entity.isBlood());
             pPlayer.level().addFreshEntity(entity);
             this.activeShadeUUID = entity.getUUID();
             return entity;

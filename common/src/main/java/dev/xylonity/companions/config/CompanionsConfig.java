@@ -381,10 +381,38 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Shadow Bat",
-            comment = "Shade Bat stats multiplier on its blood state. For example, if set to 1.2, a default damage of 10 will be 12 when the blood upgrade is active. This is only applied to Health and Attack Damage attributes.",
+            comment = "Number of Shade Bat parts spawned in the normal phase",
+            min = 1, max = 64
+    )
+    public static int SHADOW_BAT_PARTS_AMOUNT = 6;
+
+    @ConfigEntry(
+            category = "Shadow Bat",
+            comment = "Max life of each Shade Bat part",
+            min = 1.0, max = 5000.0
+    )
+    public static double SHADOW_BAT_PART_MAX_LIFE = 11.666666666666666;
+
+    @ConfigEntry(
+            category = "Shadow Bat",
+            comment = "Damage dealt by each Shade Bat part",
+            min = 0.0, max = 500.0
+    )
+    public static double SHADOW_BAT_PART_DAMAGE = 1.3333333333333333;
+
+    @ConfigEntry(
+            category = "Shadow Bat",
+            comment = "Shade Bat stats multiplier on its blood state. For example, if set to 1.2, a default damage of 10 will be 12 when the blood upgrade is active. This is only applied to the Attack Damage attribute.",
             min = 0.0, max = 10.0
     )
     public static double SHADOW_BAT_BLOOD_MULTIPLIER = 1.2;
+
+    @ConfigEntry(
+            category = "Shadow Bat",
+            comment = "Max life of the Shade Bat on its blood state",
+            min = 0d, max = 5000d
+    )
+    public static double SHADOW_BAT_BLOOD_MAX_LIFE = 180d;
 
     /**
      * SHADE MAW

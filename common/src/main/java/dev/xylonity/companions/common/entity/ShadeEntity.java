@@ -33,17 +33,28 @@ public abstract class ShadeEntity extends CompanionEntity {
     @Override
     public void remove(@NotNull RemovalReason pReason) {
         super.remove(pReason);
-        for (int i = 0; i < 25; i++) {
-            double vx = (level().random.nextDouble() - 0.5) * this.getBbWidth();
-            double vy = (level().random.nextDouble() - 0.5) * this.getBbHeight();
-            double vz = (level().random.nextDouble() - 0.5) * this.getBbWidth();
-            if (level() instanceof ServerLevel level) {
-                level.sendParticles(CompanionsParticles.SHADE_TRAIL.get(), getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
-                if (i % 3 == 0) level.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), getX(), getY(), getZ(), 1, vx, vy, vz, 0.35);
+        if (shouldSpawnDespawnParticles()) {
+            for (int i = 0; i < 25; i++) {
+                final double vx = (level().random.nextDouble() - 0.5) * this.getBbWidth();
+                final double vy = (level().random.nextDouble() - 0.5) * this.getBbHeight();
+                final double vz = (level().random.nextDouble() - 0.5) * this.getBbWidth();
+                if (level() instanceof ServerLevel level) {
+                    level.sendParticles(CompanionsParticles.SHADE_TRAIL.get(), getX(), getY(), getZ(), 1, vx, vy, vz, 0.15);
+                    if (i % 3 == 0) {
+                        level.sendParticles(CompanionsParticles.SHADE_SUMMON.get(), getX(), getY(), getZ(), 1, vx, vy, vz, 0.35);
+                    }
+
+                }
+
             }
+
         }
 
         playSound(CompanionsSounds.SHADE_DESPAWN.get());
+    }
+
+    protected boolean shouldSpawnDespawnParticles() {
+        return true;
     }
 
     @Override
@@ -85,6 +96,15 @@ public abstract class ShadeEntity extends CompanionEntity {
 
     public void setIsBlood(boolean isBlood) {
         this.entityData.set(IS_BLOOD, isBlood);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> pKey) {
+        super.onSyncedDataUpdated(pKey);
+        if (IS_BLOOD.equals(pKey)) {
+            refreshDimensions();
+        }
+
     }
 
     public int getLifetime() {
