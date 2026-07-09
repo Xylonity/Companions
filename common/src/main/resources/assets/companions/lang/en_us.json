@@ -150,7 +150,10 @@
   "block.companions.respawn_totem_block": "Respawn Totem",
   "block.companions.shade_sword_altar": "Shade Sword Altar",
   "block.companions.shade_maw_altar": "Shade Maw Altar",
+  "block.companions.shade_bat_altar": "Shade Bat Altar",
   "block.companions.frog_bonanza_block": "Frog Bonanza",
+  "block.companions.porcelain_pottery": "Porcelain Pottery",
+  "block.companions.holy_porcelain_pottery": "Holy Porcelain Pottery",
   "block.companions.eternal_fire": "Eternal Fire",
 
   "entity.companions.antlion": "Antlion",
@@ -165,6 +168,8 @@
   "entity.companions.gargoyle": "Gargoyle",
   "entity.companions.puppet": "Puppet",
   "entity.companions.puppet_glove": "Puppet Glove",
+  "entity.companions.shade_bat": "Shade Bat",
+  "entity.companions.shade_bat_part": "Shade Bat Part",
   "entity.companions.shade_maw": "Shade Maw",
   "entity.companions.shade_sword": "Shade Sword",
   "entity.companions.soul_mage": "Soul Mage",
@@ -276,7 +281,10 @@
   "tooltip.block.companions.respawn_totem_block": "Sets companion's respawn point when activated.",
   "tooltip.block.companions.shade_sword_altar": "Summons the Shade Sword. Activate using crystallized blood.",
   "tooltip.block.companions.shade_maw_altar": "Summons the Shade Maw. Activate using crystallized blood.",
+  "tooltip.block.companions.shade_bat_altar": "Summons the Shade Bat. Activate using crystallized blood.",
   "tooltip.block.companions.frog_bonanza_block": "Frog bonanza why not",
+  "tooltip.block.companions.porcelain_pottery": "A delicate porcelain vessel.",
+  "tooltip.block.companions.holy_porcelain_pottery": "A sacred vessel able to hold a creature inside.",
 
   "tooltip.icon.companions.star": "\uEA0D",
 
