@@ -20,6 +20,7 @@
 - Deleted croissant dragon spawn egg, which was obtainable through commands
 - The needle recipe now requires antlion fur
 - Now antlions are categorized as arthropods
+- Now the croissant dragon armor can be swapped
 - Added compatibility with knightlib 1.6.0
 - Added config options to specify names under which each entity would activate its reskin
 - Added a config option to modify bonanza drops on the 2 or 3 coin head rolls

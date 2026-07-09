@@ -37,6 +37,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -143,6 +144,30 @@ public class CroissantDragonEntity extends CompanionEntity {
 
     public String getArmorName() {
         return this.entityData.get(ARMOR_NAME);
+    }
+
+    private String armorNameForItem(Item item) {
+        if (item == CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get()) {
+            return "strawberry";
+        }
+        if (item == CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get()) {
+            return "vanilla";
+        }
+        if (item == CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get()) {
+            return "chocolate";
+        }
+
+        return null;
+    }
+
+    private ItemStack armorItemForName(String name) {
+        return switch (name) {
+            case "strawberry" -> new ItemStack(CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get());
+            case "vanilla" -> new ItemStack(CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get());
+            case "chocolate" -> new ItemStack(CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get());
+            default -> ItemStack.EMPTY;
+        };
+
     }
 
     @Override
@@ -331,31 +356,23 @@ public class CroissantDragonEntity extends CompanionEntity {
         }
 
         if (isTame() && !this.level().isClientSide && hand == InteractionHand.MAIN_HAND && getOwner() == player) {
-            if (getArmorName().equals("default")) {
-                if (level().isClientSide) return InteractionResult.SUCCESS;
+            final String armorName = armorNameForItem(itemstack.getItem());
+            if (armorName != null && !armorName.equals(getArmorName())) {
+                if (!getArmorName().equals("default")) {
+                    spawnAtLocation(armorItemForName(getArmorName()));
+                }
 
-                if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_STRAWBERRY.get()) {
-                    this.setArmorName("strawberry");
+                this.setArmorName(armorName);
 
-                    if (!player.getAbilities().instabuild) itemstack.shrink(1);
-
-                    return InteractionResult.SUCCESS;
-                } else if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_VANILLA.get()) {
-                    this.setArmorName("vanilla");
-
-                    if (!player.getAbilities().instabuild) itemstack.shrink(1);
-
-                    return InteractionResult.SUCCESS;
-                } else if (itemstack.getItem() == CompanionsItems.CROISSANT_DRAGON_ARMOR_CHOCOLATE.get()) {
-                    this.setArmorName("chocolate");
-
-                    if (!player.getAbilities().instabuild) itemstack.shrink(1);
-
-                    return InteractionResult.SUCCESS;
+                if (!player.getAbilities().instabuild) {
+                    itemstack.shrink(1);
                 }
 
                 this.playSound(SoundEvents.WOOL_BREAK, 0.5F, 1.0F);
+
+                return InteractionResult.SUCCESS;
             }
+
         }
 
         if (handleDefaultMainActionAndHeal(player, hand)) {
