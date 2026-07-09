@@ -41,6 +41,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -53,6 +56,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import java.util.Map;
 import java.util.Random;
 
 public class TeddyEntity extends CompanionEntity implements TraceableEntity {
@@ -81,6 +85,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private final RawAnimation HOLY_ATTACK1 = RawAnimation.begin().thenPlay("stab");
     private final RawAnimation HOLY_ATTACK2 = RawAnimation.begin().thenPlay("stab2");
     private final RawAnimation HOLY_APPLY_EFFECTS = RawAnimation.begin().thenPlay("apply_effects");
+    private final RawAnimation HOLY_RITUAL = RawAnimation.begin().thenPlay("apply_effects");
     private final RawAnimation HOLY_SUMMON_BALLS = RawAnimation.begin().thenPlay("summon_balls");
     private final RawAnimation HOLY_FLY = RawAnimation.begin().thenPlay("fly");
     private final RawAnimation HOLY_FLY_IDLE = RawAnimation.begin().thenPlay("fly_idle");
@@ -94,10 +99,15 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     private static final EntityDataAccessor<Integer> ANGEL_PHASE_COUNTER = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_ON_AIR = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> TELEPORTED = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> RITUAL_TICKS = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<ItemStack> RITUAL_ITEM = SynchedEntityData.defineId(TeddyEntity.class, EntityDataSerializers.ITEM_STACK);
 
     private static final int ANIMATION_TRANSFORM_MAX_TICKS = 200;
     private static final int ANIMATION_TRANSFORM_ANGEL_MAX_TICKS = 80;
     private static final int ANIMATION_DEAD_MAX_TICKS = 64;
+    public static final int RITUAL_MAX_TICKS = 33;
+
+    private int ritualRenderStartTick = -1;
 
     public TeddyEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -114,6 +124,35 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     public void setTeleported(boolean teleported) {
         this.entityData.set(TELEPORTED, teleported);
+    }
+
+    public int getRitualTicks() {
+        return this.entityData.get(RITUAL_TICKS);
+    }
+
+    public void setRitualTicks(int ticks) {
+        this.entityData.set(RITUAL_TICKS, ticks);
+    }
+
+    public ItemStack getRitualItem() {
+        return this.entityData.get(RITUAL_ITEM);
+    }
+
+    public void setRitualItem(ItemStack stack) {
+        this.entityData.set(RITUAL_ITEM, stack);
+    }
+
+    public float getRitualRenderAge(float partialTick) {
+        if (getRitualTicks() <= 0) {
+            ritualRenderStartTick = -1;
+            return 0f;
+        }
+
+        if (ritualRenderStartTick < 0) {
+            ritualRenderStartTick = tickCount - getRitualTicks();
+        }
+
+        return tickCount - ritualRenderStartTick + partialTick;
     }
 
     @Override
@@ -133,7 +172,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             @Override
             public void start() {
                 super.start();
-                if (getPhase() == 2) {
+                if (getPhase() == 2 || (getPhase() > 2 && getSitVariation() != 2)) {
                     double currentX = getX();
                     double currentZ = getZ();
 
@@ -142,13 +181,23 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                         double y = groundPos.getY() + 1.0;
                         teleportTo(currentX, y, currentZ);
                     }
+                    else if (getPhase() > 2) {
+                        setSitVariation(2);
+                    }
+
                 }
+
             }
+
         });
 
         this.goalSelector.addGoal(2, new TeddyAttackGoal(this, 10, 30));
         this.goalSelector.addGoal(2, new TeddyVoodooAttackGoal(this, 60, 200));
         this.goalSelector.addGoal(3, new TeddyApproachTargetGoal(this, 0.45, 0.4f, 1.25f));
+
+        this.goalSelector.addGoal(2, new HolyTeddySummonBallsGoal(this, 140, 260));
+        this.goalSelector.addGoal(2, new HolyTeddyBlessingGoal(this, 300, 500));
+        this.goalSelector.addGoal(3, new HolyTeddyAttackGoal(this, 15, 40));
 
         this.goalSelector.addGoal(3, new MutatedTeddyAttackGoal(this, 0, 15));
         this.goalSelector.addGoal(4, new MutatedTeddyFollowTargetGoal(this));
@@ -187,7 +236,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
     @Override
     public boolean hurt(DamageSource source, float amount) {
 
-        if (getPhase() == 2 && source.is(DamageTypes.IN_WALL)) return false;
+        if (getPhase() != 1 && source.is(DamageTypes.IN_WALL)) return false;
 
         boolean ret = super.hurt(source, amount);
 
@@ -229,6 +278,19 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         AttributeInstance damage = this.getAttribute(Attributes.ATTACK_DAMAGE);
         if (damage != null) {
             damage.setBaseValue(CompanionsConfig.TEDDY_MUTANT_DAMAGE);
+        }
+
+    }
+
+    private void updateHolyStats() {
+        final AttributeInstance maxHealth = this.getAttribute(Attributes.MAX_HEALTH);
+        if (maxHealth != null) {
+            maxHealth.setBaseValue(CompanionsConfig.TEDDY_HOLY_MAX_LIFE);
+        }
+
+        final AttributeInstance damage = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (damage != null) {
+            damage.setBaseValue(CompanionsConfig.TEDDY_HOLY_DAMAGE);
         }
 
     }
@@ -275,7 +337,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     @Override
     public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
-        return getPhase() != 2 && super.causeFallDamage(pFallDistance, pMultiplier, pSource);
+        return getPhase() == 1 && super.causeFallDamage(pFallDistance, pMultiplier, pSource);
     }
 
     @Override
@@ -287,13 +349,15 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         this.entityData.define(ATTACK_TYPE, 0);
         this.entityData.define(IS_ON_AIR, false);
         this.entityData.define(TELEPORTED, false);
+        this.entityData.define(RITUAL_TICKS, 0);
+        this.entityData.define(RITUAL_ITEM, ItemStack.EMPTY);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (getPhase() == 2) {
+        if (getPhase() != 1) {
             this.setNoGravity(true);
         }
 
@@ -336,10 +400,31 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                 setPhase(random.nextInt(2) + 3);
                 this.refreshDimensions();
 
+                updateHolyStats();
                 playSound(CompanionsSounds.TEDDY_TRANSFORMATION.get());
+
+                this.moveControl = new TeddyMoveControl(this);
             }
 
             setAngelPhaseCounter(getAngelPhaseCounter() + 1);
+        }
+
+        if (getRitualTicks() > 0 && !level().isClientSide) {
+            setTarget(null);
+            setNoMovement(true);
+
+            if (level() instanceof ServerLevel level && tickCount % 3 == 0) {
+                Vec3 pos = ritualItemPos();
+                level.sendParticles(ParticleTypes.ENCHANT, pos.x, pos.y + 0.4, pos.z, 2, 0.2, 0.25, 0.2, 0.1);
+            }
+
+            if (getRitualTicks() >= RITUAL_MAX_TICKS) {
+                finishRitual();
+            }
+            else {
+                setRitualTicks(getRitualTicks() + 1);
+            }
+
         }
 
         if (getPhase() == 2) {
@@ -355,6 +440,29 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             if (tickCount % 15 == 0 && ((getMainAction() == 0 && getIsOnAir()) || (getMainAction() != 0))) playSound(CompanionsSounds.MUTANT_TEDDY_FLAP_WINGS.get(), 0.4f, 1f);
         }
 
+    }
+
+    public Vec3 ritualItemPos() {
+        return position().add(Vec3.directionFromRotation(0, yBodyRot).scale(0.9)).add(0, 1.05, 0);
+    }
+
+    private void finishRitual() {
+        final ItemStack itemToFix = getRitualItem().copy();
+        final Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(itemToFix);
+        enchants.remove(Enchantments.VANISHING_CURSE);
+        EnchantmentHelper.setEnchantments(enchants, itemToFix);
+
+        final Vec3 pos = ritualItemPos();
+        final ItemEntity item = new ItemEntity(level(), pos.x, pos.y, pos.z, itemToFix);
+        item.setDeltaMovement(0, 0.15, 0);
+        level().addFreshEntity(item);
+
+        spawnAngelParticles(30);
+        playSound(SoundEvents.PLAYER_LEVELUP, 0.8f, 1.5f);
+
+        setRitualItem(ItemStack.EMPTY);
+        setRitualTicks(0);
+        setNoMovement(false);
     }
 
     private void spawnAngelParticles(int amount) {
@@ -415,7 +523,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        return getPhase() == 1 ? super.getDimensions(pPose) : EntityDimensions.scalable(1F, 2F);
+        return getPhase() == 1 ? super.getDimensions(pPose) : getPhase() == 2 ? EntityDimensions.scalable(1F, 2F) : EntityDimensions.scalable(0.9F, 1.4F);
     }
 
     @Override
@@ -485,6 +593,24 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             return InteractionResult.SUCCESS;
         }
 
+        // Vanishing curse cleansing ritual
+        if (isTame() && player == getOwner() && getPhase() > 2 && getRitualTicks() == 0 && getTarget() == null
+                && EnchantmentHelper.getEnchantments(stack).getOrDefault(Enchantments.VANISHING_CURSE, 0) > 0) {
+            if (level().isClientSide) {
+                return InteractionResult.SUCCESS;
+            }
+
+            setRitualItem(stack.copyWithCount(1));
+            if (!player.getAbilities().instabuild) {
+                stack.shrink(1);
+            }
+
+            setRitualTicks(1);
+            playSound(SoundEvents.AMETHYST_BLOCK_RESONATE, 1f, 0.8f);
+
+            return InteractionResult.SUCCESS;
+        }
+
         // Healing
         if (handleDefaultMainActionAndHeal(player, hand)) {
             return InteractionResult.SUCCESS;
@@ -501,12 +627,16 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
                 this.level().broadcastEntityEvent(this, (byte) 60);
                 this.remove(RemovalReason.KILLED);
             }
-        } else {
+            
+        }
+        else {
             if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
                 this.level().broadcastEntityEvent(this, (byte) 60);
                 this.remove(RemovalReason.KILLED);
             }
+
         }
+
     }
 
     @Override
@@ -524,6 +654,9 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         if (pKey.equals(PHASE)) {
             this.refreshDimensions();
         }
+        if (pKey.equals(RITUAL_TICKS) && getRitualTicks() == 0) {
+            ritualRenderStartTick = -1;
+        }
     }
 
     @Override
@@ -531,15 +664,25 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
         super.readAdditionalSaveData(pCompound);
         if (pCompound.contains("Phase")) {
             this.setPhase(pCompound.getInt("Phase"));
-            if (getPhase() == 2) {
+            if (getPhase() != 1) {
                 this.moveControl = new TeddyMoveControl(this);
             }
+        }
+        if (pCompound.contains("RitualTicks")) {
+            this.setRitualTicks(pCompound.getInt("RitualTicks"));
+        }
+        if (pCompound.contains("RitualItem")) {
+            this.setRitualItem(ItemStack.of(pCompound.getCompound("RitualItem")));
         }
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
+        pCompound.putInt("RitualTicks", getRitualTicks());
+        if (!getRitualItem().isEmpty()) {
+            pCompound.put("RitualItem", getRitualItem().save(new CompoundTag()));
+        }
         pCompound.putInt("Phase", getPhase());
         if (this.getSecondPhaseCounter() != 0) {
             pCompound.putInt("Phase", 2);
@@ -556,7 +699,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     @Override
     protected int sitAnimationsAmount() {
-        return getPhase() == 1 ? 3 : 2;
+        return getPhase() == 2 ? 2 : 3;
     }
 
     @Override
@@ -615,9 +758,11 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
         }
         else {
-            if (this.getMainAction() == 0) {
-                final boolean secondSit = level().random.nextBoolean();
-                final RawAnimation sit = getSitVariation() == 0 ? HOLY_SIT1 : secondSit ? HOLY_SIT2 : HOLY_SIT3;
+            if (getRitualTicks() > 0) {
+                event.getController().setAnimation(HOLY_RITUAL);
+            }
+            else if (this.getMainAction() == 0) {
+                final RawAnimation sit = getSitVariation() == 0 ? HOLY_SIT1 : getSitVariation() == 1 ? HOLY_SIT2 : HOLY_SIT3;
                 event.getController().setAnimation(sit);
             }
             else if (getAttackType() == 1) {
@@ -632,7 +777,7 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
             else if (getAttackType() == 4) {
                 event.setAnimation(HOLY_SUMMON_BALLS);
             }
-            else if (event.isMoving()) {
+            else if (event.isMoving() && event.getLimbSwingAmount() > 0.35f) {
                 event.getController().setAnimation(HOLY_FLY);
             }
             else {
