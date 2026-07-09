@@ -20,6 +20,15 @@ public class TeddyRenderer extends GeoEntityRenderer<TeddyEntity> {
     }
 
     @Override
+    public void render(TeddyEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        final boolean hiddenByAngelTransform = entity.getPhase() == 1 && entity.getAngelPhaseCounter() > 0
+                && (entity.getAngelPhaseCounter() + partialTick) / 20f >= 2.63f;
+        this.shadowRadius = hiddenByAngelTransform ? 0f : 0.6f;
+
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
+
+    @Override
     protected float getDeathMaxRotation(TeddyEntity animatable) {
         return animatable.getPhase() == 2 ? 0F : super.getDeathMaxRotation(animatable);
     }
