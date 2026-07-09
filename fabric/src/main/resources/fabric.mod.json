@@ -34,7 +34,7 @@
         "fabric": "*",
         "minecraft": "~${minecraft_version}",
         "java": ">=17",
-        "knightlib": "*"
+        "knightlib": ">=1.6.0"
     },
     "suggests": {
         "another-mod": "*"
