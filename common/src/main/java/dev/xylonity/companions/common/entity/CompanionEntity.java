@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.entity;
 
+import dev.xylonity.companions.common.entity.ai.generic.CompanionsNearestHostileTargetGoal;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.knightlib.registry.KnightLibItems;
 import dev.xylonity.knightlib.registry.KnightLibParticles;
@@ -50,6 +51,7 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     protected CompanionEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.noCulling = true;
+        this.targetSelector.addGoal(3, new CompanionsNearestHostileTargetGoal(this));
     }
 
     @Override

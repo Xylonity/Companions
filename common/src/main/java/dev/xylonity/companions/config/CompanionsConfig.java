@@ -47,6 +47,12 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "General",
+            comment = "Whether tamed companions proactively attack nearby hostile mobs without the owner having to attack or be attacked first."
+    )
+    public static boolean COMPANIONS_ATTACK_HOSTILES_PROACTIVELY = false;
+
+    @ConfigEntry(
+            category = "General",
             comment = "The maximum distance (in blocks) at which companions will teleport to their owner (in a valid position).",
             min = 0, max = 1000
     )
