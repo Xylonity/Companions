@@ -101,6 +101,7 @@ public class CompanionsClientEvents {
         event.register(CompanionsEntities.ANTLION_SAND_PROJECTILE, AntlionSandProjectileRenderer::new);
         event.register(CompanionsEntities.BLOOD_SLASH_PROJECTILE, BloodSlashRenderer::new);
         event.register(CompanionsEntities.FIRE_GEISER_PROJECTILE, FireGeiserProjectileRenderer::new);
+        event.register(CompanionsEntities.BONANZA_ANVIL, BonanzaAnvilRenderer::new);
 
         event.register(CompanionsEntities.GENERIC_TRIGGER_PROJECTILE, GenericTriggerProjectileRenderer::new);
         event.register(CompanionsEntities.CAKE_CREAM_TRIGGER_PROJECTILE, CakeCreamTriggerProjectileRenderer::new);

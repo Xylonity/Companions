@@ -1,9 +1,9 @@
 package dev.xylonity.companions.common.blockentity;
 
+import dev.xylonity.companions.common.entity.BonanzaAnvilEntity;
 import dev.xylonity.companions.common.entity.HostileEntity;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
-import dev.xylonity.companions.mixin.FallingBlockEntityAccessor;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
@@ -20,7 +20,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Creeper;
@@ -30,7 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -303,11 +301,9 @@ public class FrogBonanzaBlockEntity extends BlockEntity implements GeoBlockEntit
             Vec3 center = Vec3.atCenterOf(getBlockPos());
             Player player = serverLevel.getNearestPlayer(center.x, center.y, center.z, 25.0, false);
             if (player != null) {
-                final FallingBlockEntity anvil = FallingBlockEntityAccessor._new(serverLevel, player.getX(), player.getY() + 20, player.getZ(), Blocks.ANVIL.defaultBlockState());
+                final BonanzaAnvilEntity anvil = BonanzaAnvilEntity.create(serverLevel, player.getX(), player.getY() + 20, player.getZ(), player.getY());
 
-                anvil.time = 1;
                 anvil.disableDrop();
-                anvil.setHurtsEntities(2.0f, 40);
                 serverLevel.addFreshEntity(anvil);
             }
 

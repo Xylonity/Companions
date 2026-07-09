@@ -1100,4 +1100,11 @@ public final class CompanionsConfig {
     )
     public static String BONANZA_CURRENCY_TYPES = "companions:copper_coin, 1; companions:nether_coin, 2; companions:end_coin, 4";
 
+    @ConfigEntry(
+            category = "Bonanza",
+            comment = "Maximum damage the falling anvil from 2 skull heads can deal to a player.",
+            min = 0d, max = 1000d
+    )
+    public static double BONANZA_ANVIL_MAX_DAMAGE = 20d;
+
 }

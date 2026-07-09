@@ -1,6 +1,7 @@
 package dev.xylonity.companions.registry;
 
 import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.common.entity.BonanzaAnvilEntity;
 import dev.xylonity.companions.common.entity.companion.*;
 import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.projectile.*;
@@ -78,6 +79,7 @@ public class CompanionsEntities {
     public static final ResourceEntry<EntityType<NeedleProjectile>> NEEDLE_PROJECTILE = ENTITIES.registerEntity("needle_projectile", NeedleProjectile::new, MobCategory.MISC, 1.2f, 0.4f, List.of(EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<BlueOrbProjectile>> BLUE_ORB_PROJECTILE = ENTITIES.registerEntity("blue_orb_projectile", BlueOrbProjectile::new, MobCategory.MISC, 0.4f, 0.4f, List.of(EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<HolyRingProjectile>> HOLY_RING_PROJECTILE = ENTITIES.registerEntity("holy_ring_projectile", HolyRingProjectile::new, MobCategory.MISC, 0.5f, 0.2f, List.of(EntityType.Builder::noSummon));
+    public static final ResourceEntry<EntityType<BonanzaAnvilEntity>> BONANZA_ANVIL = ENTITIES.registerEntity("bonanza_anvil", BonanzaAnvilEntity::new, MobCategory.MISC, 0.98f, 0.98f, List.of(EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<LaserTriggerProjectile>> LASER_PROJECTILE = ENTITIES.registerEntity("laser", LaserTriggerProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<LaserRingProjectile>> LASER_RING = ENTITIES.registerEntity("laser_ring", LaserRingProjectile::new, MobCategory.MISC, 0.1f, 0.1f, List.of(EntityType.Builder::noSummon));
     public static final ResourceEntry<EntityType<FrogHealProjectile>> FROG_HEAL_PROJECTILE = ENTITIES.registerEntity("frog_heal_projectile", FrogHealProjectile::new, MobCategory.MISC, 0.4f, 0.4f, List.of(EntityType.Builder::noSummon));
