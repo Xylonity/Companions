@@ -1,24 +1,30 @@
 package dev.xylonity.companions.common.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 public class EternalFireBlock extends BaseFireBlock {
-    public static final MapCodec<EternalFireBlock> CODEC = simpleCodec(EternalFireBlock::new);
+
+    public static final com.mojang.serialization.MapCodec<EternalFireBlock> CODEC = simpleCodec(EternalFireBlock::new);
 
     public EternalFireBlock(Properties properties) {
         super(properties, 2f);
+    }
+
+    @Override
+    protected @NotNull com.mojang.serialization.MapCodec<? extends BaseFireBlock> codec() {
+        return CODEC;
     }
 
     public @NotNull BlockState updateShape(@NotNull BlockState state, @NotNull Direction direction, @NotNull BlockState neighborState, @NotNull LevelAccessor level, @NotNull BlockPos pos, @NotNull BlockPos neighborPos) {
@@ -26,16 +32,13 @@ public class EternalFireBlock extends BaseFireBlock {
     }
 
     public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader level, @NotNull BlockPos pos) {
-        return true;
+        BlockPos down = pos.below();
+        BlockState belowState = level.getBlockState(down);
+        return belowState.isFaceSturdy(level, down, Direction.UP);
     }
 
     protected boolean canBurn(@NotNull BlockState state) {
         return true;
-    }
-
-    @Override
-    protected MapCodec<? extends BaseFireBlock> codec() {
-        return CODEC;
     }
 
     @Override

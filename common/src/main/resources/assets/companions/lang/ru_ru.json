@@ -66,7 +66,7 @@
 
   "respawn_totem.companions.charges_remaining": "\uEA11 У тотема возрождения осталось %1$d зарядов.",
 
-  "item.companions.saint_klimt_music_disc.desc": "Solas Composer - Angel of Gertrude",
+  "jukebox_song.companions.saint_klimt": "Solas Composer - Angel of Gertrude",
 
   "item.companions.netherite_chains": "Незеритовые цепи",
   "item.companions.big_bread": "Большой хлеб",
@@ -161,9 +161,8 @@
   "entity.companions.soul_mage": "Маг душ",
   "entity.companions.teddy": "Плюшевый мишка",
   "entity.companions.mutated_teddy": "Мутировавший плюшевый мишка",
-  "entity.companions.sacred_pontiff_invisible": "Sacred Pontiff Invisible",
-  "entity.companions.sacred_pontiff": "Sacred Pontiff",
-  "entity.companions.his_holiness": "His Holiness",
+  "entity.companions.sacred_pontiff": "Верховный Понтифик",
+  "entity.companions.his_holiness": "Его Святейшество",
   "entity.companions.bubble_frog": "Пузырьковая лягушка",
   "entity.companions.ember_pole": "Тлеющий головастик",
   "entity.companions.ender_frog": "Эндер-лягушка",

@@ -1,17 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "c c",
-    " c ",
-    " c "
+    "cxc"
   ],
   "key": {
     "c": {
       "item": "companions:old_cloth"
+    },
+    "x": {
+      "item": "minecraft:netherite_chestplate"
     }
   },
   "result": {
-    "count": 1,
-    "id": "companions:holy_robe_coat"
+    "id": "companions:holy_robe_coat",
+    "count": 1
   }
 }

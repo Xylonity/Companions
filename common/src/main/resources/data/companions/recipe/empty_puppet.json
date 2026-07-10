@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "count": 1,
-    "id": "companions:empty_puppet_block"
+    "id": "companions:empty_puppet_block",
+    "count": 1
   }
 }

@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "count": 1,
-    "id": "companions:plasma_lamp_block"
+    "id": "companions:plasma_lamp_block",
+    "count": 1
   }
 }

@@ -1,17 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "lll",
-    "lll",
+    " i ",
+    "lxl",
     "l l"
   ],
   "key": {
     "l": {
       "item": "minecraft:leather"
+    },
+    "x": {
+      "item": "minecraft:diamond_leggings"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
     }
   },
   "result": {
-    "count": 1,
-    "id": "companions:mage_leggings"
+    "id": "companions:mage_leggings",
+    "count": 1
   }
 }

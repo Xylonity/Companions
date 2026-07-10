@@ -44,6 +44,10 @@ dependencies {
 
     implementation("dev.xylonity.knightlib:knightlib-common-${minecraft_version}:${knightlib_version}")
 
+    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:4.9"
+
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 }

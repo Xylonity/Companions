@@ -1,10 +1,10 @@
 package dev.xylonity.companions.common.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -17,23 +17,23 @@ public class TooltipArmorItem extends ArmorItem {
 
     private String tooltipName;
 
-    public TooltipArmorItem(Holder<ArmorMaterial> armorMaterial, Type type, Properties properties) {
+    public TooltipArmorItem(net.minecraft.core.Holder<ArmorMaterial> armorMaterial, Type type, Properties properties) {
         super(armorMaterial, type, properties);
         this.tooltipName = "";
     }
 
-    public TooltipArmorItem(Holder<ArmorMaterial> armorMaterial, Type type, Properties properties, String tooltipName) {
+    public TooltipArmorItem(net.minecraft.core.Holder<ArmorMaterial> armorMaterial, Type type, Properties properties, String tooltipName) {
         this(armorMaterial, type, properties);
         this.tooltipName = tooltipName;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack itemStack, @NotNull Item.TooltipContext level, @NotNull List<Component> components, @NotNull TooltipFlag flag) {
         if (!tooltipName().isEmpty() && !tooltipName().isBlank()) {
-            tooltipComponents.add(Component.translatable("tooltip.item.companions." + tooltipName()).withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
+            components.add(Component.translatable("tooltip.item.companions." + tooltipName()).withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
         }
 
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHoverText(itemStack, level, components, flag);
     }
 
     protected String tooltipName() {

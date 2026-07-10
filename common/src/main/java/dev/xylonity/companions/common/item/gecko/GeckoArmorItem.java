@@ -1,0 +1,57 @@
+package dev.xylonity.companions.common.item.gecko;
+
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public abstract class GeckoArmorItem extends ArmorItem implements GeoItem {
+
+    private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+
+    protected final String resourceKey;
+
+    public GeckoArmorItem(net.minecraft.core.Holder<ArmorMaterial> material, Type type, Properties properties, String resourceKey) {
+        super(material, type, properties);
+        this.resourceKey = resourceKey;
+        SingletonGeoAnimatable.registerSyncedAnimatable(this);
+    }
+
+    protected abstract Supplier<Object> createGeckoRenderer();
+
+    @Override
+    public void createGeoRenderer(Consumer<software.bernie.geckolib.animatable.client.GeoRenderProvider> consumer) {
+        consumer.accept(new software.bernie.geckolib.animatable.client.GeoRenderProvider() {
+
+            private software.bernie.geckolib.renderer.GeoArmorRenderer<?> renderer;
+
+            @Override
+            public <T extends net.minecraft.world.entity.LivingEntity> net.minecraft.client.model.HumanoidModel<?> getGeoArmorRenderer(T livingEntity, net.minecraft.world.item.ItemStack itemStack, net.minecraft.world.entity.EquipmentSlot equipmentSlot, net.minecraft.client.model.HumanoidModel<T> original) {
+                if (this.renderer == null)
+                    this.renderer = (software.bernie.geckolib.renderer.GeoArmorRenderer<?>) createGeckoRenderer().get();
+
+                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+
+                return this.renderer;
+            }
+
+        });
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        ;;
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
+
+}

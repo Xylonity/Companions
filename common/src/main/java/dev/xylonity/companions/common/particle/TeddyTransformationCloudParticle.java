@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.Random;
+
 public class TeddyTransformationCloudParticle extends TextureSheetParticle {
     private final SpriteSet spritesset;
     private static final Quaternionf QUATERNION = new Quaternionf(0F, +0.7F, -0.7F, 0F);

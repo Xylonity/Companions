@@ -1,0 +1,72 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "gui_light": "front",
+  "texture_size": [
+    64,
+    32
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        -6.75,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        0,
+        -6.75,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        -10,
+        0,
+        -13
+      ],
+      "translation": [
+        0,
+        -5.75,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -10,
+        0,
+        -13
+      ],
+      "translation": [
+        0,
+        -5.75,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  },
+  "textures": {
+    "particle": "companions:item/crystallized_blood_axe"
+  }
+}

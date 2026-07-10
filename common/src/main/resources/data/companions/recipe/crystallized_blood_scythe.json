@@ -11,14 +11,14 @@
       "item": "companions:mutant_flesh"
     },
     {
-      "item": "minecraft:netherite_hoe"
+      "item": "minecraft:netherite_pickaxe"
     },
     {
       "item": "companions:crystallized_blood"
     }
   ],
   "result": {
-    "count": 1,
-    "id": "companions:crystallized_blood_scythe"
+    "id": "companions:crystallized_blood_scythe",
+    "count": 1
   }
 }

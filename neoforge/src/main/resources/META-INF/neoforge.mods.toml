@@ -14,8 +14,6 @@ authors = "${mod_author}" #optional
 description = '''${description}''' #mandatory (Supports multiline text)
 [[mixins]]
 config = "${mod_id}.mixins.json"
-[[mixins]]
-config = "${mod_id}.neoforge.mixins.json"
 [[dependencies.${mod_id}]] #optional
 modId = "neoforge" #mandatory
 type="required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
@@ -31,7 +29,7 @@ side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "knightlib"
 type="required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[1.5.0,)"
+versionRange = "[1.6.0,)"
 ordering = "NONE"
 side = "BOTH"
 

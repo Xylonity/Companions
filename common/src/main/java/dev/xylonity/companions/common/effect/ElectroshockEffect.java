@@ -17,4 +17,9 @@ public class ElectroshockEffect extends MobEffect {
         return true;
     }
 
+    @Override
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+        return true;
+    }
+
 }

@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:4.7.6"
+    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:4.9"
 
     implementation "dev.xylonity.knightlib:knightlib-neoforge-${minecraft_version}:${knightlib_version}"
 

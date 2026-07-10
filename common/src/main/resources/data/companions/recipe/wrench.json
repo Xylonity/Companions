@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "count": 1,
-    "id": "companions:wrench"
+    "id": "companions:wrench",
+    "count": 1
   }
 }

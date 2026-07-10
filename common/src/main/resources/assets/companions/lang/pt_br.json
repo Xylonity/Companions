@@ -66,7 +66,7 @@
 
   "respawn_totem.companions.charges_remaining": "\uEA11 %1$d cargas restantes para o totem de ressurreição.",
 
-  "item.companions.saint_klimt_music_disc.desc": "Solas Composer - Angel of Gertrude",
+  "jukebox_song.companions.saint_klimt": "Solas Composer - Angel of Gertrude",
 
   "item.companions.netherite_chains": "Corrente de Netherite",
   "item.companions.big_bread": "Pão Grandão",
@@ -161,9 +161,8 @@
   "entity.companions.soul_mage": "Mago Espiritual",
   "entity.companions.teddy": "Ursinho",
   "entity.companions.mutated_teddy": "Ursinho Mutante",
-  "entity.companions.sacred_pontiff_invisible": "Sacred Pontiff Invisible",
-  "entity.companions.sacred_pontiff": "Sacred Pontiff",
-  "entity.companions.his_holiness": "His Holiness",
+  "entity.companions.sacred_pontiff": "Pontífice Sagrado",
+  "entity.companions.his_holiness": "Sua Santidade",
   "entity.companions.bubble_frog": "Sapo de Bolhas",
   "entity.companions.ember_pole": "Girino-Brasa",
   "entity.companions.ender_frog": "Sapo do Fim",

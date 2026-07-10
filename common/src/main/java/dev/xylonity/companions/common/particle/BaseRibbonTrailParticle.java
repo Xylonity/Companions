@@ -1,15 +1,17 @@
 package dev.xylonity.companions.common.particle;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.knightlib.client.particle.AbstractRibbonTrailParticle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
+import org.jetbrains.annotations.Nullable;
+
 public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, "textures/particle/trail.png");
+    private static final ResourceLocation TEXTURE = Companions.of("textures/particle/trail.png");
 
     protected final float radius;
     protected final float height;
@@ -67,6 +69,7 @@ public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
         return getTarget() != null ? getTarget().position().add(0, getTarget().getBbHeight() * 0.5, 0) : new Vec3(x, y, z);
     }
 
+    @Nullable
     private Entity getTarget() {
         return targetId == -1 ? null : level.getEntity(targetId);
     }

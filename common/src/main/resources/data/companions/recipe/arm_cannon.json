@@ -17,7 +17,7 @@
     }
   },
   "result": {
-    "count": 1,
-    "id": "companions:cannon_arm"
+    "id": "companions:cannon_arm",
+    "count": 1
   }
 }

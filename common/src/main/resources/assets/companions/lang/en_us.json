@@ -43,6 +43,10 @@
   "shadow_bell.companions.client_message.altar_saved": "Altar linked successfully.",
   "shadow_bell.companions.client_message.altar_empty": "The current altar in empty.",
 
+  "tooltip.item.companions.holy_porcelain_pottery.stored": "Contains: %s",
+  "holy_porcelain_pottery.companions.client_message.blacklisted": "This entity cannot be stored inside the pottery.",
+  "holy_porcelain_pottery.companions.client_message.too_big": "This entity is too big to fit inside the pottery.",
+
   "hostile_puppet_glove.companions.client_message.game_start": "You're going to start playing rock, paper, scissors.",
   "hostile_puppet_glove.companions.client_message.wrong_item": "You need rock, paper, or scissors.",
   "hostile_puppet_glove.companions.client_message.draw": "Draw!",
@@ -71,7 +75,7 @@
   "effect.companions.phantom": "Phantom",
   "effect.companions.voodoo": "Voodoo",
 
-  "item.companions.saint_klimt_music_disc.desc": "Solas Composer - Angel of Gertrude",
+  "jukebox_song.companions.saint_klimt": "Solas Composer - Angel of Gertrude",
 
   "item.companions.netherite_chains": "Netherite Chains",
   "item.companions.big_bread": "Big Bread",
@@ -146,10 +150,14 @@
   "block.companions.respawn_totem_block": "Respawn Totem",
   "block.companions.shade_sword_altar": "Shade Sword Altar",
   "block.companions.shade_maw_altar": "Shade Maw Altar",
+  "block.companions.shade_bat_altar": "Shade Bat Altar",
   "block.companions.frog_bonanza_block": "Frog Bonanza",
+  "block.companions.porcelain_pottery": "Porcelain Pottery",
+  "block.companions.holy_porcelain_pottery": "Holy Porcelain Pottery",
   "block.companions.eternal_fire": "Eternal Fire",
 
   "entity.companions.antlion": "Antlion",
+  "entity.companions.bonanza_anvil": "Anvil",
   "entity.companions.cloak": "Cloak",
   "entity.companions.cornelius": "Cornelius Croak",
   "entity.companions.croissant_dragon": "Croissant Dragon",
@@ -161,12 +169,13 @@
   "entity.companions.gargoyle": "Gargoyle",
   "entity.companions.puppet": "Puppet",
   "entity.companions.puppet_glove": "Puppet Glove",
+  "entity.companions.shade_bat": "Shade Bat",
+  "entity.companions.shade_bat_part": "Shade Bat Part",
   "entity.companions.shade_maw": "Shade Maw",
   "entity.companions.shade_sword": "Shade Sword",
   "entity.companions.soul_mage": "Soul Mage",
   "entity.companions.teddy": "Teddy",
   "entity.companions.mutated_teddy": "Mutated Teddy",
-  "entity.companions.sacred_pontiff_invisible": "Sacred Pontiff Invisible",
   "entity.companions.sacred_pontiff": "Sacred Pontiff",
   "entity.companions.his_holiness": "His Holiness",
   "entity.companions.bubble_frog": "Bubble Frog",
@@ -273,7 +282,10 @@
   "tooltip.block.companions.respawn_totem_block": "Sets companion's respawn point when activated.",
   "tooltip.block.companions.shade_sword_altar": "Summons the Shade Sword. Activate using crystallized blood.",
   "tooltip.block.companions.shade_maw_altar": "Summons the Shade Maw. Activate using crystallized blood.",
+  "tooltip.block.companions.shade_bat_altar": "Summons the Shade Bat. Activate using crystallized blood.",
   "tooltip.block.companions.frog_bonanza_block": "Frog bonanza why not",
+  "tooltip.block.companions.porcelain_pottery": "A delicate porcelain vessel.",
+  "tooltip.block.companions.holy_porcelain_pottery": "A sacred vessel able to hold a creature inside.",
 
   "tooltip.icon.companions.star": "\uEA0D",
 
@@ -286,5 +298,6 @@
   "jei.companions.puppet_interaction.title": "Create Puppet",
   "jei.companions.croissant_egg_interaction.title": "Spawn Croissant Dragon",
   "jei.companions.croissant_dragon_armor_interaction.title": "Croissant Dragon Armor",
-  "jei.companions.antlion_interaction.title": "Cycle Antlion state"
+  "jei.companions.antlion_interaction.title": "Cycle Antlion state",
+  "jei.companions.frog_bonanza_interaction.title": "Frog Bonanza"
 }

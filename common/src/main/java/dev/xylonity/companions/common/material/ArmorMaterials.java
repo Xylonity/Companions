@@ -1,52 +1,47 @@
 package dev.xylonity.companions.common.material;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.knightlib.api.armor.KnightLibArmorMaterial;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
-
-import java.util.EnumMap;
-import java.util.List;
 
 public final class ArmorMaterials {
 
-    public static void init() { ;; }
+    public static void init() {
+        ;;
+    }
 
-    public static final Holder<ArmorMaterial> MAGE = register("mage", CompanionsConfig.MAGE_SET_STATS, Items.DIAMOND, SoundEvents.ARMOR_EQUIP_DIAMOND);
-    public static final Holder<ArmorMaterial> HOLY_ROBE = register("holy_robe", CompanionsConfig.HOLY_ROBE_SET_STATS, Items.DIAMOND, SoundEvents.ARMOR_EQUIP_DIAMOND);
-    public static final Holder<ArmorMaterial> CRYSTALLIZED_BLOOD = register("crystallized_blood", CompanionsConfig.CRYSTALLIZED_BLOOD_SET_STATS, Items.DIAMOND, SoundEvents.ARMOR_EQUIP_DIAMOND);
+    public static final KnightLibArmorMaterial MAGE_STATS = fromConfig("mage", CompanionsConfig.MAGE_SET_STATS);
+    public static final KnightLibArmorMaterial HOLY_ROBE_STATS = fromConfig("holy_robe", CompanionsConfig.HOLY_ROBE_SET_STATS);
+    public static final KnightLibArmorMaterial CRYSTALLIZED_BLOOD_STATS = fromConfig("crystallized_blood", CompanionsConfig.CRYSTALLIZED_BLOOD_SET_STATS);
 
-    private static Holder<ArmorMaterial> register(String name, String entry, ItemLike repairItem, Holder<SoundEvent> equipSound) {
-        String[] parts = entry.trim().split("\\s*,\\s*");
+    public static final Holder<ArmorMaterial> MAGE = Holder.direct(MAGE_STATS.get());
+    public static final Holder<ArmorMaterial> HOLY_ROBE = Holder.direct(HOLY_ROBE_STATS.get());
+    public static final Holder<ArmorMaterial> CRYSTALLIZED_BLOOD = Holder.direct(CRYSTALLIZED_BLOOD_STATS.get());
 
+    private static KnightLibArmorMaterial fromConfig(String name, String configEntry) {
+        final String[] parts = configEntry.trim().split("\\s*,\\s*");
         if (parts.length != 7) {
-            throw new IllegalArgumentException("[Companions!] Invalid armor stats: " + entry);
+            throw new IllegalArgumentException("[Companions] Invalid armor stats: " + configEntry);
         }
 
-        EnumMap<ArmorItem.Type, Integer> defense = new EnumMap<>(ArmorItem.Type.class);
-        defense.put(ArmorItem.Type.HELMET, Integer.parseInt(parts[0]));
-        defense.put(ArmorItem.Type.CHESTPLATE, Integer.parseInt(parts[1]));
-        defense.put(ArmorItem.Type.LEGGINGS, Integer.parseInt(parts[2]));
-        defense.put(ArmorItem.Type.BOOTS, Integer.parseInt(parts[3]));
-
-        float toughness = Float.parseFloat(parts[4]);
-        float knockback = Float.parseFloat(parts[5]);
-
-        return CompanionsCommon.COMMON_PLATFORM.registerArmorMaterial(name,
-                () -> new ArmorMaterial(
-                        defense, 20, equipSound, () -> Ingredient.of(repairItem),
-                        List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(CompanionsCommon.MOD_ID, name))),
-                        toughness, knockback
+        return KnightLibArmorMaterial.builder(name, Companions.MOD_ID)
+                .defense(
+                        Integer.parseInt(parts[0]),
+                        Integer.parseInt(parts[1]),
+                        Integer.parseInt(parts[2]),
+                        Integer.parseInt(parts[3])
                 )
-        );
-
+                .toughness(Float.parseFloat(parts[4]))
+                .knockbackResistance(Float.parseFloat(parts[5]))
+                .durabilityMultiplier(Integer.parseInt(parts[6]))
+                .enchantmentValue(20)
+                .equipSound(SoundEvents.ARMOR_EQUIP_DIAMOND)
+                .repairItem(Items.DIAMOND)
+                .build();
     }
 
 }

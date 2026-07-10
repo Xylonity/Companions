@@ -3,14 +3,23 @@
   "minVersion": "0.8",
   "package": "dev.xylonity.companions.mixin",
   "refmap": "${mod_id}.refmap.json",
-  "compatibilityLevel": "JAVA_18",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "FallingBlockEntityAccessor"
+    "FallingBlockEntityAccessor",
+    "IllagerGolemRaidMixin",
+    "LevelAccessor",
+    "LivingEntityMixin",
+    "MobMixin",
+    "PlayerInteractOnMixin",
+    "ProjectileAccessor",
+    "SmithingTrimRecipeMixin"
   ],
   "client": [
-    "IllagerGolemRaidMixin"
+    "RenderStateShardAccessor",
+    "RenderTypeAccessor"
   ],
-  "server": [],
+  "server": [
+  ],
   "injectors": {
     "defaultRequire": 1
   }

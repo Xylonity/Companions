@@ -1,26 +1,29 @@
 package dev.xylonity.companions.registry;
 
-import dev.xylonity.companions.CompanionsCommon;
+import dev.xylonity.companions.Companions;
 import dev.xylonity.companions.common.effect.ElectroshockEffect;
 import dev.xylonity.companions.common.effect.FireMarkEffect;
 import dev.xylonity.companions.common.effect.PhantomEffect;
 import dev.xylonity.companions.common.effect.VoodooEffect;
-import net.minecraft.core.Holder;
+import dev.xylonity.knightlib.api.registrar.ResourceDispatcher;
+import dev.xylonity.knightlib.api.registrar.ResourceEntry;
+import dev.xylonity.knightlib.api.registrar.ResourceRegistry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 
 import java.util.function.Supplier;
 
 public class CompanionsEffects {
 
-    public static void init() { ;; }
+    public static final ResourceRegistry<MobEffect> EFFECTS = ResourceDispatcher.create(BuiltInRegistries.MOB_EFFECT, Companions.MOD_ID);
 
-    public static final Holder<MobEffect> FIRE_MARK = registerEffect("fire_mark", FireMarkEffect::new);
-    public static final Holder<MobEffect> ELECTROSHOCK = registerEffect("electroshock", ElectroshockEffect::new);
-    public static final Holder<MobEffect> VOODOO = registerEffect("voodoo", VoodooEffect::new);
-    public static final Holder<MobEffect> PHANTOM = registerEffect("phantom", PhantomEffect::new);
+    public static final ResourceEntry<MobEffect> FIRE_MARK = EFFECTS.register("fire_mark", FireMarkEffect::new);
+    public static final ResourceEntry<MobEffect> ELECTROSHOCK = EFFECTS.register("electroshock", ElectroshockEffect::new);
+    public static final ResourceEntry<MobEffect> VOODOO = EFFECTS.register("voodoo", VoodooEffect::new);
+    public static final ResourceEntry<MobEffect> PHANTOM = EFFECTS.register("phantom", PhantomEffect::new);
 
-    private static <T extends MobEffect> Holder<T> registerEffect(String id, Supplier<T> effect) {
-        return CompanionsCommon.COMMON_PLATFORM.registerEffect(id, effect);
+    public static net.minecraft.core.Holder<MobEffect> holder(ResourceEntry<MobEffect> entry) {
+        return BuiltInRegistries.MOB_EFFECT.wrapAsHolder(entry.get());
     }
 
 }

@@ -7,14 +7,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.pathfinder.*;
 import net.minecraft.world.level.PathNavigationRegion;
-import net.minecraft.world.level.pathfinder.Node;
-import net.minecraft.world.level.pathfinder.NodeEvaluator;
-import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +25,7 @@ public class BonusPathFinder extends PathFinder {
         super(processor, maxVisitedNodes);
     }
 
+    @Nullable
     @Override
     public Path findPath(@NotNull PathNavigationRegion region, @NotNull Mob mob, @NotNull Set<BlockPos> targetPositions, float maxRange, int accuracy, float searchDepthMultiplier) {
         Path path = super.findPath(region, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier);

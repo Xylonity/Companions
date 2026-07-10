@@ -1,48 +1,47 @@
 package dev.xylonity.companions.common.effect;
 
-import dev.xylonity.companions.CompanionsCommon;
-import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import dev.xylonity.companions.common.entity.projectile.FireMarkProjectile;
+import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsEffects;
+import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.projectile.Projectile;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public class FireMarkEffect extends MobEffect {
-    private static final Map<UUID, Projectile> FIRE_MARK_PROJECTILES = new ConcurrentHashMap<>();
 
     public FireMarkEffect() {
         super(MobEffectCategory.HARMFUL, 0x303030);
     }
 
     @Override
-    public void onEffectAdded(LivingEntity entity, int amplifier) {
-        Projectile fireMark = (Projectile) CompanionsCommon.COMMON_PLATFORM.getFireMarkProjectile().create(entity.level());
+    public void onEffectAdded(@NotNull LivingEntity entity, int amplifier) {
+        super.onEffectAdded(entity, amplifier);
+        final FireMarkProjectile fireMark = CompanionsEntities.FIRE_MARK_PROJECTILE.get().create(entity.level());
         if (fireMark != null) {
-            fireMark.moveTo(entity.getX(), entity.getY(), entity.getZ(), entity.getYRot(), entity.getXRot());
+            fireMark.moveTo(entity.getX(), entity.getY(), entity.getZ());
             fireMark.setOwner(entity);
             entity.level().addFreshEntity(fireMark);
-            FIRE_MARK_PROJECTILES.put(entity.getUUID(), fireMark);
         }
 
-        super.onEffectAdded(entity, amplifier);
     }
 
     @Override
-    public void onMobRemoved(LivingEntity entity, int amplifier, @Nullable Entity.RemovalReason reason) {
-        Projectile fireMark = FIRE_MARK_PROJECTILES.remove(entity.getUUID());
-        if (fireMark != null && !fireMark.isRemoved()) {
-            fireMark.remove(Entity.RemovalReason.DISCARDED);
+    public boolean applyEffectTick(@NotNull LivingEntity entity, int i) {
+        if (entity.isOnFire()) {
+            entity.removeEffect(CompanionsEffects.holder(CompanionsEffects.FIRE_MARK));
+            final Level.ExplosionInteraction interaction = CompanionsConfig.SPELLS_GRIEF_WORLD ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE;
+            entity.level().explode(null, entity.getX(), entity.getY(0.0625) + entity.getBbHeight() * 0.5, entity.getZ(), (float) CompanionsConfig.FIRE_MARK_EFFECT_RADIUS * (CompanionsConfig.FIRE_MARK_EFFECT_RADIUS > 4 ? 0.45F : 0.75f), interaction);
         }
 
-        super.onMobRemoved(entity, amplifier, reason);
+        return true;
     }
+
+    @Override
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+        return true;
+    }
+
 }

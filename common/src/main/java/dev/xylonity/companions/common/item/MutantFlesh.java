@@ -3,7 +3,6 @@ package dev.xylonity.companions.common.item;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import dev.xylonity.companions.registry.CompanionsParticles;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -52,7 +51,7 @@ public class MutantFlesh extends TooltipItem {
         }
 
         if (level.random.nextFloat() < 0.25f) {
-            entity.addEffect(new MobEffectInstance(CompanionsEffects.VOODOO, level.random.nextInt(100, 600), 0, true, true, true));
+            entity.addEffect(new MobEffectInstance(CompanionsEffects.holder(CompanionsEffects.VOODOO), level.random.nextInt(100, 600), 0, true, true, true));
         }
 
         if (level.random.nextFloat() < 0.75 && CompanionsConfig.MUTANT_FLESH_SHOULD_HURT) {

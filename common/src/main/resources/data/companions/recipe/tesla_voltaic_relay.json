@@ -17,7 +17,7 @@
     }
   },
   "result": {
-    "count": 1,
-    "id": "companions:voltaic_relay_block"
+    "id": "companions:voltaic_relay_block",
+    "count": 1
   }
 }

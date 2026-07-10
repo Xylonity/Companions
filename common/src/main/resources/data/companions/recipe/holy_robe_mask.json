@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " c ",
-    "cgc",
+    " x ",
     "cgc"
   ],
   "key": {
@@ -11,10 +11,13 @@
     },
     "g": {
       "item": "companions:relic_gold"
+    },
+    "x": {
+      "item": "minecraft:netherite_helmet"
     }
   },
   "result": {
-    "count": 1,
-    "id": "companions:holy_robe_mask"
+    "id": "companions:holy_robe_mask",
+    "count": 1
   }
 }

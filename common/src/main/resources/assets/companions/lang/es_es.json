@@ -52,7 +52,7 @@
   "crystallized_blood.companions.client_message.added_charge": "Se ha consumido una carga de sangre!",
   "crystallized_blood.companions.client_message.max_charges": "Máxima cantidad de cargas de sangre alcanzada!",
 
-  "item.companions.saint_klimt_music_disc.desc": "Solas Composer - Angel of Gertrude",
+  "jukebox_song.companions.saint_klimt": "Solas Composer - Angel of Gertrude",
 
   "item.companions.netherite_chains": "Cadenas de Netherita",
   "item.companions.big_bread": "Pan Grande",
@@ -146,9 +146,8 @@
   "entity.companions.soul_mage": "Mago de almas",
   "entity.companions.teddy": "Osito",
   "entity.companions.mutated_teddy": "Osito mutado",
-  "entity.companions.sacred_pontiff_invisible": "Sacred Pontiff Invisible",
-  "entity.companions.sacred_pontiff": "Sacred Pontiff",
-  "entity.companions.his_holiness": "His Holiness",
+  "entity.companions.sacred_pontiff": "Pontífice Sagrado",
+  "entity.companions.his_holiness": "Su Santidad",
   "entity.companions.bubble_frog": "Rana de burbujas",
   "entity.companions.ember_pole": "Bichajo de brasas",
   "entity.companions.ender_frog": "Rana del ender",
@@ -266,5 +265,6 @@
   "jei.companions.puppet_interaction.title": "Crear Títere",
   "jei.companions.croissant_egg_interaction.title": "Invocar Dragón Croissant",
   "jei.companions.croissant_dragon_armor_interaction.title": "Armadura de Dragón Croissant",
-  "jei.companions.antlion_interaction.title": "Alternar estado de la hormiga león"
+  "jei.companions.antlion_interaction.title": "Alternar estado de la hormiga león",
+  "jei.companions.frog_bonanza_interaction.title": "Frog Bonanza"
 }

@@ -163,7 +163,7 @@ public class FlyingNavigator extends FlyingPathNavigation {
             Boolean isPathfindable = this.cache.getIfPresent(immutablePos);
             if (isPathfindable == null) {
                 BlockState blockState = this.level.getBlockState(pos);
-                isPathfindable = blockState.isSolidRender(this.level, pos) || blockState.isAir();
+                isPathfindable = blockState.isPathfindable(PathComputationType.AIR);
                 this.cache.put(immutablePos, isPathfindable);
             }
 
@@ -171,7 +171,7 @@ public class FlyingNavigator extends FlyingPathNavigation {
                 return false;
             }
 
-            PathType pathType = this.nodeEvaluator.getPathType(new PathfindingContext(this.level, this.mob), currentX, currentY, currentZ);
+            PathType pathType = this.nodeEvaluator.getPathType(this.mob, new net.minecraft.core.BlockPos(currentX, currentY, currentZ));
             float malus = this.mob.getPathfindingMalus(pathType);
 
             if (malus < 0.0F || malus >= 8.0F || pathType == PathType.DAMAGE_FIRE || pathType == PathType.DANGER_FIRE || pathType == PathType.DAMAGE_OTHER) {

@@ -2,16 +2,19 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "  c",
-    " c ",
+    " cx",
     "c  "
   ],
   "key": {
     "c": {
       "item": "minecraft:iron_ingot"
+    },
+    "x": {
+      "item": "companions:antlion_fur"
     }
   },
   "result": {
-    "count": 1,
-    "id": "companions:needle"
+    "id": "companions:needle",
+    "count": 1
   }
 }
