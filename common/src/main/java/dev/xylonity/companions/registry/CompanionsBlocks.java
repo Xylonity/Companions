@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 
 import java.util.function.Supplier;
 
@@ -213,9 +214,9 @@ public class CompanionsBlocks {
     public static final Supplier<Block> PORCELAIN_POTTERY = BLOCKS.registerBlock("porcelain_pottery",
             () -> new PorcelainPotteryBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.TERRACOTTA_WHITE)
-                    .strength(1.2f)
-                    .sound(SoundType.COPPER)
-                    .instrument(NoteBlockInstrument.FLUTE)
+                    .strength(0f, 0f)
+                    .sound(SoundType.DECORATED_POT)
+                    .pushReaction(PushReaction.DESTROY)
                     .noOcclusion()),
             CompanionsItems.ITEMS,
             block -> new PorcelainPottery(block, new Item.Properties(), "porcelain_pottery")
@@ -224,9 +225,9 @@ public class CompanionsBlocks {
     public static final Supplier<Block> HOLY_PORCELAIN_POTTERY = BLOCKS.registerBlock("holy_porcelain_pottery",
             () -> new HolyPorcelainPotteryBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.TERRACOTTA_YELLOW)
-                    .strength(1.2f)
-                    .sound(SoundType.COPPER)
-                    .instrument(NoteBlockInstrument.FLUTE)
+                    .strength(0f, 0f)
+                    .sound(SoundType.DECORATED_POT)
+                    .pushReaction(PushReaction.DESTROY)
                     .noOcclusion()),
             CompanionsItems.ITEMS,
             block -> new HolyPorcelainPottery(block, new Item.Properties(), "holy_porcelain_pottery")

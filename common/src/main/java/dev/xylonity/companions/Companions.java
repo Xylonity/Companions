@@ -3,6 +3,7 @@ package dev.xylonity.companions;
 import dev.xylonity.companions.platform.CompanionsPlatform;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.*;
+import dev.xylonity.knightlib.KnightLib;
 import dev.xylonity.knightlib.api.network.Network;
 import dev.xylonity.knightlib.api.network.NetworkEndpoint;
 import dev.xylonity.knightlib.api.util.ResourceLocations;
@@ -41,6 +42,8 @@ public class Companions {
 
         CompanionsEntitySpawns.init();
         CompanionsEntityDrops.init();
+
+        KnightLib.initialize();
     }
 
     public static ResourceLocation of(final String path) {

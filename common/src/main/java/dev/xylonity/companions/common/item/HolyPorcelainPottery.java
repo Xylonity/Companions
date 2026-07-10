@@ -3,13 +3,16 @@ package dev.xylonity.companions.common.item;
 import dev.xylonity.companions.common.item.blockitem.GenericBlockItem;
 import dev.xylonity.companions.common.item.gecko.GeckoBlockItem;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -29,8 +32,8 @@ import java.util.List;
 
 public class HolyPorcelainPottery extends GenericBlockItem {
 
-    private static final String STORED_ENTITY = "stored_entity";
-    private static final String STORED_NAME = "stored_entity_name";
+    public static final String STORED_ENTITY = "stored_entity";
+    public static final String STORED_NAME = "stored_entity_name";
 
     public HolyPorcelainPottery(Block pBlock, Properties pProperties, String resourceKey) {
         super(pBlock, pProperties, resourceKey);
@@ -84,6 +87,11 @@ public class HolyPorcelainPottery extends GenericBlockItem {
         tag.putString(STORED_NAME, target.getDisplayName().getString());
         storedStack.setTag(tag);
 
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(ParticleTypes.POOF, target.getX(), target.getY() + target.getBbHeight() * 0.5, target.getZ(), 12, target.getBbWidth() * 0.4, target.getBbHeight() * 0.4, target.getBbWidth() * 0.4, 0.05);
+        }
+
+        level.playSound(null, target.getX(), target.getY(), target.getZ(), CompanionsSounds.POP.get(), SoundSource.PLAYERS, 0.8F, 1.2F);
         target.discard();
         player.setItemInHand(hand, storedStack);
 
@@ -98,7 +106,7 @@ public class HolyPorcelainPottery extends GenericBlockItem {
         if (player == null) {
             return InteractionResult.PASS;
         }
-        if (!hasStoredEntity(stack)) {
+        if (!hasStoredEntity(stack) || player.isShiftKeyDown()) {
             return super.useOn(context);
         }
         if (level.isClientSide) {
@@ -129,6 +137,8 @@ public class HolyPorcelainPottery extends GenericBlockItem {
             return InteractionResult.FAIL;
         }
 
+        serverLevel.sendParticles(ParticleTypes.POOF, spawnedEntity.getX(), spawnedEntity.getY() + spawnedEntity.getBbHeight() * 0.5, spawnedEntity.getZ(), 12, spawnedEntity.getBbWidth() * 0.4, spawnedEntity.getBbHeight() * 0.4, spawnedEntity.getBbWidth() * 0.4, 0.05);
+        level.playSound(null, x, y, z, CompanionsSounds.POP.get(), SoundSource.PLAYERS, 0.8F, 0.9F);
         tag.remove(STORED_ENTITY);
         tag.remove(STORED_NAME);
         stack.setTag(tag);

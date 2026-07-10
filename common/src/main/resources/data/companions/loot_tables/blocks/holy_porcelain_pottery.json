@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "stored_entity",
+                  "target": "stored_entity",
+                  "op": "replace"
+                },
+                {
+                  "source": "stored_entity_name",
+                  "target": "stored_entity_name",
+                  "op": "replace"
+                }
+              ]
+            }
+          ],
+          "name": "companions:holy_porcelain_pottery"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "companions:blocks/holy_porcelain_pottery"
+}
