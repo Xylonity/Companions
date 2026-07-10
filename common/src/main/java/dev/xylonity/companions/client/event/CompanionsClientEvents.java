@@ -7,6 +7,7 @@ import dev.xylonity.companions.client.gui.screen.CorneliusScreen;
 import dev.xylonity.companions.client.gui.screen.PuppetScreen;
 import dev.xylonity.companions.client.gui.screen.SoulFurnaceScreen;
 import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
+import dev.xylonity.companions.client.particle.*;
 import dev.xylonity.companions.client.projectile.renderer.*;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
 import dev.xylonity.companions.common.particle.*;
@@ -16,7 +17,6 @@ import dev.xylonity.knightlib.api.event.RegisterEvent;
 import dev.xylonity.knightlib.api.event.impl.client.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.LerpingBossEvent;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
 public class CompanionsClientEvents {

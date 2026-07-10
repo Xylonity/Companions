@@ -1,6 +1,7 @@
 package dev.xylonity.companions.client;
 
 import dev.xylonity.companions.client.event.CompanionsClientEvents;
+import dev.xylonity.companions.client.particle.*;
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;

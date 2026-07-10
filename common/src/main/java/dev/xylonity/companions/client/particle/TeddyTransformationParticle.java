@@ -1,5 +1,4 @@
-
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
@@ -10,22 +9,20 @@ import org.joml.Quaternionf;
 
 import java.util.Random;
 
-public class BlackHoleStarParticle extends TextureSheetParticle {
+public class TeddyTransformationParticle  extends TextureSheetParticle {
     private final SpriteSet spritesset;
-    private double angle;
-    private double radius;
+    private static Quaternionf QUATERNION = new Quaternionf(0F, -0.7F, 0.7F, 0F);
 
-    BlackHoleStarParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites, double velX, double velY, double velZ) {
+    TeddyTransformationParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites, double velX, double velY, double velZ) {
         super(world, x, y + 0.5, z, 0.0, 0.0, 0.0);
 
-        this.quadSize = 0.15f;
+        this.quadSize = 1f;
+        this.rCol = 1F;
+        this.gCol = 1F;
+        this.bCol = 1F;
         this.lifetime = new Random().nextInt(0, 15) + 20;
         this.setSpriteFromAge(sprites);
         this.spritesset = sprites;
-
-        this.angle = random.nextDouble() * 2 * Math.PI;
-        this.radius = random.nextDouble() * 0.5;
-        this.y += random.nextDouble() - 0.5;
     }
 
     @Override
@@ -34,17 +31,14 @@ public class BlackHoleStarParticle extends TextureSheetParticle {
     }
 
     @Override
+    public void render(VertexConsumer pBuffer, Camera pRenderInfo, float pPartialTicks) {
+        super.render(pBuffer, pRenderInfo, pPartialTicks);
+    }
+
+    @Override
     public void tick() {
         super.tick();
         this.setSpriteFromAge(spritesset);
-
-        angle += 0.30;
-        radius += 0.0008;
-
-        this.x = xo + radius * Math.cos(angle) + (random.nextDouble() - 0.5) * 0.1;
-        this.z = zo + radius * Math.sin(angle) + (random.nextDouble() - 0.5) * 0.1;
-
-        this.y = yo;
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {
@@ -54,8 +48,10 @@ public class BlackHoleStarParticle extends TextureSheetParticle {
             this.sprites = spriteSet;
         }
 
-        public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
-            return new BlackHoleStarParticle(level, x, y, z, this.sprites, dx, dy, dz);
+        public Particle createParticle(SimpleParticleType particleType, ClientLevel level,
+                                       double x, double y, double z,
+                                       double dx, double dy, double dz) {
+            return new TeddyTransformationParticle(level, x, y, z, this.sprites, dx, dy, dz);
         }
     }
 

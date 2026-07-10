@@ -1,7 +1,5 @@
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -9,29 +7,25 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class ShadeSummonParticle extends TextureSheetParticle {
+public class BlizzardIceParticle extends TextureSheetParticle {
     private final SpriteSet spritesset;
 
-    public ShadeSummonParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites, double velX, double velY, double velZ) {
+    BlizzardIceParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites, double velX, double velY, double velZ) {
         super(world, x, y + 0.5, z, 0.0, 0.0, 0.0);
 
-        this.quadSize = 0.55f;
+        this.quadSize = 0.16f;
         this.rCol = 1F;
         this.gCol = 1F;
         this.bCol = 1F;
-        this.lifetime = new Random().nextInt(0, 15) + 20;
+        this.lifetime = new Random().nextInt(0, 15) + 10;
         this.setSpriteFromAge(sprites);
         this.spritesset = sprites;
+        this.gravity = 0.7F;
     }
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-    }
-
-    @Override
-    public void render(@NotNull VertexConsumer pBuffer, @NotNull Camera pRenderInfo, float pPartialTicks) {
-        super.render(pBuffer, pRenderInfo, pPartialTicks);
     }
 
     @Override
@@ -48,8 +42,9 @@ public class ShadeSummonParticle extends TextureSheetParticle {
         }
 
         public Particle createParticle(@NotNull SimpleParticleType particleType, @NotNull ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
-            return new ShadeSummonParticle(level, x, y, z, this.sprites, dx, dy, dz);
+            return new BlizzardIceParticle(level, x, y, z, this.sprites, dx, dy, dz);
         }
+
     }
 
 }

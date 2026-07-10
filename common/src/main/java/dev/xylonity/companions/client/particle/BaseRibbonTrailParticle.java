@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.knightlib.client.particle.AbstractRibbonTrailParticle;
@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 
 import org.jetbrains.annotations.Nullable;
 
-public class SidedRibbonTrailParticle extends AbstractRibbonTrailParticle {
+public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
     private static final ResourceLocation TEXTURE = Companions.of("textures/particle/trail.png");
 
@@ -20,15 +20,13 @@ public class SidedRibbonTrailParticle extends AbstractRibbonTrailParticle {
     protected final float yawSpeed;
 
     protected float ribbonHeight;
-    protected int side;
 
-    public SidedRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId, int side) {
+    public BaseRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId) {
         super(level, x, y, z, 0, 0, 0, r, g, b);
 
         this.radius = radius;
         this.height = height;
         this.targetId = targetId;
-        this.side = side;
 
         this.gravity = 0;
         this.lifetime = 60;
@@ -37,7 +35,14 @@ public class SidedRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
         this.ribbonHeight = 0.35f;
 
-        setPos(targetPos().x, targetPos().y, targetPos().z);
+        Vec3 p = orbitPos();
+        setPos(p.x, p.y, p.z);
+    }
+
+    public BaseRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId, float trailHeight) {
+        this(level, x, y, z, r, g, b, radius, height, targetId);
+
+        this.ribbonHeight = trailHeight;
     }
 
     @Override
@@ -51,27 +56,17 @@ public class SidedRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
         ribbonAlpha = 1f - age / (float) lifetime;
 
-        setPos(targetPos().x, targetPos().y, targetPos().z);
+        setPos(orbitPos().x, orbitPos().y, orbitPos().z);
+    }
+
+    private Vec3 orbitPos() {
+        double alpha = Math.toRadians(startYaw + yawSpeed * age);
+        Vec3 off = new Vec3(Math.cos(alpha) * radius, height * Math.sin(age * 0.1f), Math.sin(alpha) * radius);
+        return targetPos().add(off);
     }
 
     protected Vec3 targetPos() {
-        if (getTarget() == null) return new Vec3(x, y, z);
-
-        Vec3 dir = getTarget().getDeltaMovement().normalize();
-
-        if (dir.lengthSqr() < 1e-6) return new Vec3(x, y, z);
-
-        Vec3 perp = new Vec3(-dir.z, 0, dir.x).normalize().scale(1.5);
-        double y = getTarget().getY();
-
-        Vec3 right = new Vec3(getTarget().getX(), y, getTarget().getZ()).add(perp);
-        Vec3 left = new Vec3(getTarget().getX(), y, getTarget().getZ()).subtract(perp);
-
-        if (side == 0) {
-            return new Vec3(left.x, left.y, left.z);
-        } else {
-            return new Vec3(right.x, right.y, right.z);
-        }
+        return getTarget() != null ? getTarget().position().add(0, getTarget().getBbHeight() * 0.5, 0) : new Vec3(x, y, z);
     }
 
     @Nullable

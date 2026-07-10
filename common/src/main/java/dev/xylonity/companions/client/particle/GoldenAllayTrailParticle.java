@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
@@ -7,7 +7,6 @@ import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
 
 import java.util.Random;
 
