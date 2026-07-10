@@ -10,7 +10,6 @@ import dev.xylonity.companions.client.gui.screen.SoulMageScreen;
 import dev.xylonity.companions.client.particle.*;
 import dev.xylonity.companions.client.projectile.renderer.*;
 import dev.xylonity.companions.common.entity.hostile.SacredPontiffEntity;
-import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.registry.*;
 import dev.xylonity.knightlib.api.bossbar.BossBarBuilder;
 import dev.xylonity.knightlib.api.event.RegisterEvent;
