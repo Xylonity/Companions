@@ -300,28 +300,28 @@ public final class CompanionsConfig {
             comment = "Max life of the Teddy in holy phase",
             min = 0, max = 2000
     )
-    public static double TEDDY_HOLY_MAX_LIFE = 110;
+    public static double TEDDY_HOLY_MAX_LIFE = 160;
 
     @ConfigEntry(
             category = "Teddy",
             comment = "Damage dealt by the Teddy in holy phase",
             min = 0.0, max = 100.0
     )
-    public static double TEDDY_HOLY_DAMAGE = 8d;
+    public static double TEDDY_HOLY_DAMAGE = 9d;
 
     @ConfigEntry(
             category = "Teddy",
             comment = "Damage dealt by each orb summoned by the Teddy in holy phase",
             min = 0.0, max = 100.0
     )
-    public static double TEDDY_HOLY_ORB_DAMAGE = 5d;
+    public static double TEDDY_HOLY_ORB_DAMAGE = 6d;
 
     @ConfigEntry(
             category = "Teddy",
             comment = "Damage dealt by the holy nova released by the Teddy in holy phase",
             min = 0.0, max = 100.0
     )
-    public static double TEDDY_HOLY_NOVA_DAMAGE = 6d;
+    public static double TEDDY_HOLY_NOVA_DAMAGE = 7d;
 
 
     /**
