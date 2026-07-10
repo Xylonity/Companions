@@ -1,16 +1,15 @@
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.knightlib.client.particle.AbstractRibbonTrailParticle;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
-public class GoldenAllayRibbonTrailParticle extends AbstractRibbonTrailParticle {
+public class GenericRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
     private static final ResourceLocation TEXTURE = Companions.of("textures/particle/trail.png");
 
@@ -22,7 +21,7 @@ public class GoldenAllayRibbonTrailParticle extends AbstractRibbonTrailParticle 
 
     protected float ribbonHeight;
 
-    public GoldenAllayRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId) {
+    public GenericRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId) {
         super(level, x, y, z, 0, 0, 0, r, g, b);
 
         this.radius = radius;
@@ -37,6 +36,12 @@ public class GoldenAllayRibbonTrailParticle extends AbstractRibbonTrailParticle 
         this.ribbonHeight = 0.35f;
 
         setPos(targetPos().x, targetPos().y, targetPos().z);
+    }
+
+    public GenericRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId, float trailHeight) {
+        this(level, x, y, z, r, g, b, radius, height, targetId);
+
+        this.ribbonHeight = trailHeight;
     }
 
     @Override
@@ -74,12 +79,7 @@ public class GoldenAllayRibbonTrailParticle extends AbstractRibbonTrailParticle 
 
     @Override
     protected int totalSegments() {
-        return 8;
-    }
-
-    @Override
-    protected int getLightColor(float f) {
-        return LightTexture.FULL_BRIGHT;
+        return 5;
     }
 
 }

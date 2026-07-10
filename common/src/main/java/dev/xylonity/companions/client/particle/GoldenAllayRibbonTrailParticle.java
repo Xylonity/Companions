@@ -1,15 +1,16 @@
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.knightlib.client.particle.AbstractRibbonTrailParticle;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
-public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
+public class GoldenAllayRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
     private static final ResourceLocation TEXTURE = Companions.of("textures/particle/trail.png");
 
@@ -21,7 +22,7 @@ public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
     protected float ribbonHeight;
 
-    public BaseRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId) {
+    public GoldenAllayRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId) {
         super(level, x, y, z, 0, 0, 0, r, g, b);
 
         this.radius = radius;
@@ -35,14 +36,7 @@ public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
         this.ribbonHeight = 0.35f;
 
-        Vec3 p = orbitPos();
-        setPos(p.x, p.y, p.z);
-    }
-
-    public BaseRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId, float trailHeight) {
-        this(level, x, y, z, r, g, b, radius, height, targetId);
-
-        this.ribbonHeight = trailHeight;
+        setPos(targetPos().x, targetPos().y, targetPos().z);
     }
 
     @Override
@@ -56,13 +50,7 @@ public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
         ribbonAlpha = 1f - age / (float) lifetime;
 
-        setPos(orbitPos().x, orbitPos().y, orbitPos().z);
-    }
-
-    private Vec3 orbitPos() {
-        double alpha = Math.toRadians(startYaw + yawSpeed * age);
-        Vec3 off = new Vec3(Math.cos(alpha) * radius, height * Math.sin(age * 0.1f), Math.sin(alpha) * radius);
-        return targetPos().add(off);
+        setPos(targetPos().x, targetPos().y, targetPos().z);
     }
 
     protected Vec3 targetPos() {
@@ -86,7 +74,12 @@ public class BaseRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
     @Override
     protected int totalSegments() {
-        return 5;
+        return 8;
+    }
+
+    @Override
+    protected int getLightColor(float f) {
+        return LightTexture.FULL_BRIGHT;
     }
 
 }

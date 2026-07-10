@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
 import dev.xylonity.companions.Companions;
 import dev.xylonity.knightlib.client.particle.AbstractRibbonTrailParticle;
@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
-public class GenericRibbonTrailParticle extends AbstractRibbonTrailParticle {
+public class SidedRibbonTrailParticle extends AbstractRibbonTrailParticle {
 
     private static final ResourceLocation TEXTURE = Companions.of("textures/particle/trail.png");
 
@@ -20,13 +20,15 @@ public class GenericRibbonTrailParticle extends AbstractRibbonTrailParticle {
     protected final float yawSpeed;
 
     protected float ribbonHeight;
+    protected int side;
 
-    public GenericRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId) {
+    public SidedRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId, int side) {
         super(level, x, y, z, 0, 0, 0, r, g, b);
 
         this.radius = radius;
         this.height = height;
         this.targetId = targetId;
+        this.side = side;
 
         this.gravity = 0;
         this.lifetime = 60;
@@ -36,12 +38,6 @@ public class GenericRibbonTrailParticle extends AbstractRibbonTrailParticle {
         this.ribbonHeight = 0.35f;
 
         setPos(targetPos().x, targetPos().y, targetPos().z);
-    }
-
-    public GenericRibbonTrailParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, float radius, float height, int targetId, float trailHeight) {
-        this(level, x, y, z, r, g, b, radius, height, targetId);
-
-        this.ribbonHeight = trailHeight;
     }
 
     @Override
@@ -59,7 +55,23 @@ public class GenericRibbonTrailParticle extends AbstractRibbonTrailParticle {
     }
 
     protected Vec3 targetPos() {
-        return getTarget() != null ? getTarget().position().add(0, getTarget().getBbHeight() * 0.5, 0) : new Vec3(x, y, z);
+        if (getTarget() == null) return new Vec3(x, y, z);
+
+        Vec3 dir = getTarget().getDeltaMovement().normalize();
+
+        if (dir.lengthSqr() < 1e-6) return new Vec3(x, y, z);
+
+        Vec3 perp = new Vec3(-dir.z, 0, dir.x).normalize().scale(1.5);
+        double y = getTarget().getY();
+
+        Vec3 right = new Vec3(getTarget().getX(), y, getTarget().getZ()).add(perp);
+        Vec3 left = new Vec3(getTarget().getX(), y, getTarget().getZ()).subtract(perp);
+
+        if (side == 0) {
+            return new Vec3(left.x, left.y, left.z);
+        } else {
+            return new Vec3(right.x, right.y, right.z);
+        }
     }
 
     @Nullable

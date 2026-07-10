@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
@@ -10,8 +10,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-
-import java.util.Random;
 
 public class TeddyTransformationCloudParticle extends TextureSheetParticle {
     private final SpriteSet spritesset;

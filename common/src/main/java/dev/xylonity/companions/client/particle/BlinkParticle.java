@@ -1,26 +1,28 @@
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
+public class BlinkParticle extends TextureSheetParticle {
 
-public class BlizzardSnowParticle extends TextureSheetParticle {
     private final SpriteSet spritesset;
 
-    BlizzardSnowParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites, double velX, double velY, double velZ) {
-        super(world, x, y + 0.5, z, 0.0, 0.0, 0.0);
+    private static final float LARGE_SIZE = 8.0f;
+    private static final float SMALL_SIZE = 5.0f;
 
-        this.quadSize = 0.16f;
+    BlinkParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
+        super(world, x, y, z, 0.0, 0.0, 0.0);
+
         this.rCol = 1F;
         this.gCol = 1F;
         this.bCol = 1F;
-        this.lifetime = new Random().nextInt(0, 15) + 10;
+        this.lifetime = 5;
         this.setSpriteFromAge(sprites);
         this.spritesset = sprites;
-        this.gravity = 0.7F;
+        this.gravity = 0F;
+        this.quadSize = LARGE_SIZE;
     }
 
     @Override
@@ -31,6 +33,13 @@ public class BlizzardSnowParticle extends TextureSheetParticle {
     @Override
     public void tick() {
         super.tick();
+
+        if (this.age < 3) {
+            this.quadSize = LARGE_SIZE;
+        } else {
+            this.quadSize = SMALL_SIZE;
+        }
+
         this.setSpriteFromAge(spritesset);
     }
 
@@ -42,7 +51,7 @@ public class BlizzardSnowParticle extends TextureSheetParticle {
         }
 
         public Particle createParticle(@NotNull SimpleParticleType particleType, @NotNull ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
-            return new BlizzardSnowParticle(level, x, y, z, this.sprites, dx, dy, dz);
+            return new BlinkParticle(level, x, y, z, this.sprites);
         }
 
     }

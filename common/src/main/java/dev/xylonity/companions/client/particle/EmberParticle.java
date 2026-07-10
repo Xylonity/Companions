@@ -1,4 +1,4 @@
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -7,10 +7,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class BlizzardIceParticle extends TextureSheetParticle {
+public class EmberParticle extends TextureSheetParticle {
     private final SpriteSet spritesset;
 
-    BlizzardIceParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites, double velX, double velY, double velZ) {
+    EmberParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites, double velX, double velY, double velZ) {
         super(world, x, y + 0.5, z, 0.0, 0.0, 0.0);
 
         this.quadSize = 0.16f;
@@ -42,7 +42,7 @@ public class BlizzardIceParticle extends TextureSheetParticle {
         }
 
         public Particle createParticle(@NotNull SimpleParticleType particleType, @NotNull ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
-            return new BlizzardIceParticle(level, x, y, z, this.sprites, dx, dy, dz);
+            return new EmberParticle(level, x, y, z, this.sprites, dx, dy, dz);
         }
 
     }

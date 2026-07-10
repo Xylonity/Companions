@@ -1,11 +1,11 @@
 package dev.xylonity.companions.client;
 
 import dev.xylonity.companions.client.event.CompanionsClientEvents;
+import dev.xylonity.companions.client.particle.*;
 import dev.xylonity.companions.common.blockentity.AbstractShadeAltarBlockEntity;
 import dev.xylonity.companions.common.blockentity.AbstractTeslaBlockEntity;
 import dev.xylonity.companions.common.entity.companion.ShadeMawEntity;
 import dev.xylonity.companions.common.entity.projectile.trigger.LaserTriggerProjectile;
-import dev.xylonity.companions.common.particle.*;
 import dev.xylonity.companions.proxy.IProxy;
 import dev.xylonity.companions.registry.CompanionsParticles;
 import dev.xylonity.knightlib.api.event.KnightLibEvents;

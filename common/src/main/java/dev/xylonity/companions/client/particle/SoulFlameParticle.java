@@ -1,5 +1,5 @@
 
-package dev.xylonity.companions.common.particle;
+package dev.xylonity.companions.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
