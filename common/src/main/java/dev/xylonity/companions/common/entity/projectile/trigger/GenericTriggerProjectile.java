@@ -17,11 +17,6 @@ public class GenericTriggerProjectile extends BaseProjectile implements GeoEntit
     }
 
     @Override
-    protected void defineSynchedData(@NotNull SynchedEntityData.Builder pBuilder) {
-        ;;
-    }
-
-    @Override
     public void playerTouch(@NotNull Player pEntity) {
         ;;
     }
