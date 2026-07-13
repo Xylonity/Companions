@@ -16,7 +16,7 @@ public class GenericTriggerProjectile extends BaseProjectile implements GeoEntit
 
     @Override
     protected void defineSynchedData() {
-        ;;
+        super.defineSynchedData();
     }
 
     @Override
