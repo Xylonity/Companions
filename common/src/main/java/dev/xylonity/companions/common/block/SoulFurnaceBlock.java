@@ -51,7 +51,7 @@ public class SoulFurnaceBlock extends Block implements EntityBlock {
     }
 
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (level.isClientSide) {
+        if (!level.isClientSide) {
             final BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof MenuProvider menuProvider && player instanceof ServerPlayer serverPlayer) {
                 KnightLib.PLATFORM.openMenu(serverPlayer, menuProvider, friendlyByteBuf -> friendlyByteBuf.writeBlockPos(pos));
