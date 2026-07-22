@@ -1,9 +1,5 @@
 package dev.xylonity.companions.common.entity.projectile;
 
-import net.minecraft.network.syncher.SynchedEntityData;
-
-import org.jetbrains.annotations.NotNull;
-
 import dev.xylonity.companions.common.entity.BaseProjectile;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.world.entity.EntityType;
@@ -59,11 +55,6 @@ public class FireMarkProjectile extends BaseProjectile {
             this.setDeltaMovement(velocity);
             this.move(MoverType.SELF, velocity);
         }
-    }
-
-    @Override
-    protected void defineSynchedData(@NotNull SynchedEntityData.Builder pBuilder) {
-        ;;
     }
 
     @Override
