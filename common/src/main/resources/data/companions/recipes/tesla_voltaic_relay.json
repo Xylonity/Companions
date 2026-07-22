@@ -7,10 +7,10 @@
   ],
   "key": {
     "n": {
-      "item": "minecraft:iron_nugget"
+      "item": "minecraft:iron_ingot"
     },
     "i": {
-      "item": "minecraft:iron_ingot"
+      "item": "companions:tesla_coil_block"
     },
     "p": {
       "tag": "minecraft:planks"

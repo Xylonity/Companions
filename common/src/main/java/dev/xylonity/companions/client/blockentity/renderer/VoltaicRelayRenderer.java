@@ -35,6 +35,11 @@ public class VoltaicRelayRenderer extends GeoBlockRenderer<VoltaicRelayBlockEnti
     }
 
     @Override
+    public boolean shouldRenderOffScreen(VoltaicRelayBlockEntity blockEntity) {
+        return Companions.PLATFORM.requiresGlobalTeslaRenderer();
+    }
+
+    @Override
     public int getViewDistance() {
         return 256;
     }

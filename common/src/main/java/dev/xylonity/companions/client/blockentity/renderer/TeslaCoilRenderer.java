@@ -27,6 +27,11 @@ public class TeslaCoilRenderer extends GeoBlockRenderer<TeslaCoilBlockEntity> {
     protected void rotateBlock(Direction facing, PoseStack poseStack) { }
 
     @Override
+    public boolean shouldRenderOffScreen(TeslaCoilBlockEntity blockEntity) {
+        return Companions.PLATFORM.requiresGlobalTeslaRenderer();
+    }
+
+    @Override
     public int getViewDistance() {
         return 256;
     }
