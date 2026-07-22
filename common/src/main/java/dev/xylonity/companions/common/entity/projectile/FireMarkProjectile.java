@@ -58,11 +58,6 @@ public class FireMarkProjectile extends BaseProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        ;;
-    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", this::predicate));
     }
