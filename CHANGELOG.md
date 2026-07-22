@@ -23,7 +23,7 @@
 - Enhanced the movement of the Shade Maw, to make it less rough
 - Now the Shade Maw rotates slightly up or down depending on the direction of movement
 - Deleted croissant dragon spawn egg, which was obtainable through commands
-- The needle recipe now requires antlion fur
+- The needle recipe now requires antlion fur, and the voltaic relay now requires a tesla coil
 - Now antlions are categorized as arthropods
 - Now the croissant dragon armor can be swapped
 - Reworked bonanza drops, making it more difficult to keep playing

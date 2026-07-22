@@ -22,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,6 +73,18 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         this.pendingRemoval = false;
         this.receivesGenerator = false;
         this.defaultAttackBehaviour = new DefaultAttackBehaviour();
+    }
+
+    public AABB getConnectionRenderBoundingBox() {
+        AABB bounds = new AABB(worldPosition);
+        for (final ConnectionTarget target : outgoing) {
+            if (target.isBlock()) {
+                bounds = bounds.minmax(new AABB(target.blockPos()));
+            }
+
+        }
+
+        return bounds.inflate(1.0D);
     }
 
     public ConnectionTarget asConnectionTarget() {

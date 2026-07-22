@@ -34,11 +34,8 @@ public class WrenchItem extends TooltipItem {
     // I hate statics
     private final Map<UUID, ConnectionTarget> firstNodes = new WeakHashMap<>();
 
-    private final int maxConnectionDistanceSqr;
-
     public WrenchItem(Properties properties) {
         super(properties);
-        this.maxConnectionDistanceSqr = CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE * CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE;
     }
 
     @Override
@@ -59,6 +56,12 @@ public class WrenchItem extends TooltipItem {
             handleNodeSelection(player,
                     ConnectionTarget.forEntity(target.getUUID(), player.level().dimension().location()),
                     null);
+        }
+        else {
+            dinamo.setShouldAttack(!dinamo.shouldAttack());
+            player.displayClientMessage(Component.translatable(dinamo.shouldAttack()
+                    ? "dinamo.companions.client_message.attack"
+                    : "dinamo.companions.client_message.no_attack").withStyle(ChatFormatting.GREEN), true);
         }
 
         return InteractionResult.SUCCESS;
@@ -194,9 +197,13 @@ public class WrenchItem extends TooltipItem {
             return false;
         }
 
-        if (posFirst.distanceToSqr(posCurrent) > maxConnectionDistanceSqr) {
+        final int maxConnectionDistance = first.isBlock()
+                && player.level().getBlockEntity(first.blockPos()) instanceof VoltaicRelayBlockEntity
+                ? CompanionsConfig.DINAMO_VOLTAIC_RELAY_MAX_CONNECTION_DISTANCE
+                : CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE;
+        if (posFirst.distanceToSqr(posCurrent) > maxConnectionDistance * maxConnectionDistance) {
             player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_distance",
-                    CompanionsConfig.DINAMO_MAX_CONNECTION_DISTANCE).withStyle(ChatFormatting.RED), true);
+                    maxConnectionDistance).withStyle(ChatFormatting.RED), true);
             return false;
         }
 

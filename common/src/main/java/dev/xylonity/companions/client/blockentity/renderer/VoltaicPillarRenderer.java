@@ -8,6 +8,7 @@ import dev.xylonity.companions.common.blockentity.VoltaicPillarBlockEntity;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
 
 public class VoltaicPillarRenderer extends AbstractGeoBlockRenderer<VoltaicPillarBlockEntity> {
 
@@ -25,6 +26,15 @@ public class VoltaicPillarRenderer extends AbstractGeoBlockRenderer<VoltaicPilla
 
     @Override
     protected void rotateBlock(Direction facing, PoseStack poseStack) { }
+
+    @Override
+    public boolean shouldRenderOffScreen(VoltaicPillarBlockEntity blockEntity) {
+        return Companions.PLATFORM.requiresGlobalTeslaRenderer();
+    }
+
+    public AABB getRenderBoundingBox(VoltaicPillarBlockEntity blockEntity) {
+        return blockEntity.getConnectionRenderBoundingBox();
+    }
 
     @Override
     public int getViewDistance() {

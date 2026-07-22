@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class VoltaicRelayRenderer extends AbstractGeoBlockRenderer<VoltaicRelayBlockEntity> {
@@ -31,6 +32,15 @@ public class VoltaicRelayRenderer extends AbstractGeoBlockRenderer<VoltaicRelayB
     @Override
     protected void rotateBlock(Direction facing, PoseStack poseStack) {
         ;;
+    }
+
+    @Override
+    public boolean shouldRenderOffScreen(VoltaicRelayBlockEntity blockEntity) {
+        return Companions.PLATFORM.requiresGlobalTeslaRenderer();
+    }
+
+    public AABB getRenderBoundingBox(VoltaicRelayBlockEntity blockEntity) {
+        return blockEntity.getConnectionRenderBoundingBox();
     }
 
     @Override

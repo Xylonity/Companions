@@ -8,6 +8,7 @@ import dev.xylonity.companions.common.blockentity.TeslaCoilBlockEntity;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
 
 public class TeslaCoilRenderer extends AbstractGeoBlockRenderer<TeslaCoilBlockEntity> {
 
@@ -24,6 +25,15 @@ public class TeslaCoilRenderer extends AbstractGeoBlockRenderer<TeslaCoilBlockEn
 
     @Override
     protected void rotateBlock(Direction facing, PoseStack poseStack) { }
+
+    @Override
+    public boolean shouldRenderOffScreen(TeslaCoilBlockEntity blockEntity) {
+        return Companions.PLATFORM.requiresGlobalTeslaRenderer();
+    }
+
+    public AABB getRenderBoundingBox(TeslaCoilBlockEntity blockEntity) {
+        return blockEntity.getConnectionRenderBoundingBox();
+    }
 
     @Override
     public int getViewDistance() {

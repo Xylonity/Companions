@@ -95,6 +95,13 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Dinamo",
+            comment = "The maximum distance a Voltaic Relay can connect to another tesla module",
+            min = 0, max = 100
+    )
+    public static int DINAMO_VOLTAIC_RELAY_MAX_CONNECTION_DISTANCE = 26;
+
+    @ConfigEntry(
+            category = "Dinamo",
             comment = "Max life of the Dinamo",
             min = 0d, max = 5000d
     )
