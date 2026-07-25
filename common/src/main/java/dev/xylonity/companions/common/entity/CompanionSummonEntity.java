@@ -174,6 +174,11 @@ public abstract class CompanionSummonEntity extends TamableAnimal implements Geo
     }
 
     @Override
+    public boolean wantsToAttack(@NotNull LivingEntity target, @NotNull LivingEntity owner) {
+        return !Util.areEntitiesLinked(this, target) && !Util.areTeammates(owner, target) && super.wantsToAttack(target, owner);
+    }
+
+    @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (pSource.getEntity() != null && pSource.getEntity().equals(getOwner()) & !pSource.getEntity().isShiftKeyDown()) {
             return false;

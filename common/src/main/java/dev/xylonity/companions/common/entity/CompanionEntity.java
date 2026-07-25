@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity;
 
 import dev.xylonity.companions.common.entity.ai.generic.CompanionsNearestHostileTargetGoal;
+import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.knightlib.registry.KnightLibItems;
 import dev.xylonity.knightlib.registry.KnightLibParticles;
@@ -18,6 +19,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -53,6 +55,11 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
         super(pEntityType, pLevel);
         this.noCulling = true;
         this.targetSelector.addGoal(3, new CompanionsNearestHostileTargetGoal(this));
+    }
+
+    @Override
+    public boolean wantsToAttack(@NotNull LivingEntity target, @NotNull LivingEntity owner) {
+        return !Util.areEntitiesLinked(this, target) && !Util.areTeammates(owner, target) && super.wantsToAttack(target, owner);
     }
 
     @Override

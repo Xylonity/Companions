@@ -44,6 +44,11 @@ public class PlasmaLampBlockEntity extends AbstractTeslaBlockEntity implements G
     }
 
     @Override
+    public boolean canConnectToOtherModules() {
+        return false;
+    }
+
+    @Override
     public @NotNull Vec3 electricalChargeOriginOffset() {
         return new Vec3(0, 0, 0);
     }
