@@ -112,6 +112,7 @@ public class CompanionsBlocks {
                     .strength(5F, 6F)
                     .sound(SoundType.METAL)
                     .instrument(NoteBlockInstrument.IRON_XYLOPHONE)
+                    .lightLevel(state -> state.getValue(PlasmaLampBlock.LIT) ? 15 : 0)
                     .noOcclusion()),
             CompanionsItems.ITEMS,
             block -> new GenericBlockItem(block, new Item.Properties(), "plasma_lamp_block")

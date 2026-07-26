@@ -12,7 +12,9 @@ public class CompanionsNearestHostileTargetGoal extends NearestAttackableTargetG
     private final CompanionEntity companion;
 
     public CompanionsNearestHostileTargetGoal(CompanionEntity pCompanion) {
-        super(pCompanion, LivingEntity.class, 10, true, false, livingEntity -> livingEntity instanceof Enemy && !Util.areEntitiesLinked(pCompanion, livingEntity));
+        super(pCompanion, LivingEntity.class, 10, true, false, livingEntity -> livingEntity instanceof Enemy
+                && !Util.areEntitiesLinked(pCompanion, livingEntity)
+                && !Util.areTeammates(pCompanion.getOwner(), livingEntity));
         this.companion = pCompanion;
     }
 

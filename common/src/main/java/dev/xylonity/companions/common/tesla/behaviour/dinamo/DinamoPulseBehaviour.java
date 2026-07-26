@@ -7,6 +7,7 @@ import dev.xylonity.companions.common.tesla.ConnectionTarget;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.common.util.interfaces.ITeslaGeneratorBehaviour;
 import dev.xylonity.companions.common.util.interfaces.ITeslaUtil;
+import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsEffects;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -88,8 +89,9 @@ public class DinamoPulseBehaviour implements ITeslaGeneratorBehaviour {
                         continue;
                     }
 
-                    if (!Util.areEntitiesLinked(sv.getEntity(dinamo.getOwnerUUID()), victim)) {
-                        victim.hurt(victim.level().damageSources().lightningBolt(), 7f);
+                    final Entity owner = sv.getEntity(dinamo.getOwnerUUID());
+                    if (!Util.areEntitiesLinked(owner, victim) && !Util.areTeammates(owner, victim)) {
+                        victim.hurt(victim.level().damageSources().lightningBolt(), (float) CompanionsConfig.ELECTRICITY_DAMAGE);
                         victim.addEffect(new MobEffectInstance(CompanionsEffects.holder(CompanionsEffects.ELECTROSHOCK), 50, 0, false, true, true));
                     }
                 }

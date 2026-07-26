@@ -5,7 +5,7 @@ import dev.xylonity.companions.common.item.gecko.GeckoArmorItem;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-public class GenericArmorItemModel  extends GeoModel<GeckoArmorItem> {
+public class GenericArmorItemModel extends GeoModel<GeckoArmorItem> {
 
     private final String resourceKey;
 

@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.entity.companion;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
+import dev.xylonity.companions.common.blackjack.CorneliusTable;
 import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.ai.cornelius.goal.*;
@@ -51,9 +52,17 @@ import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CorneliusEntity extends CompanionEntity implements ContainerListener, IFrogJumpUtil, MenuProvider {
 
     public SimpleContainer inventory;
+
+    private final CorneliusTable table = new CorneliusTable(this);
+    private final List<ItemStack> pendingLegacyBets = new ArrayList<>();
+
+    public static final int MAIN_COIN_SLOTS = 3;
 
     private final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");
     private final RawAnimation SIT = RawAnimation.begin().thenPlay("sit");
@@ -150,6 +159,13 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         super.tick();
 
         if (!level().isClientSide) {
+            this.table.tick();
+
+            if (!this.pendingLegacyBets.isEmpty()) {
+                this.pendingLegacyBets.forEach(this::spawnAtLocation);
+                this.pendingLegacyBets.clear();
+            }
+
             if (getCycleCount() == 0) playSound(CompanionsSounds.FROGGY_JUMP.get(), 0.5f, 1);
 
             if (getCycleCount() >= 12) this.setDeltaMovement(new Vec3(0, 0, 0));
@@ -225,9 +241,36 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
         return new CorneliusContainerMenu(i, inventory, this);
     }
 
+    public CorneliusTable getTable() {
+        return this.table;
+    }
+
+    private void migrateLegacyBets() {
+        for (int i = MAIN_COIN_SLOTS; i < this.inventory.getContainerSize(); i++) {
+            ItemStack stack = this.inventory.removeItemNoUpdate(i);
+            if (stack.isEmpty()) {
+                continue;
+            }
+
+            for (int j = 0; j < MAIN_COIN_SLOTS && !stack.isEmpty(); j++) {
+                if (this.inventory.getItem(j).isEmpty()) {
+                    this.inventory.setItem(j, stack);
+                    stack = ItemStack.EMPTY;
+                }
+
+            }
+
+            if (!stack.isEmpty()) {
+                this.pendingLegacyBets.add(stack);
+            }
+
+        }
+
+    }
+
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (this.isTame() && this.getOwner() == player && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+        if (this.isTame() && player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!level().isClientSide) {
                 if (player instanceof ServerPlayer serverPlayer) {
                     KnightLib.PLATFORM.openMenu(serverPlayer, this, friendlyByteBuf -> friendlyByteBuf.writeInt(getId()));
@@ -250,15 +293,27 @@ public class CorneliusEntity extends CompanionEntity implements ContainerListene
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.inventory.fromTag(pCompound.getList("Inventory", 10), this.registryAccess());
+        this.table.load(pCompound.getList("BlackjackSeats", 10), this.registryAccess());
+        this.migrateLegacyBets();
         if (pCompound.contains("SummonedCount")) {
             this.setSummonedCount(pCompound.getInt("SummonedCount"));
         }
     }
 
     @Override
+    public void die(@NotNull DamageSource pCause) {
+        if (!level().isClientSide) {
+            this.table.dropEverything();
+        }
+
+        super.die(pCause);
+    }
+
+    @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.put("Inventory", this.inventory.createTag(this.registryAccess()));
+        pCompound.put("BlackjackSeats", this.table.save(this.registryAccess()));
         pCompound.putInt("SummonedCount", this.getSummonedCount());
     }
 

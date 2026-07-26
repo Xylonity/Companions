@@ -9,6 +9,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -72,7 +73,10 @@ public class LivingCandleEntity extends CompanionSummonEntity {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            if (!this.isTame() || this.getOwner() == null) {
+            LivingEntity owner = this.getOwner();
+            if (owner instanceof SoulMageEntity soulMage) {
+                soulMage.registerCandle(this);
+            } else if (!this.isTame() || owner == null) {
                 ServerLevel serverLevel = (ServerLevel) this.level();
                 findNearestSoulMage(serverLevel);
             }
@@ -109,6 +113,16 @@ public class LivingCandleEntity extends CompanionSummonEntity {
         this.discard();
     }
 
+    @Override
+    public void remove(@NotNull RemovalReason pReason) {
+        LivingEntity owner = this.getOwner();
+        if (!this.level().isClientSide && owner instanceof SoulMageEntity soulMage) {
+            soulMage.unregisterCandle(this);
+        }
+
+        super.remove(pReason);
+    }
+
     private void findNearestSoulMage(ServerLevel serverLevel) {
         List<SoulMageEntity> nearbyMages = serverLevel.getEntitiesOfClass(SoulMageEntity.class, this.getBoundingBox().inflate(20.0D), EntitySelector.NO_SPECTATORS);
 
@@ -126,9 +140,8 @@ public class LivingCandleEntity extends CompanionSummonEntity {
 
             if (closestMage.getCandleCount() < SoulMageEntity.MAX_CANDLES_COUNT) {
                 this.setOwnerUUID(closestMage.getUUID());
-                closestMage.setCandleCount(closestMage.getCandleCount() + 1);
-                closestMage.candles.add(this);
                 this.setTame(true, true);
+                closestMage.registerCandle(this);
             }
 
         }

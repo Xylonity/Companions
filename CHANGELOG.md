@@ -3,6 +3,7 @@
 - Added a new teddy variant, the holy teddy. It is activated by interacting with a normal teddy using a porcelain pottery. Interacting with the teddy while holding an item with the curse of vanishing enchantment would eliminate it
 - Added 2 new items (placeable), porcelain pottery and holy porcelain pottery. The former is used to transform the teddy in its holy variant, while the latter is used to contain entities and allows to move them freely
 - The Tesla Manager, which handles connection logic on the Tesla Network, has been rewritten, potentially fixing Tesla connection and desynchronization issues on dedicated servers
+- Cornelius blackjack game is now available for all players in the server, not only the owner, and the game is now played sequentially per active player
 - Now the Sacred Pontiff can have its name translated into different languages instead of being exclusively in English (previously limited by the bossbar system)
 - The bonanza's 2 skull drop anvil feels special today, don't you dare annoy it
 - Armor effects now apply to any entity wearing the armor set, not just players
@@ -15,6 +16,7 @@
 - In Fabric, the respawn totem can now respawn any tamable entity, not just companions
 - The code has been partially rewritten to ensure loader parity
 - Increased mutated teddy attack range
+- The plasma lamp now lits when active
 - Enhanced the visuals for the holiness star
 - Now the soul mage casts the black hole with greater accuracy towards his target, so that it is less likely to miss
 - The soul mage's healing ring spell has been given priority, as it wasn't cast sometimes
@@ -38,6 +40,7 @@
 - Added a config option to allow the enchantments on the respective armor piece to persist when crafting mage, holy robe, or crystallized blood armor sets
 - Fixed companions not being detected by mods that display entity loot tables, due to a lack of loot table definitions
 - Fixed a bug where the blood scythe wouldn't heal the player on hit
+- Fixed a case where the soul mage living candle wouldn't work
 - Fixed a case where a max stack size lower than 64 would make the "Dinamo" impossible to tame
 - Fixed a bug where the hostile imp was not dropping demon flesh in Fabric
 - Fixed a potential sync issue that occurred when spawning charged creepers with the frog bonanza

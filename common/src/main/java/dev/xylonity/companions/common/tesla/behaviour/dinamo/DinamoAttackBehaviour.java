@@ -78,20 +78,14 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
         dinamo.setAttackCycleCounter(dinamo.getAttackCycleCounter() + 1);
     }
 
+    private boolean canBeAttacked(DinamoEntity dinamo, LivingEntity entity) {
+        return !Util.areEntitiesLinked(entity, dinamo) && !Util.areTeammates(dinamo.getOwner(), entity);
+    }
+
     private void searchForTargets(DinamoEntity dinamo) {
         final List<LivingEntity> list = dinamo.level().getEntitiesOfClass(LivingEntity.class,
                         dinamo.getBoundingBox().inflate(10),
-                        entity -> {
-                            if (Util.areEntitiesLinked(entity, dinamo)) {
-                                return false;
-                            }
-
-                            if (Util.areTeammates(dinamo.getOwner(), entity)) {
-                                return false;
-                            }
-
-                            return entity instanceof Monster;
-                        })
+                        entity -> canBeAttacked(dinamo, entity) && entity instanceof Monster)
                 .stream()
                 .filter(dinamo::hasLineOfSight)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -104,7 +98,7 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
 
         }
 
-        if (dinamo.getTarget() != null) {
+        if (dinamo.getTarget() != null && canBeAttacked(dinamo, dinamo.getTarget())) {
             dinamo.entitiesToAttack.add(dinamo.getTarget());
             dinamo.setTargetIds(dinamo.getTargetIds() + dinamo.getTarget().getId() + ";");
         }

@@ -100,6 +100,10 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     }
 
     public void addOutgoing(ConnectionTarget target) {
+        if (!canConnectToOtherModules()) {
+            return;
+        }
+
         outgoing.add(target);
         setChanged();
     }
@@ -124,7 +128,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
         super.loadAdditional(tag, registries);
 
         outgoing.clear();
-        if (tag.contains("OutgoingConnections", Tag.TAG_LIST)) {
+        if (tag.contains("OutgoingConnections", Tag.TAG_LIST) && canConnectToOtherModules()) {
             tag.getList("OutgoingConnections", Tag.TAG_COMPOUND).forEach(tagg ->
                     outgoing.add(ConnectionTarget.deserialize((CompoundTag) tagg)));
         }
@@ -202,7 +206,7 @@ public abstract class AbstractTeslaBlockEntity extends BlockEntity implements Ge
     }
 
     public boolean handleNodeSelection(ConnectionTarget thisNode, ConnectionTarget nodeToConnect, @Nullable UseOnContext ctx, Player player) {
-        if (level != null) {
+        if (level != null && canConnectToOtherModules()) {
             addOutgoing(nodeToConnect);
             TeslaNetwork.get(level).onConnectionAdded(thisNode, nodeToConnect);
             return true;

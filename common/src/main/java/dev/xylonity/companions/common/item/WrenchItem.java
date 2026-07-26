@@ -112,23 +112,28 @@ public class WrenchItem extends TooltipItem {
             return;
         }
 
-        final boolean aToBExists = nodeHasOutgoingTo(firstNode, currentNode, player);
-        final boolean bToAExists = nodeHasOutgoingTo(currentNode, firstNode, player);
+        // Sink modules can only be the destination of a connection, so the pair gets flipped
+        final boolean flip = !canBeSource(firstNode, player) && canBeSource(currentNode, player);
+        final ConnectionTarget sourceNode = flip ? currentNode : firstNode;
+        final ConnectionTarget targetNode = flip ? firstNode : currentNode;
+
+        final boolean aToBExists = nodeHasOutgoingTo(sourceNode, targetNode, player);
+        final boolean bToAExists = nodeHasOutgoingTo(targetNode, sourceNode, player);
         final boolean anyConnection = aToBExists || bToAExists;
 
         if (anyConnection) {
             // Removes existing connection
-            removeExistingConnection(player, firstNode, currentNode, aToBExists, bToAExists, context);
+            removeExistingConnection(player, sourceNode, targetNode, aToBExists, bToAExists, context);
             player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_deleted").withStyle(ChatFormatting.RED), true);
         }
         else {
             // Creates a new connection
-            if (!validateNewConnection(player, firstNode, currentNode, context)) {
+            if (!validateNewConnection(player, sourceNode, targetNode, context)) {
                 firstNodes.remove(playerId);
                 return;
             }
 
-            final boolean messageFlag = createConnection(player, firstNode, currentNode, context);
+            final boolean messageFlag = createConnection(player, sourceNode, targetNode, context);
             if (messageFlag) {
                 player.displayClientMessage(Component.translatable("wrench.companions.client_message.connection_established").withStyle(ChatFormatting.GREEN), true);
             }
@@ -140,6 +145,14 @@ public class WrenchItem extends TooltipItem {
         }
 
         firstNodes.remove(playerId);
+    }
+
+    private boolean canBeSource(ConnectionTarget node, Player player) {
+        if (node.isBlock() && player.level().getBlockEntity(node.blockPos()) instanceof AbstractTeslaBlockEntity blockEntity) {
+            return blockEntity.canConnectToOtherModules();
+        }
+
+        return true;
     }
 
     private boolean nodeHasOutgoingTo(ConnectionTarget source, ConnectionTarget target, Player player) {
@@ -251,18 +264,6 @@ public class WrenchItem extends TooltipItem {
                 messageFlag = teslaBlockEntity.handleNodeSelection(first, current, context, player);
                 teslaBlockEntity.setOwnerUUID(player.getUUID());
                 teslaBlockEntity.sync();
-            }
-
-        }
-        else {
-            // If the context is null but the first one is a block
-            if (first.isEntity()) {
-                final Entity entity = CompanionsEntityTracker.getEntityByUUID(first.entityId());
-                if (entity instanceof DinamoEntity dinamo) {
-                    dinamo.addOutgoingConnection(current);
-                    network.onConnectionAdded(first, current);
-                }
-
             }
 
         }
