@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -142,16 +143,52 @@ public class SoulMageEntity extends CompanionEntity implements ContainerListener
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if (pAmount > this.getHealth()) {
+        if (pAmount >= this.getHealth()) {
+            refreshCandles();
             if (!candles.isEmpty()) {
                 LivingCandleEntity candle = candles.remove(0);
-                setCandleCount(getCandleCount() - 1);
+                setCandleCount(candles.size());
                 candle.doKill();
                 return false;
             }
+
         }
 
         return super.hurt(pSource, pAmount);
+    }
+
+    public void registerCandle(LivingCandleEntity candle) {
+        if (candle.isAlive() && !candle.isRemoved() && !candles.contains(candle)) {
+            candles.add(candle);
+            setCandleCount(candles.size());
+        }
+
+    }
+
+    public void unregisterCandle(LivingCandleEntity candle) {
+        if (candles.remove(candle)) {
+            setCandleCount(candles.size());
+        }
+
+    }
+
+    private void refreshCandles() {
+        candles.removeIf(candle -> !candle.isAlive() || candle.isRemoved() || !this.getUUID().equals(candle.getOwnerUUID()));
+
+        if (this.level() instanceof ServerLevel serverLevel) {
+            for (
+                    final LivingCandleEntity candle : serverLevel.getEntitiesOfClass(LivingCandleEntity.class, this.getBoundingBox().inflate(64.0D),
+                    candle -> candle.isAlive() && this.getUUID().equals(candle.getOwnerUUID()))
+            ) {
+                if (!candles.contains(candle)) {
+                    candles.add(candle);
+                }
+
+            }
+
+        }
+
+        setCandleCount(candles.size());
     }
 
     public String getCurrentAttackType() {

@@ -40,6 +40,7 @@
 - Added a config option to allow the enchantments on the respective armor piece to persist when crafting mage, holy robe, or crystallized blood armor sets
 - Fixed companions not being detected by mods that display entity loot tables, due to a lack of loot table definitions
 - Fixed a bug where the blood scythe wouldn't heal the player on hit
+- Fixed a case where the soul mage living candle wouldn't work
 - Fixed a case where a max stack size lower than 64 would make the "Dinamo" impossible to tame
 - Fixed a bug where the hostile imp was not dropping demon flesh in Fabric
 - Fixed a potential sync issue that occurred when spawning charged creepers with the frog bonanza
