@@ -1,5 +1,6 @@
 package dev.xylonity.companions.common.container;
 
+import dev.xylonity.companions.common.blackjack.CorneliusTable;
 import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.config.CompanionsConfig;
@@ -9,63 +10,77 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CorneliusContainerMenu extends AbstractContainerMenu {
 
-    private final CorneliusEntity cornelius;
-    private final Container entityInventory;
-    private boolean gameActive = false;
+    public static final int BUTTON_DEAL = 0;
+    public static final int BUTTON_HIT = 1;
+    public static final int BUTTON_STAND = 2;
 
-    public static final int BUTTON_START_GAME = 0;
-    public static final int BUTTON_STOP_GAME  = 1;
-    public static final int ACTION_LOSE = 2;
-    public static final int ACTION_TIE = 3;
-    public static final int ACTION_WIN = 4;
-    public static final int ACTION_JACK = 5;
+    private static final int MAIN_SLOTS = 3;
+    private static final int CONTAINER_SLOTS = MAIN_SLOTS + CorneliusTable.BET_SLOTS;
+
+    public static final int IDX_PHASE = 0;
+    public static final int IDX_TURN = 1;
+    public static final int IDX_MY_SEAT = 2;
+    public static final int IDX_SEAT_COUNT = 3;
+    public static final int IDX_MY_RESULT = 4;
+    public static final int IDX_MY_STATE = 5;
+    public static final int IDX_DEALER_COUNT = 6;
+    public static final int IDX_DEALER_CARDS = 7;
+    public static final int IDX_MY_CARDS = IDX_DEALER_CARDS + CorneliusTable.MAX_CARDS;
+    public static final int IDX_SEATS = IDX_MY_CARDS + CorneliusTable.MAX_CARDS;
+    public static final int SEAT_STRIDE = 4;
+    private static final int DATA_SIZE = IDX_SEATS + CorneliusTable.MAX_SEATS * SEAT_STRIDE;
 
     private static final List<Object> ALLOWED_BET_KEYS = new ArrayList<>();
     private static String cachedBets = null;
 
+    private final CorneliusEntity cornelius;
+    private final Container entityInventory;
+    private final ContainerData data = new SimpleContainerData(DATA_SIZE);
+
+    private final CorneliusTable table;
+    private final CorneliusTable.Seat seat;
+    private final Player viewer;
+
     public CorneliusContainerMenu(int windowId, Inventory playerInv, CorneliusEntity cornelius) {
         super(CompanionsMenuTypes.CORNELIUS_MENU.get(), windowId);
         this.cornelius = cornelius;
+        this.viewer = playerInv.player;
         this.entityInventory = cornelius.inventory;
 
-        checkContainerSize(this.entityInventory, 2);
+        this.table = cornelius.level().isClientSide ? null : cornelius.getTable();
+        this.seat = this.table != null ? this.table.getOrCreateSeat(playerInv.player) : null;
+
+        final Container betContainer = this.seat != null ? this.seat.bet : new SimpleContainer(CorneliusTable.BET_SLOTS);
+
+        checkContainerSize(this.entityInventory, MAIN_SLOTS);
         this.entityInventory.startOpen(playerInv.player);
 
         this.addSlot(new MainCoinSlot(entityInventory, 0, 24, 118));
         this.addSlot(new MainCoinSlot(entityInventory, 1, 42, 118));
         this.addSlot(new MainCoinSlot(entityInventory, 2, 60, 118));
 
-        this.addSlot(new CrupierCoinSlot(entityInventory, 3, 78, 7));
-        this.addSlot(new CrupierCoinSlot(entityInventory, 4, 96, 7));
-        this.addSlot(new CrupierCoinSlot(entityInventory, 5, 114, 7));
+        this.addSlot(new BetSlot(betContainer, 0, 78, 7));
+        this.addSlot(new BetSlot(betContainer, 1, 96, 7));
+        this.addSlot(new BetSlot(betContainer, 2, 114, 7));
 
-        this.addDataSlot(new DataSlot() {
-            @Override
-            public int get() {
-                return gameActive ? 1 : 0;
-            }
-
-            @Override
-            public void set(int value) {
-                gameActive = (value != 0);
-            }
-
-        });
+        this.addDataSlots(this.data);
 
         final int PLAYER_INVENTORY_START_Y = 144;
         for (int row = 0; row < 3; row++) {
@@ -82,6 +97,149 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
     }
 
     @Override
+    public void broadcastChanges() {
+        if (this.table != null) {
+            syncTable();
+        }
+
+        super.broadcastChanges();
+    }
+
+    private void syncTable() {
+        this.data.set(IDX_PHASE, this.table.getPhase().ordinal());
+        this.data.set(IDX_TURN, this.table.getTurn());
+        this.data.set(IDX_MY_SEAT, this.seat == null ? -1 : this.table.seatIndex(this.seat.playerId));
+        this.data.set(IDX_SEAT_COUNT, this.table.getSeats().size());
+        this.data.set(IDX_MY_RESULT, this.seat == null ? 0 : this.seat.result.ordinal());
+        this.data.set(IDX_MY_STATE, this.seat == null ? 0 : this.seat.state.ordinal());
+
+        final List<Integer> dealer = this.table.getDealerCards();
+        this.data.set(IDX_DEALER_COUNT, dealer.size());
+        for (int i = 0; i < CorneliusTable.MAX_CARDS; i++) {
+            final boolean hidden = i == 0 && this.table.isHoleCardHidden();
+            this.data.set(IDX_DEALER_CARDS + i, i < dealer.size() && !hidden ? dealer.get(i) : 0);
+        }
+
+        final List<Integer> mine = this.seat == null ? List.of() : this.seat.cards;
+        for (int i = 0; i < CorneliusTable.MAX_CARDS; i++) {
+            this.data.set(IDX_MY_CARDS + i, i < mine.size() ? mine.get(i) : 0);
+        }
+
+        final List<CorneliusTable.Seat> seats = this.table.getSeats();
+        for (int i = 0; i < CorneliusTable.MAX_SEATS; i++) {
+            final int offset = IDX_SEATS + i * SEAT_STRIDE;
+            if (i >= seats.size()) {
+                this.data.set(offset, 0);
+                this.data.set(offset + 1, 0);
+                this.data.set(offset + 2, 0);
+                this.data.set(offset + 3, 0);
+                continue;
+            }
+
+            final CorneliusTable.Seat other = seats.get(i);
+            final Player player = this.cornelius.level().getPlayerByUUID(other.playerId);
+            final int entityId = player == null ? -1 : player.getId();
+
+            this.data.set(offset, (entityId >> 16) & 0xFFFF);
+            this.data.set(offset + 1, entityId & 0xFFFF);
+            this.data.set(offset + 2, CorneliusTable.handValue(other.cards).total());
+            this.data.set(offset + 3, other.state.ordinal());
+        }
+
+    }
+
+    public CorneliusTable.Phase phase() {
+        final int ordinal = this.data.get(IDX_PHASE);
+        final CorneliusTable.Phase[] values = CorneliusTable.Phase.values();
+
+        return ordinal >= 0 && ordinal < values.length ? values[ordinal] : CorneliusTable.Phase.BETTING;
+    }
+
+    public int turn() {
+        return this.data.get(IDX_TURN);
+    }
+
+    public int mySeat() {
+        return this.data.get(IDX_MY_SEAT);
+    }
+
+    public int seatCount() {
+        return Math.min(this.data.get(IDX_SEAT_COUNT), CorneliusTable.MAX_SEATS);
+    }
+
+    public CorneliusTable.Result myResult() {
+        return CorneliusTable.Result.values()[Math.floorMod(this.data.get(IDX_MY_RESULT), CorneliusTable.Result.values().length)];
+    }
+
+    public CorneliusTable.SeatState myState() {
+        return CorneliusTable.SeatState.values()[Math.floorMod(this.data.get(IDX_MY_STATE), CorneliusTable.SeatState.values().length)];
+    }
+
+    public CorneliusTable.SeatState seatState(int index) {
+        return CorneliusTable.SeatState.values()[Math.floorMod(this.data.get(IDX_SEATS + index * SEAT_STRIDE + 3), CorneliusTable.SeatState.values().length)];
+    }
+
+    public int seatTotal(int index) {
+        return this.data.get(IDX_SEATS + index * SEAT_STRIDE + 2);
+    }
+
+    public int seatPlayerId(int index) {
+        final int offset = IDX_SEATS + index * SEAT_STRIDE;
+
+        return ((this.data.get(offset) & 0xFFFF) << 16) | (this.data.get(offset + 1) & 0xFFFF);
+    }
+
+    public List<Integer> dealerCards() {
+        final List<Integer> cards = new ArrayList<>();
+        for (int i = 0; i < this.data.get(IDX_DEALER_COUNT) && i < CorneliusTable.MAX_CARDS; i++) {
+            cards.add(this.data.get(IDX_DEALER_CARDS + i));
+        }
+
+        return cards;
+    }
+
+    public List<Integer> myCards() {
+        final List<Integer> cards = new ArrayList<>();
+        for (int i = 0; i < CorneliusTable.MAX_CARDS; i++) {
+            final int value = this.data.get(IDX_MY_CARDS + i);
+            if (value <= 0) {
+                break;
+            }
+
+            cards.add(value);
+        }
+
+        return cards;
+    }
+
+    public boolean hasSeat() {
+        return this.table != null ? this.seat != null : mySeat() >= 0;
+    }
+
+    public boolean betsLocked() {
+        return phaseOf() != CorneliusTable.Phase.BETTING;
+    }
+
+    private CorneliusTable.Phase phaseOf() {
+        return this.table != null ? this.table.getPhase() : phase();
+    }
+
+    public boolean hasBet() {
+        for (int i = MAIN_SLOTS; i < CONTAINER_SLOTS; i++) {
+            if (!this.slots.get(i).getItem().isEmpty()) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+    private boolean isOwner(Player player) {
+        return this.cornelius.getOwner() == player;
+    }
+
+    @Override
     public boolean stillValid(@NotNull Player player) {
         return this.entityInventory.stillValid(player) && this.cornelius.isAlive() && this.cornelius.distanceTo(player) < 8.0F;
     }
@@ -90,6 +248,11 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
     public void removed(@NotNull Player player) {
         super.removed(player);
         this.entityInventory.stopOpen(player);
+
+        if (this.table != null) {
+            this.table.leave(player);
+        }
+
     }
 
     @Override
@@ -100,22 +263,26 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
             ItemStack stackInSlot = slot.getItem();
             itemstack = stackInSlot.copy();
 
-            int containerSize = this.entityInventory.getContainerSize();
-            if (index < containerSize) {
-                if (!this.moveItemStackTo(stackInSlot, containerSize, this.slots.size(), true)) {
+            if (index < CONTAINER_SLOTS) {
+                if (!this.moveItemStackTo(stackInSlot, CONTAINER_SLOTS, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else {
-                if (!this.moveItemStackTo(stackInSlot, 0, containerSize, false)) {
+
+            }
+            else {
+                if (!this.moveItemStackTo(stackInSlot, 0, CONTAINER_SLOTS, false)) {
                     return ItemStack.EMPTY;
                 }
+
             }
 
             if (stackInSlot.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
-            } else {
+            }
+            else {
                 slot.setChanged();
             }
+
         }
 
         return itemstack;
@@ -123,89 +290,69 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
 
     @Override
     public boolean clickMenuButton(@NotNull Player player, int buttonId) {
-
-        if (buttonId == BUTTON_START_GAME) {
-            this.gameActive = true;
-            this.broadcastChanges();
-            return true;
+        if (this.table == null || this.seat == null) {
+            return false;
         }
 
-        if (buttonId == BUTTON_STOP_GAME) {
-            this.gameActive = false;
-            this.broadcastChanges();
-            return true;
-        }
-
-        if (buttonId >= ACTION_LOSE && buttonId <= ACTION_JACK) {
-            double multipl;
-            switch (buttonId) {
-                case ACTION_JACK -> multipl = 2.5;
-                case ACTION_WIN -> multipl = 2.0;
-                case ACTION_TIE -> multipl = 1.0;
-                default // LOSE
-                        -> multipl = 0.0;
+        switch (buttonId) {
+            case BUTTON_DEAL -> {
+                this.table.deal();
+                this.broadcastChanges();
+                return true;
+            }
+            case BUTTON_HIT -> {
+                this.table.hit(player.getUUID());
+                this.broadcastChanges();
+                return true;
+            }
+            case BUTTON_STAND -> {
+                this.table.stand(player.getUUID());
+                this.broadcastChanges();
+                return true;
+            }
+            default -> {
+                return super.clickMenuButton(player, buttonId);
             }
 
-            pay(multipl, player);
-            this.gameActive = false;
-            this.broadcastChanges();
-            return true;
         }
 
-        return super.clickMenuButton(player, buttonId);
     }
 
-    private void pay(double multiplier, Player player) {
-        for (int i = 3; i <= 5; i++) {
-            ItemStack bet = this.entityInventory.getItem(i);
-
-            if (bet.isEmpty()) continue;
-
-            int payoutTotal = (int) Math.floor(bet.getCount() * multiplier);
-
-            int toSlot = Math.min(payoutTotal, bet.getMaxStackSize());
-            int overflow = payoutTotal - toSlot;
-
-            this.entityInventory.setItem(i, new ItemStack(bet.getItem(), toSlot));
-            if (overflow > 0) {
-                ItemEntity drop = new ItemEntity(player.level(), player.getX(), player.getY() + 1.0, player.getZ(), new ItemStack(bet.getItem(), overflow));
-                player.level().addFreshEntity(drop);
-            }
-        }
-
-        this.entityInventory.setChanged();
-    }
-
-    public static class MainCoinSlot extends Slot {
+    public class MainCoinSlot extends Slot {
         public MainCoinSlot(Container container, int index, int x, int y) {
             super(container, index, x, y);
         }
 
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
-            return stack.getItem() instanceof CoinItem;
+            return stack.getItem() instanceof CoinItem && CorneliusContainerMenu.this.isOwner(CorneliusContainerMenu.this.viewer);
+        }
+
+        @Override
+        public boolean mayPickup(@NotNull Player player) {
+            return CorneliusContainerMenu.this.isOwner(player);
         }
 
     }
 
-    public class CrupierCoinSlot extends Slot {
-        public CrupierCoinSlot(Container container, int index, int x, int y) {
+    public class BetSlot extends Slot {
+        public BetSlot(Container container, int index, int x, int y) {
             super(container, index, x, y);
         }
 
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
-            return isAllowedBet(stack) && !CorneliusContainerMenu.this.gameActive;
+            return isAllowedBet(stack) && CorneliusContainerMenu.this.hasSeat() && !CorneliusContainerMenu.this.betsLocked();
         }
 
         @Override
         public boolean mayPickup(@NotNull Player player) {
-            return !CorneliusContainerMenu.this.gameActive;
+            return !CorneliusContainerMenu.this.betsLocked();
         }
 
         @Override
         public boolean allowModification(@NotNull Player pPlayer) {
-            return !CorneliusContainerMenu.this.gameActive && super.allowModification(pPlayer);
+            return !CorneliusContainerMenu.this.betsLocked() && super.allowModification(pPlayer);
         }
 
     }
@@ -221,7 +368,8 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
                     return true;
                 }
 
-            } else if (object instanceof TagKey<?> anyTag) {
+            }
+            else if (object instanceof TagKey<?> anyTag) {
                 if (stack.is((TagKey<Item>) anyTag)) {
                     return true;
                 }
@@ -254,7 +402,8 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
             if (isTag) {
                 TagKey<Item> tag = TagKey.create(Registries.ITEM, resourceLocation);
                 ALLOWED_BET_KEYS.add(tag);
-            } else {
+            }
+            else {
                 BuiltInRegistries.ITEM.getOptional(resourceLocation).ifPresent(ALLOWED_BET_KEYS::add);
             }
 

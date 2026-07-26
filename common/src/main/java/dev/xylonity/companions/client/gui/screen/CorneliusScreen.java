@@ -3,6 +3,7 @@ package dev.xylonity.companions.client.gui.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
 import dev.xylonity.companions.Companions;
+import dev.xylonity.companions.common.blackjack.CorneliusTable;
 import dev.xylonity.companions.common.container.CorneliusContainerMenu;
 import dev.xylonity.companions.common.util.Util;
 import dev.xylonity.companions.registry.CompanionsSounds;
@@ -19,14 +20,13 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
 
 public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerMenu> {
@@ -35,12 +35,6 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
     private static final ResourceLocation TEX_BOTTOM = Companions.of("textures/gui/cornelius_gui_bottom.png");
 
     private static final int ANIM_TICKS = 8;
-    private static final int DEAL_INTERVAL_TICKS = 6;
-
-    private int dealDelay = 0;
-
-    private final ArrayDeque<Boolean> dealQueue = new ArrayDeque<>();
-    private int resultTicks = 0;
 
     private final List<FrogCard> playerCards = new ArrayList<>();
     private final List<FrogCard> dealerCards = new ArrayList<>();
@@ -48,7 +42,7 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
     private FrogCard hoveredCard = null;
 
     private static final float LERP_DELTA = 0.235f;
-    private static final int END_GAME_TIME = 30;
+    private static final int RESULT_ANIM_TIME = 40;
     private static final int CARD_W = 24;
     private static final int CARD_H = 36;
     private static final int V_BACK = 144;
@@ -65,15 +59,17 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
     private static final float HOVER_W = CARD_W * HOVER_SCALE;
     private static final float HOVER_H = CARD_H * HOVER_SCALE;
 
+    private static final int SEAT_STRIP_X = -76;
+    private static final int SEAT_STRIP_Y = -46;
+    private static final int SEAT_ROW_H = 11;
+
     private Button btnHit;
     private Button btnStand;
 
     private boolean hitButtonPressed = false;
     private boolean standButtonPressed = false;
 
-    private Phase phase = Phase.WAITING_PLAY;
-    private Result result;
-    private Result pendingResult = null;
+    private int resultTicks = 0;
 
     public CorneliusScreen(CorneliusContainerMenu container, Inventory inv, Component title) {
         super(container, inv, title);
@@ -89,17 +85,17 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         return (this.height - this.imageHeight) / 2;
     }
 
-    private FrogCard newCard2Player() {
+    private FrogCard newCard2Player(int value) {
         return new FrogCard(
                 (width - CARD_W) / 2f, START_Y,
                 generalMarginLeft() + MARGIN_PLAYER + playerCards.size() * (CARD_W + SPACING_PLAYER),
                 generalMarginTop() + PLAYER_Y + 17,
-                new Random().nextInt(13) + 1,
+                value,
                 true
         );
     }
 
-    private FrogCard newCard2Crupier() {
+    private FrogCard newCard2Crupier(int value) {
         int idx = dealerCards.size();
         float targetX = generalMarginLeft() + MARGIN_DEALER + idx * (CARD_W + SPACING_DEALER);
         if (idx >= 1) targetX += 10;
@@ -108,9 +104,10 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
                 START_Y,
                 targetX,
                 generalMarginTop() + DEALER_Y,
-                new Random().nextInt(13)+1,
+                value,
                 idx != 0
         );
+
     }
 
     @Override
@@ -122,27 +119,22 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
                         generalMarginTop() + PLAYER_Y + 100,
                         43, 29, 0, 227, TEX_TOP, b->
         {
-            int c = 0;
-            for (int i = 3; i <= 5; i++) {
-                if (menu.slots.get(i).getItem().isEmpty()) {
-                    c++;
+            if (menu.phase() == CorneliusTable.Phase.BETTING) {
+                if (menu.hasBet()) {
+                    sendAction(CorneliusContainerMenu.BUTTON_DEAL);
                 }
+
+            } else if (isMyTurn()) {
+                sendAction(CorneliusContainerMenu.BUTTON_HIT);
             }
 
-            if (c == 3) return;
-
-            if (phase == Phase.WAITING_PLAY) {
-                startGame();
-            } else if (phase == Phase.PLAYER_TURN) {
-                onHit();
-            }
         })
         {
 
             @Override
             public void onPress(){
                 super.onPress();
-                if (phase != Phase.WAITING_PLAY) hitButtonPressed = true;
+                if (menu.phase() != CorneliusTable.Phase.BETTING) hitButtonPressed = true;
             }
 
             @Override
@@ -157,13 +149,18 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         btnStand = addRenderableWidget(new ImageButton(
                 generalMarginLeft() + 135,
                 generalMarginTop() + PLAYER_Y + 100,
-                43,29,0,227, TEX_TOP, b-> onStand())
+                43,29,0,227, TEX_TOP, b -> {
+                    if (isMyTurn()) {
+                        sendAction(CorneliusContainerMenu.BUTTON_STAND);
+                    }
+
+                })
         {
 
             @Override
             public void onPress() {
                 super.onPress();
-                if (phase != Phase.WAITING_PLAY) standButtonPressed = true;
+                if (menu.phase() != CorneliusTable.Phase.BETTING) standButtonPressed = true;
             }
 
             @Override
@@ -177,23 +174,16 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
     }
 
-    private HandValue fullHandValue(List<FrogCard> cards) {
-        int total = 0;
-        int aces = 0;
-        for (FrogCard card : cards) {
-            int v = card.value;
-            if (v == 1) {
-                total += 11; aces++;
-            } else {
-                total += Math.min(v, 10);
-            }
+    private void sendAction(int buttonId) {
+        final Minecraft mc = Minecraft.getInstance();
+        if (mc.gameMode != null) {
+            mc.gameMode.handleInventoryButtonClick(this.menu.containerId, buttonId);
         }
 
-        while (total > 21 && aces > 0) {
-            total -= 10; aces--;
-        }
+    }
 
-        return new HandValue(total, aces > 0);
+    private boolean isMyTurn() {
+        return menu.phase() == CorneliusTable.Phase.PLAYING && menu.mySeat() >= 0 && menu.turn() == menu.mySeat();
     }
 
     @Override
@@ -219,118 +209,83 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
     }
 
-    private void startGame(){
-        phase = Phase.DEALING;
-        playerCards.clear();
-        dealerCards.clear();
-        dealQueue.clear();
-        dealQueue.addAll(List.of(true,false,true,false)); // player - dealer - player - dealer
-        dealDelay = 0;
-
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.gameMode != null)
-            mc.gameMode.handleInventoryButtonClick(this.menu.containerId, CorneliusContainerMenu.BUTTON_START_GAME);
-
-    }
-    private void onHit() {
-        if (phase != Phase.PLAYER_TURN) return;
-
-        dealQueue.add(true);
-        btnHit.active = false;
-        btnStand.active = false;
-        phase = Phase.DEALING;
-        dealDelay = 0;
-    }
-
-    private void onStand(){
-        if (phase!=Phase.PLAYER_TURN) return;
-
-        if (!dealerCards.isEmpty()) {
-            dealerCards.get(0).startFlip();
-        }
-
-        phase = Phase.DEALER_TURN;
-        btnHit.visible = false;
-        btnStand.visible = true;
-        dealDelay = DEAL_INTERVAL_TICKS;
-        standButtonPressed = false;
-    }
-
     @Override
     protected void containerTick() {
 
         super.containerTick();
 
-        switch(phase) {
-            case DEALING -> {
-                tickCards();
+        tickCards();
+        syncHands();
+        updateButtons();
 
-                if (dealDelay>0) {
-                    dealDelay--;
-                }
-
-                if (dealDelay==0 && !dealQueue.isEmpty()) {
-                    spawnNextCard(dealQueue.poll());
-                    dealDelay = DEAL_INTERVAL_TICKS;
-                }
-
-                if (dealQueue.isEmpty() && allArrived()) {
-                    finishDealing();
-                }
-            }
-            case PLAYER_TURN -> {
-                if (handValue(playerCards).total == 21) {
-                    showResult(Result.BLACKJACK);
-                }
-
-                if (handValue(playerCards).total > 21) {
-                    showResult(Result.LOSE);
-                }
-
-                if (handValue(dealerCards).total > 21) {
-                    showResult(Result.WIN);
-                }
-
-                if (handValue(dealerCards).total == 21) {
-                    showResult(Result.LOSE);
-                }
-            }
-            case DEALER_TURN -> {
-                tickCards();
-
-                if (dealDelay > 0) {
-                    dealDelay--;
-                    break;
-                }
-
-                if (fullHandValue(dealerCards).total < 17 || (fullHandValue(dealerCards).total == 17 && fullHandValue(dealerCards).soft)) {
-                    spawnNextCard(false);
-                    dealDelay = DEAL_INTERVAL_TICKS;
-                } else {
-                    if (allArrived() && noCardIsFlipping()) {
-                        evaluateGame();
-                    }
-                }
-
-            }
-            case SHOW_RESULT -> {
-                if (++resultTicks >= END_GAME_TIME) {
-                    resetToWaitingPlay();
-                }
-
-            }
-            default -> { ;; }
-        }
-
-        if (pendingResult != null && allArrived() && noCardIsFlipping()) {
-            showResult(pendingResult);
-            pendingResult = null;
+        if (menu.phase() == CorneliusTable.Phase.RESULT && noCardIsFlipping()) {
+            resultTicks++;
+        } else if (menu.phase() != CorneliusTable.Phase.RESULT) {
+            resultTicks = 0;
         }
 
     }
 
-    private boolean noCardIsFlipping() {
-        return Stream.concat(playerCards.stream(), dealerCards.stream()).noneMatch(card -> card.flipping);
+    private void syncHands() {
+        boolean dealt = false;
+
+        final List<Integer> synced = menu.myCards();
+        if (synced.size() < playerCards.size()) {
+            playerCards.clear();
+        }
+
+        for (int i = playerCards.size(); i < synced.size(); i++) {
+            playerCards.add(newCard2Player(synced.get(i)));
+            dealt = true;
+        }
+
+        final List<Integer> dealer = menu.dealerCards();
+        if (dealer.size() < dealerCards.size()) {
+            dealerCards.clear();
+        }
+
+        for (int i = dealerCards.size(); i < dealer.size(); i++) {
+            dealerCards.add(newCard2Crupier(dealer.get(i)));
+            dealt = true;
+        }
+
+        if (dealt) {
+            playFlipSound();
+        }
+
+        if (!dealerCards.isEmpty() && !dealer.isEmpty()) {
+            final FrogCard hole = dealerCards.get(0);
+            final int value = dealer.get(0);
+            if (value > 0 && !hole.faceUp) {
+                hole.value = value;
+                hole.startFlip();
+            }
+
+        }
+
+    }
+
+    private void updateButtons() {
+        final boolean betting = menu.phase() == CorneliusTable.Phase.BETTING;
+        final boolean myTurn = isMyTurn();
+
+        btnHit.visible = betting || myTurn;
+        btnHit.active = betting ? menu.hasBet() && menu.hasSeat() : myTurn;
+        btnStand.visible = myTurn;
+        btnStand.active = myTurn;
+
+        if (betting || myTurn) {
+            hitButtonPressed = false;
+            standButtonPressed = false;
+        }
+
+    }
+
+    private void playFlipSound() {
+        if (this.minecraft != null) {
+            this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(CompanionsSounds.FLIP_CARD.get(), 1.0F));
+        }
+
     }
 
     private boolean tickCards() {
@@ -350,117 +305,19 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         return all;
     }
 
-    private void spawnNextCard(boolean toPlayer) {
-        if (toPlayer) {
-            playerCards.add(newCard2Player());
-        } else {
-            dealerCards.add(newCard2Crupier());
-        }
-
-        if (this.minecraft != null)
-            this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(CompanionsSounds.FLIP_CARD.get(),1.0F));
-    }
-
-    private boolean allArrived() {
-        for (FrogCard card : playerCards) {
-            if (!card.arrived) {
-                return false;
-            }
-        }
-
-        for (FrogCard card : dealerCards) {
-            if (!card.arrived) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private void finishDealing() {
-        if (phase != Phase.DEALING) return;
-
-        if (playerCards.size() == 2 && handValue(playerCards).total == 21){
-            showResult(Result.BLACKJACK);
-            return;
-        }
-
-        if (dealerCards.size() == 2 && handValue(dealerCards).total == 21 ){
-            showResult(Result.LOSE);
-            return;
-        }
-
-        phase = Phase.PLAYER_TURN;
-        btnHit.visible = btnStand.visible = true;
-        btnHit.active = btnStand.active = true;
-        hitButtonPressed = standButtonPressed = false;
-    }
-
-    private void evaluateGame() {
-        int player = handValue(playerCards).total;
-        int frog = handValue(dealerCards).total;
-        if (player > 21) {
-            pendingResult = Result.LOSE;
-        } else if (frog > 21) {
-            pendingResult = Result.WIN;
-        } else if (player == frog) {
-            pendingResult = Result.TIE;
-        } else if (player > frog) {
-            pendingResult = Result.WIN;
-        } else {
-            pendingResult = Result.LOSE;
-        }
-
-    }
-
-    private void showResult(Result result){
-        this.result = result;
-        phase = Phase.SHOW_RESULT;
-        resultTicks = 0;
-        btnHit.visible = btnStand.visible = false;
-
-        int action;
-        switch (result) {
-            case WIN -> action = CorneliusContainerMenu.ACTION_WIN;
-            case BLACKJACK -> action = CorneliusContainerMenu.ACTION_JACK;
-            case TIE -> action = CorneliusContainerMenu.ACTION_TIE;
-            default -> // LOSE
-                    action = CorneliusContainerMenu.ACTION_LOSE;
-        }
-
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.gameMode != null) {
-            mc.gameMode.handleInventoryButtonClick(this.menu.containerId, action);
-        }
-
-    }
-
-    private void resetToWaitingPlay(){
-        phase = Phase.WAITING_PLAY;
-        playerCards.clear();
-        dealerCards.clear();
-        dealQueue.clear();
-        dealDelay = 0;
-
-        btnHit.visible = true;
-        btnHit.active = true;
-        btnStand.visible = false;
-
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.gameMode != null) {
-            mc.gameMode.handleInventoryButtonClick(this.menu.containerId, CorneliusContainerMenu.BUTTON_STOP_GAME);
-        }
-
+    private boolean noCardIsFlipping() {
+        return Stream.concat(playerCards.stream(), dealerCards.stream()).noneMatch(card -> card.flipping);
     }
 
     private void renderResultOverlay(GuiGraphics g) {
-        if (phase != Phase.SHOW_RESULT) return;
+        if (menu.phase() != CorneliusTable.Phase.RESULT || menu.myResult() == CorneliusTable.Result.NONE) return;
+        if (!noCardIsFlipping()) return;
 
         int u;
         int v;
         int w;
         int h;
-        switch (result) {
+        switch (menu.myResult()) {
             case WIN -> {
                 u = 41;
                 v = 83;
@@ -491,8 +348,8 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
         float bScale;
         if (resultTicks < ANIM_TICKS) {
             bScale = (float) resultTicks / ANIM_TICKS;
-        } else if (resultTicks > END_GAME_TIME - ANIM_TICKS) {
-            bScale = (float)(END_GAME_TIME - resultTicks) / ANIM_TICKS;
+        } else if (resultTicks > RESULT_ANIM_TIME - ANIM_TICKS) {
+            bScale = (float)(RESULT_ANIM_TIME - resultTicks) / ANIM_TICKS;
         } else {
             bScale = 1f;
         }
@@ -623,7 +480,8 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
             int u = (card.value <= 10) ? (card.value - 1) * CARD_W : 0;
             int v = (card.value <= 10) ? 0 : (card.value - 10) * CARD_H;
             g.blit(TEX_TOP, dx, dy, u, v, CARD_W, CARD_H);
-        } else {
+        }
+        else {
             g.blit(TEX_TOP, dx, dy, 0, V_BACK, CARD_W, CARD_H);
         }
 
@@ -656,13 +514,55 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
     @Override
     protected void renderLabels(@NotNull GuiGraphics g,int mx,int my){
         // player
-        if (handValue(playerCards).total != 0) {
-            g.drawString(font, String.valueOf(handValue(playerCards).total),46, 57,0xC3B64D);
+        if (handValue(playerCards).total() != 0) {
+            g.drawString(font, String.valueOf(handValue(playerCards).total()),46, 57,0xC3B64D);
         }
 
         // crupier
-        if (handValue(dealerCards).total != 0) {
-            g.drawString(font, String.valueOf(handValue(dealerCards).total), 34, -42, 0xC3B64D);
+        if (handValue(dealerCards).total() != 0) {
+            g.drawString(font, String.valueOf(handValue(dealerCards).total()), 34, -42, 0xC3B64D);
+        }
+
+        renderSeatStrip(g);
+    }
+
+    private void renderSeatStrip(GuiGraphics g) {
+        final int seats = menu.seatCount();
+        if (seats <= 1 || this.minecraft == null || this.minecraft.level == null) return;
+
+        final int x = Math.max(SEAT_STRIP_X, 2 - this.leftPos);
+        int y = SEAT_STRIP_Y;
+
+        for (int i = 0; i < seats; i++) {
+            final Entity entity = this.minecraft.level.getEntity(menu.seatPlayerId(i));
+            final String name = entity != null ? entity.getName().getString() : "?";
+            final int total = menu.seatTotal(i);
+
+            final int colour;
+            if (menu.phase() == CorneliusTable.Phase.PLAYING && menu.turn() == i) {
+                colour = 0xFFE14D;
+            }
+            else if (menu.seatState(i) == CorneliusTable.SeatState.BUST) {
+                colour = 0xC0392B;
+            }
+            else if (i == menu.mySeat()) {
+                colour = 0xC3B64D;
+            }
+            else {
+                colour = 0x9A9A9A;
+            }
+
+            String row = name.length() > 9 ? name.substring(0, 9) : name;
+            if (total > 0) {
+                row = row + " " + total;
+            }
+
+            if (menu.phase() == CorneliusTable.Phase.PLAYING && menu.turn() == i) {
+                row = "> " + row;
+            }
+
+            g.drawString(font, row, x, y, colour);
+            y += SEAT_ROW_H;
         }
 
     }
@@ -674,7 +574,7 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
     @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        if ((pKeyCode == Minecraft.getInstance().options.keyInventory.getDefaultKey().getValue() || pKeyCode == GLFW.GLFW_KEY_ESCAPE) && phase != Phase.WAITING_PLAY) {
+        if ((pKeyCode == Minecraft.getInstance().options.keyInventory.getDefaultKey().getValue() || pKeyCode == GLFW.GLFW_KEY_ESCAPE) && isInHand()) {
             return true;
         }
 
@@ -683,56 +583,33 @@ public class CorneliusScreen extends AbstractContainerScreen<CorneliusContainerM
 
     @Override
     public void onClose() {
-        if (phase == Phase.WAITING_PLAY) {
+        if (!isInHand()) {
             super.onClose();
         }
 
     }
 
-    private enum Phase {
-        WAITING_PLAY,
-        DEALING,
-        PLAYER_TURN,
-        DEALER_TURN,
-        SHOW_RESULT
+    private boolean isInHand() {
+        return menu.phase() != CorneliusTable.Phase.BETTING && menu.myState() != CorneliusTable.SeatState.IDLE;
     }
 
-    private enum Result {
-        WIN,
-        LOSE,
-        TIE,
-        BLACKJACK
-    }
-
-    private record HandValue(int total, boolean soft) { ;; }
-
-    private HandValue handValue(List<FrogCard> cards){
-        int total = 0;
-        int aces = 0;
-        for (FrogCard c : cards){
-            if (!c.faceUp) continue;
-            int v = c.value;
-            if (v == 1){
-                total += 11; aces++;
-            } else{
-                total += Math.min(v,10);
+    private CorneliusTable.HandValue handValue(List<FrogCard> cards) {
+        final List<Integer> values = new ArrayList<>();
+        for (FrogCard card : cards) {
+            if (card.faceUp) {
+                values.add(card.value);
             }
 
         }
 
-        while (total > 21 && aces > 0){
-            total -= 10;
-            aces--;
-        }
-
-        return new HandValue(total, aces > 0);
+        return CorneliusTable.handValue(values);
     }
 
     private static class FrogCard {
         public float x, y, prevX, prevY;
         public float targetX;
         public float targetY;
-        public final int value; // 1 (which can be 1 or 11) and 4 10s
+        public int value; // 1 (which can be 1 or 11) and 4 10s
         public boolean faceUp;
         public boolean arrived = false;
 
