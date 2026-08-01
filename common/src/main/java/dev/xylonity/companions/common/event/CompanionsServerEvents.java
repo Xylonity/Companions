@@ -1,6 +1,7 @@
 package dev.xylonity.companions.common.event;
 
 import dev.xylonity.companions.common.blockentity.RespawnTotemBlockEntity;
+import dev.xylonity.companions.common.entity.CompanionEntity;
 import dev.xylonity.companions.common.entity.companion.*;
 import dev.xylonity.companions.common.entity.hostile.*;
 import dev.xylonity.companions.common.entity.projectile.PontiffFireRingProjectile;
@@ -19,7 +20,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import dev.xylonity.knightlib.api.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
@@ -27,11 +27,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -48,7 +45,6 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import java.lang.ref.WeakReference;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public final class CompanionsServerEvents {
 
@@ -190,9 +186,13 @@ public final class CompanionsServerEvents {
 
     @RegisterEvent
     public static void onDeath(final LivingDeathEvent event) {
-        final Entity entity = event.getEntity();
-
+        final LivingEntity entity = event.getEntity();
         final CompoundTag entityTag = PersistentData.get(entity);
+        if ((!entityTag.contains("RespawnTotemPos") || !entityTag.contains("RespawnTotemDim")) && entity instanceof CompanionEntity companion && companion.getRespawnTotemPosLong() != Long.MIN_VALUE && companion.getRespawnTotemDim() != null) {
+            entityTag.putLong("RespawnTotemPos", companion.getRespawnTotemPosLong());
+            entityTag.putString("RespawnTotemDim", companion.getRespawnTotemDim().toString());
+        }
+
         if (!entityTag.contains("RespawnTotemPos")) {
             return;
         }
@@ -227,27 +227,16 @@ public final class CompanionsServerEvents {
         CompoundTag nbt = new CompoundTag();
         entity.save(nbt);
         nbt.remove("DeathTime");
+        nbt.remove("Fire");
         nbt.remove("HurtByTimestamp");
         nbt.remove("HurtTime");
         nbt.remove("FallFlying");
         nbt.remove("Motion");
+        nbt.remove("UUID");
         nbt.putFloat("Health", 1f);
 
         totem.queueRespawn(nbt, 20);
         totem.setChanged();
-
-        if (entity instanceof TamableAnimal tame) {
-            final UUID ownerId = tame.getOwnerUUID();
-            if (ownerId != null) {
-                final Player owner = totemLevel.getPlayerByUUID(ownerId);
-                if (owner != null) {
-                    owner.sendSystemMessage(Component.translatable("respawn_totem.companions.charges_remaining", totem.getCharges() - 1));
-                }
-
-            }
-
-        }
-
     }
 
     @RegisterEvent

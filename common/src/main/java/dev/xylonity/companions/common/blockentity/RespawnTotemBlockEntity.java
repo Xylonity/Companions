@@ -6,16 +6,19 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.companions.registry.CompanionsBlockEntities;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import dev.xylonity.companions.registry.CompanionsParticles;
+import dev.xylonity.knightlib.api.entity.data.PersistentData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
@@ -88,13 +91,17 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
         for (Entity e : level.getEntitiesOfClass(TamableAnimal.class, new AABB(worldPosition).inflate(5))) {
             if (e.isRemoved()) continue;
 
-            CompoundTag data = new CompoundTag();
-            e.save(data);
-            savedEntities.put(e.getUUID(), data);
+            CompoundTag persistentData = PersistentData.get(e);
+            persistentData.putLong("RespawnTotemPos", worldPosition.asLong());
+            persistentData.putString("RespawnTotemDim", level.dimension().location().toString());
 
             if (e instanceof CompanionEntity c) {
                 c.setRespawnTotem(worldPosition, level.dimension().location());
             }
+
+            CompoundTag data = new CompoundTag();
+            e.save(data);
+            savedEntities.put(e.getUUID(), data);
 
             captureFlag = true;
         }
@@ -205,14 +212,7 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
                             });
 
                     if (spawned != null) {
-                        for (int i = 0; i < 20; i++) {
-                            double dx = (sv.random.nextDouble() - 0.5) * 2.0;
-                            double dy = (sv.random.nextDouble() - 0.5) * 2.0;
-                            double dz = (sv.random.nextDouble() - 0.5) * 2.0;
-                            sv.sendParticles(ParticleTypes.POOF, spawned.getX(), spawned.getY() + spawned.getBbHeight() * 0.5, spawned.getZ(), 1, dx, dy, dz, 0.1);
-                        }
-
-                        t.setCharges(t.getCharges() - 1);
+                        spawned.clearFire();
 
                         if (spawned instanceof CompanionEntity c) {
                             c.setMainAction(0, null);
@@ -220,7 +220,23 @@ public class RespawnTotemBlockEntity extends BlockEntity implements GeoBlockEnti
                             tamableAnimal.setOrderedToSit(true);
                         }
 
-                        sv.addFreshEntity(spawned);
+                        if (sv.addFreshEntity(spawned)) {
+                            for (int i = 0; i < 20; i++) {
+                                double dx = (sv.random.nextDouble() - 0.5) * 2.0;
+                                double dy = (sv.random.nextDouble() - 0.5) * 2.0;
+                                double dz = (sv.random.nextDouble() - 0.5) * 2.0;
+                                sv.sendParticles(ParticleTypes.POOF, spawned.getX(), spawned.getY() + spawned.getBbHeight() * 0.5, spawned.getZ(), 1, dx, dy, dz, 0.1);
+                            }
+
+                            t.setCharges(t.getCharges() - 1);
+
+                            if (spawned instanceof TamableAnimal tame && tame.getOwnerUUID() != null) {
+                                ServerPlayer owner = sv.getServer().getPlayerList().getPlayer(tame.getOwnerUUID());
+                                if (owner != null) {
+                                    owner.sendSystemMessage(Component.translatable("respawn_totem.companions.charges_remaining", t.getCharges()));
+                                }
+                            }
+                        }
                     }
 
                     it.remove();

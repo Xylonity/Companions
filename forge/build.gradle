@@ -45,6 +45,22 @@ minecraft {
             }
         }
 
+        client2 {
+            parent minecraft.runs.client
+            workingDirectory project.file('run2')
+            ideaModule "${rootProject.name}.${project.name}.main"
+            taskName 'Client2'
+            args '--username', 'Dev2'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            mods {
+                modClientRun {
+                    source sourceSets.main
+                    source project(":common").sourceSets.main
+                }
+            }
+        }
+
         server {
             workingDirectory project.file('run')
             ideaModule "${rootProject.name}.${project.name}.main"
@@ -88,7 +104,7 @@ dependencies {
     implementation fg.deobf("curse.maven:overflowing-bars-852662:5763974")
 
     implementation fg.deobf("dev.xylonity.knightlib:knightlib-forge-${minecraft_version}:${knightlib_version}")
-    implementation fg.deobf("dev.xylonity.tooltipoverhaul:tooltipoverhaul-forge-1.20.1:1.4.2")
+    //implementation fg.deobf("dev.xylonity.tooltipoverhaul:tooltipoverhaul-forge-1.20.1:1.5.2")
 
     implementation fg.deobf("curse.maven:Xaeros-263420:4812568")
 
