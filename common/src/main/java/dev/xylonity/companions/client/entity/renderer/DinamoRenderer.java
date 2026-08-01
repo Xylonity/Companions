@@ -40,7 +40,7 @@ public class DinamoRenderer extends GeoEntityRenderer<DinamoEntity> implements I
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(DinamoEntity entity) {
-        return getGeoModel().getTextureResource(animatable, this);
+        return getGeoModel().getTextureResource(entity, this);
     }
 
     private static class DinamoArcLayer extends GeoRenderLayer<DinamoEntity> {

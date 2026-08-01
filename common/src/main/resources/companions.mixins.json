@@ -5,10 +5,10 @@
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "EntityPhantomEffectMixin",
     "FallingBlockEntityAccessor",
     "IllagerGolemRaidMixin",
     "LevelAccessor",
-    "LivingEntityMixin",
     "MobMixin",
     "PlayerInteractOnMixin",
     "ProjectileAccessor",
@@ -24,4 +24,3 @@
     "defaultRequire": 1
   }
 }
-
