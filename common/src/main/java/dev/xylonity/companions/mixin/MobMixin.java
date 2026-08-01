@@ -9,15 +9,24 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Mob.class)
-public class MobMixin {
+public abstract class MobMixin {
 
     @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
-    private void companions$setTarget(LivingEntity pTarget, CallbackInfo ci) {
-        if (pTarget == null) return;
-        if (pTarget.hasEffect(CompanionsEffects.holder(CompanionsEffects.PHANTOM))) {
+    private void companions$preventPhantomTarget(LivingEntity target, CallbackInfo ci) {
+        if (target != null
+                && target.hasEffect(CompanionsEffects.holder(CompanionsEffects.PHANTOM))) {
             ci.cancel();
         }
+    }
 
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void companions$clearPhantomTarget(CallbackInfo ci) {
+        Mob mob = (Mob) (Object) this;
+        LivingEntity target = mob.getTarget();
+        if (target != null
+                && target.hasEffect(CompanionsEffects.holder(CompanionsEffects.PHANTOM))) {
+            mob.setTarget(null);
+        }
     }
 
 }

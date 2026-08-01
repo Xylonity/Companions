@@ -34,6 +34,7 @@
   "wrench.companions.client_message.max_chain_connections": "Máxima distancia en cadena alcanzada. Usa un relé voltaico para extender la señal.",
 
   "hourglass.companions.client_message.required_durability": "El item necesita durabilidad completa para usarse.",
+  "respawn_totem.companions.charges_remaining": "\uEA11 Al t\u00f3tem de reaparici\u00f3n le quedan %1$d cargas.",
 
   "voltaic_pillar.companions.client_message.wrong_amount": "La cantidad de pilares en ambas columnas ha de ser el mismo.",
 

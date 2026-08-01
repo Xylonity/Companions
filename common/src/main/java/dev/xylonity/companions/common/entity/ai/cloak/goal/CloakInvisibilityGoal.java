@@ -59,8 +59,9 @@ public class CloakInvisibilityGoal extends AbstractCloakAttackGoal {
     @Override
     protected void performAttack(LivingEntity target) {
         if (cloak.getOwner() != null) {
-            cloak.getOwner().addEffect(new MobEffectInstance(CompanionsEffects.holder(CompanionsEffects.PHANTOM), 600, 0, false, true, true));
-            cloak.addEffect(new MobEffectInstance(CompanionsEffects.holder(CompanionsEffects.PHANTOM), 600, 0, false, true, true));
+            final int duration = 600;
+            cloak.getOwner().addEffect(new MobEffectInstance(CompanionsEffects.holder(CompanionsEffects.PHANTOM), duration, 0, false, true, true));
+            cloak.addEffect(new MobEffectInstance(CompanionsEffects.holder(CompanionsEffects.PHANTOM), duration, 0, false, true, true));
             spawnParticles(cloak.getOwner().position(), cloak.getOwner().getBbHeight());
             spawnParticles(cloak.position(), cloak.getBbHeight());
         }
