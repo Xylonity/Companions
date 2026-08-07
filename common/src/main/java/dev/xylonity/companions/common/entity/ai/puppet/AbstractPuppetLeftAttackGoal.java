@@ -17,8 +17,8 @@ public abstract class AbstractPuppetLeftAttackGoal extends Goal {
 
     public AbstractPuppetLeftAttackGoal(PuppetEntity puppet, int minCd, int maxCd, String attackType) {
         this.puppet = puppet;
-        this.minCooldown = minCd;
-        this.maxCooldown = maxCd;
+        this.minCooldown = puppet.scaleAttackCooldown(minCd);
+        this.maxCooldown = puppet.scaleAttackCooldown(maxCd);
         this.attackType = attackType;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }

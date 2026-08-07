@@ -68,7 +68,7 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
 
         }
 
-        if (dinamo.getAttackCycleCounter() >= DINAMO_ATTACK_DELAY) {
+        if (dinamo.getAttackCycleCounter() >= dinamo.scaleAttackCooldown(DINAMO_ATTACK_DELAY)) {
             dinamo.setAttackCycleCounter(0);
             dinamo.entitiesToAttack.clear();
             dinamo.setTargetIds("");

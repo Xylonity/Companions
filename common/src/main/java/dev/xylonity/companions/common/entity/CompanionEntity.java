@@ -6,6 +6,7 @@ import dev.xylonity.companions.config.CompanionsConfig;
 import dev.xylonity.knightlib.registry.KnightLibItems;
 import dev.xylonity.knightlib.registry.KnightLibParticles;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -21,6 +22,8 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -47,6 +50,8 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     private static final EntityDataAccessor<Boolean> NO_MOVEMENT = SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.BOOLEAN);
 
     private ChunkPos lastChunkPos;
+    private final String configEntityId;
+    private final double attackRateMultiplier;
 
     private long respawnTotemPos = Long.MIN_VALUE;
     private ResourceLocation respawnTotemDim;
@@ -55,6 +60,29 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
         super(pEntityType, pLevel);
         this.noCulling = true;
         this.targetSelector.addGoal(3, new CompanionsNearestHostileTargetGoal(this));
+
+        final ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(pEntityType);
+        this.configEntityId = entityId.toString();
+        this.attackRateMultiplier = CompanionsConfig.getCompanionAttackRate(configEntityId);
+
+        applyConfiguredArmor();
+    }
+
+    private void applyConfiguredArmor() {
+        final AttributeInstance armor = getAttribute(Attributes.ARMOR);
+        if (armor != null) {
+            armor.setBaseValue(CompanionsConfig.getCompanionArmor(configEntityId, armor.getBaseValue()));
+        }
+
+    }
+
+    public int scaleAttackCooldown(int cooldown) {
+        if (cooldown <= 0) {
+            return 0;
+        }
+
+        final double scaledCooldown = Math.ceil(cooldown / attackRateMultiplier);
+        return (int) Math.max(1d, Math.min(Integer.MAX_VALUE, scaledCooldown));
     }
 
     @Override
@@ -221,6 +249,7 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+        applyConfiguredArmor();
 
         if (pCompound.contains("CompanionsMainAction")) {
             setMainAction(pCompound.getInt("CompanionsMainAction"), null);

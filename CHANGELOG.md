@@ -32,6 +32,9 @@
 - Enhanced the visuals of the eternal fire
 - Added compatibility with knightlib 1.6.0
 - Added config options to specify names under which each entity would activate its reskin
+- Added a config option to modify companions! structures biome and biome tag worldgen generation
+- Added a config option to modify the attack rate for companions (potentially making them attack more often or less often)
+- Added a config option that lets override armor point values for companions
 - Added a config option that lets specify if companions can actively attack nearby hostile mobs without the owner having to attack first
 - Added a config option to modify bonanza drops on the 2 or 3 coin head rolls
 - Added a config option to prevent mob griefing (when using certain magic books)

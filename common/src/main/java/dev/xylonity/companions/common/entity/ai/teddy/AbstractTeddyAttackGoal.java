@@ -17,8 +17,8 @@ public abstract class AbstractTeddyAttackGoal extends Goal {
     public AbstractTeddyAttackGoal(TeddyEntity teddy, int attackDuration, int minCd, int maxCd) {
         this.teddy = teddy;
         this.attackDuration = attackDuration;
-        this.minCooldown = minCd;
-        this.maxCooldown = maxCd;
+        this.minCooldown = teddy.scaleAttackCooldown(minCd);
+        this.maxCooldown = teddy.scaleAttackCooldown(maxCd);
         this.nextUseTick = -1;
         this.setFlags(EnumSet.of(Flag.LOOK));
     }

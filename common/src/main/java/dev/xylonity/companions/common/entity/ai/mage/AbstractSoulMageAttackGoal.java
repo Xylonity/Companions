@@ -19,8 +19,8 @@ public abstract class AbstractSoulMageAttackGoal extends Goal {
 
     public AbstractSoulMageAttackGoal(SoulMageEntity soulMage, int minCd, int maxCd, String attackType) {
         this.soulMage = soulMage;
-        this.minCooldown = minCd;
-        this.maxCooldown = maxCd;
+        this.minCooldown = soulMage.scaleAttackCooldown(minCd);
+        this.maxCooldown = soulMage.scaleAttackCooldown(maxCd);
         this.attackType = attackType;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }

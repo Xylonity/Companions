@@ -17,8 +17,8 @@ public abstract class AbstractPuppetGloveAttackGoal extends Goal {
     public AbstractPuppetGloveAttackGoal(PuppetGloveEntity glove, int attackDuration, int minCd, int maxCd) {
         this.glove = glove;
         this.attackDuration = attackDuration;
-        this.minCooldown = minCd;
-        this.maxCooldown = maxCd;
+        this.minCooldown = glove.scaleAttackCooldown(minCd);
+        this.maxCooldown = glove.scaleAttackCooldown(maxCd);
         this.nextUseTick = -1;
         this.setFlags(EnumSet.of(Flag.LOOK));
     }

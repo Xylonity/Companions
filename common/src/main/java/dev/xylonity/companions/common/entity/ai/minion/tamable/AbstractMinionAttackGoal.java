@@ -17,8 +17,8 @@ public abstract class AbstractMinionAttackGoal extends Goal {
     public AbstractMinionAttackGoal(MinionEntity pontiff, int attackDuration, int minCd, int maxCd) {
         this.minion = pontiff;
         this.attackDuration = attackDuration;
-        this.minCooldown = minCd;
-        this.maxCooldown = maxCd;
+        this.minCooldown = pontiff.scaleAttackCooldown(minCd);
+        this.maxCooldown = pontiff.scaleAttackCooldown(maxCd);
         this.nextUseTick = -1;
         this.setFlags(EnumSet.of(Flag.LOOK));
     }

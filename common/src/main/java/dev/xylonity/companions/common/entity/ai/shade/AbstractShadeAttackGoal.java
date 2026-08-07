@@ -19,8 +19,8 @@ public abstract class AbstractShadeAttackGoal extends Goal {
     public AbstractShadeAttackGoal(ShadeEntity shade, int attackDuration, int minCd, int maxCd) {
         this.shade = shade;
         this.attackDuration = attackDuration;
-        this.minCooldown = minCd;
-        this.maxCooldown = maxCd;
+        this.minCooldown = shade.scaleAttackCooldown(minCd);
+        this.maxCooldown = shade.scaleAttackCooldown(maxCd);
         this.nextUseTick = -1;
         this.setFlags(EnumSet.of(Flag.LOOK));
     }
