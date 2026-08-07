@@ -64,6 +64,18 @@ public final class CompanionsConfig {
     )
     public static boolean SOUL_FURNACE_CONSTANT_MAX_CHARGES = false;
 
+    @ConfigEntry(
+            category = "General",
+            comment = "Armor point overrides for companions: [entity ID, armor points; ...]. Unlisted companions keep their default armor. Example: companions:minion, 6; companions:teddy, 10"
+    )
+    public static String COMPANION_ARMOR_OVERRIDES = "";
+
+    @ConfigEntry(
+            category = "General",
+            comment = "Attack rate multipliers for companions: [entity ID, multiplier; ...]. Values above 1 attack more often and values below 1 attack less often. Example: companions:minion, 1.5; companions:teddy, 0.75"
+    )
+    public static String COMPANION_ATTACK_RATE_MULTIPLIERS = "";
+
     /**
      * DINAMO
      */
@@ -978,6 +990,36 @@ public final class CompanionsConfig {
     )
     public static double STRUCTURE_CHEST_LOOT_FILL_CHANCE = 0.45;
 
+    @ConfigEntry(
+            category = "Structures",
+            comment = "Biomes and biome tags (separated by ; or ,) where the Baba Yaga structure can generate. Prefix tags with #. Leave blank to disable the structure."
+    )
+    public static String BABAYAGA_STRUCTURE_BIOMES = "minecraft:swamp";
+
+    @ConfigEntry(
+            category = "Structures",
+            comment = "Biomes and biome tags (separated by ; or ,) where the Factory structure can generate. Prefix tags with #. Leave blank to disable the structure."
+    )
+    public static String FACTORY_STRUCTURE_BIOMES = "minecraft:plains";
+
+    @ConfigEntry(
+            category = "Structures",
+            comment = "Biomes and biome tags (separated by ; or ,) where the Monkey Temple structure can generate. Prefix tags with #. Leave blank to disable the structure."
+    )
+    public static String MONKEY_TEMPLE_STRUCTURE_BIOMES = "minecraft:jungle";
+
+    @ConfigEntry(
+            category = "Structures",
+            comment = "Biomes and biome tags (separated by ; or ,) where the Teddy Tower structure can generate. Prefix tags with #. Leave blank to disable the structure."
+    )
+    public static String TEDDY_TOWER_STRUCTURE_BIOMES = "minecraft:dark_forest";
+
+    @ConfigEntry(
+            category = "Structures",
+            comment = "Biomes and biome tags (separated by ; or ,) where the Nether Tent structure can generate. Prefix tags with #. Leave blank to disable the structure."
+    )
+    public static String NETHER_TENT_STRUCTURE_BIOMES = "minecraft:nether_wastes";
+
     /**
      * HOLY PORCELAIN POTTERY
      */
@@ -1113,5 +1155,34 @@ public final class CompanionsConfig {
             min = 0d, max = 1000d
     )
     public static double BONANZA_ANVIL_MAX_DAMAGE = 20d;
+
+    public static double getCompanionArmor(String entityId, double defaultValue) {
+        return Math.max(0d, getCompanionStatValue(COMPANION_ARMOR_OVERRIDES, entityId, defaultValue));
+    }
+
+    public static double getCompanionAttackRate(String entityId) {
+        final double value = getCompanionStatValue(COMPANION_ATTACK_RATE_MULTIPLIERS, entityId, 1d);
+        return value > 0d ? value : 1d;
+    }
+
+    private static double getCompanionStatValue(String entries, String entityId, double defaultValue) {
+        for (final String entry : entries.split(";")) {
+            final String[] pair = entry.trim().split("\\s*,\\s*", 2);
+            if (pair.length != 2 || !pair[0].equals(entityId)) {
+                continue;
+            }
+
+            try {
+                final double value = Double.parseDouble(pair[1]);
+                return Double.isFinite(value) ? value : defaultValue;
+            }
+            catch (NumberFormatException ignored) {
+                return defaultValue;
+            }
+
+        }
+
+        return defaultValue;
+    }
 
 }

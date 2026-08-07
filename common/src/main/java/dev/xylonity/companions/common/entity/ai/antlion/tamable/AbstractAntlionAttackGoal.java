@@ -17,8 +17,8 @@ public abstract class AbstractAntlionAttackGoal extends Goal {
     public AbstractAntlionAttackGoal(AntlionEntity antlion, int attackDuration, int minCd, int maxCd) {
         this.antlion = antlion;
         this.attackDuration = attackDuration;
-        this.minCooldown = minCd;
-        this.maxCooldown = maxCd;
+        this.minCooldown = antlion.scaleAttackCooldown(minCd);
+        this.maxCooldown = antlion.scaleAttackCooldown(maxCd);
         this.nextUseTick = -1;
         this.setFlags(EnumSet.of(Flag.LOOK));
     }

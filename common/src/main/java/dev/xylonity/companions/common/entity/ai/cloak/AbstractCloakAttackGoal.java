@@ -17,8 +17,8 @@ public abstract class AbstractCloakAttackGoal extends Goal {
     public AbstractCloakAttackGoal(CloakEntity cloak, int attackDuration, int minCd, int maxCd) {
         this.cloak = cloak;
         this.attackDuration = attackDuration;
-        this.minCooldown = minCd;
-        this.maxCooldown = maxCd;
+        this.minCooldown = cloak.scaleAttackCooldown(minCd);
+        this.maxCooldown = cloak.scaleAttackCooldown(maxCd);
         this.nextUseTick = -1;
         this.setFlags(EnumSet.of(Flag.LOOK));
     }

@@ -26,8 +26,8 @@ public abstract class AbstractCorneliusAttackGoal extends Goal {
 
     public AbstractCorneliusAttackGoal(CorneliusEntity cornelius, int minCd, int maxCd) {
         this.cornelius = cornelius;
-        this.minCooldown = minCd;
-        this.maxCooldown = maxCd;
+        this.minCooldown = cornelius.scaleAttackCooldown(minCd);
+        this.maxCooldown = cornelius.scaleAttackCooldown(maxCd);
         this.nextUseTick = -1;
         this.setFlags(EnumSet.of(Flag.LOOK));
     }

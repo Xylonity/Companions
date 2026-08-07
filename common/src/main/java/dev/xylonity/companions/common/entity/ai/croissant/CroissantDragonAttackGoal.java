@@ -131,7 +131,7 @@ public class CroissantDragonAttackGoal extends Goal {
             lastTarget = null;
         }
 
-        cooldown = dragon.getRandom().nextInt(61) + 60;
+        cooldown = dragon.scaleAttackCooldown(dragon.getRandom().nextInt(61) + 60);
     }
 
 }

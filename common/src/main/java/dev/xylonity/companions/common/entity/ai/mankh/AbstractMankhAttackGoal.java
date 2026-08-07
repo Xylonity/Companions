@@ -17,8 +17,8 @@ public abstract class AbstractMankhAttackGoal extends Goal {
     public AbstractMankhAttackGoal(MankhEntity mankh, int attackDuration, int minCd, int maxCd) {
         this.mankh = mankh;
         this.attackDuration = attackDuration;
-        this.minCooldown = minCd;
-        this.maxCooldown = maxCd;
+        this.minCooldown = mankh.scaleAttackCooldown(minCd);
+        this.maxCooldown = mankh.scaleAttackCooldown(maxCd);
         this.nextUseTick = -1;
         this.setFlags(EnumSet.of(Flag.LOOK));
     }

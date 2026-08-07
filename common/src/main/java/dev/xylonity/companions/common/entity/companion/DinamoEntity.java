@@ -292,7 +292,7 @@ public class DinamoEntity extends CompanionEntity implements GeoEntity {
         }
 
         if (level().isClientSide) {
-            if (this.getAttackCycleCounter() >= ITeslaUtil.DINAMO_ATTACK_DELAY) {
+            if (this.getAttackCycleCounter() >= scaleAttackCooldown(ITeslaUtil.DINAMO_ATTACK_DELAY)) {
                 this.entitiesToAttack.clear();
             }
 

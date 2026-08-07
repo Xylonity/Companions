@@ -8,11 +8,13 @@
     "EntityPhantomEffectMixin",
     "FallingBlockEntityAccessor",
     "IllagerGolemRaidMixin",
+    "JigsawStructureAccessor",
     "LevelAccessor",
     "MobMixin",
     "PlayerInteractOnMixin",
     "ProjectileAccessor",
-    "SmithingTrimRecipeMixin"
+    "SmithingTrimRecipeMixin",
+    "StructureMixin"
   ],
   "client": [
     "RenderStateShardAccessor",
