@@ -355,9 +355,15 @@ public class TeddyEntity extends CompanionEntity implements TraceableEntity {
 
     @Override
     public void tick() {
+        if (getPhase() != 1) {
+            this.noPhysics = false;
+            this.setNoGravity(true);
+        }
+
         super.tick();
 
         if (getPhase() != 1) {
+            this.noPhysics = false;
             this.setNoGravity(true);
         }
 

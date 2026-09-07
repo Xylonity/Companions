@@ -77,18 +77,16 @@ public class GoldenAllayEntity extends CompanionEntity implements GeoEntity {
     public GoldenAllayEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.moveControl = new GoldenAllayMoveControl(this);
+        this.setNoGravity(true);
         this.transformationCounter = -1;
         this.shirtCounter = -1;
         this.hatCounter = -1;
     }
 
     public void tick() {
-        this.noPhysics = true;
-
-        super.tick();
-
         this.noPhysics = false;
         this.setNoGravity(true);
+        super.tick();
 
         if (tickCount % 20 == 0 && level().isClientSide) {
             this.level().addParticle(CompanionsParticles.GOLDEN_ALLAY_TRAIL.get(), getX(), getY(), getZ(), 0.35, 0.35, 0.35);

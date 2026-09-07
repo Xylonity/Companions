@@ -1,5 +1,6 @@
 # 1.3.3
 - Added compat with knightlib 2.0.0
+- Attempt to fix a case where the mutated/holy teddy and the golden allay would phase through the ground on certain cases
 
 # 1.3.2
 - Fixed companion attack logic receiving infinite cooldowns, which prevented several companions from dealing damage and Cornelius from completing its taming behavior

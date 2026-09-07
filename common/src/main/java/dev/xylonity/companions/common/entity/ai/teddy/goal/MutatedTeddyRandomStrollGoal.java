@@ -71,7 +71,7 @@ public class MutatedTeddyRandomStrollGoal extends Goal {
     @Override
     public void start() {
         this.targetPos = new Vec3(wantedX, wantedY, wantedZ);
-        this.teddy.noPhysics = true;
+        this.teddy.noPhysics = false;
     }
 
     @Override
@@ -108,6 +108,7 @@ public class MutatedTeddyRandomStrollGoal extends Goal {
     @Override
     public void stop() {
         teddy.noPhysics = false;
+        teddy.setDeltaMovement(Vec3.ZERO);
         this.targetPos = null;
     }
 
