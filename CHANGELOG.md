@@ -1,3 +1,6 @@
+# 1.3.3
+- Added compat with knightlib 2.0.0
+
 # 1.3.2
 - Fixed companion attack logic receiving infinite cooldowns, which prevented several companions from dealing damage and Cornelius from completing its taming behavior
 - Fixed hostile imps not pursuing their current targets, as well as Dinamo hitting duplicate targets
