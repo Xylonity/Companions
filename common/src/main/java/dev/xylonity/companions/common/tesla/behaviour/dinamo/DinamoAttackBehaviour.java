@@ -49,7 +49,7 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
 
                 if (dinamo.getAttackCycleCounter() == 3) {
                     for (final LivingEntity target : dinamo.entitiesToAttack) {
-                        if (target.distanceToSqr(target) <= 64) {
+                        if (target.distanceToSqr(dinamo) <= 64) {
                             target.hurt(dinamo.damageSources().lightningBolt(), (float) CompanionsConfig.ELECTRICITY_DAMAGE);
                             if (target.getRandom().nextFloat() < 0.4f) {
                                 target.addEffect(new MobEffectInstance(CompanionsEffects.holder(CompanionsEffects.ELECTROSHOCK), 50, 0, false, true, true));
@@ -98,7 +98,7 @@ public class DinamoAttackBehaviour implements ITeslaGeneratorBehaviour {
 
         }
 
-        if (dinamo.getTarget() != null && canBeAttacked(dinamo, dinamo.getTarget())) {
+        if (dinamo.getTarget() != null && canBeAttacked(dinamo, dinamo.getTarget()) && !dinamo.entitiesToAttack.contains(dinamo.getTarget())) {
             dinamo.entitiesToAttack.add(dinamo.getTarget());
             dinamo.setTargetIds(dinamo.getTargetIds() + dinamo.getTarget().getId() + ";");
         }

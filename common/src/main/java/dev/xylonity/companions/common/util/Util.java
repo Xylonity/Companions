@@ -50,14 +50,22 @@ public class Util {
 
     @Nullable
     private static Player computePlayer(@Nullable Entity entity) {
-        if (entity == null) {
+        return computePlayer(entity, new HashSet<>());
+    }
+
+    @Nullable
+    private static Player computePlayer(@Nullable Entity entity, Set<UUID> visited) {
+        if (entity == null || !visited.add(entity.getUUID())) {
             return null;
         }
         if (entity instanceof Player player) {
             return player;
         }
-        if (entity instanceof OwnableEntity ownableEntity && ownableEntity.getOwner() instanceof Player player) {
-            return player;
+        if (entity instanceof Projectile projectile) {
+            return computePlayer(projectile.getOwner(), visited);
+        }
+        if (entity instanceof OwnableEntity ownableEntity) {
+            return computePlayer(ownableEntity.getOwner(), visited);
         }
 
         return null;
@@ -182,6 +190,7 @@ public class Util {
     public static boolean areEntitiesLinked(Entity e1, Entity e2) {
         if (e1 == null || e2 == null) return false;
         if (e1 == e2) return true;
+        if (areTeammates(e1, e2)) return true;
 
         Set<UUID> ownersA = collectOwners(e1, new HashSet<>(), new HashSet<>());
         Set<UUID> ownersB = collectOwners(e2, new HashSet<>(), new HashSet<>());

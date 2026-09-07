@@ -11,7 +11,7 @@ public abstract class AbstractTeddyAttackGoal extends Goal {
     protected int attackDuration;
     protected final int minCooldown, maxCooldown;
     protected int attackTicks;
-    protected int nextUseTick;
+    protected long nextUseTick;
     protected boolean started;
 
     public AbstractTeddyAttackGoal(TeddyEntity teddy, int attackDuration, int minCd, int maxCd) {
@@ -32,7 +32,7 @@ public abstract class AbstractTeddyAttackGoal extends Goal {
         if (teddy.getMainAction() != 1) return false;
 
         if (nextUseTick < 0) {
-            nextUseTick = teddy.tickCount + minCooldown + teddy.getRandom().nextInt(maxCooldown - minCooldown + 1);
+            scheduleNextUse();
             return false;
         }
 
@@ -55,8 +55,7 @@ public abstract class AbstractTeddyAttackGoal extends Goal {
     public void stop() {
         started = false;
         teddy.setAttackType(0);
-        int cd = minCooldown + teddy.getRandom().nextInt(maxCooldown - minCooldown + 1);
-        nextUseTick = teddy.tickCount + cd;
+        scheduleNextUse();
     }
 
     @Override
@@ -80,6 +79,18 @@ public abstract class AbstractTeddyAttackGoal extends Goal {
 
     protected boolean matchesPhase() {
         return this.phase() == teddy.getPhase();
+    }
+
+    protected void scheduleNextUse() {
+        nextUseTick = (long) teddy.tickCount + randomCooldown();
+    }
+
+    private int randomCooldown() {
+        final int lower = Math.min(minCooldown, maxCooldown);
+        final int upper = Math.max(minCooldown, maxCooldown);
+        final long range = (long) upper - lower + 1L;
+        final long offset = range <= Integer.MAX_VALUE ? teddy.getRandom().nextInt((int) range) : Math.floorMod(teddy.getRandom().nextLong(), range);
+        return (int) (lower + offset);
     }
 
     protected abstract void performAttack(LivingEntity target);

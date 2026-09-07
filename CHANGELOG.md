@@ -1,4 +1,19 @@
-# 1.3.0
+# 1.3.2
+- Fixed companion attack logic receiving infinite cooldowns, which prevented several companions from dealing damage and Cornelius from completing its taming behavior
+- Fixed hostile imps not pursuing their current targets, as well as Dinamo hitting duplicate targets
+- Fixed puppet cannon stakes spawning and flying lower than intended
+
+# 1.3.1
+- Imp tents now have 30% more chance of spawning
+- Fixed a case where the teammate validation could generate a recursive loop that ended up in a server kick
+- Fixed a case where the teddy could trigger a crash caused by its own logic discriminators
+- Fixed newly generated imp tents being placed on illegal places
+- Attempt to fix a case where the ice shard projectile would crash the server caused by an incorrect itemstack serialization
+- Fixed companion attack goals receiving effectively infinite cooldowns, which prevented several companions from dealing damage and Cornelius from completing its taming behavior
+- Fixed Dinamo and hostile imps not pursuing their current targets, as well as Dinamo hitting duplicate or out-of-range targets
+- Fixed puppet cannon stakes spawning and flying lower than intended
+
+ # 1.3.0
 - Added a new companion, the shade bat. The default version consists of some small bats that do basic damage, while the blood version is a big bat that makes tackles (and applies poison) to the current target.
 - Added a new teddy variant, the holy teddy. It is activated by interacting with a normal teddy using a porcelain pottery. Interacting with the teddy while holding an item with the curse of vanishing enchantment would eliminate it
 - Added 2 new items (placeable), porcelain pottery and holy porcelain pottery. The former is used to transform the teddy in its holy variant, while the latter is used to contain entities and allows to move them freely

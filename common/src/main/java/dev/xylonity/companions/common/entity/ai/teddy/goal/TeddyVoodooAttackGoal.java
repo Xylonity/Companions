@@ -33,7 +33,7 @@ public class TeddyVoodooAttackGoal extends AbstractTeddyAttackGoal {
         if (teddy.getMainAction() != 1) return false;
 
         if (nextUseTick < 0) {
-            nextUseTick = teddy.tickCount + minCooldown + teddy.getRandom().nextInt(maxCooldown - minCooldown + 1);
+            scheduleNextUse();
             return false;
         }
 

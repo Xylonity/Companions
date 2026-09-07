@@ -39,7 +39,7 @@ public class HolyTeddyBlessingGoal extends AbstractTeddyAttackGoal {
         }
 
         if (nextUseTick < 0) {
-            nextUseTick = teddy.tickCount + minCooldown + teddy.getRandom().nextInt(maxCooldown - minCooldown + 1);
+            scheduleNextUse();
             return false;
         }
 

@@ -20,7 +20,7 @@ public class PuppetRightCannonAttackGoal extends AbstractPuppetRightAttackGoal {
         Vec3 vec3 = new Vec3(-lookVec.z, 0, lookVec.x).normalize();
         Vec3 offset = vec3.scale(0.5).add(0, 0.2, 0);
 
-        Vec3 startPos =  new Vec3(puppet.getX(), puppet.getY(), puppet.getZ()).add(offset); // puppet.getEyePosition(1.0F).subtract().add(offset);
+        Vec3 startPos = puppet.getEyePosition(1.0F).add(offset);
         Vec3 targetPos = target.getEyePosition(1.0F);
         Vec3 direction = targetPos.subtract(startPos).normalize();
 
