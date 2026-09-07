@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.hostile;
 
 import dev.xylonity.companions.common.ai.navigator.GroundNavigator;
 import dev.xylonity.companions.common.entity.HostileEntity;
+import dev.xylonity.companions.common.entity.ai.generic.MobApproachTargetGoal;
 import dev.xylonity.companions.common.entity.ai.minion.hostile.goal.HostileImpBraceAttackGoal;
 import dev.xylonity.companions.common.entity.ai.minion.hostile.goal.HostileImpFireMarkAttackGoal;
 import dev.xylonity.companions.common.entity.companion.MinionEntity;
@@ -103,7 +104,8 @@ public class HostileImpEntity extends HostileEntity {
         this.goalSelector.addGoal(1, new HostileImpBraceAttackGoal(this, 20, 90));
         this.goalSelector.addGoal(1, new HostileImpFireMarkAttackGoal(this, 20, 160));
 
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.43));
+        this.goalSelector.addGoal(2, new MobApproachTargetGoal(this, 0.55D, 8.0D, 5.0D));
+        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.43));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true) {
             @Override

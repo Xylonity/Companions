@@ -226,7 +226,7 @@ public class SmallIceShardProjectile extends AbstractArrow implements GeoEntity 
 
     @Override
     protected @NotNull ItemStack getPickupItem() {
-        return ItemStack.EMPTY;
+        return new ItemStack(Items.ICE);
     }
 
     @Override

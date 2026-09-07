@@ -50,8 +50,6 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
     private static final EntityDataAccessor<Boolean> NO_MOVEMENT = SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.BOOLEAN);
 
     private ChunkPos lastChunkPos;
-    private final String configEntityId;
-    private final double attackRateMultiplier;
 
     private long respawnTotemPos = Long.MIN_VALUE;
     private ResourceLocation respawnTotemDim;
@@ -61,17 +59,17 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
         this.noCulling = true;
         this.targetSelector.addGoal(3, new CompanionsNearestHostileTargetGoal(this));
 
-        final ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(pEntityType);
-        this.configEntityId = entityId.toString();
-        this.attackRateMultiplier = CompanionsConfig.getCompanionAttackRate(configEntityId);
-
         applyConfiguredArmor();
+    }
+
+    private String getConfigEntityId() {
+        return BuiltInRegistries.ENTITY_TYPE.getKey(getType()).toString();
     }
 
     private void applyConfiguredArmor() {
         final AttributeInstance armor = getAttribute(Attributes.ARMOR);
         if (armor != null) {
-            armor.setBaseValue(CompanionsConfig.getCompanionArmor(configEntityId, armor.getBaseValue()));
+            armor.setBaseValue(CompanionsConfig.getCompanionArmor(getConfigEntityId(), armor.getBaseValue()));
         }
 
     }
@@ -81,6 +79,7 @@ public abstract class CompanionEntity extends TamableAnimal implements GeoEntity
             return 0;
         }
 
+        final double attackRateMultiplier = CompanionsConfig.getCompanionAttackRate(getConfigEntityId());
         final double scaledCooldown = Math.ceil(cooldown / attackRateMultiplier);
         return (int) Math.max(1d, Math.min(Integer.MAX_VALUE, scaledCooldown));
     }
