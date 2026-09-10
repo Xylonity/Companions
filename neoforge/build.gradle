@@ -36,6 +36,8 @@ dependencies {
 
     implementation "dev.xylonity.knightlib:knightlib-neoforge-${minecraft_version}:${knightlib_version}"
 
+    implementation "curse.maven:just-enough-resources-jer-240630:6174588"
+
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     implementation "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }

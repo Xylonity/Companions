@@ -9,7 +9,7 @@ public class CompanionsEntityDrops {
     public static void init() {
         KnightLibLoot.builder()
                 .tag(CompanionsTags.DEMON_FLESH_DROP)
-                .chance((float) CompanionsConfig.DEMON_FLESH_DROP_RATE)
+                .chance(() -> (float) CompanionsConfig.DEMON_FLESH_DROP_RATE)
                 .item(CompanionsItems.DEMON_FLESH)
                 .submit();
     }
