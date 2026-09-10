@@ -1,3 +1,7 @@
+# 1.3.4
+- Minimum required version of knightlib increased to 2.0.1
+- Fixed demon flesh appearing in every entity loot table in JER
+
 # 1.3.3
 - Added compat with knightlib 2.0.0
 - Attempt to fix a case where the mutated/holy teddy and the golden allay would phase through the ground on certain cases
