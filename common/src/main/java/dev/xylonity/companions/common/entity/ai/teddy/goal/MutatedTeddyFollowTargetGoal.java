@@ -2,6 +2,7 @@ package dev.xylonity.companions.common.entity.ai.teddy.goal;
 
 import dev.xylonity.companions.common.entity.companion.TeddyEntity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
@@ -65,6 +66,7 @@ public class MutatedTeddyFollowTargetGoal extends Goal {
 
     @Override
     public void tick() {
+        teddy.noPhysics = false;
         teddy.lookAt(target, 30f, 30f);
         ticksInState++;
 
@@ -103,7 +105,7 @@ public class MutatedTeddyFollowTargetGoal extends Goal {
         // updated teddy position within the angular
         Vec3 nextPos = teddy.position().lerp(center.add(r * Math.cos(angle), y + 0.7, r * Math.sin(angle)), 0.12);
 
-        teddy.setPos(nextPos.x, nextPos.y, nextPos.z);
+        teddy.move(MoverType.SELF, nextPos.subtract(teddy.position()));
         teddy.setDeltaMovement(Vec3.ZERO);
 
         // charges towards the target (holy phases teleport on attack instead)
@@ -130,7 +132,7 @@ public class MutatedTeddyFollowTargetGoal extends Goal {
     // stops the teddy as a fallback for wrong redirect oscilation
     private void idleTick() {
         double y = Y_AMPL * 0.5 * Math.sin(time * Y_OSCILATION * Math.PI * 2);
-        teddy.setPos(teddy.getX(), teddy.getY() + y * 0.1, teddy.getZ());
+        teddy.move(MoverType.SELF, new Vec3(0, y * 0.1, 0));
         teddy.setDeltaMovement(Vec3.ZERO);
 
         if (ticksInState >= (teddy.getRandom().nextInt(MAX_IDLE_TIME - MIN_IDLE_TIME) + MIN_IDLE_TIME)) {
@@ -143,8 +145,8 @@ public class MutatedTeddyFollowTargetGoal extends Goal {
     // charges towards the target (for some reason sometimes the teddy decides to go through the entity and charge the floor instead of going back)
     private void chargeTick() {
         Vec3 v = chargeDir.scale(0.2875);
-        teddy.setDeltaMovement(v);
-        teddy.moveTo(target.position().add(v));
+        teddy.move(MoverType.SELF, v);
+        teddy.setDeltaMovement(Vec3.ZERO);
 
         // fallback when it goes through the target and charges the floor due to the attack speed lol
         teddy.setTeleported(true);
@@ -161,6 +163,7 @@ public class MutatedTeddyFollowTargetGoal extends Goal {
 
     @Override
     public void stop() {
+        teddy.noPhysics = false;
         teddy.setDeltaMovement(Vec3.ZERO);
         super.stop();
     }

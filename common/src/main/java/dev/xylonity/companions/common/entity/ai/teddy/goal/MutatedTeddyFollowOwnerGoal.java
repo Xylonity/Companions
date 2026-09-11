@@ -7,12 +7,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
@@ -67,6 +64,7 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
 
     @Override
     public void tick() {
+        this.teddy.noPhysics = false;
         if (this.owner == null) return;
 
         if (this.teddy.distanceToSqr(this.owner) >= TELEPORT_WHEN_DISTANCE_IS * TELEPORT_WHEN_DISTANCE_IS) {
@@ -102,11 +100,14 @@ public class MutatedTeddyFollowOwnerGoal extends Goal {
         Vec3 cVel = this.teddy.getDeltaMovement();
         this.teddy.setDeltaMovement(new Vec3(Mth.lerp(this.lerpFactor, cVel.x, vel.x), Mth.lerp(this.lerpFactor, cVel.y, vel.y), Mth.lerp(this.lerpFactor, cVel.z, vel.z)));
 
-        this.teddy.noPhysics = isPathBlocked(this.teddy.level(), this.teddy.getEyePosition(), target);
     }
 
-    private boolean isPathBlocked(Level level, Vec3 from, Vec3 to) {
-        return level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.teddy)).getType() != HitResult.Type.MISS;
+    @Override
+    public void stop() {
+        this.owner = null;
+        this.navigation.stop();
+        this.teddy.noPhysics = false;
+        this.teddy.setDeltaMovement(Vec3.ZERO);
     }
 
     protected void teleportToOwner() {

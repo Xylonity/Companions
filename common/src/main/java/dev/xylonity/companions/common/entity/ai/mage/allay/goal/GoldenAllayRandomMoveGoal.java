@@ -3,6 +3,9 @@ package dev.xylonity.companions.common.entity.ai.mage.allay.goal;
 import dev.xylonity.companions.common.entity.companion.GoldenAllayEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
@@ -29,16 +32,31 @@ public class GoldenAllayRandomMoveGoal extends Goal {
 
         for (int i = 0; i < 3; ++i) {
             BlockPos offset = pos.offset(allay.getRandom().nextInt(15) - 7, allay.getRandom().nextInt(7) - 3, allay.getRandom().nextInt(15) - 7);
-            if (allay.level().isEmptyBlock(offset)) {
-                allay.getMoveControl().setWantedPosition(offset.getX() + 0.5, offset.getY() + 0.5, offset.getZ() + 0.5, 0.25);
+            Vec3 destination = Vec3.atCenterOf(offset);
+            if (canMoveTo(offset, destination)) {
+                allay.getMoveControl().setWantedPosition(destination.x, destination.y, destination.z, 0.25);
                 if (allay.getTarget() == null) {
-                    allay.getLookControl().setLookAt(offset.getX() + 0.5, offset.getY() + 0.5, offset.getZ() + 0.5, 180.0F, 20.0F);
+                    allay.getLookControl().setLookAt(destination.x, destination.y, destination.z, 180.0F, 20.0F);
                 }
 
                 break;
             }
         }
 
+    }
+
+    private boolean canMoveTo(BlockPos destinationPos, Vec3 destination) {
+        if (!allay.level().isInWorldBounds(destinationPos) || !allay.level().isEmptyBlock(destinationPos)) {
+            return false;
+        }
+
+        Vec3 movement = destination.subtract(allay.position());
+        if (!allay.level().noCollision(allay, allay.getBoundingBox().move(movement))) {
+            return false;
+        }
+
+        return allay.level().clip(new ClipContext(allay.getBoundingBox().getCenter(), destination, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, allay))
+                .getType() == HitResult.Type.MISS;
     }
 
 }
