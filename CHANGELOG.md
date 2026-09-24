@@ -1,3 +1,7 @@
+# 1.3.5
+- Heal book now heals tamed and passive mobs, and damages undead enemies properly
+- Canceled fall damage for the tamed minion companion
+
 # 1.3.4
 - Added compat with knightlib 2.0.0
 - Attempt to fix a case where the mutated/holy teddy and the golden allay would phase through the ground on certain cases
