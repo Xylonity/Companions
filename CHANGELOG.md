@@ -1,3 +1,7 @@
+# 1.3.5
+- Heal book now heals tamed and passive mobs, and damages undead enemies properly
+- Canceled fall damage for the tamed minion companion
+
 # 1.3.4
 - Minimum required version of knightlib increased to 2.0.1
 - Fixed demon flesh appearing in every entity loot table in JER

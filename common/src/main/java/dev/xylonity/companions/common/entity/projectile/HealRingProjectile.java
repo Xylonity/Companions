@@ -11,6 +11,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -22,6 +24,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 public class HealRingProjectile extends BaseProjectile implements GeoEntity {
+
     private final RawAnimation HEAL = RawAnimation.begin().thenPlay("heal");
 
     private boolean hasHealed = false;
@@ -44,13 +47,16 @@ public class HealRingProjectile extends BaseProjectile implements GeoEntity {
 
             if (tickCount % 10 == 0 && !hasHealed) {
                 for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(2))) {
-                    if (e.isInvertedHealAndHarm()) {
+                    final boolean tamed = e instanceof OwnableEntity ownable && ownable.getOwnerUUID() != null;
+                    if (e.isInvertedHealAndHarm() && !tamed) {
                         e.hurt(damageSources().indirectMagic(this, getOwner()), (float) CompanionsConfig.HEAL_RING_HEALING);
                         spawnParticles(e, CompanionsParticles.SHADE_SUMMON.get());
-                    } else {
+                    }
+                    else if (tamed || !(e instanceof Enemy)) {
                         e.heal((float) CompanionsConfig.HEAL_RING_HEALING);
                         spawnParticles(e, KnightLibParticles.STARSET.get());
                     }
+
                 }
 
                 hasHealed = true;

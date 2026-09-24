@@ -241,6 +241,11 @@ public class MinionEntity extends CompanionEntity {
         return getVariant().equals(Variant.NETHER.getName());
     }
 
+    @Override
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
+        return false;
+    }
+
     private void rewardParticles() {
         for (int i = 0; i < 20; i++) {
             double dx = (this.random.nextDouble() - 0.5) * 2.0;
