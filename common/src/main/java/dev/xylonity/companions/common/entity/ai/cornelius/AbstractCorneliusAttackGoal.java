@@ -5,7 +5,6 @@ import dev.xylonity.companions.registry.CompanionsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -113,9 +112,9 @@ public abstract class AbstractCorneliusAttackGoal extends Goal {
 
     protected boolean hasSufficientCoins() {
         int found = 0;
-        for (int i = 0; i <= 2; i++) {
+        for (int i = 0; i < CorneliusEntity.MAIN_COIN_SLOTS; i++) {
             ItemStack stack = cornelius.inventory.getItem(i);
-            if (stack.getItem() == coin()) {
+            if (isCurrency(stack)) {
                 found += stack.getCount();
                 if (found >= coinsToConsume()) return true;
             }
@@ -126,9 +125,9 @@ public abstract class AbstractCorneliusAttackGoal extends Goal {
 
     protected void consumeCoins() {
         int toConsume = coinsToConsume();
-        for (int i = 0; i <= 2 && toConsume > 0; i++) {
+        for (int i = 0; i < CorneliusEntity.MAIN_COIN_SLOTS && toConsume > 0; i++) {
             ItemStack stack = cornelius.inventory.getItem(i);
-            if (stack.getItem() == coin()) {
+            if (isCurrency(stack)) {
                 int remove = Math.min(toConsume, stack.getCount());
                 stack.shrink(remove);
                 toConsume -= remove;
@@ -201,7 +200,7 @@ public abstract class AbstractCorneliusAttackGoal extends Goal {
     }
 
     protected abstract void performAttack(LivingEntity target);
-    protected abstract Item coin();
+    protected abstract boolean isCurrency(ItemStack stack);
     protected abstract int coinsToConsume();
 
 }

@@ -1,3 +1,7 @@
+# 1.3.6
+- Fixed glove sweeping animations causing a client crash
+- Added configurable items and item tags for Cornelius's copper, nether, and end summon payments
+
 # 1.3.5
 - Heal book now heals tamed and passive mobs, and damages undead enemies properly
 - Canceled fall damage for the tamed minion companion

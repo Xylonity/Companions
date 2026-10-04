@@ -3,11 +3,11 @@ package dev.xylonity.companions.common.entity.ai.cornelius.goal;
 import dev.xylonity.companions.common.entity.ai.cornelius.AbstractCorneliusAttackGoal;
 import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
 import dev.xylonity.companions.common.entity.projectile.ScrollProjectile;
-import dev.xylonity.companions.registry.CompanionsBlocks;
+import dev.xylonity.companions.config.CorneliusCurrency;
 import dev.xylonity.companions.registry.CompanionsEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class CorneliusNetherBullfrogGoal extends AbstractCorneliusAttackGoal {
 
@@ -31,8 +31,8 @@ public class CorneliusNetherBullfrogGoal extends AbstractCorneliusAttackGoal {
     }
 
     @Override
-    protected Item coin() {
-        return CompanionsBlocks.NETHER_COIN.get().asItem();
+    protected boolean isCurrency(ItemStack stack) {
+        return CorneliusCurrency.NETHER.matches(stack);
     }
 
     @Override

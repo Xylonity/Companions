@@ -233,6 +233,27 @@ public final class CompanionsConfig {
 
     @ConfigEntry(
             category = "Cornelius",
+            comment = "Items accepted as copper-tier payment for Firework Toad and Bubble Frog summons. "
+                    + "Use item IDs or #tags separated by ;. Each summon consumes one item."
+    )
+    public static String CORNELIUS_COPPER_CURRENCY = "companions:copper_coin";
+
+    @ConfigEntry(
+            category = "Cornelius",
+            comment = "Items accepted as nether-tier payment for Nether Bullfrog and Ember Pole summons. "
+                    + "Use item IDs or #tags separated by ;. Each summon consumes one item."
+    )
+    public static String CORNELIUS_NETHER_CURRENCY = "companions:nether_coin";
+
+    @ConfigEntry(
+            category = "Cornelius",
+            comment = "Items accepted as end-tier payment for Ender Frog summons. "
+                    + "Use item IDs or #tags separated by ;. Each summon consumes one item."
+    )
+    public static String CORNELIUS_END_CURRENCY = "companions:end_coin";
+
+    @ConfigEntry(
+            category = "Cornelius",
             comment = "Names (separated by ; or ,) that activate Cornelius's reskin when used as a nametag. Leave blank to disable."
     )
     public static String CORNELIUS_RESKIN_NAMES = "Rosalind; Juan";
