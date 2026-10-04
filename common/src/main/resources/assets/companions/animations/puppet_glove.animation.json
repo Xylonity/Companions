@@ -2319,12 +2319,6 @@
 						"vector": [0, 0, "math.cos(q.anim_time*270 - 90)*15"]
 					}
 				}
-			},
-			"particle_effects": {
-				"0.8333": {
-					"effect": "dust_left",
-					"locator": "locator"
-				}
 			}
 		},
 		"broom_drop": {
