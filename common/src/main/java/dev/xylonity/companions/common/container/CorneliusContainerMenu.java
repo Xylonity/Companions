@@ -2,8 +2,8 @@ package dev.xylonity.companions.common.container;
 
 import dev.xylonity.companions.common.blackjack.CorneliusTable;
 import dev.xylonity.companions.common.entity.companion.CorneliusEntity;
-import dev.xylonity.companions.common.item.blockitem.CoinItem;
 import dev.xylonity.companions.config.CompanionsConfig;
+import dev.xylonity.companions.config.CorneliusCurrency;
 import dev.xylonity.companions.registry.CompanionsMenuTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -325,7 +325,7 @@ public class CorneliusContainerMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
-            return stack.getItem() instanceof CoinItem && CorneliusContainerMenu.this.isOwner(CorneliusContainerMenu.this.viewer);
+            return CorneliusCurrency.accepts(stack) && CorneliusContainerMenu.this.isOwner(CorneliusContainerMenu.this.viewer);
         }
 
         @Override
