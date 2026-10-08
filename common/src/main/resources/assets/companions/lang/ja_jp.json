@@ -34,7 +34,7 @@
   "wrench.companions.client_message.connection_distance": "電極同士が%1$dブロック以内でなければ接続できない",
   "wrench.companions.client_message.max_chain_connections": "最大接続距離に達した。通電式リレーで延長できる",
 
-  "hourglass.companions.client_message.required_durability": "使用する為には耐久値が最大である必要がある",
+  "hourglass.companions.client_message.required_durability": "使用するためには耐久値が最大である必要がある",
 
   "voltaic_pillar.companions.client_message.wrong_amount": "両方の柱の数が同数でなければならない",
 
@@ -42,6 +42,10 @@
   "shadow_bell.companions.client_message.no_charges": "接続された祭壇のチャージが不足",
   "shadow_bell.companions.client_message.altar_saved": "祭壇の接続に成功",
   "shadow_bell.companions.client_message.altar_empty": "祭壇は空だ",
+
+  "tooltip.item.companions.holy_porcelain_pottery.stored": "収納中: %s",
+  "holy_porcelain_pottery.companions.client_message.blacklisted": "このエンティティは壺の中に収納できない",
+  "holy_porcelain_pottery.companions.client_message.too_big": "このエンティティは大きすぎて壺に入らない",
 
   "hostile_puppet_glove.companions.client_message.game_start": "じゃんけんを始めるよ！",
   "hostile_puppet_glove.companions.client_message.wrong_item": "グー・チョキ・パーのいずれかが必要だよ",
@@ -146,10 +150,14 @@
   "block.companions.respawn_totem_block": "リスポーントーテム",
   "block.companions.shade_sword_altar": "影の剣の祭壇",
   "block.companions.shade_maw_altar": "影喰らいの祭壇",
+  "block.companions.shade_bat_altar": "影のコウモリの祭壇",
   "block.companions.frog_bonanza_block": "カエルスロット",
+  "block.companions.porcelain_pottery": "磁器の壺",
+  "block.companions.holy_porcelain_pottery": "聖なる磁器の壺",
   "block.companions.eternal_fire": "久遠の炎",
 
   "entity.companions.antlion": "アントリオン",
+  "entity.companions.bonanza_anvil": "金床",
   "entity.companions.cloak": "クローク",
   "entity.companions.cornelius": "コーネリアス・クローク",
   "entity.companions.croissant_dragon": "クロワッサンドラゴン",
@@ -161,6 +169,8 @@
   "entity.companions.gargoyle": "ガーゴイル",
   "entity.companions.puppet": "パペット",
   "entity.companions.puppet_glove": "パペットグローブ",
+  "entity.companions.shade_bat": "影のコウモリ",
+  "entity.companions.shade_bat_part": "影の眷属",
   "entity.companions.shade_maw": "影喰らい",
   "entity.companions.shade_sword": "影の剣",
   "entity.companions.soul_mage": "ソウルメイジ",
@@ -192,7 +202,7 @@
   "tooltip.item.companions.blade_arm": "パペット用の腕部アタッチメント",
   "tooltip.item.companions.cannon_arm": "パペット用の腕部アタッチメント",
   "tooltip.item.companions.antlion_fur": "悪臭を漂わせやや高温を放つ。食べたらどうなるだろう",
-  "tooltip.item.companions.hourglass_shift": "\uEA0E 詳細を確認するには \uEA0B を押す。",
+  "tooltip.item.companions.hourglass_shift": "\uEA0E 詳細を確認するには \uEA0B を押す",
   "tooltip.item.companions.hourglass_1": "手懐けたアントリオンに使用して形態を切り替える",
   "tooltip.item.companions.hourglass_2": "リスポーントーテムに使用して起動する",
   "tooltip.item.companions.crystallized_blood": "影の祭壇の燃料",
@@ -272,7 +282,10 @@
   "tooltip.block.companions.respawn_totem_block": "使用するとコンパニオンのリスポーン地点が設定される",
   "tooltip.block.companions.shade_sword_altar": "影の剣を召喚する。結晶化した血で起動する",
   "tooltip.block.companions.shade_maw_altar": "影喰らいを召喚する。結晶化した血で起動する",
+  "tooltip.block.companions.shade_bat_altar": "影のコウモリを召喚する。結晶化した血で起動する",
   "tooltip.block.companions.frog_bonanza_block": "カエルである理由を考えるのは野暮だ",
+  "tooltip.block.companions.porcelain_pottery": "繊細な磁器の容器",
+  "tooltip.block.companions.holy_porcelain_pottery": "生物を中に格納できる神聖な容器",
 
   "tooltip.icon.companions.star": "\uEA0D",
 
@@ -285,5 +298,6 @@
   "jei.companions.puppet_interaction.title": "パペットの作製",
   "jei.companions.croissant_egg_interaction.title": "クロワッサンドラゴンの召喚",
   "jei.companions.croissant_dragon_armor_interaction.title": "クロワッサンドラゴンの鎧",
-  "jei.companions.antlion_interaction.title": "アントリオンの形態の切り替え"
+  "jei.companions.antlion_interaction.title": "アントリオンの形態の切り替え",
+  "jei.companions.frog_bonanza_interaction.title": "カエルスロット"
 }
