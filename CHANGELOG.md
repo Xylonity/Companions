@@ -1,7 +1,9 @@
 # 1.3.7
-- Fixed weapons and armor not accepting vanilla enchantments, both on the enchanting table and the anvil
 - The crystallized blood scythe now accepts weapon enchantments in addition to mining ones
 - The eternal lighter and the wrench now accept unbreaking and mending enchantments
+- Reworked the blood slash and blood tornado trails, which now look smoother and follow the projectiles properly
+- Fixed the blood slash and blood tornado projectiles stuttering while moving
+- Fixed weapons and armor not accepting vanilla enchantments, both on the enchanting table and the anvil
 
 # 1.3.6
 - Fixed glove sweeping animations causing a client crash

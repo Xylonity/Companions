@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,6 +40,7 @@ public class BloodTornadoProjectile extends BaseProjectile {
     private static final EntityDataAccessor<Integer> TICKS = SynchedEntityData.defineId(BloodTornadoProjectile.class, EntityDataSerializers.INT);
 
     private boolean initialized = false;
+    private float clientTicks = Float.NaN;
 
     public BloodTornadoProjectile(EntityType<? extends BaseProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -111,7 +113,13 @@ public class BloodTornadoProjectile extends BaseProjectile {
             initialized = true;
         }
 
-        double t = getTicks() * 0.2;
+        float ticks = getTicks();
+        if (level().isClientSide) {
+            clientTicks = Float.isNaN(clientTicks) ? ticks : clientTicks + 1 + Mth.clamp((ticks - clientTicks) * 0.1f, -0.5f, 0.5f);
+            ticks = clientTicks;
+        }
+
+        double t = ticks * 0.2;
 
         double xLocal = 2 * Math.sin((Math.PI / 2f) * t);
         double zLocal = t;
@@ -136,13 +144,8 @@ public class BloodTornadoProjectile extends BaseProjectile {
             }
         }
 
-        if (level().isClientSide) {
-            if ((this.tickCount % 35 == 0 || this.tickCount == 1)) {
-                for (int i = 0; i < 3; i++) {
-                    Companions.PROXY.spawnBaseProjectileTrail(this, this.getBbHeight() - 0.25f, getBbHeight(), 135/255f, 0, 0);
-                }
-
-            }
+        if (level().isClientSide && this.tickCount == 1) {
+            Companions.PROXY.spawnBloodVortexRibbons(this, 3);
         }
 
     }
@@ -176,6 +179,9 @@ public class BloodTornadoProjectile extends BaseProjectile {
 
     @Override
     public void playerTouch(@NotNull Player pEntity) { ;; }
+
+    @Override
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) { ;; }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {

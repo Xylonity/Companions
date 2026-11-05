@@ -77,6 +77,14 @@ public class ClientProxy implements IProxy {
     }
 
     @Override
+    public void spawnBloodVortexRibbons(Entity e, int count) {
+        for (int i = 0; i < count; i++) {
+            Minecraft.getInstance().particleEngine.add(new BloodVortexRibbonParticle((ClientLevel) e.level(), e, i, count));
+        }
+
+    }
+
+    @Override
     public void spawnShadeAltarParticles(AbstractShadeAltarBlockEntity e, Level level, float r, float g, float b, double radius) {
         Minecraft.getInstance().particleEngine.add(new ShadeAltarRibbonParticle((ClientLevel) level, e.getBlockPos().getCenter(), r, g, b, radius));
     }
