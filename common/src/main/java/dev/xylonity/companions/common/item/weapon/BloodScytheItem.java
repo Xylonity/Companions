@@ -10,6 +10,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -36,6 +38,11 @@ public class BloodScytheItem extends GeckoPickaxeItem {
         pAttacker.heal(damage * (float) CompanionsConfig.CRYSTALLIZED_BLOOD_SCYTHE_LIFE_STEAL);
 
         return super.hurtEnemy(pStack, pTarget, pAttacker);
+    }
+
+    // Forge stub
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return enchantment.category == EnchantmentCategory.WEAPON || enchantment.category.canEnchant(this);
     }
 
     @Override

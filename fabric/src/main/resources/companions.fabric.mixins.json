@@ -13,6 +13,8 @@
         "GeckoSwordItemMixin"
     ],
     "mixins": [
+        "EnchantmentHelperMixin",
+        "EnchantmentMixin"
     ],
     "server": [
     ],
