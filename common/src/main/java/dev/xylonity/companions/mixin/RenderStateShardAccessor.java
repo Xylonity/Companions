@@ -32,4 +32,14 @@ public interface RenderStateShardAccessor {
         throw new AssertionError();
     }
 
+    @Accessor("DEPTH_WRITE")
+    static RenderStateShard.WriteMaskStateShard getDepthWrite() {
+        throw new AssertionError();
+    }
+
+    @Accessor("RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER")
+    static RenderStateShard.ShaderStateShard getEntityTranslucentEmissiveShader() {
+        throw new AssertionError();
+    }
+
 }

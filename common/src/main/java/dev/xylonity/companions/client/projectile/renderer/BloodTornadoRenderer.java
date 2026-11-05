@@ -2,6 +2,7 @@ package dev.xylonity.companions.client.projectile.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.xylonity.companions.client.CompanionsRenderTypes;
 import dev.xylonity.companions.client.projectile.model.BloodTornadoModel;
 import dev.xylonity.companions.common.entity.projectile.BloodSlashProjectile;
 import dev.xylonity.companions.common.entity.projectile.BloodTornadoProjectile;
@@ -29,7 +30,14 @@ public class BloodTornadoRenderer extends GeoEntityRenderer<BloodTornadoProjecti
     @Override
     public void actuallyRender(PoseStack poseStack, BloodTornadoProjectile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.scale(1.25f, 1.25f, 1.25f);
+
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, animatable.isInWall() ? LightTexture.FULL_SKY : packedLight, packedOverlay, red, green, blue, alpha);
+
+        if (!isReRender) {
+            final RenderType depth = CompanionsRenderTypes.entityTranslucentEmissiveDepth(getGeoModel().getTextureResource(animatable));
+            super.actuallyRender(poseStack, animatable, model, depth, bufferSource, bufferSource.getBuffer(depth), true, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        }
+
     }
 
 }

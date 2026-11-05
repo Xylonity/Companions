@@ -44,7 +44,7 @@ public class BloodSlashProjectile extends FrogHealProjectile {
     public void tick() {
         super.tick();
 
-        if (level().isClientSide && (tickCount % 20 == 0 || tickCount == 1)) {
+        if (level().isClientSide && tickCount == 1) {
             spawnSidedRibbon();
         }
 
@@ -63,6 +63,11 @@ public class BloodSlashProjectile extends FrogHealProjectile {
 
         Vec3 right = new Vec3(this.getX(), y, this.getZ()).add(perp);
         Companions.PROXY.spawnSidedRibbonTrail(this, level(), right.x, right.y, right.z, 145/255f, 20/255f, 20/255f, 0, 0.1725f, 1);
+    }
+
+    @Override
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps, boolean teleport) {
+        if (distanceToSqr(x, y, z) > 4) super.lerpTo(x, y, z, yRot, xRot, steps, teleport);
     }
 
     @Override

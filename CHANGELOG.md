@@ -1,3 +1,7 @@
+# 1.3.7
+- Reworked the blood slash and blood tornado trails, which now look smoother and follow the projectiles properly
+- Fixed the blood slash and blood tornado projectiles stuttering while moving
+
 # 1.3.6
 - Fixed glove sweeping animations causing a client crash
 - Added configurable items and item tags for Cornelius's copper, nether, and end summon payments
