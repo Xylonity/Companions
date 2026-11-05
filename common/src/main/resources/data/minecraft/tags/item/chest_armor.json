@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "companions:mage_coat",
+    "companions:holy_robe_coat",
+    "companions:crystallized_blood_chestplate"
+  ]
+}

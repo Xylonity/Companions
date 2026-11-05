@@ -1,3 +1,8 @@
+# 1.3.7
+- Fixed weapons and armor not accepting vanilla enchantments, both on the enchanting table and the anvil
+- The crystallized blood scythe now accepts weapon enchantments in addition to mining ones
+- The eternal lighter and the wrench now accept unbreaking and mending enchantments
+
 # 1.3.6
 - Fixed glove sweeping animations causing a client crash
 - Added configurable items and item tags for Cornelius's copper, nether, and end summon payments
