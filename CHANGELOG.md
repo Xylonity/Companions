@@ -1,3 +1,6 @@
+# 1.3.8
+- Magic spell books can now be stored in chiseled bookshelves
+
 # 1.3.7
 - The crystallized blood scythe now accepts weapon enchantments in addition to mining ones
 - The eternal lighter and the wrench now accept unbreaking and mending enchantments
