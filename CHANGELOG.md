@@ -1,3 +1,9 @@
+# 1.3.9
+- Fixed the black hole clipping into walls and ceilings when hitting a block
+- The black hole now stops on the surface of water and lava instead of sinking to the bottom
+- Fixed the black hole's opening flash and release sound never playing
+- Fixed clouds rendering on top of the black hole
+
 # 1.3.8
 - Magic spell books can now be stored in chiseled bookshelves
 
