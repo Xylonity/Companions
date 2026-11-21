@@ -8,6 +8,7 @@ import dev.xylonity.companions.registry.CompanionsSounds;
 import dev.xylonity.knightlib.KnightLib;
 import dev.xylonity.knightlib.api.camera.shake.ShakeSettings;
 import dev.xylonity.knightlib.network.packets.CameraShakeS2C;
+import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -86,11 +87,13 @@ public class BlackHoleProjectile extends BaseProjectile {
 
         super.tick();
 
+        if (!level().isClientSide) setTickCount(tickCount);
+
         if (getTickCount() == 20) {
             level().playSound(null, getX(), getY(), getZ(), CompanionsSounds.SPELL_RELEASE_SPEARS.get(), getSoundSource(), 1.5F, 1.0F);
         }
 
-        if (new Random().nextFloat() < 0.44 && getTickCount() < getLifetime() - 20) for (int i = 0; i < 1; i++) {
+        if (new Random().nextFloat() < 0.44 && getLifetime() > 20) for (int i = 0; i < 1; i++) {
             if (this.level() instanceof ServerLevel level) {
                 double x = (Math.random() - 0.5) * 0.5;
                 double z = (Math.random() - 0.5) * 0.5;
@@ -129,10 +132,14 @@ public class BlackHoleProjectile extends BaseProjectile {
 
         vel = vel.scale(0.99);
 
-        BlockHitResult blockHit = level().clip(new ClipContext(oldPos, oldPos.add(vel), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        ClipContext.Fluid fluid = level().getFluidState(blockPosition()).isEmpty() ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE;
+        BlockHitResult blockHit = level().clip(new ClipContext(oldPos, oldPos.add(vel), ClipContext.Block.COLLIDER, fluid, this));
 
         if (blockHit.getType() == HitResult.Type.BLOCK) {
+            Direction face = blockHit.getDirection();
             Vec3 hitPos = blockHit.getLocation();
+            if (face == Direction.DOWN) hitPos = hitPos.subtract(0, getBbHeight(), 0);
+            else if (face != Direction.UP) hitPos = hitPos.add(Vec3.atLowerCornerOf(face.getNormal()).scale(0.35));
             this.setPos(hitPos.x, hitPos.y, hitPos.z);
 
             this.setDeltaMovement(Vec3.ZERO);
@@ -188,7 +195,7 @@ public class BlackHoleProjectile extends BaseProjectile {
     }
 
     private <T extends GeoAnimatable> PlayState extraPredicate(AnimationState<T> event) {
-        if (getTickCount() >= getLifetime() - 7) event.getController().setAnimation(DISAPPEAR);
+        if (getLifetime() <= 7) event.getController().setAnimation(DISAPPEAR);
 
         return PlayState.CONTINUE;
     }
